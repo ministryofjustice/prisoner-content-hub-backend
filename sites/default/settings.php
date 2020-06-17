@@ -12,6 +12,64 @@ $databases['default']['default'] = array(
   'driver' => 'mysql',
 );
 
+/**
+ * Flysystem S3 filesystem configuration
+ */
+$flysystem_schemes = [
+
+  'local-files' => [
+    'driver' => 'local',
+    'config' => [
+      'root' => 'sites/default/files',
+      'public' => TRUE
+    ],
+    'description' => 'Local. This is a Flysystem reference to the Drupal "files" directory.',
+
+    // We don't need to cache local files
+    'cache' => FALSE
+  ],
+
+  's3' => [
+    'driver' => 's3',
+    'config' => [
+      'key'    => getenv('FLYSYSTEM_S3_KEY', true),
+      'secret' => getenv('FLYSYSTEM_S3_SECRET', true),
+      'region' => getenv('FLYSYSTEM_S3_REGION', true),
+      'bucket' => getenv('FLYSYSTEM_S3_BUCKET', true),
+
+      // Optional configuration settings.
+
+      // 'options' => [
+      //   'ACL' => 'public-read',
+      //   'StorageClass' => 'REDUCED_REDUNDANCY',
+      // ],
+
+      // Autodetected based on the current request if not provided
+      // 'protocol' => 'https',
+
+      // Directory prefix for all viewed files
+      // 'prefix' => 'an/optional/prefix',
+
+      // A CNAME that resolves to your bucket. Used for URL generation
+      // 'cname' => 'static.example.com',
+
+      // Set to FALSE if the CNAME does not resolve to a bucket and the bucket
+      // should be included in the path.
+      // 'cname_is_bucket' => TRUE,
+
+      // Set to TRUE to link to files using direct links
+      // 'public' => TRUE,
+
+      // Set to TRUE if CORS upload support is enabled for the bucket
+      // 'cors' => TRUE,
+    ],
+
+    'cache' => TRUE, // Creates a metadata cache to speed up lookups
+  ],
+];
+
+$settings['flysystem'] = $flysystem_schemes;
+
 $settings['install_profile'] = 'standard';
 $settings['hash_salt'] = 'TDVdRVDjXzm2ASUFPQ2rVUys-wiXvnYar9n2CWrQXefT1Hc3pLOhDC0lPtgLQcfoPViNEwWo3g';
 $settings['update_free_access'] = FALSE;
