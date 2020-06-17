@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+data:
+  internalUrl: {{ include "prisoner-content-hub-backend.internalHost" . }}
+  externalUrl: {{ include "prisoner-content-hub-backend.externalHost" . }}

@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HUB_DB_ENV_MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.dbSecretName }}
+                  key: database_name
+            - name: HUB_DB_ENV_MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.dbSecretName }}
+                  key: database_username
+            - name: HUB_DB_ENV_MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.dbSecretName }}
+                  key: database_password
+            - name: HUB_DB_PORT_3306_TCP_ADDR
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.dbSecretName }}
+                  key: rds_instance_address
+            - name: HUB_EXT_FILE_URL
+              value: {{ .Values.ingress.hostName }}
+            - name: PHP_MEMORY_LIMIT
+              value: {{ .Values.application.config.phpMemoryLimit }}
+            - name: PHP_UPLOAD_MAX_FILE_SIZE
+              value: {{ .Values.application.config.phpUploadMaxFileSize }}
+            - name: PHP_POST_MAX_SIZE
+              value: {{ .Values.application.config.phpPostMaxSize }}
+            - name: XDEBUG_IP
+              value: {{ .Values.application.config.xDebugIp }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.application.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.application.liveness.endpoint }}
+              port: http
+            initialDelaySeconds: {{ .Values.application.liveness.delaySeconds }}
+            timeoutSeconds: {{ .Values.application.liveness.timeoutSeconds }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.application.readiness.endpoint }}
+              port: http
+            initialDelaySeconds: {{ .Values.application.liveness.delaySeconds }}
+            timeoutSeconds: {{ .Values.application.liveness.timeoutSeconds }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

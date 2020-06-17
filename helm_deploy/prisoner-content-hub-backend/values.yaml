@@ -1,0 +1,48 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+maxReplicaCount: 3
+
+image:
+  repository: mojdigitalstudio/digital-hub-be
+  pullPolicy: IfNotPresent
+  tag: latest
+
+application:
+  port: 80
+  liveness:
+    endpoint: /api/health
+    delaySeconds: 10
+    timeoutSeconds: 5
+  readiness:
+    endpoint: /
+    delaySeconds: 10
+    timeoutSeconds: 5
+  config:
+    phpMemoryLimit: 256M
+    phpUploadMaxFileSize: 500M
+    phpPostMaxSize: 500M
+    xDebugIp: 127.0.0.1
+  dbSecretName: drupal-rds
+
+imagePullSecrets: [] # Are we using ECR?
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources: {}
+
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  tlsEnabled: false
+  hostName: content.pfs-hub.local
+  path: /
+  cert_secret: cert-secret
