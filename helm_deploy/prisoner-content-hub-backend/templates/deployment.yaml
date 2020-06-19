@@ -57,6 +57,8 @@ spec:
               value: {{ .Values.application.config.phpPostMaxSize }}
             - name: XDEBUG_IP
               value: {{ .Values.application.config.xDebugIp }}
+            - name: SERVER_PORT
+              value: {{ .Values.application.port | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.application.port }}
@@ -75,7 +77,14 @@ spec:
             timeoutSeconds: {{ .Values.application.liveness.timeoutSeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: apache-cache
+              mountPath: /tmp
       {{- with .Values.affinity }}
       affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}

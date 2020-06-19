@@ -10,7 +10,7 @@ image:
   tag: latest
 
 application:
-  port: 80
+  port: 8080
   liveness:
     endpoint: /api/health
     delaySeconds: 10
@@ -26,11 +26,21 @@ application:
     xDebugIp: 127.0.0.1
   dbSecretName: drupal-rds
 
+volumes:
+  - name: apache-cache
+    emptyDir: {}
+
 imagePullSecrets: [] # Are we using ECR?
 
 podSecurityContext: {}
 
-securityContext: {}
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
 
 resources: {}
 
@@ -45,4 +55,3 @@ ingress:
   tlsEnabled: false
   hostName: content.pfs-hub.local
   path: /
-  cert_secret: cert-secret
