@@ -2,14 +2,9 @@
 !core/assets/vendor
 /core/vendor
 /modules/contrib
-!sites/default/files/2017-05/pg33870-images.epub
 sites/*/files
 sites/*/private
-sites/simpletest
-.vagrant
-/nbproject/private/
 .DS_Store
-nbproject
 .idea
 .settings
 .vscode
