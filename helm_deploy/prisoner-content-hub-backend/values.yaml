@@ -24,6 +24,8 @@ application:
     phpUploadMaxFileSize: 500M
     phpPostMaxSize: 500M
     xDebugIp: 127.0.0.1
+    elasticsearchCluster: elasticsearch
+    elasticsearchHost: http://hub-elasticsearch-elasticsearch-coordinating-only.development.svc.cluster.local:9200
   dbSecretName: drupal-rds
 
 volumes:

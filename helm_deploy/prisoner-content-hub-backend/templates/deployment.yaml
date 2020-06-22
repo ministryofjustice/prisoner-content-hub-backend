@@ -47,6 +47,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.application.dbSecretName }}
                   key: rds_instance_address
+            - name: HASH_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "prisoner-content-hub-backend.fullname" . }}
+                  key: hashSalt
             - name: HUB_EXT_FILE_URL
               value: {{ .Values.ingress.hostName }}
             - name: PHP_MEMORY_LIMIT
@@ -59,6 +64,10 @@ spec:
               value: {{ .Values.application.config.xDebugIp }}
             - name: SERVER_PORT
               value: {{ .Values.application.port | quote }}
+            - name: ELASTICSEARCH_CLUSTER
+              value: {{ .Values.application.config.elasticsearchCluster }}
+            - name: ELASTICSEARCH_HOST
+              value: {{ .Values.application.config.elasticsearchHost }}
           ports:
             - name: http
               containerPort: {{ .Values.application.port }}
@@ -73,8 +82,8 @@ spec:
             httpGet:
               path: {{ .Values.application.readiness.endpoint }}
               port: http
-            initialDelaySeconds: {{ .Values.application.liveness.delaySeconds }}
-            timeoutSeconds: {{ .Values.application.liveness.timeoutSeconds }}
+            initialDelaySeconds: {{ .Values.application.readiness.delaySeconds }}
+            timeoutSeconds: {{ .Values.application.readiness.timeoutSeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
