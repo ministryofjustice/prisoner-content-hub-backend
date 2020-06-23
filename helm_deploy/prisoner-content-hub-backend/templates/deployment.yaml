@@ -53,7 +53,7 @@ spec:
                   name: {{ include "prisoner-content-hub-backend.fullname" . }}
                   key: hashSalt
             - name: HUB_EXT_FILE_URL
-              value: {{ .Values.ingress.hostName }}
+              value: {{ include "prisoner-content-hub-backend.externalHost" . }}/sites/default/files
             - name: PHP_MEMORY_LIMIT
               value: {{ .Values.application.config.phpMemoryLimit }}
             - name: PHP_UPLOAD_MAX_FILE_SIZE
