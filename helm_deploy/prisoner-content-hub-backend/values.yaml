@@ -9,6 +9,8 @@ image:
   pullPolicy: IfNotPresent
   tag: latest
 
+tier: backend
+
 application:
   port: 8080
   liveness:
