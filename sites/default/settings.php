@@ -81,8 +81,8 @@ $settings['file_scan_ignore_directories'] = [
 $settings['entity_update_batch_size'] = 50;
 $settings['entity_update_backup'] = TRUE;
 $settings['file_public_base_url'] = getenv('HUB_EXT_FILE_URL', true);
-$elasticsearch_cluster = getenv("ELASTICSEARCH_CLUSTER");
-$config['elasticsearch_connector.cluster.'.$elasticsearch_cluster]['url'] = getenv("ELASTICSEARCH_HOST");
+$elasticsearch_cluster = getenv("ELASTICSEARCH_CLUSTER", true);
+$config['elasticsearch_connector.cluster.'.$elasticsearch_cluster]['url'] = getenv("ELASTICSEARCH_HOST", true);
 
 $config_directories['sync'] = 'sites/default/files/config/sync';
 
