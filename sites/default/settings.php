@@ -71,7 +71,7 @@ $flysystem_schemes = [
 $settings['flysystem'] = $flysystem_schemes;
 
 $settings['install_profile'] = 'standard';
-$settings['hash_salt'] = 'TDVdRVDjXzm2ASUFPQ2rVUys-wiXvnYar9n2CWrQXefT1Hc3pLOhDC0lPtgLQcfoPViNEwWo3g';
+$settings['hash_salt'] = getenv('HASH_SALT', true);
 $settings['update_free_access'] = FALSE;
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 $settings['file_scan_ignore_directories'] = [
@@ -81,6 +81,8 @@ $settings['file_scan_ignore_directories'] = [
 $settings['entity_update_batch_size'] = 50;
 $settings['entity_update_backup'] = TRUE;
 $settings['file_public_base_url'] = getenv('HUB_EXT_FILE_URL', true);
+$elasticsearch_cluster = getenv("ELASTICSEARCH_CLUSTER", true);
+$config['elasticsearch_connector.cluster.'.$elasticsearch_cluster]['url'] = getenv("ELASTICSEARCH_HOST", true);
 
 $config_directories['sync'] = 'sites/default/files/config/sync';
 

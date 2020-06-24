@@ -1,0 +1,63 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+maxReplicaCount: 3
+
+image:
+  repository: mojdigitalstudio/digital-hub-be
+  pullPolicy: IfNotPresent
+  tag: latest
+
+tier: backend
+
+application:
+  port: 8080
+  liveness:
+    endpoint: /api/health
+    delaySeconds: 10
+    timeoutSeconds: 5
+  readiness:
+    endpoint: /
+    delaySeconds: 10
+    timeoutSeconds: 5
+  config:
+    phpMemoryLimit: 256M
+    phpUploadMaxFileSize: 500M
+    phpPostMaxSize: 500M
+    xDebugIp: 127.0.0.1
+    elasticsearchCluster: elasticsearch
+    elasticsearchHost: http://hub-elasticsearch-elasticsearch-coordinating-only.development.svc.cluster.local:9200
+  dbSecretName: drupal-rds
+  s3SecretName: drupal-s3
+  s3Region: eu-west-1
+
+volumes:
+  - name: apache-cache
+    emptyDir: {}
+
+imagePullSecrets: [] # Are we using ECR?
+
+podSecurityContext: {}
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+resources: {}
+
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  tlsEnabled: false
+  hostName: content.pfs-hub.local
+  path: /

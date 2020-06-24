@@ -1,0 +1,6 @@
+{{- if not .Values.ingress.enabled }}
+Ingress not enabled
+{{ else }}
+Application is running at:
+  http{{ if .Values.ingress.tlsEnabled}}s{{ end }}://{{ .Values.ingress.hostName }}{{ $.Values.ingress.path }}
+{{- end }}
