@@ -29,6 +29,8 @@ application:
     elasticsearchCluster: elasticsearch
     elasticsearchHost: http://hub-elasticsearch-elasticsearch-coordinating-only.development.svc.cluster.local:9200
   dbSecretName: drupal-rds
+  s3SecretName: drupal-s3
+  s3Region: eu-west-1
 
 volumes:
   - name: apache-cache
