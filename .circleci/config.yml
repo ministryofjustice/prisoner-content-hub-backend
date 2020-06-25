@@ -47,7 +47,7 @@ jobs:
           root: /tmp/workspace
           paths:
             - docker-build
-  build_drupal:
+  build_production:
     <<: *defaults
     steps:
       - checkout
@@ -102,5 +102,5 @@ workflows:
           <<: *feature_branch
           requires:
             - approve_preview_build
-      - build_drupal:
+      - build_production:
           <<: *main_branch
