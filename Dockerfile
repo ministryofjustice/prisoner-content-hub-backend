@@ -35,6 +35,6 @@ RUN composer dump-autoload --optimize
 RUN composer clear-cache
 
 # Update permisions
-RUN chown -R 1000:1000 /var/www/html/
+RUN chown -R www-data:www-data /var/www/html/
 
-USER 1000
+USER www-data
