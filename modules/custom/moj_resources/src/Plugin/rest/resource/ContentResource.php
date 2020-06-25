@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          type="string",
  *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
  *      ),
- *      
+ *
  *     @SWG\Response(response="200", description="Hub content resource")
  * )
  */
@@ -84,7 +84,7 @@ class ContentResource extends ResourceBase
         ContentApiClass $contentApiClass,
         Request $currentRequest,
         LanguageManager $languageManager
-    ) {        
+    ) {
         $this->contentApiClass = $contentApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
@@ -94,11 +94,11 @@ class ContentResource extends ResourceBase
         self::checklanguageParameterIsValid();
         parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     }
-  
+
     public static function create(
         ContainerInterface $container,
-        array $configuration, 
-        $plugin_id, 
+        array $configuration,
+        $plugin_id,
         $plugin_definition
     ) {
         return new static(
@@ -111,12 +111,12 @@ class ContentResource extends ResourceBase
             $container->get('request_stack')->getCurrentRequest(),
             $container->get('language_manager')
         );
-    }   
+    }
 
-    public function get() 
+    public function get()
     {
         self::checkContentIdParameterIsNumeric();
-        $content = $this->contentApiClass->ContentApiEndpoint($lang, $this->nid);
+        $content = $this->contentApiClass->ContentApiEndpoint('', $this->nid);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
@@ -125,13 +125,13 @@ class ContentResource extends ResourceBase
         throw new NotFoundHttpException(t('No content found'));
     }
 
-    protected function checklanguageParameterIsValid() 
+    protected function checklanguageParameterIsValid()
     {
         foreach($this->availableLangs as $lang)
         {
             if ($lang->getid() === $this->lang) {
                 return true;
-            } 
+            }
         }
         throw new NotFoundHttpException(
             t('The language tag invalid or translation for this tag is not avilable'),

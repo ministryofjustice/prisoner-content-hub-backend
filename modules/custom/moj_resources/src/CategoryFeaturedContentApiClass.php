@@ -95,7 +95,11 @@ class CategoryFeaturedContentApiClass
 
     //sort them out
     usort($results, function ($a, $b) {
-      return $b->changed->value - $a->changed->value;
+      if ($a->changed && $b->changed) {
+        return $b->changed->value - $a->changed->value;
+      }
+
+      return 0;
     });
 
     return array_slice($results, 0, $number);
