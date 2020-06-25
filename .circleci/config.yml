@@ -1,0 +1,106 @@
+defaults: &defaults
+  working_directory: ~/prisoner-content-hub-backend
+  docker:
+    - image: circleci/php:7.1
+main_branch: &main_branch
+  filters:
+    branches:
+      only: main
+feature_branch: &feature_branch
+  filters:
+    branches:
+      ignore: main
+
+version: 2.1
+
+jobs:
+  build-preview:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: sudo composer self-update
+      - restore_cache:
+          key: dependency-cache-{{ checksum "composer.lock" }}
+      - run:
+          name: Install Drupal modules
+          command: |
+            make build-deps
+      - save_cache:
+          key: dependency-cache-{{ checksum "composer.lock" }}
+          paths:
+            - ./modules/contrib
+      - run:
+          name: Build Docker image
+          command: make build
+      - run:
+          name: Push Docker image
+          command: make push-preview
+      - run:
+          name: Persist build number for deployment
+          command: |
+            mkdir -p /tmp/workspace/docker-build
+            cd /tmp/workspace/docker-build
+            echo preview > version-to-deploy.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - docker-build
+  build_drupal:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: sudo composer self-update
+      - restore_cache:
+          key: dependency-cache-{{ checksum "composer.lock" }}
+      - run:
+          name: Install Drupal modules
+          command: |
+            make build-deps
+      - save_cache:
+          key: dependency-cache-{{ checksum "composer.lock" }}
+          paths:
+            - ./modules/contrib
+      - run:
+          name: Build Docker image
+          command: make build
+      - run:
+          name: Push Docker image
+          command: make push
+      - add_ssh_keys:
+          fingerprints:
+            - "0a:04:a1:27:17:3e:3d:8a:20:91:79:a1:9e:af:85:6c" # This will probably need updating
+      - run:
+          name: Create Git Tag
+          command: |
+            git config user.name "Circle CI"
+            git config user.email "circle@circleci.com"
+            git tag -a "$(date '+%Y-%m-%d').$CIRCLE_BUILD_NUM" $CIRCLE_SHA1 -m "$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=%B)"
+            git push origin "$(date '+%Y-%m-%d').$CIRCLE_BUILD_NUM"
+      - run:
+          name: Persist build number for deployment
+          command: |
+            mkdir -p /tmp/workspace/docker-build
+            cd /tmp/workspace/docker-build
+            echo build-${CIRCLE_BUILD_NUM} > version-to-deploy.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - docker-build
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - approve_preview_build:
+          <<: *feature_branch
+          type: approval
+      - build_preview:
+          <<: *feature_branch
+          requires:
+            - approve_preview_build
+      - build_drupal:
+          <<: *main_branch
