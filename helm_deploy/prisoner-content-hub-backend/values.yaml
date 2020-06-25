@@ -45,8 +45,8 @@ securityContext:
     drop:
     - ALL
   runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
+  runAsUser: 33
+  runAsGroup: 33
 
 resources: {}
 
