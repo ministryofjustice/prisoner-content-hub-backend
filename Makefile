@@ -3,14 +3,14 @@ build-deps:
 	composer install --no-dev --no-ansi --no-scripts --prefer-dist --ignore-platform-reqs --no-interaction --no-autoloader
 
 build:
-	docker build -t digital-hub-be .
+	docker build -t prisoner-content-hub-backend .
 
 clean:
 	rm -rf modules/contrib
 
 push:
 	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-	docker tag digital-hub-be mojdigitalstudio/digital-hub-be:build-$(CIRCLE_BUILD_NUM)
-	docker tag digital-hub-be mojdigitalstudio/digital-hub-be:latest
-	docker push mojdigitalstudio/digital-hub-be:build-$(CIRCLE_BUILD_NUM)
-	docker push mojdigitalstudio/digital-hub-be:latest
+	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:build-$(CIRCLE_BUILD_NUM)
+	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:latest
+	docker push mojdigitalstudio/prisoner-content-hub-backend:build-$(CIRCLE_BUILD_NUM)
+	docker push mojdigitalstudio/prisoner-content-hub-backend:latest
