@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/prisoner-content-hub-backend
   docker:
-    - image: circleci/php:7.1
+    - image: mojdigitalstudio/circleci-build-container
 main_branch: &main_branch
   filters:
     branches:
@@ -20,17 +20,6 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: sudo composer self-update
-      - restore_cache:
-          key: dependency-cache-{{ checksum "composer.lock" }}
-      - run:
-          name: Install Drupal modules
-          command: |
-            make build-deps
-      - save_cache:
-          key: dependency-cache-{{ checksum "composer.lock" }}
-          paths:
-            - ./modules/contrib
       - run:
           name: Build Docker image
           command: make build
@@ -53,17 +42,6 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: sudo composer self-update
-      - restore_cache:
-          key: dependency-cache-{{ checksum "composer.lock" }}
-      - run:
-          name: Install Drupal modules
-          command: |
-            make build-deps
-      - save_cache:
-          key: dependency-cache-{{ checksum "composer.lock" }}
-          paths:
-            - ./modules/contrib
       - run:
           name: Build Docker image
           command: make build
