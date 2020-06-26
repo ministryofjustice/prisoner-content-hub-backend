@@ -14,7 +14,7 @@ feature_branch: &feature_branch
 version: 2.1
 
 jobs:
-  build-preview:
+  build_preview:
     <<: *defaults
     steps:
       - checkout
