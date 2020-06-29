@@ -1,0 +1,7 @@
+application:
+  elasticsearchServiceName: hub-elasticsearch-elasticsearch-coordinating-only
+
+ingress:
+  enabled: false
+  tlsEnabled: true
+  hostName: content.pfs-digital-hub-stage.hmpps.dsd.io

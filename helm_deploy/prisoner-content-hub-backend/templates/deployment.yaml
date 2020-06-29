@@ -84,7 +84,7 @@ spec:
             - name: ELASTICSEARCH_CLUSTER
               value: {{ .Values.application.config.elasticsearchCluster }}
             - name: ELASTICSEARCH_HOST
-              value: {{ .Values.application.config.elasticsearchHost }}
+              value: {{ include "prisoner-content-hub-backend.elasticsearchServiceHost" . }}
           ports:
             - name: http
               containerPort: {{ .Values.application.port }}
