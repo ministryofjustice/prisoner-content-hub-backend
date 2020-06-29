@@ -60,3 +60,9 @@ ingress:
   enabled: false
   tlsEnabled: false
   path: /
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
+      SecRuleEngine On
