@@ -5,7 +5,7 @@ replicaCount: 1
 maxReplicaCount: 3
 
 image:
-  repository: mojdigitalstudio/digital-hub-be
+  repository: mojdigitalstudio/prisoner-content-hub-backend
   pullPolicy: IfNotPresent
   tag: latest
 
