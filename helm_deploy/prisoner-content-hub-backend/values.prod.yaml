@@ -1,0 +1,4 @@
+ingress:
+  enabled: false
+  tlsEnabled: true
+  hostName: content.pfs-digital-hub-stage.hmpps.dsd.io

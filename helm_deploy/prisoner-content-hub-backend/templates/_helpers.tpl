@@ -52,6 +52,13 @@ Create internal Kubernetes hostname
 {{- end }}
 
 {{/*
+Create internal Kubernetes hostname
+*/}}
+{{- define "prisoner-content-hub-backend.elasticsearchServiceHost" -}}
+{{- printf "http://%s.%s.svc.cluster.local:9200" .Values.application.config.elasticsearchServiceName .Release.Namespace }}
+{{- end }}
+
+{{/*
 Create external Kubernetes hostname
 */}}
 {{- define "prisoner-content-hub-backend.externalHost" -}}
