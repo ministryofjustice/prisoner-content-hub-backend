@@ -15,7 +15,7 @@ version: 2.1
 
 orbs:
   kubernetes: circleci/kubernetes@0.3.0
-  helm: circleci/helm@0.1.2
+  helm: circleci/helm@1.0.0
 
 commands:
   release_to_namespace:
