@@ -13,6 +13,46 @@ feature_branch: &feature_branch
 
 version: 2.1
 
+orbs:
+  kubernetes: circleci/kubernetes@0.3.0
+  helm: circleci/helm@0.1.2
+
+commands:
+  release_to_namespace:
+    description: "Release with Helm"
+    parameters:
+      namespace:
+        type: string
+    steps:
+      - kubernetes/install
+      - helm/install-helm-client:
+          version: v3.2.1
+      - attach_workspace:
+          at: /tmp/build-info
+      - run:
+          name: Configure kubectl context
+          command: |
+            echo -n ${KUBE_CLUSTER_CERT} | base64 -d > /tmp/cluster_ca.crt
+            kubectl config set-cluster ${KUBE_CLUSTER_NAME} \
+              --certificate-authority=/tmp/cluster-ca.crt \
+              --server="https://api.${KUBE_CLUSTER_NAME}"
+            kubectl config --set-credentials circleci \
+              --token=${KUBE_TOKEN}
+            kubectl config --set-context ${KUBE_CLUSTER_NAME} \
+              --cluster=${KUBE_CLUSTER_NAME} \
+              --user=circleci \
+              --namespace=${KUBE_NAMESPACE}
+            kubectl config use-context ${KUBE_CLUSTER_NAME}
+      - run:
+          name: Release to << parameters.namespace >>
+          command: |
+            VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
+            helm upgrade prisoner-content-hub-backend ./helm_deploy/prisoner-content-hub-backend \
+              --install --wait --force --reset-values --timeout 360 \
+              --namespace=${KUBE_NAMESPACE} \
+              --values ./helm_deploy/prisoner-content-hub-backend/values.<< parameters.namespace >>.yaml \
+              --set image.tag=${VERSION_TO_DEPLOY}
+
 jobs:
   build_preview:
     <<: *defaults
@@ -29,13 +69,12 @@ jobs:
       - run:
           name: Persist build number for deployment
           command: |
-            mkdir -p /tmp/workspace/docker-build
-            cd /tmp/workspace/docker-build
-            echo preview > version-to-deploy.txt
+            mkdir -p /tmp/build-info
+            echo preview > /tmp/build-info/version-to-deploy.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: /tmp/build-info
           paths:
-            - docker-build
+            - version-to-deploy.txt
   build_production:
     <<: *defaults
     steps:
@@ -61,13 +100,17 @@ jobs:
       - run:
           name: Persist build number for deployment
           command: |
-            mkdir -p /tmp/workspace/docker-build
-            cd /tmp/workspace/docker-build
-            echo build-${CIRCLE_BUILD_NUM} > version-to-deploy.txt
+            mkdir -p /tmp/build-info
+            echo build-${CIRCLE_BUILD_NUM} > /tmp/build-info/version-to-deploy.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: /tmp/build-info
           paths:
-            - docker-build
+            - version-to-deploy.txt
+  release_production:
+    <<: *defaults
+    steps:
+      - release_to_namespace:
+          namespace: "prod"
 
 workflows:
   version: 2
@@ -82,3 +125,12 @@ workflows:
             - approve_preview_build
       - build_production:
           <<: *main_branch
+      - approve_release_production:
+          type: approval
+          requires:
+            - build_production
+      - release_production:
+          <<: *main_branch
+          context: prisoner-content-hub-prod
+          requires:
+            - approve_release_production
