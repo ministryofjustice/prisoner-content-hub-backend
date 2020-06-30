@@ -32,7 +32,7 @@ commands:
       - run:
           name: Configure kubectl context
           command: |
-            echo -n ${KUBE_CLUSTER_CERT} | base64 -d > /tmp/cluster_ca.crt
+            echo -n ${KUBE_CLUSTER_CERT} | base64 -d > /tmp/cluster-ca.crt
             kubectl config set-cluster ${KUBE_CLUSTER_NAME} \
               --certificate-authority=/tmp/cluster-ca.crt \
               --server="https://api.${KUBE_CLUSTER_NAME}"
