@@ -27,6 +27,7 @@ commands:
       - kubernetes/install
       - helm/install-helm-client:
           version: v3.2.1
+      - checkout
       - attach_workspace:
           at: /tmp/build-info
       - run:
