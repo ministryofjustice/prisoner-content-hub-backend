@@ -36,9 +36,9 @@ commands:
             kubectl config set-cluster ${KUBE_CLUSTER_NAME} \
               --certificate-authority=/tmp/cluster-ca.crt \
               --server="https://api.${KUBE_CLUSTER_NAME}"
-            kubectl config --set-credentials circleci \
+            kubectl config set-credentials circleci \
               --token=${KUBE_TOKEN}
-            kubectl config --set-context ${KUBE_CLUSTER_NAME} \
+            kubectl config set-context ${KUBE_CLUSTER_NAME} \
               --cluster=${KUBE_CLUSTER_NAME} \
               --user=circleci \
               --namespace=${KUBE_NAMESPACE}
