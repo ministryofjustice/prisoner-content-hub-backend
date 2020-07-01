@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~/prisoner-content-hub-backend
+  working_directory: ~/workspace
   docker:
     - image: mojdigitalstudio/circleci-build-container
 main_branch: &main_branch
@@ -27,7 +27,8 @@ commands:
       - kubernetes/install
       - helm/install-helm-client:
           version: v3.2.1
-      - checkout
+      - checkout:
+          path: ~/git
       - attach_workspace:
           at: /tmp/build-info
       - run:
@@ -48,10 +49,10 @@ commands:
           name: Release to << parameters.namespace >>
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
-            helm upgrade prisoner-content-hub-backend ./helm_deploy/prisoner-content-hub-backend \
+            helm upgrade prisoner-content-hub-backend ~/git/helm_deploy/prisoner-content-hub-backend \
               --install --wait --force --reset-values --timeout 360s \
               --namespace=${KUBE_NAMESPACE} \
-              --values ./helm_deploy/prisoner-content-hub-backend/values.<< parameters.namespace >>.yaml \
+              --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.namespace >>.yaml \
               --set image.tag=${VERSION_TO_DEPLOY}
 
 jobs:
