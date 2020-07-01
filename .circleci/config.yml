@@ -49,7 +49,7 @@ commands:
           name: Release to << parameters.namespace >>
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
-            helm upgrade prisoner-content-hub-backend ~/git/helm_deploy/prisoner-content-hub-backend \
+            helm upgrade ${HELM_BACKEND_RELEASE_NAME} ~/git/helm_deploy/prisoner-content-hub-backend \
               --install --wait --force --reset-values --timeout 360s \
               --namespace=${KUBE_NAMESPACE} \
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.namespace >>.yaml \
@@ -128,6 +128,7 @@ workflows:
       - build_production:
           <<: *main_branch
       - approve_release_production:
+          <<: *main_branch
           type: approval
           requires:
             - build_production
