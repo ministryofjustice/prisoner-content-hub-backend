@@ -25,6 +25,7 @@ RUN composer install \
 # Copy Project
 COPY modules/custom modules/custom
 COPY sites/ sites/
+COPY ./flysystem/FieldMigration.php /var/www/html/modules/contrib/flysystem/src/Form/FieldMigration.php
 
 COPY ./apache/ /etc/apache2/
 
