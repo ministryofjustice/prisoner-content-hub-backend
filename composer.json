@@ -73,6 +73,12 @@
             "themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ]
+        },
+        "enable-patching": true,
+        "patches": {
+            "drupal/flysystem": {
+                "Add migration option for Flysystem": "https://www.drupal.org/files/issues/2019-12-23/flysystem-field-migration-2691731-9.patch"
+            }
         }
     },
     "autoload": {
