@@ -4,6 +4,7 @@
     "type": "project",
     "license": "GPL-2.0-or-later",
     "require": {
+        "cweagans/composer-patches": "~1.0",
         "composer/installers": "^1.0.24",
         "wikimedia/composer-merge-plugin": "^1.4",
         "mhor/php-mediainfo": "^4.1",
@@ -32,10 +33,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "preferred-install": "dist",
+        "preferred-install": "source",
         "autoloader-suffix": "Drupal8"
     },
     "extra": {
+        "enable-patching": true,
         "_readme": [
             "By default Drupal loads the autoloader from ./vendor/autoload.php.",
             "To change the autoloader you can edit ./autoload.php.",
@@ -74,10 +76,9 @@
                 "type:drupal-custom-theme"
             ]
         },
-        "enable-patching": true,
         "patches": {
             "drupal/flysystem": {
-                "Add migration option for Flysystem": "https://www.drupal.org/files/issues/2019-12-23/flysystem-field-migration-2691731-9.patch"
+                "Add migration option for Flysystem": "/var/www/html/FieldMigration.patch"
             }
         }
     },

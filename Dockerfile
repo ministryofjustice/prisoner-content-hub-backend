@@ -12,6 +12,9 @@ RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_se
 
 COPY composer.json composer.lock /var/www/html/
 
+# Install patch from https://www.drupal.org/project/flysystem/issues/2691731
+COPY /flysystem/FieldMigration.patch /var/www/html/
+
 # Install dependencies
 RUN composer install \
   --ignore-platform-reqs \
@@ -20,12 +23,11 @@ RUN composer install \
   --no-autoloader \
   --no-interaction \
   --no-scripts \
-  --prefer-dist
+  --prefer-source
 
 # Copy Project
 COPY modules/custom modules/custom
 COPY sites/ sites/
-# COPY ./flysystem/FieldMigration.php /var/www/html/modules/contrib/flysystem/src/Form/FieldMigration.php
 
 COPY ./apache/ /etc/apache2/
 
@@ -34,6 +36,9 @@ RUN composer dump-autoload --optimize
 
 # Remove composer cache
 RUN composer clear-cache
+
+# Remove patch file as no longer required
+RUN rm /var/www/html/FieldMigration.patch
 
 # Update permisions
 RUN chown -R www-data:www-data /var/www/html/
