@@ -78,7 +78,7 @@
         },
         "patches": {
             "drupal/flysystem": {
-                "Add migration option for Flysystem": "/var/www/html/FieldMigration.patch"
+                "Add migration option for Flysystem": "https://www.drupal.org/files/issues/2019-07-05/flysystem-field-migration-2691731-8.patch"
             }
         }
     },

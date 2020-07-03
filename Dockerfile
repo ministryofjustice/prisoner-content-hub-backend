@@ -10,10 +10,7 @@ RUN php -r "unlink('composer-setup.php');"
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 
-COPY composer.json composer.lock /var/www/html/
-
-# Install patch from https://www.drupal.org/project/flysystem/issues/2691731
-COPY /flysystem/FieldMigration.patch /var/www/html/
+COPY composer.json /var/www/html/
 
 # Install dependencies
 RUN composer install \
@@ -24,6 +21,8 @@ RUN composer install \
   --no-interaction \
   --no-scripts \
   --prefer-source
+
+RUN composer update
 
 # Copy Project
 COPY modules/custom modules/custom
@@ -36,9 +35,6 @@ RUN composer dump-autoload --optimize
 
 # Remove composer cache
 RUN composer clear-cache
-
-# Remove patch file as no longer required
-RUN rm /var/www/html/FieldMigration.patch
 
 # Update permisions
 RUN chown -R www-data:www-data /var/www/html/
