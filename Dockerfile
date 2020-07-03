@@ -10,7 +10,7 @@ RUN php -r "unlink('composer-setup.php');"
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 
-COPY composer.json composer.lock /var/www/html/
+COPY composer.json /var/www/html/
 
 # Install dependencies
 RUN composer install \
@@ -20,7 +20,9 @@ RUN composer install \
   --no-autoloader \
   --no-interaction \
   --no-scripts \
-  --prefer-dist
+  --prefer-source
+
+RUN composer update
 
 # Copy Project
 COPY modules/custom modules/custom
