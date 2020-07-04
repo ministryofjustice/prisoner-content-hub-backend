@@ -23,6 +23,8 @@ RUN composer install \
   --prefer-dist
 
 # Copy Project
+COPY flysystem/flysystem.* /var/www/html/modules/contrib/flysystem
+COPY flysystem/FieldMigration.php /var/www/html/modules/contrib/flysystem/src/Form
 COPY modules/custom modules/custom
 COPY sites/ sites/
 

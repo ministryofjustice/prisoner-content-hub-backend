@@ -1,0 +1,37 @@
+flysystem.files:
+  path: '/_flysystem/{scheme}'
+  defaults:
+    _controller: 'Drupal\system\FileDownloadController::download'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _access: 'TRUE'
+    scheme: '^[a-zA-Z0-9+.-]+$'
+
+flysystem.serve:
+  path: '/_flysystem/{scheme}/{filepath}'
+  defaults:
+    _controller: 'Drupal\system\FileDownloadController::download'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _access: 'TRUE'
+    scheme: '^[a-zA-Z0-9+.-]+$'
+    filepath: .+
+
+flysystem.migrate_field:
+  path: '/admin/config/media/file-system/flysystem/field-migration'
+  defaults:
+    _form: 'Drupal\flysystem\Form\FieldMigration'
+    _title: 'Field migration'
+  requirements:
+    _permission: 'administer flysystem'
+
+flysystem.config:
+  path: '/admin/config/media/file-system/flysystem'
+  defaults:
+    _form: 'Drupal\flysystem\Form\ConfigForm'
+    _title: Flysystem
+  requirements:
+    _permission: 'administer flysystem'
+
+route_callbacks:
+  - 'Drupal\flysystem\Routing\FlysystemRoutes::routes'
