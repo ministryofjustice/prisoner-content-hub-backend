@@ -1,6 +1,10 @@
 <?php
 
 use Drupal\image\Entity\ImageStyle;
+use Drupal\file\Entity\File;
+use Drupal\node\NodeInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_install()
@@ -222,5 +226,92 @@ function moj_video_item_update_8027(){
              'weight' => 12
     ))->save();
 
+
+}
+
+
+/**
+* Move Video field to File
+*/
+function moj_video_item_update_8030(){
+
+  function transform_video_to_file(File $video) {
+    $file_entity = File::create();
+    $file_entity->setFileUri($video->getFileUri());
+    $file_entity->setMimeType($video->getMimeType());
+    $file_entity->setFileName($video->getFileName());
+    $file_entity->setOwnerId($video->getOwnerId());
+    $file_entity->setPermanent();
+    $file_entity->save();
+    return $file_entity;
+  }
+
+  if (!FieldStorageConfig::loadByName('node', 'field_video')) {
+    // Create field_video storage
+    FieldStorageConfig::create(array(
+      'field_name' => 'field_video',
+      'entity_type' => 'node',
+      'type' => 'file',
+      'settings' => array(
+        'description_field' => FALSE,
+        'handler' => 'default:file'
+      ),
+    ))->save();
+    // Create field_video field
+    FieldConfig::create(array(
+      'field_name' => 'field_video',
+      'entity_type' => 'node',
+      'bundle' => 'moj_video_item',
+      'label' => 'Video',
+      'description' => 'Video item for the content',
+      'required' => TRUE,
+      'settings' => array(
+          'file_directory' => 'videos/[date:custom:Y]-[date:custom:m]',
+          'file_extensions' => 'mp4',
+          'max_filesize' => '500MB',
+      )
+    ))->save();
+
+  }
+
+  // entity_get_form_display is deprecated as of 9.x
+  // Use \Drupal::service('entity_display.repository') instead
+
+  entity_get_form_display('node', 'moj_video_item', 'default')
+    ->setComponent('field_video', array(
+      'region' => 'content',
+      'type' => 'file_generic',
+      'weight' => 8
+    ))
+    ->save();
+
+  entity_get_display('node', 'moj_video_item', 'default')
+    ->setComponent('field_video', array(
+      'region' => 'content',
+      'type' => 'file_default',
+      'weight' => 8
+    ))
+    ->save();
+
+  // Load all of the moj_video_item nodes
+  $nodes = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->loadByProperties(['type' => ['moj_video_item']]);
+  foreach ($nodes as $node) {
+    // Verify that the field_moj_video field has a value
+    if (!empty($node->field_moj_video->entity)) {
+      // Create the new File entity and assign it to the field_video
+      $node->field_video->entity = transform_video_to_file($node->field_moj_video->entity);
+      $node->save();
+      \Drupal::logger('chromatic_image')->notice(
+        sprintf('Updated image for node "%s".', $node->getTitle())
+      );
+    }
+  }
+
+  if (FieldStorageConfig::loadByName('node', 'field_moj_video')) {
+    // Deleting Video field storage
+    FieldStorageConfig::loadByName('node', 'field_moj_video')->delete();
+  }
 
 }

@@ -5,7 +5,7 @@ use Mhor\MediaInfo\MediaInfo;
 function moj_video_item_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->bundle() == "moj_video_item") {
 
-    $file_entity = $entity->field_moj_video->entity;
+    $file_entity = $entity->field_video->entity;
 
     if (!$file_entity) {
       return;
@@ -36,7 +36,7 @@ function moj_video_item_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
 
           $entity->set("field_moj_duration", $fieldDuration);
       }
-      
+
     } catch (Exception $e) {
       drupal_set_message("Unable to retrieve video duration", "warning");
     }

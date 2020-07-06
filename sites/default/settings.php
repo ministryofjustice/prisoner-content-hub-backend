@@ -93,3 +93,6 @@ $config_directories = [
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
+
+// TODO: Remove, added for long execution time of moj_video_item migration
+ini_set('max_execution_time', 3000);

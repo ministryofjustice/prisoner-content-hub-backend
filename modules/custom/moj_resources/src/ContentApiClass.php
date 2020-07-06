@@ -162,8 +162,7 @@ class ContentApiClass
   private function createVideoItemResponse($node)
   {
     $result = [];
-
-    $result['media'] = $node->field_moj_video[0];
+    $result['media'] = $node->field_video[0];
     $result["episode_id"] = $this->createEpisodeId($node);
     $result["series_id"] = $node->field_moj_series[0]->target_id;
     $result["season"] = $node->field_moj_season->value;
