@@ -57,11 +57,11 @@ class VideoNormalizer extends NormalizerBase
             "nid" => $entity->nid->value,
             "description" => $entity->field_moj_description->value,
             "duration" => $entity->field_moj_duration->value,
-            "video_url" => file_create_url($entity->field_moj_video->entity->getFileUri()),			
+            "video_url" => file_create_url($entity->field_video->entity->getFileUri()),
             "categories" => $categories,
             "tags" => $tags,
             "channel_name" => !empty($entity->field_moj_categories->entity) ? $entity->field_moj_categories->entity->getName() : "",
-			"thumbnail" => !empty($entity->field_moj_thumbnail_image->entity) ? ImageStyle::load('moj_landing_page_thumb')->buildUrl($entity->field_moj_thumbnail_image->entity->getFileUri()): "",			
+			"thumbnail" => !empty($entity->field_moj_thumbnail_image->entity) ? ImageStyle::load('moj_landing_page_thumb')->buildUrl($entity->field_moj_thumbnail_image->entity->getFileUri()): "",
         ];
     }
 

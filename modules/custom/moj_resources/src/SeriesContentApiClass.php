@@ -123,7 +123,7 @@ class SeriesContentApiClass
       if ($result["content_type"] === 'moj_radio_item') {
         $result["media"] = $curr->field_moj_audio[0];
       } else {
-        $result["media"] = $curr->field_moj_video[0];
+        $result["media"] = $curr->field_video[0];
       }
 
       $acc[] = $result;
