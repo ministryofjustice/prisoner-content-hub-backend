@@ -1,7 +1,12 @@
 FROM drupal:8.7.8-apache
 
 # Install Composer and it's dependencies
-RUN apt-get update && apt-get install curl -y && apt-get install git-core unzip -y && apt-get install mediainfo -y
+RUN apt-get update && apt-get install -y \
+      curl \
+      git-core \
+      mediainfo \
+      unzip \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=/bin --filename=composer
