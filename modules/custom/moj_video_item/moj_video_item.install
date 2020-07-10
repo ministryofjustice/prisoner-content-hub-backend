@@ -246,6 +246,12 @@ function moj_video_item_update_8030(){
     return $file_entity;
   }
 
+  function set_file_usage(File $file, File $video, $entity_id) {
+    $file_usage = \Drupal::service('file.usage');
+    $file_usage->add($file, 'file', 'node', $entity_id);
+    $file_usage->delete($video, 'file', 'node', $entity_id);
+  }
+
   if (!FieldStorageConfig::loadByName('node', 'field_video')) {
     // Create field_video storage
     FieldStorageConfig::create(array(
@@ -299,10 +305,12 @@ function moj_video_item_update_8030(){
     ->loadByProperties(['type' => ['moj_video_item']]);
   foreach ($nodes as $node) {
     // Verify that the field_moj_video field has a value
-    if (!empty($node->field_moj_video->entity)) {
+    $video = $node->field_moj_video->entity;
+    if (!empty($video)) {
       // Create the new File entity and assign it to the field_video
-      $node->field_video->entity = transform_video_to_file($node->field_moj_video->entity);
+      $file = $node->field_video->entity = transform_video_to_file($node->field_moj_video->entity);
       $node->save();
+      set_file_usage($file, $video, $node->id());
       \Drupal::logger('chromatic_image')->notice(
         sprintf('Updated image for node "%s".', $node->getTitle())
       );
