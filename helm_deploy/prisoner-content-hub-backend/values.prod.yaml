@@ -1,4 +1,4 @@
 ingress:
-  enabled: false
+  enabled: true
   tlsEnabled: true
-  hostName: content.pfs-digital-hub-stage.hmpps.dsd.io
+  hostName: cms-prisoner-content-hub-production.apps.live-1.cloud-platform.service.justice.gov.uk
