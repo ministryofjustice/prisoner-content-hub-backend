@@ -235,17 +235,6 @@ function moj_video_item_update_8027(){
 */
 function moj_video_item_update_8030(){
 
-  function transform_video_to_file(File $video) {
-    $file_entity = File::create();
-    $file_entity->setFileUri($video->getFileUri());
-    $file_entity->setMimeType($video->getMimeType());
-    $file_entity->setFileName($video->getFileName());
-    $file_entity->setOwnerId($video->getOwnerId());
-    $file_entity->setPermanent();
-    $file_entity->save();
-    return $file_entity;
-  }
-
   function set_file_usage(File $file, File $video, $entity_id) {
     $file_usage = \Drupal::service('file.usage');
     $file_usage->add($file, 'file', 'node', $entity_id);
@@ -308,9 +297,9 @@ function moj_video_item_update_8030(){
     $video = $node->field_moj_video->entity;
     if (!empty($video)) {
       // Create the new File entity and assign it to the field_video
-      $file = $node->field_video->entity = transform_video_to_file($node->field_moj_video->entity);
+      $node->field_video->entity = $node->field_moj_video->entity;
       $node->save();
-      set_file_usage($file, $video, $node->id());
+      set_file_usage($node->field_video->entity, $video, $node->id());
       \Drupal::logger('chromatic_image')->notice(
         sprintf('Updated image for node "%s".', $node->getTitle())
       );
