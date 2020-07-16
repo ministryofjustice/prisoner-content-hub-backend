@@ -45,17 +45,17 @@ $flysystem_schemes = [
       // ],
 
       // Autodetected based on the current request if not provided
-      // 'protocol' => 'https',
+      'protocol' => 'https',
 
       // Directory prefix for all viewed files
       // 'prefix' => 'an/optional/prefix',
 
       // A CNAME that resolves to your bucket. Used for URL generation
-      // 'cname' => 'static.example.com',
+      'cname' => getenv('FLYSYSTEM_S3_CNAME', true),
 
       // Set to FALSE if the CNAME does not resolve to a bucket and the bucket
       // should be included in the path.
-      // 'cname_is_bucket' => TRUE,
+      'cname_is_bucket' => FALSE,
 
       // Set to TRUE to link to files using direct links
       // 'public' => TRUE,
@@ -80,7 +80,7 @@ $settings['file_scan_ignore_directories'] = [
 ];
 $settings['entity_update_batch_size'] = 50;
 $settings['entity_update_backup'] = TRUE;
-$settings['file_public_base_url'] = getenv('HUB_EXT_FILE_URL', true);
+$settings['file_public_base_url'] = getenv('FILE_PUBLIC_BASE_URL', true);
 $elasticsearch_cluster = getenv("ELASTICSEARCH_CLUSTER", true);
 $config['elasticsearch_connector.cluster.'.$elasticsearch_cluster]['url'] = getenv("ELASTICSEARCH_HOST", true);
 
