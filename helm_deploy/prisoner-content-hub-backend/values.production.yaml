@@ -2,3 +2,8 @@ ingress:
   enabled: true
   tlsEnabled: true
   hostName: cms-prisoner-content-hub-production.apps.live-1.cloud-platform.service.justice.gov.uk
+
+application:
+  # The S3 bucket for production exists in Ireland,
+  # but the default is London
+  s3Region: eu-west-1
