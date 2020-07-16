@@ -64,12 +64,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.application.s3SecretName }}
                   key: bucket_name
+            - name: FLYSYSTEM_S3_CNAME
+              value: {{ .Values.ingress.hostName }}
             - name: HASH_SALT
               valueFrom:
                 secretKeyRef:
                   name: {{ include "prisoner-content-hub-backend.fullname" . }}
                   key: hashSalt
-            - name: HUB_EXT_FILE_URL
+            - name: FILE_PUBLIC_BASE_URL
               value: {{ include "prisoner-content-hub-backend.externalHost" . }}/sites/default/files
             - name: PHP_MEMORY_LIMIT
               value: {{ .Values.application.config.phpMemoryLimit }}
