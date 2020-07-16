@@ -55,7 +55,7 @@ $flysystem_schemes = [
 
       // Set to FALSE if the CNAME does not resolve to a bucket and the bucket
       // should be included in the path.
-      'cname_is_bucket' => FALSE,
+      'cname_is_bucket' => TRUE,
 
       // Set to TRUE to link to files using direct links
       'public' => TRUE,
