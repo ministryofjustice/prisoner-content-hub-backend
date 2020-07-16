@@ -48,7 +48,7 @@ $flysystem_schemes = [
       'protocol' => 'https',
 
       // Directory prefix for all viewed files
-      // 'prefix' => 'an/optional/prefix',
+      'prefix' => '_flysystem/s3',
 
       // A CNAME that resolves to your bucket. Used for URL generation
       'cname' => getenv('FLYSYSTEM_S3_CNAME', true),
