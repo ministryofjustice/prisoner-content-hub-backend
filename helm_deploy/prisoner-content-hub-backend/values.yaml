@@ -1,8 +1,8 @@
 nameOverride: ""
 fullnameOverride: ""
 
-replicaCount: 1
-maxReplicaCount: 3
+replicaCount: 3
+maxReplicaCount: 6
 
 image:
   repository: mojdigitalstudio/prisoner-content-hub-backend
@@ -16,9 +16,9 @@ application:
   liveness:
     endpoint: /api/health
     delaySeconds: 10
-    timeoutSeconds: 5
+    timeoutSeconds: 10
   readiness:
-    endpoint: /
+    endpoint: /api/health
     delaySeconds: 10
     timeoutSeconds: 5
   config:
@@ -30,7 +30,7 @@ application:
     elasticsearchServiceName: aws-es-proxy-service
   dbSecretName: drupal-rds
   s3SecretName: drupal-s3
-  s3Region: eu-west-1
+  s3Region: eu-west-2
 
 volumes:
   - name: apache-cache
