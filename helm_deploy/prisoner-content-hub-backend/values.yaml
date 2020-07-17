@@ -38,12 +38,14 @@ volumes:
 
 imagePullSecrets: [] # Are we using ECR?
 
-podSecurityContext: {}
+podSecurityContext:
+  fsGroup: 33
 
 securityContext:
-  capabilities:
-    drop:
-    - ALL
+  # TODO: add back in but retain CHOWN, UID and GID capabilities
+  # capabilities:
+  #   drop:
+  #   - ALL
   runAsNonRoot: true
   runAsUser: 33
   runAsGroup: 33
