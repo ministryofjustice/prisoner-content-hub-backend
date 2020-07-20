@@ -68,3 +68,7 @@ ingress:
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
       SecRuleEngine On
+    # Allow traffic coming from: Primary DP Egress, Secondary DP Egress, Studio (Sheffield), DSD VPN, Quantum (x3 ranges)
+    nginx.ingress.kubernetes.io/whitelist-source-range: 18.130.83.42/32,52.56.168.163/32,217.33.148.210/29,81.134.202.29/32,212.137.36.230/32,62.25.109.197/32,195.92.38.16/28
+    nginx.ingress.kubernetes.io/server-snippet: |
+       add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
