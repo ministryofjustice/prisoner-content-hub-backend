@@ -1,0 +1,4 @@
+ingress:
+  enabled: true
+  tlsEnabled: true
+  hostName: cms-prisoner-content-hub-development.apps.live-1.cloud-platform.service.justice.gov.uk
