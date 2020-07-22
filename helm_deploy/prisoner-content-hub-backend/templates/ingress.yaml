@@ -1,11 +1,11 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "prisoner-content-hub-frontend.fullname" . -}}
+{{- $fullName := include "prisoner-content-hub-backend.fullname" . -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "prisoner-content-hub-frontend.labels" . | nindent 4 }}
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
