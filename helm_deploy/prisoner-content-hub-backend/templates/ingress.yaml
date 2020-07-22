@@ -19,28 +19,12 @@ spec:
   {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: {{ .Values.ingress.path }}
+          - path: "/"
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
   {{- end }}
-
-  {{- range .Values.ingress.hosts }}
-  - hosts:
-    - {{ .host }}
-    {{ if .cert_secret }}secretName: {{ .cert_secret }}{{ end }}
-  {{- end }}
-
-  rules:
-  {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
-      http:
-        paths:
-          - path: {{ .Values.ingress.path }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
-  {{- end }}
+{{- end -}}
