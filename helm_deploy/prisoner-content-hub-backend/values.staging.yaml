@@ -1,3 +1,4 @@
 ingress:
+  hostName: cms-prisoner-content-hub-staging.apps.live-1.cloud-platform.service.justice.gov.uk
   hosts:
     - host: cms-prisoner-content-hub-staging.apps.live-1.cloud-platform.service.justice.gov.uk
