@@ -11,13 +11,32 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tlsEnabled }}
   tls:
-    - hosts:
-        - {{ .Values.ingress.hostName }}
+  {{- range .Values.ingress.hosts }}
+  - hosts:
+    - {{ .host }}
+    {{ if .cert_secret }}secretName: {{ .cert_secret }}{{ end }}
   {{- end }}
   rules:
-    - host: {{ .Values.ingress.hostName }}
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.path }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+  {{- end }}
+
+  {{- range .Values.ingress.hosts }}
+  - hosts:
+    - {{ .host }}
+    {{ if .cert_secret }}secretName: {{ .cert_secret }}{{ end }}
+  {{- end }}
+
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
       http:
         paths:
           - path: {{ .Values.ingress.path }}
