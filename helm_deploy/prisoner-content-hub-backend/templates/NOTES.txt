@@ -2,5 +2,5 @@
 Ingress not enabled
 {{ else }}
 Application is running at:
-  http{{ if .Values.ingress.tlsEnabled}}s{{ end }}://{{ .Values.ingress.hostName }}{{ $.Values.ingress.path }}
+  {{ include "prisoner-content-hub-backend.externalHost" . }}
 {{- end }}

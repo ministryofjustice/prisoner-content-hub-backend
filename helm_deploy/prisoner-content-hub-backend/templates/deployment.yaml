@@ -65,7 +65,7 @@ spec:
                   name: {{ .Values.application.s3SecretName }}
                   key: bucket_name
             - name: FLYSYSTEM_S3_CNAME
-              value: {{ .Values.ingress.hostName }}/_flysystem/s3
+              value: {{ (index .Values.ingress.hosts 0).host }}/_flysystem/s3
             - name: HASH_SALT
               valueFrom:
                 secretKeyRef:
