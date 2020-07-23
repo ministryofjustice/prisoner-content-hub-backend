@@ -4,4 +4,5 @@ application:
 ingress:
   enabled: false
   tlsEnabled: true
-  hostName: content.pfs-digital-hub-stage.hmpps.dsd.io
+  hosts:
+    - host: content.pfs-digital-hub-stage.hmpps.dsd.io
