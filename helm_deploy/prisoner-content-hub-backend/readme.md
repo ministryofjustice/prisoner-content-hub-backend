@@ -36,7 +36,8 @@ helm upgrade [Release Name] . \
 --namespace [Kubernetes Namespace] \
 --values values.[Environment].yaml \
 --values secrets.yaml \
---set image.tag=[Image Tag]
+--set image.tag=[Image Tag] \
+--set cronToken=[Drupal cron token]
 ```
 
 The computed values and generated output will be displayed
@@ -51,7 +52,8 @@ helm upgrade [Release Name] . \
 --namespace [Kubernetes Namespace] \
 --values values.[Environment].yaml \
 --values secrets.yaml \
---set image.tag=[Image Tag]
+--set image.tag=[Image Tag] \
+--set cronToken=[Drupal cron token]
 ```
 
 ### Rolling back releases

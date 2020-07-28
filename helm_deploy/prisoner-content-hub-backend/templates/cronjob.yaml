@@ -1,0 +1,22 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.cron.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: drupalCronJob
+            {{- with .Values.cron.image }}
+            image: "{{ .repository }}:{{ .tag }}"
+            {{- end }}
+            args:
+            - -s
+            - {{ include "prisoner-content-hub-backend.internalHost" . }}/cron/{{ .Values.cronToken }}
+          restartPolicy: OnFailure

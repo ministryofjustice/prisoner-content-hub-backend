@@ -53,7 +53,8 @@ commands:
               --install --wait --force --reset-values --timeout 360s \
               --namespace=${KUBE_NAMESPACE} \
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.environment >>.yaml \
-              --set image.tag=${VERSION_TO_DEPLOY}
+              --set image.tag=${VERSION_TO_DEPLOY} \
+              --set cronToken=${HELM_BACKEND_CRON_TOKEN}
 
 jobs:
   build_preview:
