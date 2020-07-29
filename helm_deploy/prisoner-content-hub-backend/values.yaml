@@ -73,3 +73,9 @@ ingress:
     nginx.ingress.kubernetes.io/server-snippet: |
        add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
+
+cron:
+  schedule: "*/* 3 * * *"
+  image:
+    repository: docker pull curlimages/curl
+    tag: 0.1
