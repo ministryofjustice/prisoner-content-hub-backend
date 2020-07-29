@@ -34,6 +34,10 @@ RUN composer install \
 COPY modules/custom modules/custom
 COPY sites/ sites/
 
+# Remove write persmissions for added security
+RUN chmod u-w sites/default/settings.php \
+  && chmod u-w sites/default/services.yml
+
 COPY ./apache/ /etc/apache2/
 
 # Update autoloads
