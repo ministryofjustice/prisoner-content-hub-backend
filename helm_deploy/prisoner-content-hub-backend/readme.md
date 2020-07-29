@@ -42,6 +42,12 @@ helm upgrade [Release Name] . \
 
 The computed values and generated output will be displayed
 
+**Note:** The Drupal cron token is located in drupal path:
+
+Manage / configuration / cron
+or
+configuration / cron
+
 ### Perform the release
 
 Once tested and verified the release can be performed using the following
