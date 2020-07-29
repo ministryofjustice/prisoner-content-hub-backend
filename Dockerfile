@@ -27,7 +27,6 @@ RUN composer install \
   --no-dev \
   --no-autoloader \
   --no-interaction \
-  --no-scripts \
   --prefer-dist
 
 # Copy Project
