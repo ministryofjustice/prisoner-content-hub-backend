@@ -1,12 +1,12 @@
-FROM drupal:8.9.1-apache
+FROM drupal:8.9.2-apache
 
 # Install Composer and it's dependencies
 RUN apt-get update && apt-get install -y \
-      curl \
-      git-core \
-      mediainfo \
-      unzip \
-    && rm -rf /var/lib/apt/lists/*
+  curl \
+  git-core \
+  mediainfo \
+  unzip \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=/bin --filename=composer
@@ -16,6 +16,9 @@ RUN php -r "unlink('composer-setup.php');"
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 
 COPY composer.json composer.lock /var/www/html/
+
+# Copy in patches we want to apply to modules in Drupal using Composer
+COPY patches/ patches/
 
 # Install dependencies
 RUN composer install \
@@ -28,8 +31,6 @@ RUN composer install \
   --prefer-dist
 
 # Copy Project
-COPY flysystem/flysystem.* /var/www/html/modules/contrib/flysystem/
-COPY flysystem/FieldMigration.php /var/www/html/modules/contrib/flysystem/src/Form/
 COPY modules/custom modules/custom
 COPY sites/ sites/
 

@@ -1,0 +1,426 @@
+diff --git a/README.md b/README.md
+index 3ca606f..af7da47 100644
+--- a/README.md
++++ b/README.md
+@@ -36,7 +36,7 @@ $schemes = [
+       // Optional configuration settings.
+
+       // 'options' => [
+-      //   'ACL' => 'public-read',
++      //   'ACL' => 'public-read',   // If bucket is private, set to 'private'
+       //   'StorageClass' => 'REDUCED_REDUNDANCY',
+       // ],
+
+@@ -62,6 +62,13 @@ $schemes = [
+
+       // 'public' => TRUE,                        // Set to TRUE to link to files
+                                                   // using direct links.
++
++      // 'expires' => '+600 seconds',             // An optional expiry time
++                                                  // to use when generating
++                                                  // presigend URLs for private
++                                                  // files. Default is +3600
++                                                  // seconds (one hour).
++
+     ],
+
+     'cache' => TRUE, // Creates a metadata cache to speed up lookups.
+diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
+index d9b5f26..6ebd2ef 100644
+--- a/src/Flysystem/S3.php
++++ b/src/Flysystem/S3.php
+@@ -3,16 +3,23 @@
+ namespace Drupal\flysystem_s3\Flysystem;
+
+ use Aws\Credentials\Credentials;
++use Aws\S3\Exception\S3Exception;
+ use Aws\S3\S3Client;
++use Aws\S3\S3ClientInterface;
+ use Drupal\Component\Utility\UrlHelper;
+ use Drupal\Core\Logger\RfcLogLevel;
++use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
+ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Drupal\Core\Render\RendererInterface;
++use Drupal\Core\Utility\Error;
+ use Drupal\flysystem\Plugin\FlysystemPluginInterface;
+ use Drupal\flysystem\Plugin\FlysystemUrlTrait;
+ use Drupal\flysystem\Plugin\ImageStyleGenerationTrait;
+ use Drupal\flysystem_s3\AwsCacheAdapter;
+ use Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter;
++use League\Flysystem\AdapterInterface;
+ use League\Flysystem\Config;
++use Psr\Log\LoggerInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+
+ /**
+@@ -36,7 +43,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+   /**
+    * The S3 client.
+    *
+-   * @var \Aws\S3\S3Client
++   * @var \Aws\S3\S3ClientInterface
+    */
+   protected $client;
+
+@@ -61,6 +68,34 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+    */
+   protected $urlPrefix;
+
++  /**
++   * The amount of time presigned URLs are valid for, such as '+60 seconds'.
++   *
++   * @var string
++   */
++  protected $expires;
++
++  /**
++   * The Drupal renderer used to set cache expiration.
++   *
++   * @var \Drupal\Core\Render\RendererInterface
++   */
++  protected $renderer;
++
++  /**
++   * The system logger.
++   *
++   * @var \Psr\Log\LoggerInterface
++   */
++  protected $logger;
++
++  /**
++   * The kill switch response policy.
++   *
++   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
++   */
++  protected $killSwitch;
++
+   /**
+    * Whether the stream is set to public.
+    *
+@@ -71,19 +106,30 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+   /**
+    * Constructs an S3 object.
+    *
+-   * @param \Aws\S3\S3Client $client
++   * @param \Aws\S3\S3ClientInterface $client
+    *   The S3 client.
+    * @param \League\Flysystem\Config $config
+    *   The configuration.
++   * @param \Drupal\Core\Render\RendererInterface $renderer
++   *   The Drupal renderer used to set cache expiration.
++   * @param \Psr\Log\LoggerInterface $logger
++   *   The system logger.
++   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $kill_switch
++   *   (optional) Service to disable page caching when presigned URLs are used.
+    */
+-  public function __construct(S3Client $client, Config $config) {
++  public function __construct(S3ClientInterface $client, Config $config, RendererInterface $renderer, LoggerInterface $logger, KillSwitch $kill_switch = NULL) {
+     $this->client = $client;
+     $this->bucket = $config->get('bucket', '');
+     $this->prefix = $config->get('prefix', '');
+     $this->isPublic = $config->get('public', FALSE);
+     $this->options = $config->get('options', []);
++    $this->expires = $config->get('expires', '+3600 seconds');
+
+     $this->urlPrefix = $this->calculateUrlPrefix($config);
++
++    $this->renderer = $renderer;
++    $this->logger = $logger;
++    $this->killSwitch = $kill_switch;
+   }
+
+   /**
+@@ -97,7 +143,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+
+     unset($configuration['key'], $configuration['secret']);
+
+-    return new static($client, new Config($configuration));
++    return new static($client, new Config($configuration), $container->get('renderer'), $container->get('logger.channel.flysystem'));
+   }
+
+   /**
+@@ -187,8 +233,55 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+
+     $target = $this->getTarget($uri);
+
+-    if (strpos($target, 'styles/') === 0 && !file_exists($uri)) {
+-      $this->generateImageStyle($target);
++    if (strpos($target, 'styles/') === 0 && !$this->getAdapter()->has($target)) {
++      return $this->generateImageUrl($target);
++    }
++
++    // This method can only return FALSE if the wrapper does not exist, and not
++    // if there is an error in generating the URL. If an asset is missing on S3,
++    // then the getVisibility() call will throw an exception. In that case,
++    // we log it and return an unsigned URL so we don't break the expected
++    // return or completely break the response.
++    try {
++      if ($this->options['ACL'] != 'public-read' && $this->getAdapter()->getVisibility($target)['visibility'] == AdapterInterface::VISIBILITY_PRIVATE) {
++        // Use getCommand() so we don't actually make a request yet.
++        $command = $this->client->getCommand('getObject', [
++          'Bucket' => $this->bucket,
++          'Key' => $target,
++        ]);
++        $request = $this->client->createPresignedRequest($command, $this->expires);
++
++        // This informs the render system that the request has a cache
++        // dependency on the time this URL is valid for.
++        // TODO: The page cache does not currently respect max-age cache
++        // headers. We can't set proper max-age based on the signing time until
++        // https://www.drupal.org/node/2352009 is fixed. Unfortunately, this
++        // also means we can't cache any pages with signed URLs at all. When we
++        // can implement this, we should parse out max-age from the generated
++        // URL as suggested at https://github.com/aws/aws-sdk-php/issues/1052.
++        $build = [
++          '#cache' => [
++            'max-age' => 0,
++          ],
++        ];
++        $this->renderer->renderRoot($build);
++
++        // Since the above bug means this max-age isn't respected, we have to
++        // kill the general page cache.
++        if ($this->killSwitch) {
++          $this->killSwitch->trigger();
++        }
++
++        return (string) $request->getUri();
++      }
++    }
++    catch (S3Exception $e) {
++      // Inline watchdog_exception() so we can use it with our injected service.
++      // Use a default value if $message is not set.
++      $message = '%type: @message in %function (line %line of %file).';
++      $variables = Error::decodeException($e);
++
++      $this->logger->error($message, $variables);
+     }
+
+     return $this->urlPrefix . '/' . UrlHelper::encodePath($target);
+diff --git a/tests/src/Unit/Flysystem/S3Test.php b/tests/src/Unit/Flysystem/S3Test.php
+index 25954c1..306cc5c 100644
+--- a/tests/src/Unit/Flysystem/S3Test.php
++++ b/tests/src/Unit/Flysystem/S3Test.php
+@@ -8,13 +8,20 @@ use Aws\S3\S3ClientInterface;
+ use Drupal\Core\Cache\MemoryBackend;
+ use Drupal\Core\DependencyInjection\ContainerBuilder;
+ use Drupal\Core\Logger\RfcLogLevel;
++use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
++use Drupal\Core\PageCache\ResponsePolicyInterface;
++use Drupal\Core\Render\RendererInterface;
+ use Drupal\Tests\UnitTestCase;
+ use Drupal\flysystem_s3\Flysystem\S3;
++use GuzzleHttp\Psr7;
+ use League\Flysystem\AdapterInterface;
++use League\Flysystem\AwsS3v3\AwsS3Adapter;
+ use League\Flysystem\Config;
+ use Prophecy\Argument;
++use Psr\Log\LoggerInterface;
+ use Symfony\Component\HttpFoundation\Request;
+ use Symfony\Component\HttpFoundation\RequestStack;
++use Symfony\Component\HttpFoundation\Response;
+
+ /**
+  * @coversDefaultClass \Drupal\flysystem_s3\Flysystem\S3
+@@ -23,20 +30,32 @@ use Symfony\Component\HttpFoundation\RequestStack;
+  */
+ class S3Test extends UnitTestCase {
+
++  protected $renderer;
++  protected $logger;
++
++  public function setUp() {
++    $this->renderer = $this->prophesize(RendererInterface::class)->reveal();
++    $this->logger = $this->prophesize(LoggerInterface::class)->reveal();
++  }
++
+   public function test() {
+     $configuration = [
+       'bucket' => 'example-bucket',
+       'prefix' => 'test prefix',
+       'cname' => 'example.com',
++      'cname_is_bucket' => TRUE,
+     ];
+
+-    $client = new S3Client([
+-      'version' => 'latest',
+-      'region' => 'beep',
+-      'credentials' => new Credentials('fsdf', 'sfsdf'),
+-    ]);
++    $client = $this->prophesize(S3Client::class);
++    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
++    $client->execute(Argument::type('\Aws\Command'))->willReturn(new \Aws\Result([
++      'Grants' => [
++        ['Grantee' => ['URI' => AwsS3Adapter::PUBLIC_GRANT_URI], 'Permission' => 'READ'],
++      ],
++    ]));
++    $client = $client->reveal();
+
+-    $plugin = new S3($client, new Config($configuration));
++    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
+
+     $this->assertInstanceOf(AdapterInterface::class, $plugin->getAdapter());
+
+@@ -44,12 +63,12 @@ class S3Test extends UnitTestCase {
+
+     $configuration['prefix'] = '';
+
+-    $plugin = new S3($client, new Config($configuration));
++    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
+     $this->assertSame('http://example.com/foo%201.html', $plugin->getExternalUrl('s3://foo 1.html'));
+   }
+
+   /**
+-   * Tests merging defaults into configuration arrays.
++   * Test merging defaults into configuration arrays.
+    */
+   public function testMergeConfiguration() {
+     $container = new ContainerBuilder();
+@@ -76,6 +95,8 @@ class S3Test extends UnitTestCase {
+     $container = new ContainerBuilder();
+     $container->set('request_stack', new RequestStack());
+     $container->get('request_stack')->push(Request::create('https://example.com/'));
++    $container->set('renderer', $this->renderer);
++    $container->set('logger.channel.flysystem', $this->logger);
+
+     $configuration = [
+       'key'    => 'fee',
+@@ -86,12 +107,24 @@ class S3Test extends UnitTestCase {
+
+     $plugin = S3::create($container, $configuration, '', '');
+     $this->assertInstanceOf(S3::class, $plugin);
++    $client = $this->prophesize(S3Client::class);
++    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
++    $client->execute(Argument::type('\Aws\Command'))->willReturn(new \Aws\Result([
++      'Grants' => [
++        ['Grantee' => ['URI' => AwsS3Adapter::PUBLIC_GRANT_URI], 'Permission' => 'READ'],
++      ],
++    ]));
++    $client = $client->reveal();
++    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
++    $this->assertInstanceOf('\Drupal\flysystem_s3\Flysystem\S3', $plugin);
+   }
+
+   public function testCreateUsingNonAwsConfiguration() {
+     $container = new ContainerBuilder();
+     $container->set('request_stack', new RequestStack());
+     $container->get('request_stack')->push(Request::create('https://example.com/'));
++    $container->set('renderer', $this->renderer);
++    $container->set('logger.channel.flysystem', $this->logger);
+
+     $configuration = [
+       'key'      => 'fee',
+@@ -102,7 +135,6 @@ class S3Test extends UnitTestCase {
+     ];
+
+     $plugin = S3::create($container, $configuration, '', '');
+-    $this->assertSame('https://something.somewhere.tld/foo%201.html', $plugin->getExternalUrl('s3://foo 1.html'));
+     $this->assertSame('https://api.somewhere.tld', (string) $plugin->getAdapter()->getClient()->getEndpoint());
+   }
+
+@@ -110,6 +142,8 @@ class S3Test extends UnitTestCase {
+     $container = new ContainerBuilder();
+     $container->set('request_stack', new RequestStack());
+     $container->get('request_stack')->push(Request::create('http://example.com/'));
++    $container->set('renderer', $this->renderer);
++    $container->set('logger.channel.flysystem', $this->logger);
+
+     $configuration = [
+       'key'             => 'foo',
+@@ -121,7 +155,6 @@ class S3Test extends UnitTestCase {
+     ];
+
+     $plugin = S3::create($container, $configuration, '', '');
+-    $this->assertSame('http://storage.example.com/my-bucket/foo%201.html', $plugin->getExternalUrl('s3://foo 1.html'));
+     $this->assertSame('https://api.somewhere.tld', (string) $plugin->getAdapter()->getClient()->getEndpoint());
+   }
+
+@@ -131,19 +164,76 @@ class S3Test extends UnitTestCase {
+       'bucket'   => 'my-bucket',
+     ];
+
+-    $plugin = new S3($this->getMock(S3ClientInterface::class), new Config($configuration));
++    $client = $this->prophesize(S3Client::class);
++    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
++    $client->execute(Argument::type('\Aws\Command'))->willReturn(new \Aws\Result([
++      'Grants' => [
++        ['Grantee' => ['URI' => AwsS3Adapter::PUBLIC_GRANT_URI], 'Permission' => 'READ'],
++      ],
++    ]));
++    $client = $client->reveal();
++    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
++    $this->assertSame('http://s3.amazonaws.com/my-bucket/foo.html', $plugin->getExternalUrl('s3://foo.html'));
++  }
++
++  /**
++   * Test presigned URL generation.
++   */
++  public function testPresignedUrl() {
++    $configuration = [
++      'bucket'   => 'my-bucket',
++      'expires' => '+10 seconds',
++    ];
++
++    $client = $this->prophesize(S3Client::class);
++    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
++    $client->execute(Argument::type('\Aws\Command'))->willReturn(new \Aws\Result([
++      'Grants' => [
++        [],
++      ],
++    ]));
++    $client->getCommand('getObject', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
++    $request = new Psr7\Request('GET', 'https://s3.amazonaws.com/signed');
++    $client->createPresignedRequest(Argument::type('\Aws\Command'), '+10 seconds')->willReturn($request);
++    $client = $client->reveal();
++    $kill_switch = new KillSwitch();
++    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger, $kill_switch);
++    $this->assertSame('https://s3.amazonaws.com/signed', $plugin->getExternalUrl('s3://foo.html'));
++    $this->assertEquals(ResponsePolicyInterface::DENY, $kill_switch->check(new Response(), new Request()));
++  }
++
++  /**
++   * Test that when an S3 exception is thrown, we fall back to unsigned URLs.
++   */
++  public function testPresignedUrlMissing() {
++    $configuration = [
++      'bucket'   => 'my-bucket',
++      'expires' => '+10 seconds',
++    ];
++
++    $client = $this->prophesize(S3Client::class);
++    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
++    $client->execute(Argument::type('\Aws\Command'))
++      ->willThrow(new \Aws\S3\Exception\S3Exception('404 Not Found', $this->prophesize((\Aws\Command::class))->reveal()));
++    $client = $client->reveal();
++
++    $logger = $this->prophesize(LoggerInterface::class);
++    $logger->error(Argument::type('string'), Argument::type('array'))->shouldBeCalled();
++
++    $kill_switch = new KillSwitch();
++    $plugin = new S3($client, new Config($configuration), $this->renderer, $logger->reveal(), $kill_switch);
+     $this->assertSame('http://s3.amazonaws.com/my-bucket/foo.html', $plugin->getExternalUrl('s3://foo.html'));
+   }
+
+   public function testEnsure() {
+     $client = $this->prophesize(S3ClientInterface::class);
+     $client->doesBucketExist(Argument::type('string'))->willReturn(TRUE);
+-    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']));
++    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']), $this->renderer, $this->logger);
+
+     $this->assertSame([], $plugin->ensure());
+
+     $client->doesBucketExist(Argument::type('string'))->willReturn(FALSE);
+-    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']));
++    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']), $this->renderer, $this->logger);
+
+     $result = $plugin->ensure();
+     $this->assertSame(1, count($result));
+@@ -154,6 +244,8 @@ class S3Test extends UnitTestCase {
+     $container = new ContainerBuilder();
+     $container->set('request_stack', new RequestStack());
+     $container->get('request_stack')->push(Request::create('https://example.com/'));
++    $container->set('renderer', $this->renderer);
++    $container->set('logger.channel.flysystem', $this->logger);
+     $container->set('cache.default', new MemoryBackend('bin'));
+
+     $configuration = ['bucket' => 'example-bucket'];
