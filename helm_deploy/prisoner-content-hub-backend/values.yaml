@@ -75,7 +75,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
 
 cron:
-  schedule: "*/* 3 * * *"
+  schedule: "0 * * * *"
   image:
-    repository: docker pull curlimages/curl
-    tag: 0.1
+    repository: curlimages/curl
+    tag: 7.71.1
