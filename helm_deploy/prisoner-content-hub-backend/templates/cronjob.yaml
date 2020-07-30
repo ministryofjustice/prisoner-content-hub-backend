@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "prisoner-content-hub-backend.fullname" . }}
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}-search-indexing
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
@@ -11,8 +11,10 @@ spec:
     spec:
       template:
         spec:
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
-          - name: drupalCronJob
+          - name: drupal-search-indexing-job
             {{- with .Values.cron.image }}
             image: "{{ .repository }}:{{ .tag }}"
             {{- end }}
