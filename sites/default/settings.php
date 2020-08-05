@@ -39,10 +39,9 @@ $flysystem_schemes = [
 
       // Optional configuration settings.
 
-      // 'options' => [
-      //   'ACL' => 'public-read',
-      //   'StorageClass' => 'REDUCED_REDUNDANCY',
-      // ],
+      'options' => [
+        'ACL' => 'private',
+      ],
 
       // Autodetected based on the current request if not provided
       'protocol' => 'https',
@@ -55,7 +54,7 @@ $flysystem_schemes = [
 
       // Set to FALSE if the CNAME does not resolve to a bucket and the bucket
       // should be included in the path.
-      'cname_is_bucket' => TRUE,
+      'cname_is_bucket' => getenv('FLYSYSTEM_S3_CNAME_IS_BUCKET', true),
 
       // Set to TRUE to link to files using direct links
       'public' => TRUE,

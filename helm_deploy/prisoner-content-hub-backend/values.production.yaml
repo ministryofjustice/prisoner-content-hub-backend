@@ -7,4 +7,5 @@ ingress:
 application:
   # The S3 bucket for production exists in Ireland,
   # but the default is London
-  s3Region: eu-west-1
+  s3:
+    region: eu-west-1
