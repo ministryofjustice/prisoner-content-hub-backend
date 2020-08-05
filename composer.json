@@ -5,6 +5,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.2",
+        "cweagans/composer-patches": "~1.0",
         "drupal/backup_migrate": "^4.0",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/core-project-message": "^8.8",
@@ -14,7 +15,7 @@
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/flood_unblock": "^2.0",
         "drupal/flysystem": "~1.0",
-        "drupal/flysystem_s3": "~1.0",
+        "drupal/flysystem_s3": "1.0-beta1",
         "drupal/health_check": "^1.1",
         "drupal/memcache": "^2.0",
         "drupal/migrate_plus": "^4.2",
@@ -72,6 +73,11 @@
             "themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ]
+        },
+        "patches": {
+            "drupal/flysystem_s3": {
+                "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_8.x-1.0-beta1_enable_pre-signed_downloads.patch"
+            }
         }
     },
     "repositories": [

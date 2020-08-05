@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfde0439c88a7f307be097225a559448",
+    "content-hash": "642eb805c601859ef9fdca222ad7c758",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -60,16 +60,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.145.0",
+            "version": "3.147.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "df5406b49f4f5774045e51e8fecc75717c4d6454"
+                "reference": "0d637e7cbc795996a75531ed8dd2272f2672b2f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/df5406b49f4f5774045e51e8fecc75717c4d6454",
-                "reference": "df5406b49f4f5774045e51e8fecc75717c4d6454",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0d637e7cbc795996a75531ed8dd2272f2672b2f2",
+                "reference": "0d637e7cbc795996a75531ed8dd2272f2672b2f2",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-07-02T18:12:35+00:00"
+            "time": "2020-07-28T18:13:27+00:00"
         },
         {
             "name": "composer/installers",
@@ -340,6 +340,50 @@
                 "versioning"
             ],
             "time": "2020-01-13T12:06:48+00:00"
+        },
+        {
+            "name": "cweagans/composer-patches",
+            "version": "1.6.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cweagans/composer-patches.git",
+                "reference": "2e6f72a2ad8d59cd7e2b729f218bf42adb14f590"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cweagans/composer-patches/zipball/2e6f72a2ad8d59cd7e2b729f218bf42adb14f590",
+                "reference": "2e6f72a2ad8d59cd7e2b729f218bf42adb14f590",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0",
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "cweagans\\Composer\\Patches"
+            },
+            "autoload": {
+                "psr-4": {
+                    "cweagans\\Composer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Cameron Eagans",
+                    "email": "me@cweagans.net"
+                }
+            ],
+            "description": "Provides a way to patch Composer packages.",
+            "time": "2019-08-29T20:11:49+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -812,16 +856,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.9.1",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "e8ee964c562870381876e85d3f5eaaf8c8ecc9ee"
+                "reference": "8f0e24555c093669ce41edbb30637fe19df16802"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/e8ee964c562870381876e85d3f5eaaf8c8ecc9ee",
-                "reference": "e8ee964c562870381876e85d3f5eaaf8c8ecc9ee",
+                "url": "https://api.github.com/repos/drupal/core/zipball/8f0e24555c093669ce41edbb30637fe19df16802",
+                "reference": "8f0e24555c093669ce41edbb30637fe19df16802",
                 "shasum": ""
             },
             "require": {
@@ -1034,22 +1078,16 @@
                     "lib/Drupal/Core/Site/Settings.php"
                 ]
             },
-            "scripts": {
-                "pre-autoload-dump": [
-                    "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
-                ],
-                "post-autoload-dump": [
-                    "Drupal\\Core\\Composer\\Composer::ensureHtaccess"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
-            "description": "Drupal is an open source content management platform powering millions of websites and applications."
+            "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+            "time": "2020-07-08T18:53:45+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "8.9.1",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -1083,6 +1121,7 @@
                     "Drupal\\Composer\\Plugin\\Scaffold\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -1090,11 +1129,12 @@
             "homepage": "https://www.drupal.org/project/drupal",
             "keywords": [
                 "drupal"
-            ]
+            ],
+            "time": "2020-05-29T11:36:27+00:00"
         },
         {
             "name": "drupal/core-project-message",
-            "version": "8.9.1",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-project-message.git",
@@ -1119,6 +1159,7 @@
                     "Drupal\\Composer\\Plugin\\ProjectMessage\\": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -1126,20 +1167,21 @@
             "homepage": "https://www.drupal.org/project/drupal",
             "keywords": [
                 "drupal"
-            ]
+            ],
+            "time": "2020-05-11T08:00:18+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "8.9.1",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "41042f9eaa35b027e6b2c42fa03edcb85da54a06"
+                "reference": "8301ff766f17ce8a9eb36d3ffd183cbfff01dad6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/41042f9eaa35b027e6b2c42fa03edcb85da54a06",
-                "reference": "41042f9eaa35b027e6b2c42fa03edcb85da54a06",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/8301ff766f17ce8a9eb36d3ffd183cbfff01dad6",
+                "reference": "8301ff766f17ce8a9eb36d3ffd183cbfff01dad6",
                 "shasum": ""
             },
             "require": {
@@ -1151,7 +1193,7 @@
                 "doctrine/common": "v2.7.3",
                 "doctrine/inflector": "v1.2.0",
                 "doctrine/lexer": "1.0.2",
-                "drupal/core": "8.9.1",
+                "drupal/core": "8.9.2",
                 "easyrdf/easyrdf": "0.9.1",
                 "egulias/email-validator": "2.1.17",
                 "guzzlehttp/guzzle": "6.5.4",
@@ -1203,23 +1245,25 @@
                 "webflo/drupal-core-strict": "*"
             },
             "type": "metapackage",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
-            "description": "Locked core dependencies; require this project INSTEAD OF drupal/core."
+            "description": "Locked core dependencies; require this project INSTEAD OF drupal/core.",
+            "time": "2020-07-08T18:53:45+00:00"
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "8.9.1",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-vendor-hardening.git",
-                "reference": "f66104f9ef51318993d743dc1411b0e6d0992513"
+                "reference": "59976a2b7cfa8d8437deaf5137f803bb1c19a9ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-vendor-hardening/zipball/f66104f9ef51318993d743dc1411b0e6d0992513",
-                "reference": "f66104f9ef51318993d743dc1411b0e6d0992513",
+                "url": "https://api.github.com/repos/drupal/core-vendor-hardening/zipball/59976a2b7cfa8d8437deaf5137f803bb1c19a9ca",
+                "reference": "59976a2b7cfa8d8437deaf5137f803bb1c19a9ca",
                 "shasum": ""
             },
             "require": {
@@ -1235,6 +1279,7 @@
                     "Drupal\\Composer\\Plugin\\VendorHardening\\": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -1242,7 +1287,8 @@
             "homepage": "https://www.drupal.org/project/drupal",
             "keywords": [
                 "drupal"
-            ]
+            ],
+            "time": "2020-06-29T11:56:20+00:00"
         },
         {
             "name": "drupal/devel",
@@ -3060,16 +3106,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.69",
+            "version": "1.0.70",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "7106f78428a344bc4f643c233a94e48795f10967"
+                "reference": "585824702f534f8d3cf7fab7225e8466cc4b7493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/7106f78428a344bc4f643c233a94e48795f10967",
-                "reference": "7106f78428a344bc4f643c233a94e48795f10967",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/585824702f534f8d3cf7fab7225e8466cc4b7493",
+                "reference": "585824702f534f8d3cf7fab7225e8466cc4b7493",
                 "shasum": ""
             },
             "require": {
@@ -3080,7 +3126,7 @@
                 "league/flysystem-sftp": "<1.0.6"
             },
             "require-dev": {
-                "phpspec/phpspec": "^3.4",
+                "phpspec/phpspec": "^3.4 || ^4.0 || ^5.0 || ^6.0",
                 "phpunit/phpunit": "^5.7.26"
             },
             "suggest": {
@@ -3146,7 +3192,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-05-18T15:13:39+00:00"
+            "time": "2020-07-26T07:20:36+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -3352,16 +3398,16 @@
         },
         {
             "name": "mhor/php-mediainfo",
-            "version": "5.1.0",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mhor/php-mediainfo.git",
-                "reference": "cc9b46df2a207fdfbf25f538ceff4310d334901c"
+                "reference": "3a8ed790e37d8ab166ebdb3d2dd3a32311248314"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mhor/php-mediainfo/zipball/cc9b46df2a207fdfbf25f538ceff4310d334901c",
-                "reference": "cc9b46df2a207fdfbf25f538ceff4310d334901c",
+                "url": "https://api.github.com/repos/mhor/php-mediainfo/zipball/3a8ed790e37d8ab166ebdb3d2dd3a32311248314",
+                "reference": "3a8ed790e37d8ab166ebdb3d2dd3a32311248314",
                 "shasum": ""
             },
             "require": {
@@ -3400,7 +3446,7 @@
                 "metadata",
                 "wrapper"
             ],
-            "time": "2020-05-31T09:00:08+00:00"
+            "time": "2020-07-23T19:16:49+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -4618,7 +4664,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.1.2",
+            "version": "v5.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -5360,16 +5406,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.17.1",
+            "version": "v1.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "4a5b6bba3259902e386eb80dd1956181ee90b5b2"
+                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/4a5b6bba3259902e386eb80dd1956181ee90b5b2",
-                "reference": "4a5b6bba3259902e386eb80dd1956181ee90b5b2",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/d87d5766cbf48d72388a9f6b85f280c8ad51f981",
+                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981",
                 "shasum": ""
             },
             "require": {
@@ -5378,7 +5424,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.17-dev"
+                    "dev-master": "1.18-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -5436,7 +5482,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "time": "2020-07-14T12:35:20+00:00"
         },
         {
             "name": "symfony/polyfill-util",
@@ -5999,16 +6045,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.10",
+            "version": "v4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "56b3aa5eab0ac6720dcd559fd1d590ce301594ac"
+                "reference": "2125805a1a4e57f2340bc566c3013ca94d2722dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/56b3aa5eab0ac6720dcd559fd1d590ce301594ac",
-                "reference": "56b3aa5eab0ac6720dcd559fd1d590ce301594ac",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/2125805a1a4e57f2340bc566c3013ca94d2722dc",
+                "reference": "2125805a1a4e57f2340bc566c3013ca94d2722dc",
                 "shasum": ""
             },
             "require": {
@@ -6086,7 +6132,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-30T20:06:45+00:00"
+            "time": "2020-06-24T13:34:53+00:00"
         },
         {
             "name": "symfony/yaml",

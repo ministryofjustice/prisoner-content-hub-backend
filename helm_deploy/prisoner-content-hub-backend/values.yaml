@@ -29,8 +29,11 @@ application:
     elasticsearchCluster: elasticsearch
     elasticsearchServiceName: aws-es-proxy-service
   dbSecretName: drupal-rds
-  s3SecretName: drupal-s3
-  s3Region: eu-west-2
+  s3:
+    secretName: drupal-s3
+    region: eu-west-2
+    cname: ''
+    cnameIsBucket: false
 
 volumes:
   - name: apache-cache
