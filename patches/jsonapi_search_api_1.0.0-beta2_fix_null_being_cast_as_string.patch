@@ -1,0 +1,17 @@
+diff --git a/src/Query/Filter.php b/src/Query/Filter.php
+index a961b16..458c2b4 100644
+--- a/src/Query/Filter.php
++++ b/src/Query/Filter.php
+@@ -116,10 +116,10 @@ class Filter {
+       // If the child is simply a condition, add it to the new group.
+       if ($member instanceof EntityCondition) {
+         if ($member->operator() == 'IS NULL') {
+-          $group->addCondition($member->field(), 'NULL', '=');
++          $group->addCondition($member->field(), NULL, '=');
+         }
+         elseif ($member->operator() == 'IS NOT NULL') {
+-          $group->addCondition($member->field(), 'NULL', '<>');
++          $group->addCondition($member->field(), NULL, '<>');
+         }
+         else {
+           $group->addCondition($member->field(), $member->value(), $member->operator());

@@ -5,15 +5,19 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.2",
+        "cweagans/composer-patches": "~1.0",
+        "drupal/backup_migrate": "^4.0",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/core-project-message": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/core-vendor-hardening": "^8.8",
-        "mhor/php-mediainfo": "^5.1.0",
-        "drupal/backup_migrate": "^4.0",
         "drupal/devel": "^2.1",
+        "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/flood_unblock": "^2.0",
+        "drupal/flysystem": "~1.0",
+        "drupal/flysystem_s3": "1.0-beta1",
         "drupal/health_check": "^1.1",
+        "drupal/jsonapi_search_api": "1.0.0-beta2",
         "drupal/memcache": "^2.0",
         "drupal/migrate_plus": "^4.2",
         "drupal/migrate_source_csv": "^2.2",
@@ -24,9 +28,7 @@
         "drupal/token": "^1.5",
         "drupal/video": "^1.4",
         "drupal/videojs": "^1.0",
-        "drupal/elasticsearch_connector": "^7.0-alpha2",
-        "drupal/flysystem": "~1.0",
-        "drupal/flysystem_s3": "~1.0"
+        "mhor/php-mediainfo": "^5.1.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -71,6 +73,14 @@
             "themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ]
+        },
+        "patches": {
+            "drupal/flysystem_s3": {
+                "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_8.x-1.0-beta1_enable_pre-signed_downloads.patch"
+            },
+            "drupal/jsonapi_search_api": {
+                "[BUGFIX] NULL being parsed as string": "patches/jsonapi_search_api_1.0.0-beta2_fix_null_being_cast_as_string.patch"
+            }
         }
     },
     "repositories": [
