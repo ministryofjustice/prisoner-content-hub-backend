@@ -55,7 +55,7 @@ commands:
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.environment >>.yaml \
               --set image.tag=${VERSION_TO_DEPLOY} \
               --set cronToken=${HELM_BACKEND_CRON_TOKEN} \
-              --set application.sentry_dsn="${FRONTEND_SENTRY_DSN}"
+              --set application.sentry_dsn="${DRUPAL_SENTRY_DSN}"
 
 jobs:
   build_preview:
