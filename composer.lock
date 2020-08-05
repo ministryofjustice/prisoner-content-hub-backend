@@ -1570,6 +1570,9 @@
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_8.x-1.0-beta1_enable_pre-signed_downloads.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
