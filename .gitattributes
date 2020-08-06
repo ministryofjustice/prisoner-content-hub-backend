@@ -60,6 +60,6 @@
 *.woff    -text diff
 *.woff2   -text diff
 
-secretfile filter=git-crypt diff=git-crypt
 
 templates/alert-secret.yaml filter=git-crypt diff=git-crypt
+test.yaml filter=git-crypt diff=git-crypt
