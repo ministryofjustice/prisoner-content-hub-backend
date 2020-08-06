@@ -1,8 +1,48 @@
 diff --git a/README.md b/README.md
-index 3ca606f..af7da47 100644
+index 3ca606f..70ca2b4 100644
 --- a/README.md
 +++ b/README.md
-@@ -36,7 +36,7 @@ $schemes = [
+@@ -1,25 +1,24 @@
+-Flysystem S3
+-============
++# Flysystem S3
+
+ For setup instructions see the Flysystem README.md.
+
+-## CONFIGURATION ##
++## CONFIGURATION
+
+ The region needs to be set to the region id, not the region name. Here is a list
+ of the region names and their corresponding ids:
+
+-|Region name               |Region id      |
+-|:-------------------------|:--------------|
+-|US East (N. Virginia)     |us-east-1      |
+-|US West (N. California)   |us-west-1      |
+-|US West (Oregon)          |us-west-2      |
+-|EU (Ireland)              |eu-west-1      |
+-|EU (Frankfurt)            |eu-central-1   |
+-|Asia Pacific (Tokyo)      |ap-northeast-1 |
+-|Asia Pacific (Seoul)      |ap-northeast-2 |
+-|Asia Pacific (Singapore)  |ap-southeast-1 |
+-|Asia Pacific (Sydney)     |ap-southeast-2 |
+-|South America (Sao Paulo) |sa-east-1      |
++| Region name               | Region id      |
++| :------------------------ | :------------- |
++| US East (N. Virginia)     | us-east-1      |
++| US West (N. California)   | us-west-1      |
++| US West (Oregon)          | us-west-2      |
++| EU (Ireland)              | eu-west-1      |
++| EU (Frankfurt)            | eu-central-1   |
++| Asia Pacific (Tokyo)      | ap-northeast-1 |
++| Asia Pacific (Seoul)      | ap-northeast-2 |
++| Asia Pacific (Singapore)  | ap-southeast-1 |
++| Asia Pacific (Sydney)     | ap-southeast-2 |
++| South America (Sao Paulo) | sa-east-1      |
+
+ Example configuration:
+
+@@ -36,7 +35,7 @@ $schemes = [
        // Optional configuration settings.
 
        // 'options' => [
@@ -11,7 +51,7 @@ index 3ca606f..af7da47 100644
        //   'StorageClass' => 'REDUCED_REDUNDANCY',
        // ],
 
-@@ -62,6 +62,13 @@ $schemes = [
+@@ -62,6 +61,12 @@ $schemes = [
 
        // 'public' => TRUE,                        // Set to TRUE to link to files
                                                    // using direct links.
@@ -21,38 +61,398 @@ index 3ca606f..af7da47 100644
 +                                                  // presigend URLs for private
 +                                                  // files. Default is +3600
 +                                                  // seconds (one hour).
-+
      ],
 
      'cache' => TRUE, // Creates a metadata cache to speed up lookups.
+diff --git a/flysystem_s3.services.yml b/flysystem_s3.services.yml
+new file mode 100644
+index 0000000..09315f9
+--- /dev/null
++++ b/flysystem_s3.services.yml
+@@ -0,0 +1,6 @@
++services:
++  flysystem_s3.file_system:
++    public: false
++    class: \Drupal\flysystem_s3\File\FileSystem
++    decorates: file_system
++    arguments: ["@settings", "@flysystem_s3.file_system.inner"]
+diff --git a/src/File/FileSystem.php b/src/File/FileSystem.php
+new file mode 100644
+index 0000000..e208de0
+--- /dev/null
++++ b/src/File/FileSystem.php
+@@ -0,0 +1,329 @@
++<?php
++
++namespace Drupal\flysystem_s3\File;
++
++use Drupal\Core\File\FileSystemInterface;
++use Drupal\Core\Site\Settings;
++use Psr\Log\LoggerInterface;
++
++/**
++ * Decorates the Drupal FileSystem service to handle chmod() for S3.
++ */
++class FileSystem implements FileSystemInterface {
++
++  /**
++   * The site settings.
++   *
++   * @var \Drupal\Core\Site\Settings
++   */
++  protected $settings;
++
++  /**
++   * The file system being decorated.
++   *
++   * @var \Drupal\Core\File\FileSystemInterface
++   */
++  protected $fileSystem;
++
++  /**
++   * FileSystem constructor.
++   *
++   * @param \Drupal\Core\Site\Settings $settings
++   *   The site settings.
++   * @param \Drupal\Core\File\FileSystemInterface $file_system
++   *   The file system being decorated.
++   */
++  public function __construct(Settings $settings, FileSystemInterface $file_system) {
++    $this->settings = $settings;
++    $this->fileSystem = $file_system;
++  }
++
++  /**
++   * Implement chmod(), respecting S3's ACL setting.
++   *
++   * With Drupal's private files, chmod() is called by file_save_upload() to
++   * ensure the new file is readable by the file server, using the same file
++   * system permissions as the public file system. However, since private files
++   * are stored outside of the docroot, they are forced to go be accessed
++   * through Drupal's file permissions handling.
++   *
++   * With S3, \Twistor\FlysystemStreamWrapper::stream_metadata() automatically
++   * maps chmod() calls to basic S3 ACLs, which means that while a file can be
++   * initially uploaded as 'private', Drupal will immediately chmod it to
++   * public using the default file mask in settings.php.
++   *
++   * This method checks to see if we are using a private S3 scheme, and if so,
++   * ensures that group / other permissions are always unset, ensuring the
++   * stream wrapper preserves private permissions.
++   *
++   * @param string $uri
++   *   A string containing a URI file, or directory path.
++   * @param int $mode
++   *   Integer value for the permissions. Consult PHP chmod() documentation for
++   *   more information.
++   *
++   * @return bool
++   *   TRUE for success, FALSE in the event of an error.
++   *
++   * @see \Twistor\FlysystemStreamWrapper::stream_metadata
++   */
++  public function chmod($uri, $mode = NULL) {
++    $scheme = $this->fileSystem->uriScheme($uri);
++
++    if ($this->isPrivateS3Scheme($scheme)) {
++      is_dir($uri) ? $mode = 0700 : $mode = 0600;
++    }
++
++    return $this->fileSystem->chmod($uri, $mode);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function moveUploadedFile($filename, $uri) {
++    return $this->fileSystem->moveUploadedFile($filename, $uri);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function unlink($uri, $context = NULL) {
++    return $this->fileSystem->unlink($uri, $context);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function realpath($uri) {
++    return $this->fileSystem->realpath($uri);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function dirname($uri) {
++    return $this->fileSystem->dirname($uri);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function basename($uri, $suffix = NULL) {
++    return $this->fileSystem->basename($uri, $suffix);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
++    return $this->fileSystem->mkdir($uri, $mode, $recursive, $context);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function rmdir($uri, $context = NULL) {
++    return $this->fileSystem->rmdir($uri, $context);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function tempnam($directory, $prefix) {
++    return $this->fileSystem->tempnam($directory, $prefix);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function uriScheme($uri) {
++    return $this->fileSystem->uriScheme($uri);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function validScheme($scheme) {
++    return $this->fileSystem->validScheme($scheme);
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function copy($source, $destination, $replace = FILE_EXISTS_RENAME) {
++    if (method_exists($this->fileSystem, 'copy')) {
++      return $this->fileSystem->copy($source, $destination, $replace);
++    }
++    else {
++      return file_unmanaged_copy($source, $destination, $replace);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function delete($path) {
++    if (method_exists($this->fileSystem, 'delete')) {
++      return $this->fileSystem->delete($path);
++    }
++    else {
++      return file_unmanaged_delete($path);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function deleteRecursive($path, callable $callback = NULL) {
++    if (method_exists($this->fileSystem, 'deleteRecursive')) {
++      return $this->fileSystem->deleteRecursive($path, $callback);
++    }
++    else {
++      return file_unmanaged_delete_recursive($path, $callback);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function move($source, $destination, $replace = FILE_EXISTS_RENAME) {
++    if (method_exists($this->fileSystem, 'move')) {
++      return $this->fileSystem->move($source, $destination, $replace);
++    }
++    else {
++      return file_unmanaged_move($source, $destination, $replace);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  protected function prepareDestination($source, &$destination, $replace) {
++    if (method_exists($this->fileSystem, 'prepareDestination')) {
++      return $this->fileSystem->prepareDestination($source, $destination, $replace);
++    }
++    else {
++      return file_unmanaged_prepare($source, $destination, $replace);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function saveData($data, $destination, $replace = FILE_EXISTS_RENAME) {
++    if (method_exists($this->fileSystem, 'saveData')) {
++      return $this->fileSystem->saveData($data, $destination, $replace);
++    }
++    else {
++      return file_unmanaged_save_data($data, $destination, $replace);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function prepareDirectory(&$directory, $options = FILE_MODIFY_PERMISSIONS) {
++    if (method_exists($this->fileSystem, 'prepareDirectory')) {
++      return $this->fileSystem->prepareDirectory($directory, $options);
++    }
++    else {
++      return file_prepare_directory($directory, $options);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function getDestinationFilename($destination, $replace) {
++    if (method_exists($this->fileSystem, 'getDestinationFilename')) {
++      return $this->fileSystem->getDestinationFilename($destination, $replace);
++    }
++    else {
++      return file_destination($destination, $replace);
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function createFilename($basename, $directory) {
++    if (method_exists($this->fileSystem, 'createFilename')) {
++      return $this->fileSystem->createFilename($basename, $directory);
++    }
++    else {
++      return file_create_filename($basename, $directory);
++    }
++  }
++
++  /**
++   * Return if a scheme is a private S3 scheme.
++   *
++   * @param string $scheme
++   *   The scheme to check.
++   *
++   * @return bool
++   *   TRUE if the scheme's S3 acl is set to 'private'.
++   */
++  protected function isPrivateS3Scheme($scheme) {
++    $settings = $this->settings->get('flysystem', []);
++    return isset($settings[$scheme]['config']['options']['ACL'])
++      && $settings[$scheme]['driver'] == 's3'
++      && $settings[$scheme]['config']['options']['ACL'] == 'private';
++  }
++
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function scanDirectory($dir, $mask, array $options = []) {
++      return $this->fileSystem->scanDirectory($dir, $mask, $options);
++  }
++  /**
++   * {@inheritdoc}
++   *
++   * @codeCoverageIgnore
++   */
++  public function getTempDirectory() {
++      return $this->fileSystem->getTempDirectory();
++  }
++
++}
 diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
-index d9b5f26..6ebd2ef 100644
+index d9b5f26..456d45b 100644
 --- a/src/Flysystem/S3.php
 +++ b/src/Flysystem/S3.php
-@@ -3,16 +3,23 @@
+@@ -2,18 +2,25 @@
+
  namespace Drupal\flysystem_s3\Flysystem;
 
- use Aws\Credentials\Credentials;
-+use Aws\S3\Exception\S3Exception;
- use Aws\S3\S3Client;
-+use Aws\S3\S3ClientInterface;
- use Drupal\Component\Utility\UrlHelper;
- use Drupal\Core\Logger\RfcLogLevel;
-+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
- use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-+use Drupal\Core\Render\RendererInterface;
-+use Drupal\Core\Utility\Error;
- use Drupal\flysystem\Plugin\FlysystemPluginInterface;
- use Drupal\flysystem\Plugin\FlysystemUrlTrait;
- use Drupal\flysystem\Plugin\ImageStyleGenerationTrait;
- use Drupal\flysystem_s3\AwsCacheAdapter;
- use Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter;
-+use League\Flysystem\AdapterInterface;
- use League\Flysystem\Config;
-+use Psr\Log\LoggerInterface;
- use Symfony\Component\DependencyInjection\ContainerInterface;
+-use Aws\Credentials\Credentials;
+-use Aws\S3\S3Client;
+-use Drupal\Component\Utility\UrlHelper;
+-use Drupal\Core\Logger\RfcLogLevel;
+-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+-use Drupal\flysystem\Plugin\FlysystemPluginInterface;
+-use Drupal\flysystem\Plugin\FlysystemUrlTrait;
+-use Drupal\flysystem\Plugin\ImageStyleGenerationTrait;
+-use Drupal\flysystem_s3\AwsCacheAdapter;
+-use Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter;
+-use League\Flysystem\Config;
+-use Symfony\Component\DependencyInjection\ContainerInterface;
++ use Aws\Credentials\Credentials;
++ use Aws\S3\Exception\S3Exception;
++ use Aws\S3\S3Client;
++ use Aws\S3\S3ClientInterface;
++ use Drupal\Component\Utility\UrlHelper;
++ use Drupal\Core\Logger\RfcLogLevel;
++ use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
++ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++ use Drupal\Core\Render\RendererInterface;
++ use Drupal\Core\Utility\Error;
++ use Drupal\flysystem\Plugin\FlysystemPluginInterface;
++ use Drupal\flysystem\Plugin\FlysystemUrlTrait;
++ use Drupal\flysystem\Plugin\ImageStyleGenerationTrait;
++ use Drupal\flysystem_s3\AwsCacheAdapter;
++ use Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter;
++ use League\Flysystem\AdapterInterface;
++ use League\Flysystem\Config;
++ use Psr\Log\LoggerInterface;
++ use Symfony\Component\DependencyInjection\ContainerInterface;
 
  /**
+  * Drupal plugin for the "S3" Flysystem adapter.
 @@ -36,7 +43,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
    /**
     * The S3 client.
@@ -146,7 +546,7 @@ index d9b5f26..6ebd2ef 100644
 -    if (strpos($target, 'styles/') === 0 && !file_exists($uri)) {
 -      $this->generateImageStyle($target);
 +    if (strpos($target, 'styles/') === 0 && !$this->getAdapter()->has($target)) {
-+      return $this->generateImageUrl($target);
++       return $this->generateImageUrl($target);
 +    }
 +
 +    // This method can only return FALSE if the wrapper does not exist, and not
@@ -188,17 +588,102 @@ index d9b5f26..6ebd2ef 100644
 +      }
 +    }
 +    catch (S3Exception $e) {
-+      // Inline watchdog_exception() so we can use it with our injected service.
-+      // Use a default value if $message is not set.
-+      $message = '%type: @message in %function (line %line of %file).';
-+      $variables = Error::decodeException($e);
++       // Inline watchdog_exception() so we can use it with our injected service.
++       // Use a default value if $message is not set.
++       $message = '%type: @message in %function (line %line of %file).';
++       $variables = Error::decodeException($e);
 +
-+      $this->logger->error($message, $variables);
++       $this->logger->error($message, $variables);
      }
 
      return $this->urlPrefix . '/' . UrlHelper::encodePath($target);
+diff --git a/tests/src/Unit/File/FileSystemTest.php b/tests/src/Unit/File/FileSystemTest.php
+new file mode 100644
+index 0000000..ad30713
+--- /dev/null
++++ b/tests/src/Unit/File/FileSystemTest.php
+@@ -0,0 +1,79 @@
++<?php
++
++namespace NoDrupal\Tests\flysystem_s3\Unit\File;
++
++use Drupal\Core\File\FileSystemInterface;
++use Drupal\Core\Site\Settings;
++use Drupal\flysystem_s3\File\FileSystem;
++use Drupal\Tests\UnitTestCase;
++use org\bovigo\vfs\vfsStream;
++use Prophecy\Argument;
++
++/**
++ * Tests the filesystem decorator to handle chmod().
++ *
++ * @coversDefaultClass \Drupal\flysystem_s3\File\FileSystem
++ *
++ * @group flysystem_s3
++ */
++class FileSystemTest extends UnitTestCase {
++
++  /**
++   * Test that we pass public files straight through to chmod().
++   */
++  public function testPublicChmod() {
++    $settings = new Settings([
++      'flysystem' => [
++        's3' => [
++          'driver' => 's3',
++          'config' => [
++            'options' => [
++              'ACL' => 'public-read',
++            ],
++          ],
++        ],
++      ],
++    ]);
++    $decorated = $this->prophesize(FileSystemInterface::class);
++    $decorated->uriScheme(Argument::type('string'))->willReturn('s3');
++    $decorated->chmod('s3://test.txt', NULL)->willReturn(TRUE);
++    $decorated = $decorated->reveal();
++    $filesystem = new FileSystem($settings, $decorated);
++    $this->assertTrue($filesystem->chmod('s3://test.txt'));
++  }
++
++  /**
++   * Test that private files are chmod'ed correctly.
++   */
++  public function testPrivateChmod() {
++    $structure = [
++      'test.txt' => 'test file',
++      'directory' => [],
++    ];
++    $root = vfsStream::setup('s3', NULL, $structure);
++
++    $settings = new Settings([
++      'flysystem' => [
++        'vfs' => [
++          'driver' => 's3',
++          'config' => [
++            'options' => [
++              'ACL' => 'private',
++            ],
++          ],
++        ],
++      ],
++    ]);
++    $decorated = $this->prophesize(FileSystemInterface::class);
++    $decorated->uriScheme(Argument::type('string'))->willReturn('vfs');
++    $decorated->chmod('vfs://s3/test.txt', 0600)->willReturn(TRUE);
++    $decorated->uriScheme(Argument::type('string'))->willReturn('vfs');
++    $decorated->chmod('vfs://s3/directory', 0700)->willReturn(TRUE);
++    $decorated = $decorated->reveal();
++
++    $filesystem = new FileSystem($settings, $decorated);
++    $this->assertTrue($filesystem->chmod(vfsStream::url('s3/test.txt')));
++    $this->assertTrue($filesystem->chmod(vfsStream::url('s3/directory')));
++  }
++
++}
 diff --git a/tests/src/Unit/Flysystem/S3Test.php b/tests/src/Unit/Flysystem/S3Test.php
-index 25954c1..306cc5c 100644
+index 25954c1..3c91285 100644
 --- a/tests/src/Unit/Flysystem/S3Test.php
 +++ b/tests/src/Unit/Flysystem/S3Test.php
 @@ -8,13 +8,20 @@ use Aws\S3\S3ClientInterface;
@@ -261,7 +746,7 @@ index 25954c1..306cc5c 100644
 
      $this->assertInstanceOf(AdapterInterface::class, $plugin->getAdapter());
 
-@@ -44,12 +63,12 @@ class S3Test extends UnitTestCase {
+@@ -44,17 +63,19 @@ class S3Test extends UnitTestCase {
 
      $configuration['prefix'] = '';
 
@@ -275,8 +760,6 @@ index 25954c1..306cc5c 100644
 +   * Test merging defaults into configuration arrays.
     */
    public function testMergeConfiguration() {
-     $container = new ContainerBuilder();
-@@ -76,6 +95,8 @@ class S3Test extends UnitTestCase {
      $container = new ContainerBuilder();
      $container->set('request_stack', new RequestStack());
      $container->get('request_stack')->push(Request::create('https://example.com/'));
