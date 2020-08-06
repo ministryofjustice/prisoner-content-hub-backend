@@ -89,6 +89,12 @@ spec:
               value: {{ .Values.application.config.elasticsearchCluster }}
             - name: ELASTICSEARCH_HOST
               value: {{ include "prisoner-content-hub-backend.elasticsearchServiceHost" . }}
+            - name: SENTRY_DSN
+              value: {{ .Values.application.sentry_dsn }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.application.sentry_environment }}
+            - name: SENTRY_RELEASE
+              value: {{ .Values.application.sentry_release }}
           ports:
             - name: http
               containerPort: {{ .Values.application.port }}

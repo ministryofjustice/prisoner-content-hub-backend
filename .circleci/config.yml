@@ -54,7 +54,10 @@ commands:
               --namespace=${KUBE_NAMESPACE} \
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.environment >>.yaml \
               --set image.tag=${VERSION_TO_DEPLOY} \
-              --set cronToken=${HELM_BACKEND_CRON_TOKEN}
+              --set cronToken=${HELM_BACKEND_CRON_TOKEN} \
+              --set application.sentry_dsn="${DRUPAL_SENTRY_DSN}" \
+              --set application.sentry_environment="${SENTRY_ENVIRONMENT}" \
+              --set application.sentry_release="${CIRCLE_BUILD_NUM}"
 
 jobs:
   build_preview:
