@@ -116,7 +116,6 @@ class NewFeaturedContentResource extends ResourceBase
     {
         $featuredContent = $this->featuredContentApiClass->FeaturedContentApiEndpoint(
             $this->paramater_language_tag,
-            $this->paramater_category,
             $this->paramater_prison
         );
         if (!empty($featuredContent)) {
