@@ -113,6 +113,12 @@ jobs:
           paths:
             - version-to-deploy.txt
 
+  deploy_cloud_platform_development_feature:
+    <<: *defaults
+    steps:
+      - release_to_namespace:
+          environment: "development"
+
   deploy_cloud_platform_development:
     <<: *defaults
     steps:
@@ -138,10 +144,18 @@ workflows:
       - approve_preview_build:
           <<: *feature_branch
           type: approval
+
       - build_preview:
           <<: *feature_branch
           requires:
             - approve_preview_build
+
+      - deploy_cloud_platform_development_feature:
+          <<: *feature_branch
+          context: prisoner-content-hub-development
+          requires:
+            - build_preview
+
       - build_production:
           <<: *main_branch
 
@@ -149,7 +163,7 @@ workflows:
           <<: *main_branch
           context: prisoner-content-hub-development
           requires:
-            - approve_preview_build
+            - build_production
 
       - deploy_cloud_platform_staging:
           <<: *main_branch
@@ -162,6 +176,7 @@ workflows:
           type: approval
           requires:
             - deploy_cloud_platform_staging
+
       - deploy_cloud_platform_production:
           <<: *main_branch
           context: prisoner-content-hub-prod
