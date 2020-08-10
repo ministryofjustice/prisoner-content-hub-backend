@@ -125,6 +125,12 @@ jobs:
       - release_to_namespace:
           environment: "development"
 
+  deploy_cloud_platform_staging_feature:
+    <<: *defaults
+    steps:
+      - release_to_namespace:
+          environment: "staging"
+
   deploy_cloud_platform_staging:
     <<: *defaults
     steps:
@@ -155,6 +161,18 @@ workflows:
           context: prisoner-content-hub-development
           requires:
             - build_preview
+
+      - approve_deploy_staging_preview:
+          <<: *feature_branch
+          type: approval
+          requires:
+            - deploy_cloud_platform_development_feature
+
+      - deploy_cloud_platform_staging_feature:
+          <<: *feature_branch
+          context: prisoner-content-hub-staging
+          requires:
+            - approve_deploy_staging_preview
 
       - build_production:
           <<: *main_branch
