@@ -177,7 +177,7 @@ index d4cb6c4..3fc81f9 100644
 +            'max-age' => 0,
 +          ],
 +        ];
-+        $this->renderer->renderRoot($build);
++        // $this->renderer->renderRoot($build);
 +
 +        // Since the above bug means this max-age isn't respected, we have to
 +        // kill the general page cache.
