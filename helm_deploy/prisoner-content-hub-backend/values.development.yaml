@@ -1,3 +1,6 @@
+image:
+  pullPolicy: Always
+
 ingress:
   hosts:
     - host: cms-prisoner-content-hub-development.apps.live-1.cloud-platform.service.justice.gov.uk
