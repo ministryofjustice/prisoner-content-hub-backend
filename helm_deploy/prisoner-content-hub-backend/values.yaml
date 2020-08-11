@@ -6,7 +6,7 @@ maxReplicaCount: 6
 
 image:
   repository: mojdigitalstudio/prisoner-content-hub-backend
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   tag: latest
 
 tier: backend
