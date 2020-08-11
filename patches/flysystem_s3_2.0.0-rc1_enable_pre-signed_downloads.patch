@@ -26,7 +26,7 @@ index 13811fc..6cbdb95 100644
                                                    // support is enabled for the
                                                    // bucket.
 diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
-index d4cb6c4..3fc81f9 100644
+index d4cb6c4..faffe26 100644
 --- a/src/Flysystem/S3.php
 +++ b/src/Flysystem/S3.php
 @@ -3,17 +3,23 @@
@@ -147,7 +147,7 @@ index d4cb6c4..3fc81f9 100644
 -    if (strpos($target, 'styles/') === 0 && !file_exists($uri)) {
 -      $this->generateImageStyle($target);
 +    if (strpos($target, 'styles/') === 0 && !$this->getAdapter()->has($target)) {
-+      return $this->generateImageUrl($target);
++      $this->generateImageStyle($target);
 +    }
 +
 +    // This method can only return FALSE if the wrapper does not exist, and not
