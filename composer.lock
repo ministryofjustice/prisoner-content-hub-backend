@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b6e5a41728d8a1bf78904af6897b67f",
+    "content-hash": "5aff7d2218e71dcebf0e6ec9df1a661f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1565,7 +1565,9 @@
                         "message": "RC releases are not covered by Drupal security advisories."
                     }
                 },
-                "patches_applied": []
+                "patches_applied": {
+                    "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
+                }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
