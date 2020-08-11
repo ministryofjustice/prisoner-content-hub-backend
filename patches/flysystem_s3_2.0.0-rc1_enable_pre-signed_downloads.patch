@@ -1,8 +1,8 @@
 diff --git a/README.md b/README.md
-index 3ca606f..af7da47 100644
+index 13811fc..6cbdb95 100644
 --- a/README.md
 +++ b/README.md
-@@ -36,7 +36,7 @@ $schemes = [
+@@ -39,7 +39,7 @@ $schemes = [
        // Optional configuration settings.
 
        // 'options' => [
@@ -11,10 +11,10 @@ index 3ca606f..af7da47 100644
        //   'StorageClass' => 'REDUCED_REDUNDANCY',
        // ],
 
-@@ -62,6 +62,13 @@ $schemes = [
-
+@@ -66,6 +66,13 @@ $schemes = [
        // 'public' => TRUE,                        // Set to TRUE to link to files
                                                    // using direct links.
+
 +
 +      // 'expires' => '+600 seconds',             // An optional expiry time
 +                                                  // to use when generating
@@ -22,19 +22,20 @@ index 3ca606f..af7da47 100644
 +                                                  // files. Default is +3600
 +                                                  // seconds (one hour).
 +
-     ],
-
-     'cache' => TRUE, // Creates a metadata cache to speed up lookups.
+       // 'cors' => TRUE,                          // Set to TRUE if CORS upload
+                                                   // support is enabled for the
+                                                   // bucket.
 diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
-index d9b5f26..6ebd2ef 100644
+index d4cb6c4..3fc81f9 100644
 --- a/src/Flysystem/S3.php
 +++ b/src/Flysystem/S3.php
-@@ -3,16 +3,23 @@
+@@ -3,17 +3,23 @@
  namespace Drupal\flysystem_s3\Flysystem;
 
  use Aws\Credentials\Credentials;
-+use Aws\S3\Exception\S3Exception;
- use Aws\S3\S3Client;
+-use Aws\S3\S3Client;
+ use Aws\S3\Exception\S3Exception;
++use Aws\S3\S3Client;
 +use Aws\S3\S3ClientInterface;
  use Drupal\Component\Utility\UrlHelper;
  use Drupal\Core\Logger\RfcLogLevel;
@@ -53,7 +54,7 @@ index d9b5f26..6ebd2ef 100644
  use Symfony\Component\DependencyInjection\ContainerInterface;
 
  /**
-@@ -36,7 +43,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -37,7 +43,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
    /**
     * The S3 client.
     *
@@ -62,7 +63,7 @@ index d9b5f26..6ebd2ef 100644
     */
    protected $client;
 
-@@ -61,6 +68,34 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -62,6 +68,34 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
     */
    protected $urlPrefix;
 
@@ -97,7 +98,7 @@ index d9b5f26..6ebd2ef 100644
    /**
     * Whether the stream is set to public.
     *
-@@ -71,19 +106,30 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -72,19 +106,30 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
    /**
     * Constructs an S3 object.
     *
@@ -130,7 +131,7 @@ index d9b5f26..6ebd2ef 100644
    }
 
    /**
-@@ -97,7 +143,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -98,7 +143,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
 
      unset($configuration['key'], $configuration['secret']);
 
@@ -139,7 +140,7 @@ index d9b5f26..6ebd2ef 100644
    }
 
    /**
-@@ -187,8 +233,55 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -195,8 +240,55 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
 
      $target = $this->getTarget($uri);
 
@@ -198,7 +199,7 @@ index d9b5f26..6ebd2ef 100644
 
      return $this->urlPrefix . '/' . UrlHelper::encodePath($target);
 diff --git a/tests/src/Unit/Flysystem/S3Test.php b/tests/src/Unit/Flysystem/S3Test.php
-index 25954c1..306cc5c 100644
+index b6491bb..3c91285 100644
 --- a/tests/src/Unit/Flysystem/S3Test.php
 +++ b/tests/src/Unit/Flysystem/S3Test.php
 @@ -8,13 +8,20 @@ use Aws\S3\S3ClientInterface;
@@ -261,7 +262,7 @@ index 25954c1..306cc5c 100644
 
      $this->assertInstanceOf(AdapterInterface::class, $plugin->getAdapter());
 
-@@ -44,12 +63,12 @@ class S3Test extends UnitTestCase {
+@@ -44,17 +63,19 @@ class S3Test extends UnitTestCase {
 
      $configuration['prefix'] = '';
 
@@ -275,8 +276,6 @@ index 25954c1..306cc5c 100644
 +   * Test merging defaults into configuration arrays.
     */
    public function testMergeConfiguration() {
-     $container = new ContainerBuilder();
-@@ -76,6 +95,8 @@ class S3Test extends UnitTestCase {
      $container = new ContainerBuilder();
      $container->set('request_stack', new RequestStack());
      $container->get('request_stack')->push(Request::create('https://example.com/'));
@@ -339,7 +338,7 @@ index 25954c1..306cc5c 100644
        'bucket'   => 'my-bucket',
      ];
 
--    $plugin = new S3($this->getMock(S3ClientInterface::class), new Config($configuration));
+-    $plugin = new S3($this->createMock(S3ClientInterface::class), new Config($configuration));
 +    $client = $this->prophesize(S3Client::class);
 +    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
 +    $client->execute(Argument::type('\Aws\Command'))->willReturn(new \Aws\Result([
