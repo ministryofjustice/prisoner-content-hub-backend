@@ -67,9 +67,9 @@ class NewFeaturedContentApiClass
    * @param [string] $lang
    * @return array
    */
-  public function FeaturedContentApiEndpoint($lang, $category, $prison)
+  public function FeaturedContentApiEndpoint($lang, $prison)
   {
-    return $this->getFeaturedContentNodeIds($category, $prison);
+    return $this->getFeaturedContentNodeIds($prison);
   }
   /**
    * TranslateNode function
@@ -87,9 +87,9 @@ class NewFeaturedContentApiClass
    *
    * @return void
    */
-  private function getFeaturedContentNodeIds($category, $number, $prison = 0)
+  private function getFeaturedContentNodeIds($number, $prison = 0)
   {
-    $results = $this->featuredNodes($category, $number, $prison);
+    $results = $this->featuredNodes($number, $prison);
 
     return array_slice($results, 0, $number);
   }
@@ -130,7 +130,7 @@ class NewFeaturedContentApiClass
     return $result;
   }
 
-  private function featuredNodes($category, $prison)
+  private function featuredNodes($prison)
   {
     $results = $this->entity_query->get('node')
       ->condition('type', 'featured_articles')
