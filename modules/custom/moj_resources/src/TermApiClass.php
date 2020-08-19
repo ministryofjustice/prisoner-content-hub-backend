@@ -89,11 +89,11 @@ class TermApiClass
     $result['content_type'] = $term->vid[0]->target_id;
     $result['title'] = $term->name->value;
     $result['description'] = $term->description[0];
-    $result['summary'] = $term->field_content_summary->value;
+    $result['summary'] = $term->field_content_summary ? $term->field_content_summary->value : '';
     $result['image'] = $term->field_featured_image[0];
     $result['video'] = $term->field_featured_video[0];
     $result['audio'] = $term->field_featured_audio[0];
-    $result['programme_code'] = $term->field_feature_programme_code->value;
+    $result['programme_code'] = $term->field_feature_programme_code ? $term->field_feature_programme_code->value : '';
 
     return $result;
   }

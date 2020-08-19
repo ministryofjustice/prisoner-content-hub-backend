@@ -132,7 +132,7 @@ class RelatedContentApiClass
     $result['content_type'] = $node->type->target_id;
     $result['summary'] = $node->field_moj_description->summary;
     $result['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
-    $result['duration'] = $node->field_moj_duration->value;
+    $result['duration'] = $node->field_moj_duration ? $node->field_moj_duration->value : 0;
 
     return $result;
   }
