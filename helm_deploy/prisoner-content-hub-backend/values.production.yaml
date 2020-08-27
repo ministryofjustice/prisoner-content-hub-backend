@@ -1,4 +1,6 @@
 ingress:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
   hosts:
     - host: manage.content-hub.prisoner.service.justice.gov.uk
       cert_secret: prisoner-content-hub-cms-certificate
