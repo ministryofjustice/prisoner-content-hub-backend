@@ -6,8 +6,6 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
-require_once('Utils.php');
-
 /**
  * ContentApiClass
  */
@@ -109,7 +107,7 @@ class ContentApiClass
   {
     $content_type = $node->type->target_id;
 
-    if (!allowedPrison($prison)) {
+    if ($prison_id !== 0 && !in_array($prison, $node->field_moj_prisons)) {
       return [];
     }
 
