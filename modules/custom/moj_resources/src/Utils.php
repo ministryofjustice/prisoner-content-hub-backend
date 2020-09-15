@@ -17,4 +17,18 @@ function getPrisonResults($prison_id, $results) {
 
   return $results;
 }
+
+function allowedPrison($prison_id) {
+  $prison_ids = [
+    792, // berwyn
+    793, // wayland
+    959  // cookham wood
+  ];
+
+  if ($prison_id === 0 || in_array($prison_id, $prison_ids)) {
+    return true;
+  }
+
+  return false;
+}
 ?>

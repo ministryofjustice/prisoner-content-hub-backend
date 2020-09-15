@@ -36,6 +36,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          description="Response format, should be 'json'",
  *      ),
  *      @SWG\Parameter(
+ *          name="_prison",
+ *          in="query",
+ *          required=false,
+ *          type="integer",
+ *          description="ID of prison content to belong to to return, the default is belonging to all prisons.",
+ *      ),
+ *      @SWG\Parameter(
  *          name="_lang",
  *          in="query",
  *          required=false,
@@ -71,6 +78,8 @@ class ContentResource extends ResourceBase
 
     protected $languageManager;
 
+    protected $paramater_prison;
+
     protected $nid;
 
     Protected $lang;
@@ -89,6 +98,7 @@ class ContentResource extends ResourceBase
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
         $this->availableLangs = $this->languageManager->getLanguages();
+        $this->paramater_prison = self::setPrison();
         $this->nid = $this->currentRequest->get('nid');
         $this->lang =self::setLanguage();
         self::checklanguageParameterIsValid();
@@ -155,6 +165,23 @@ class ContentResource extends ResourceBase
             null,
             404
         );
+    }
+
+    protected function checkPrisonIsNumeric()
+    {
+        if (is_numeric($this->paramater_prison)) {
+            return true;
+        }
+        throw new NotFoundHttpException(
+            t('The prison parameter must be a numeric'),
+            null,
+            404
+        );
+    }
+
+    protected function setPrison()
+    {
+        return is_null($this->currentRequest->get('_prison')) ? 0 : intval($this->currentRequest->get('_prison'));
     }
 }
 

@@ -6,6 +6,8 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
+require_once('Utils.php');
+
 /**
  * ContentApiClass
  */
@@ -64,7 +66,7 @@ class ContentApiClass
    * @param [string] $lang
    * @return array
    */
-  public function ContentApiEndpoint($lang, $nid)
+  public function ContentApiEndpoint($lang, $nid, $prison = 0)
   {
     $this->lang = $lang;
     $node = $this->loadNodesDetails($nid);
@@ -75,7 +77,7 @@ class ContentApiClass
 
     $translatedNodes = $this->translateNode($node);
 
-    return $this->decorateContent($translatedNodes);
+    return $this->decorateContent($translatedNodes, $prison);
   }
   /**
    * TranslateNode function
@@ -103,9 +105,14 @@ class ContentApiClass
   /**
    *
    */
-  private function decorateContent($node)
+  private function decorateContent($node, $prison)
   {
     $content_type = $node->type->target_id;
+
+    if (!allowedPrison($prison)) {
+      return [];
+    }
+
     $defaults = $this->createItemResponse($node);
 
     switch ($content_type) {
