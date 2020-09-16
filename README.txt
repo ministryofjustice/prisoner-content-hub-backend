@@ -9,6 +9,7 @@ CONTENTS OF THIS FILE
  * Developing for Drupal
  * More information
 
+
 ABOUT DRUPAL
 ------------
 

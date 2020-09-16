@@ -2,7 +2,5 @@ image:
   pullPolicy: Always
 
 ingress:
-  annotations:
-    kubernetes.io/ingress.class: prisoner-content-hub-development
   hosts:
     - host: cms-prisoner-content-hub-development.apps.live-1.cloud-platform.service.justice.gov.uk
