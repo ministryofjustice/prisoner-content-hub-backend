@@ -1,5 +1,3 @@
 ingress:
-  annotations:
-    kubernetes.io/ingress.class: prisoner-content-hub-staging
   hosts:
     - host: cms-prisoner-content-hub-staging.apps.live-1.cloud-platform.service.justice.gov.uk
