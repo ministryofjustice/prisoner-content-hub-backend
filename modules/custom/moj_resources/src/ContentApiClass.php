@@ -107,7 +107,7 @@ class ContentApiClass
   {
     $content_type = $node->type->target_id;
 
-    if ($prison_id !== 0 && !in_array($prison, $node->field_moj_prisons)) {
+    if ($prison !== 0 && !in_array($prison, $node->field_moj_prisons)) {
       return [];
     }
 

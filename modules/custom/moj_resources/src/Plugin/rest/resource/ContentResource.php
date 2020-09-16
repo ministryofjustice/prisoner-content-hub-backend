@@ -102,6 +102,7 @@ class ContentResource extends ResourceBase
         $this->nid = $this->currentRequest->get('nid');
         $this->lang =self::setLanguage();
         self::checklanguageParameterIsValid();
+        self::checkPrisonIsNumeric();
         parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     }
 
@@ -126,7 +127,7 @@ class ContentResource extends ResourceBase
     public function get()
     {
         self::checkContentIdParameterIsNumeric();
-        $content = $this->contentApiClass->ContentApiEndpoint($this->lang, $this->nid);
+        $content = $this->contentApiClass->ContentApiEndpoint($this->lang, $this->nid, $this->paramater_prison);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
