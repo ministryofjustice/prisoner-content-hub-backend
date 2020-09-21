@@ -167,7 +167,7 @@ class ContentResource extends ResourceBase
             return true;
         }
         throw new NotFoundHttpException(
-            t('The content ID must be a numeric'),
+            t('The content ID must be numeric'),
             null,
             400
         );
@@ -179,7 +179,7 @@ class ContentResource extends ResourceBase
             return true;
         }
         throw new NotFoundHttpException(
-            t('The prison ID must be a numeric'),
+            t('The prison ID must be numeric'),
             null,
             400
         );
