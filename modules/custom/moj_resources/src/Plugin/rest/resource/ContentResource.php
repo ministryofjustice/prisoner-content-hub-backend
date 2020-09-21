@@ -78,7 +78,7 @@ class ContentResource extends ResourceBase
 
     protected $languageManager;
 
-    protected $paramater_prison;
+    protected $parameter_prison;
 
     protected $nid;
 
@@ -98,7 +98,7 @@ class ContentResource extends ResourceBase
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
         $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_prison = self::setPrison();
+        $this->parameter_prison = self::setPrison();
         $this->nid = $this->currentRequest->get('nid');
         $this->lang =self::setLanguage();
         self::checklanguageParameterIsValid();
@@ -127,13 +127,23 @@ class ContentResource extends ResourceBase
     public function get()
     {
         self::checkContentIdParameterIsNumeric();
-        $content = $this->contentApiClass->ContentApiEndpoint($this->lang, $this->nid, $this->paramater_prison);
+        $content = $this->contentApiClass->ContentApiEndpoint($this->lang, $this->nid, $this->parameter_prison);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
             return $response;
         }
         throw new NotFoundHttpException(t('No content found'));
+    }
+
+    protected function setLanguage()
+    {
+        return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
+    }
+
+    protected function setPrison()
+    {
+        return is_null($this->currentRequest->get('_prison')) ? 0 : intval($this->currentRequest->get('_prison'));
     }
 
     protected function checklanguageParameterIsValid()
@@ -145,15 +155,10 @@ class ContentResource extends ResourceBase
             }
         }
         throw new NotFoundHttpException(
-            t('The language tag invalid or translation for this tag is not avilable'),
+            t('The language tag invalid or translation for this tag is not available'),
             null,
-            404
+            400
         );
-    }
-
-    protected function setLanguage()
-    {
-        return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 
     protected function checkContentIdParameterIsNumeric()
@@ -164,25 +169,20 @@ class ContentResource extends ResourceBase
         throw new NotFoundHttpException(
             t('The content ID must be a numeric'),
             null,
-            404
+            400
         );
     }
 
     protected function checkPrisonIsNumeric()
     {
-        if (is_numeric($this->paramater_prison)) {
+        if (is_numeric($this->parameter_prison)) {
             return true;
         }
         throw new NotFoundHttpException(
             t('The prison parameter must be a numeric'),
             null,
-            404
+            400
         );
-    }
-
-    protected function setPrison()
-    {
-        return is_null($this->currentRequest->get('_prison')) ? 0 : intval($this->currentRequest->get('_prison'));
     }
 }
 
