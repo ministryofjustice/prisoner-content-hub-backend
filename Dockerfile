@@ -1,12 +1,12 @@
-FROM drupal:8.9.2-apache
+FROM drupal:8.9.6-apache
 
 # Install Composer and it's dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
-    git-core \
-    mediainfo \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
+  curl \
+  git-core \
+  mediainfo \
+  unzip \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=/bin --filename=composer
@@ -22,12 +22,12 @@ COPY patches/ patches/
 
 # Install dependencies
 RUN composer install \
-    --ignore-platform-reqs \
-    --no-ansi \
-    --no-dev \
-    --no-autoloader \
-    --no-interaction \
-    --prefer-dist
+  --ignore-platform-reqs \
+  --no-ansi \
+  --no-dev \
+  --no-autoloader \
+  --no-interaction \
+  --prefer-dist
 
 # Copy Project
 COPY modules/custom modules/custom
@@ -35,7 +35,7 @@ COPY sites/ sites/
 
 # Remove write permissions for added security
 RUN chmod u-w sites/default/settings.php \
- && chmod u-w sites/default/services.yml
+  && chmod u-w sites/default/services.yml
 
 COPY ./apache/ /etc/apache2/
 

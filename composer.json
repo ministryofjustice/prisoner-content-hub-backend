@@ -7,10 +7,10 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "~1.0",
         "drupal/backup_migrate": "^4.0",
-        "drupal/core-composer-scaffold": "^8.8",
-        "drupal/core-project-message": "^8.8",
-        "drupal/core-recommended": "^8.8",
-        "drupal/core-vendor-hardening": "^8.8",
+        "drupal/core-composer-scaffold": "^8.9",
+        "drupal/core-project-message": "^8.9",
+        "drupal/core-recommended": "^8.9",
+        "drupal/core-vendor-hardening": "^8.9",
         "drupal/devel": "^2.1",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/flood_unblock": "^2.0",
@@ -29,6 +29,7 @@
         "drupal/token": "^1.5",
         "drupal/video": "^1.4",
         "drupal/videojs": "^1.0",
+        "drupal/view_unpublished": "^1.0",
         "mhor/php-mediainfo": "^5.1.0"
     },
     "conflict": {
