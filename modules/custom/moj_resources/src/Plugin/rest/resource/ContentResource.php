@@ -155,7 +155,7 @@ class ContentResource extends ResourceBase
             }
         }
         throw new NotFoundHttpException(
-            t('The language tag invalid or translation for this tag is not available'),
+            t('The language tag is invalid or a translation for this tag is not available'),
             null,
             400
         );
@@ -179,7 +179,7 @@ class ContentResource extends ResourceBase
             return true;
         }
         throw new NotFoundHttpException(
-            t('The prison parameter must be a numeric'),
+            t('The prison ID must be a numeric'),
             null,
             400
         );
