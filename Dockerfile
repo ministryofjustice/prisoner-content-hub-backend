@@ -1,4 +1,4 @@
-FROM drupal:8.9.6-apache
+FROM drupal:8.9.2-apache
 
 # Install Composer and it's dependencies
 RUN apt-get update && apt-get install -y \
