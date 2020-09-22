@@ -115,9 +115,16 @@ class ContentApiClass
     $content_type = $node->type->target_id;
 
     if (($this->prison != 0) && (count($node->field_moj_prisons) > 0)) {
-      $prison_ids = array_column($node->field_moj_prisons, 'target_id');
+      $found = false;
 
-      if (!in_array($this->prison, $prison_ids)) {
+      foreach ($node->field_moj_prisons as $key => $n) {
+        if ($this->prison == $n->target_id) {
+          $found = true;
+          break;
+        }
+      }
+
+      if (!$found) {
         return [];
       }
     }
