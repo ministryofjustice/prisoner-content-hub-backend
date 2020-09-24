@@ -32,6 +32,12 @@ class ContentApiClass
    */
   protected $lang;
   /**
+   * Prison Id
+   *
+   * @var integer
+   */
+  protected $prison;
+  /**
    * Node_storage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
@@ -64,9 +70,10 @@ class ContentApiClass
    * @param [string] $lang
    * @return array
    */
-  public function ContentApiEndpoint($lang, $nid)
+  public function ContentApiEndpoint($lang, $nid, $prison = 0)
   {
     $this->lang = $lang;
+    $this->prison = $prison;
     $node = $this->loadNodesDetails($nid);
 
     if (is_null($node)) {
@@ -106,6 +113,22 @@ class ContentApiClass
   private function decorateContent($node)
   {
     $content_type = $node->type->target_id;
+
+    if (($this->prison != 0) && (count($node->field_moj_prisons) > 0)) {
+      $found = false;
+
+      foreach ($node->field_moj_prisons as $key => $n) {
+        if ($this->prison == $n->target_id) {
+          $found = true;
+          break;
+        }
+      }
+
+      if (!$found) {
+        return [];
+      }
+    }
+
     $defaults = $this->createItemResponse($node);
 
     switch ($content_type) {
