@@ -127,11 +127,6 @@ class ContentApiClass
       if (!$found) {
         return [];
       }
-      // $prison_ids = array_column($node->field_moj_prisons, 'target_id');
-
-      // if(!in_array($this->prison, $prison_ids)) {
-      //   return [];
-      // }
     }
 
     $defaults = $this->createItemResponse($node);
