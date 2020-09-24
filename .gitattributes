@@ -61,5 +61,5 @@
 *.woff2   -text diff
 
 
-templates/alert-secret.yaml filter=git-crypt diff=git-crypt
 test.yaml filter=git-crypt diff=git-crypt
+helm_deploy/prisoner-content-hub-backend/templates/alert-secret.yaml filter=git-crypt diff=git-crypt
