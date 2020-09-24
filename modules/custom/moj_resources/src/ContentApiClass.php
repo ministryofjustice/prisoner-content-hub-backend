@@ -115,23 +115,23 @@ class ContentApiClass
     $content_type = $node->type->target_id;
 
     if (($this->prison != 0) && (count($node->field_moj_prisons) > 0)) {
-      // $found = false;
+      $found = false;
 
-      // foreach ($node->field_moj_prisons as $key => $n) {
-      //   if ($this->prison == $n->target_id) {
-      //     $found = true;
-      //     break;
-      //   }
-      // }
+      foreach ($node->field_moj_prisons as $key => $n) {
+        if ($this->prison == $n->target_id) {
+          $found = true;
+          break;
+        }
+      }
 
-      // if (!$found) {
-      //   return [];
-      // }
-      $prison_ids = array_column($node->field_moj_prisons, 'target_id');
-
-      if(!in_array($this->prison, $prison_ids)) {
+      if (!$found) {
         return [];
       }
+      // $prison_ids = array_column($node->field_moj_prisons, 'target_id');
+
+      // if(!in_array($this->prison, $prison_ids)) {
+      //   return [];
+      // }
     }
 
     $defaults = $this->createItemResponse($node);
