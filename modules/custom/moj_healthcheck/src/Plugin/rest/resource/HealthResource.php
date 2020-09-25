@@ -13,7 +13,7 @@ use Drupal\moj_healthcheck\Controller\HealthcheckApiController;
  *   id = "health_resource",
  *   label = @Translation("Health Resource"),
  *   uri_paths = {
- *     "canonical" = "/api/health"
+ *     "canonical" = "/health"
  *   }
  * )
  */
