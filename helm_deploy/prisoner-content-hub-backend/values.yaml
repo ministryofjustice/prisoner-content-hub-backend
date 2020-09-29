@@ -14,11 +14,11 @@ tier: backend
 application:
   port: 8080
   liveness:
-    endpoint: /
+    endpoint: /health
     delaySeconds: 10
     timeoutSeconds: 10
   readiness:
-    endpoint: /
+    endpoint: /health
     delaySeconds: 10
     timeoutSeconds: 5
   config:
