@@ -132,25 +132,6 @@ class CategoryFeaturedContentApiClass
     return $result;
   }
 
-  private function promotedNodes($category, $prison)
-  {
-    $results = $this->entity_query->get('node')
-      ->condition('status', 1)
-      ->condition('field_moj_category_featured_item', 1)
-      ->accessCheck(false);
-
-    $results = getPrisonResults($prison, $results);
-
-    if ($category !== 0) {
-      $results->condition('field_moj_top_level_categories', $category);
-    };
-
-    $nodes = $results->execute();
-    $promotedContent = $this->loadNodesDetails($nodes);
-
-    return array_map(array($this, 'decorateContent'), $promotedContent);
-  }
-
   private function extractSeriesIdsFrom($nodes)
   {
     $seriesIds = [];
@@ -176,6 +157,25 @@ class CategoryFeaturedContentApiClass
     $series = $this->extractSeriesIdsFrom($nodes);
 
     return $this->promotedTerms($series, $prison);
+  }
+
+  private function promotedNodes($category, $prison)
+  {
+    $results = $this->entity_query->get('node')
+      ->condition('status', 1)
+      ->condition('field_moj_category_featured_item', 1)
+      ->accessCheck(false);
+
+    $results = getPrisonResults($prison, $results);
+
+    if ($category !== 0) {
+      $results->condition('field_moj_top_level_categories', $category);
+    };
+
+    $nodes = $results->execute();
+    $promotedContent = $this->loadNodesDetails($nodes);
+
+    return array_map(array($this, 'decorateContent'), $promotedContent);
   }
 
   private function promotedTerms($termIds, $prison)
