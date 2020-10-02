@@ -90,7 +90,7 @@ class CategoryFeaturedContentApiClass
   protected function getFeaturedContentNodeIds($category, $number, $prison = 0)
   {
     $series = $this->promotedSeries($category, $prison);
-    $nodes = $this->promotedNodes($category, $number, $prison);
+    $nodes = $this->promotedNodes($category, $prison);
     $results = array_merge($series, $nodes);
 
     //sort them out
@@ -132,26 +132,7 @@ class CategoryFeaturedContentApiClass
     return $result;
   }
 
-  private function extractSeriesIdsFrom($nodes)
-  {
-    $seriesIds = [];
-    foreach ($nodes as $key => $n) {
-      $seriesIds[] = $n->field_moj_series->target_id;
-    }
-
-    return $seriesIds;
-  }
-
-  private function promotedSeries($category, $prison)
-  {
-    $nids = $this->allNodes($category);
-    $nodes = $this->loadNodesDetails($nids);
-    $series = $this->extractSeriesIdsFrom($nodes);
-
-    return $this->promotedTerms(array_unique($series), $prison);
-  }
-
-  private function promotedNodes($category, $number, $prison)
+  private function promotedNodes($category, $prison)
   {
     $results = $this->entity_query->get('node')
       ->condition('status', 1)
@@ -164,15 +145,23 @@ class CategoryFeaturedContentApiClass
       $results->condition('field_moj_top_level_categories', $category);
     };
 
-    $results->range(0, $number);
     $nodes = $results->execute();
-
     $promotedContent = $this->loadNodesDetails($nodes);
 
     return array_map(array($this, 'decorateContent'), $promotedContent);
   }
 
-  private function allNodes($category)
+  private function extractSeriesIdsFrom($nodes)
+  {
+    $seriesIds = [];
+    foreach ($nodes as $key => $n) {
+      $seriesIds[] = $n->field_moj_series->target_id;
+    }
+
+    return array_unique($seriesIds);
+  }
+
+  private function promotedSeries($category, $prison)
   {
     $results = $this->entity_query->get('node')
       ->condition('status', 1)
@@ -182,24 +171,23 @@ class CategoryFeaturedContentApiClass
       $results->condition('field_moj_top_level_categories', $category);
     };
 
-    return $results->execute();
+    $nids = $results->execute();
+    $nodes = $this->loadNodesDetails($nids);
+    $series = $this->extractSeriesIdsFrom($nodes);
+
+    return $this->promotedTerms($series, $prison);
   }
 
   private function promotedTerms($termIds, $prison)
   {
     $terms = $this->term_storage->loadMultiple($termIds);
     $promotedTerms = array_filter($terms, function ($item) use ($prison) {
-      if ($item->field_moj_category_featured_item->value == true && $prison == $item->field_promoted_to_prison->target_id) {
+      if ($item->field_moj_category_featured_item->value == true &&
+        ($prison == $item->field_promoted_to_prison->target_id || !$item->field_promoted_to_prison->target_id)) {
         return true;
-      } elseif ($item->field_moj_category_featured_item->value == true && !$item->field_promoted_to_prison->target_id) {
-        return true;
-      } else {
-        return false;
       }
-    });
 
-    usort($promotedTerms, function ($a, $b) {
-      return $b->changed->value - $a->changed->value;
+      return false;
     });
 
     return array_map(array($this, 'decorateTerm'), $promotedTerms);
