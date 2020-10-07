@@ -1,4 +1,4 @@
-FROM drupal:8.9.2-apache
+FROM drupal:8.9.2-apache AS base
 
 # Install Composer and it's dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,32 +20,53 @@ COPY composer.json composer.lock /var/www/html/
 # Copy in patches we want to apply to modules in Drupal using Composer
 COPY patches/ patches/
 
+# Copy Project
+COPY modules/custom modules/custom
+
 # Install dependencies
 RUN composer install \
   --ignore-platform-reqs \
   --no-ansi \
   --no-dev \
-  --no-autoloader \
+  --optimize-autoloader \
   --no-interaction \
-  --prefer-dist
+  --prefer-dist \
+  && composer clear-cache
 
-# Copy Project
-COPY modules/custom modules/custom
 COPY sites/ sites/
-
-# Remove write permissions for added security
-RUN chmod u-w sites/default/settings.php \
-  && chmod u-w sites/default/services.yml
 
 COPY ./apache/ /etc/apache2/
 
-# Update autoloads
-RUN composer dump-autoload --optimize
+#
+# Run our tests in a separate build which doesn't mind being polluted with
+# test dependencies and output
+#
+FROM base AS test
 
-# Remove composer cache
-RUN composer clear-cache
+# Install test dependencies
+RUN composer install \
+  --ignore-platform-reqs \
+  --no-ansi \
+  --no-interaction \
+  --prefer-dist
 
-# Update permisions
+# TODO run the tests...
+
+#
+# Build our clean image.
+# This is handy for installing modules and running tests
+#
+FROM base AS production_base
+
+
+
+#
+# Finally lock-down the production image
+#
+FROM production_base AS production
+# Remove write permissions for added security
+RUN chmod u-w sites/default/settings.php \
+  && chmod u-w sites/default/services.yml
 RUN chown -R www-data:www-data /var/www/html/
 
 USER www-data
