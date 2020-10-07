@@ -88,5 +88,10 @@
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         }
-    ]
+    ],
+    "require-dev": {
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^7",
+        "symfony/phpunit-bridge": "^5.1"
+    }
 }
