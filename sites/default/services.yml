@@ -83,7 +83,8 @@ parameters:
     # render array, hence varying every render array by these cache contexts.
     #
     # @default ['languages:language_interface', 'theme', 'user.permissions']
-    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
+    required_cache_contexts:
+      ["languages:language_interface", "theme", "user.permissions"]
     # Renderer automatic placeholdering conditions:
     #
     # Drupal allows portions of the page to be automatically deferred when
@@ -108,7 +109,7 @@ parameters:
       # Disable by setting to [].
       #
       # @default ['session', 'user']
-      contexts: ['session', 'user']
+      contexts: ["session", "user"]
       # Tags with a high invalidation frequency.
       #
       # Disable by setting to [].
@@ -154,10 +155,10 @@ parameters:
     - webcal
     - rtsp
 
-   # Configure Cross-Site HTTP requests (CORS).
-   # Read https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-   # for more information about the topic in general.
-   # Note: By default the configuration is disabled.
+    # Configure Cross-Site HTTP requests (CORS).
+    # Read https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+    # for more information about the topic in general.
+    # Note: By default the configuration is disabled.
   cors.config:
     enabled: true
     # Specify allowed headers, like 'x-allowed-header'.
@@ -165,10 +166,23 @@ parameters:
     # Specify allowed request methods, specify ['*'] to allow all possible ones.
     allowedMethods: []
     # Configure requests allowed from specific origins.
-    allowedOrigins: ['*']
+    allowedOrigins: ["*"]
     # Sets the Access-Control-Expose-Headers header.
     exposedHeaders: false
     # Sets the Access-Control-Max-Age header.
     maxAge: false
     # Sets the Access-Control-Allow-Credentials header.
     supportsCredentials: false
+
+  monolog.channel_handlers:
+    default: ["stream", "errStream"]
+
+services:
+  monolog.handler.stream:
+    class: Monolog\Handler\StreamHandler
+    arguments: ["php://stdout"]
+    formatter: monolog.formatters.logstash
+  monolog.handler.errStream:
+    class: Monolog\Handler\StreamHandler
+    arguments: ["php://stderr", 300]
+    formatter: monolog.formatters.logstash
