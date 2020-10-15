@@ -32,7 +32,7 @@ There are two tiers of yaml files containing configuration values. These are:
 
 ```
 helm upgrade [Release Name] . \
---install --dry-run --debug\
+--install --dry-run --debug \
 --namespace [Kubernetes Namespace] \
 --values values.[Environment].yaml \
 --values secrets.yaml \
