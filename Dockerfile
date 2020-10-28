@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php composer-setup.php --install-dir=/bin --filename=composer
+RUN php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16
 RUN php -r "unlink('composer-setup.php');"
 
 # Set Timezone
