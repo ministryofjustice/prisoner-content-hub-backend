@@ -5,6 +5,7 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 require_once('Utils.php');
 
@@ -58,6 +59,7 @@ class SeriesContentApiClass
     QueryFactory $entityQuery
   ) {
     $this->node_storage = $entityTypeManager->getStorage('node');
+    $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entity_query = $entityQuery;
   }
   /**
@@ -98,9 +100,9 @@ class SeriesContentApiClass
    * decorateSeries
    *
    */
-  private function decorateSeries($node)
+  private function decorateSeries($series_content)
   {
-    $results = array_reduce($node, function ($acc, $curr) {
+    return array_map(function ($curr) {
       $episode_id = ($curr->field_moj_season->value * 1000) + ($curr->field_moj_episode->value);
       $result = [];
       $result["episode_id"] = $episode_id;
@@ -113,12 +115,13 @@ class SeriesContentApiClass
       $result["duration"] = $curr->field_moj_duration ? $curr->field_moj_duration->value : 0;
       $result["description"] = $curr->field_moj_description[0];
       $result["categories"] = $curr->field_moj_top_level_categories;
+      $result["prison_types"] = $curr->field_prison_types;
+
       if ($curr->field_moj_secondary_tags) {
         $result["secondary_tags"] = $curr->field_moj_secondary_tags;
       } else {
         $result["secondary_tags"] = $curr->field_moj_tags;
       }
-      $result["prisons"] = $curr->field_moj_prisons;
 
       if ($result["content_type"] === 'moj_radio_item') {
         $result["media"] = $curr->field_moj_audio[0];
@@ -126,12 +129,8 @@ class SeriesContentApiClass
         $result["media"] = $curr->field_video[0];
       }
 
-      $acc[] = $result;
-
-      return $acc;
-    }, []);
-
-    return $results;
+      return $result;
+    }, $series_content);
   }
   /**
    * sortSeries
@@ -199,24 +198,47 @@ class SeriesContentApiClass
    *
    * @return void
    */
-  private function getSeriesContentNodeIds($series_id, $number, $offset, $prison)
+  private function getSeriesContentNodeIds($series_id, $number_to_return, $offset, $prison_id)
   {
-    $results = $this->entity_query->get('node')
+    $prison = $this->term_storage->load($prison_id);
+    $prison_types = [];
+
+    foreach ($prison->field_prison_types as $prison_type) {
+      array_push($prison_types, $prison_type->target_id);
+    }
+
+    $series = $this->term_storage->load($series_id);
+    $series_prison_types = [];
+
+    foreach ($series->field_prison_types as $prison_type) {
+      array_push($series_prison_types, $prison_type->target_id);
+    }
+
+    $has_no_matching_scopes = empty(array_intersect($prison_types, $series_prison_types));
+
+    if (!empty($series_prison_types) && $has_no_matching_scopes) {
+      throw new BadRequestHttpException(
+        t('The Series does not have a matching scope for that prison'),
+        null,
+        400
+      );
+    }
+
+    $query = $this->entity_query->get('node')
       ->condition('status', 1)
       ->accessCheck(false);
 
     if ($series_id !== 0) {
-      $results->condition('field_moj_series', $series_id);
+      $query->condition('field_moj_series', $series_id);
     }
 
-    $results = getPrisonResults($prison, $results);
+    $query = filterByPrisonTypes($prison_types, $query);
 
-    if ($number) {
-      $results->range($offset, $number);
+    if ($number_to_return) {
+      $query->range($offset, $number_to_return);
     }
 
-    return $results
-      ->execute();
+    return $query->execute();
   }
   /**
    * Load full node details
