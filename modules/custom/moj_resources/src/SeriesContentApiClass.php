@@ -21,30 +21,41 @@ class SeriesContentApiClass
    * @var array
    */
   protected $nids = array();
+
   /**
    * Nodes
    *
    * @var array
    */
   protected $nodes = array();
+
   /**
    * Language Tag
    *
    * @var string
    */
   protected $lang;
+
   /**
-   * Node_storage object
+   * NodeStorage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $node_storage;
+
   /**
-   * Entitity Query object
+   * TermStorage object
+   *
+   * @var Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $term_storage;
+
+  /**
+   * Entity Query object
    *
    * @var Drupal\Core\Entity\Query\QueryFactory
    *
-   * Instance of querfactory
+   * Instance of QueryFactory
    */
   protected $entity_query;
 
@@ -62,6 +73,7 @@ class SeriesContentApiClass
     $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entity_query = $entityQuery;
   }
+
   /**
    * API resource function
    *
@@ -79,6 +91,7 @@ class SeriesContentApiClass
 
     return $series;
   }
+
   /**
    * API resource function
    *
@@ -96,6 +109,7 @@ class SeriesContentApiClass
 
     return $series;
   }
+
   /**
    * decorateSeries
    *
@@ -132,6 +146,7 @@ class SeriesContentApiClass
       return $result;
     }, $series_content);
   }
+
   /**
    * sortSeries
    *
@@ -152,6 +167,7 @@ class SeriesContentApiClass
 
     return $series;
   }
+
   /**
    * getNextEpisodes
    *
@@ -181,6 +197,7 @@ class SeriesContentApiClass
 
     return $episodes;
   }
+
   /**
    * TranslateNode function
    *
@@ -240,6 +257,7 @@ class SeriesContentApiClass
 
     return $query->execute();
   }
+
   /**
    * Load full node details
    *
@@ -255,6 +273,7 @@ class SeriesContentApiClass
       }
     );
   }
+
   /**
    * Sanitise node
    *
