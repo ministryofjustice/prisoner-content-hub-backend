@@ -5,9 +5,8 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\moj_resources\Utilities;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
-require_once('Utils.php');
 
 /**
  * PromotedContentApiClass
@@ -20,7 +19,7 @@ class SeriesContentApiClass
    *
    * @var array
    */
-  protected $nids = array();
+  protected $node_ids = array();
 
   /**
    * Nodes
@@ -83,8 +82,8 @@ class SeriesContentApiClass
   public function SeriesContentApiEndpoint($lang, $series_id, $number, $offset, $prison, $sort_order)
   {
     $this->lang = $lang;
-    $this->nids = $this->getSeriesContentNodeIds($series_id, $number, $offset, $prison);
-    $this->nodes = $this->loadNodesDetails($this->nids);
+    $this->node_ids = $this->getSeriesContentNodeIds($series_id, $number, $offset, $prison);
+    $this->nodes = $this->loadNodesDetails($this->node_ids);
 
     $series = $this->decorateSeries($this->nodes);
     $series = $this->sortSeries($series, $sort_order);
@@ -101,8 +100,8 @@ class SeriesContentApiClass
   public function SeriesNextEpisodeApiEndpoint($lang, $series_id, $number, $episode_id, $prison, $sort_order)
   {
     $this->lang = $lang;
-    $this->nids = $this->getSeriesContentNodeIds($series_id, null, null, $prison);
-    $this->nodes = $this->loadNodesDetails($this->nids);
+    $this->node_ids = $this->getSeriesContentNodeIds($series_id, null, null, $prison);
+    $this->nodes = $this->loadNodesDetails($this->node_ids);
     $series = $this->decorateSeries($this->nodes);
     $series = $this->sortSeries($series, $sort_order);
     $series = $this->getNextEpisodes($episode_id, $series, $number);
@@ -211,7 +210,7 @@ class SeriesContentApiClass
   }
 
   /**
-   * Get nids
+   * Get node_ids
    *
    * @return void
    */
@@ -249,7 +248,7 @@ class SeriesContentApiClass
       $query->condition('field_moj_series', $series_id);
     }
 
-    $query = filterByPrisonTypes($prison_types, $query);
+    $query = Utilities::filterByPrisonTypes($prison_types, $query);
 
     if ($number_to_return) {
       $query->range($offset, $number_to_return);
@@ -261,13 +260,13 @@ class SeriesContentApiClass
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $node_ids
    * @return array
    */
-  private function loadNodesDetails(array $nids)
+  private function loadNodesDetails(array $node_ids)
   {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
+      $this->node_storage->loadMultiple($node_ids),
       function ($item) {
         return $item->access();
       }
