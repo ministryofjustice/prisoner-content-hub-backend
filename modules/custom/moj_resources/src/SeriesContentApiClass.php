@@ -6,6 +6,7 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\moj_resources\Utilities;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -217,6 +218,15 @@ class SeriesContentApiClass
   private function getSeriesContentNodeIds($series_id, $number_to_return, $offset, $prison_id)
   {
     $prison = $this->term_storage->load($prison_id);
+
+    if (!$prison) {
+      throw new BadRequestHttpException(
+        t('Prison does not exist'),
+        null,
+        400
+      );
+    }
+
     $prison_types = [];
 
     foreach ($prison->field_prison_types as $prison_type) {
@@ -224,6 +234,15 @@ class SeriesContentApiClass
     }
 
     $series = $this->term_storage->load($series_id);
+
+    if (!$series) {
+      throw new NotFoundHttpException(
+        t('Series not found'),
+        null,
+        404
+      );
+    }
+
     $series_prison_types = [];
 
     foreach ($series->field_prison_types as $prison_type) {
@@ -248,6 +267,7 @@ class SeriesContentApiClass
       $query->condition('field_moj_series', $series_id);
     }
 
+    $query = Utilities::filterByPrison($prison_id, $query);
     $query = Utilities::filterByPrisonTypes($prison_types, $query);
 
     if ($number_to_return) {
