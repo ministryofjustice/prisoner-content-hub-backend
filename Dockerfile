@@ -1,4 +1,4 @@
-FROM drupal:8.9.2-apache
+FROM drupal:8.9-apache AS test
 
 # Install Composer and it's dependencies
 RUN apt-get update && apt-get install -y \
@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
   mediainfo \
   unzip \
   && rm -rf /var/lib/apt/lists/*
-
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16
 RUN php -r "unlink('composer-setup.php');"
@@ -15,7 +14,47 @@ RUN php -r "unlink('composer-setup.php');"
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 
-COPY composer.json composer.lock /var/www/html/
+# Remove the memory limit for the CLI only.
+RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
+
+# Remove the vanilla Drupal ready to install a dev version
+RUN rm -rf ..?* .[!.]* *
+
+# Install Drupal 8.x Dev
+RUN composer create-project drupal-composer/drupal-project:8.x-dev . --stability dev --no-interaction
+
+# Update autoloads
+RUN composer dump-autoload --optimize
+
+# Install custom modules and run PHPUnit
+WORKDIR /opt/drupal/web
+COPY phpunit.xml core/phpunit.xml
+COPY modules/custom modules/custom
+RUN ../vendor/bin/phpunit -c core --testsuite unit --debug --verbose
+
+###########################################################################################
+# Create runtime image
+###########################################################################################
+
+FROM drupal:8.9-apache
+
+# Install Composer and it's dependencies
+RUN apt-get update && apt-get install -y \
+  curl \
+  git-core \
+  mediainfo \
+  unzip \
+  && rm -rf /var/lib/apt/lists/*
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16
+RUN php -r "unlink('composer-setup.php');"
+
+# Set Timezone
+RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
+
+# Copy in Composer configuration
+WORKDIR /opt/drupal/web
+COPY composer.json composer.lock /opt/drupal/web/
 
 # Copy in patches we want to apply to modules in Drupal using Composer
 COPY patches/ patches/
@@ -30,7 +69,7 @@ RUN composer install \
   --prefer-dist
 
 # Copy Project
-COPY modules/custom modules/custom
+COPY --from=test /opt/drupal/web/modules/custom modules/custom
 COPY sites/ sites/
 
 # Remove write permissions for added security
@@ -46,6 +85,6 @@ RUN composer dump-autoload --optimize
 RUN composer clear-cache
 
 # Update permisions
-RUN chown -R www-data:www-data /var/www/html/
+RUN chown -R www-data:www-data /opt/drupal/web/
 
 USER www-data
