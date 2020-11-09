@@ -4,10 +4,7 @@ namespace Drupal\Tests\moj_resources\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\moj_resources\Unit\TestHelpers;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\moj_resources\SeriesContentApiClass;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Series Content API Unit tests
@@ -42,7 +39,7 @@ class SeriesContentApiClassTest extends UnitTestCase
         $this->nodeStorage = TestHelpers::createMockNodeStorage($this, array($this->node));
         $this->entityManager = TestHelpers::createMockEntityManager(
           $this,
-          array( // Refactor this to return different storage objects
+          array( // Refactor this to return different NodeStorage objects
             array("node", $this->nodeStorage),
             array("taxonomy_term", $this->nodeStorage)
           ));

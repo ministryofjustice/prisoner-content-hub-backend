@@ -2,11 +2,9 @@
 
 namespace Drupal\Tests\moj_resources\Unit;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\moj_resources\SeriesContentApiClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Test Helpers for Unit tests
@@ -16,14 +14,20 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 class TestHelpers
 {
+  /**
+   * Create a mock node
+   *
+   * @param \Drupal\Tests\UnitTestCase $unitTestCase
+   * @return object
+  */
   public static function createMockNode($unitTestCase) {
     $node = $unitTestCase->getMockBuilder('Drupal\node\Entity\Node')
-        ->disableOriginalConstructor()
-        ->getMock();
+      ->disableOriginalConstructor()
+      ->getMock();
 
     $node->expects($unitTestCase->any())
-        ->method('getTitle')
-        ->will($unitTestCase->returnValue($unitTestCase->node_title));
+      ->method('getTitle')
+      ->will($unitTestCase->returnValue($unitTestCase->node_title));
 
     $node->expects($unitTestCase->any())
       ->method('access')
@@ -48,7 +52,13 @@ class TestHelpers
 
     return $node;
   }
-
+  /**
+   * Create a mock QueryFactory which returns an array of Node IDs
+   *
+   * @param \Drupal\Tests\UnitTestCase $unitTestCase
+   * @param int[] $nodeIdsToReturn
+   * @return object
+  */
   public static function createMockQueryFactory($unitTestCase, $nodeIdsToReturn) {
     $queryFactory = $unitTestCase->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
       ->disableOriginalConstructor()
@@ -65,7 +75,13 @@ class TestHelpers
 
     return $queryFactory;
   }
-
+  /**
+   * Create a mock NodeStorage which returns an array of Nodes
+   *
+   * @param \Drupal\Tests\UnitTestCase $unitTestCase
+   * @param object[] $nodesToReturn
+   * @return object
+  */
   public static function createMockNodeStorage($unitTestCase, $nodesToReturn) {
     $nodeStorage = $unitTestCase->getMockBuilder('Drupal\node\NodeStorage')
       ->disableOriginalConstructor()
@@ -77,7 +93,13 @@ class TestHelpers
 
     return $nodeStorage;
   }
-
+  /**
+   * Create a mock EntityManager
+   *
+   * @param \Drupal\Tests\UnitTestCase $unitTestCase
+   * @param array $returnValueMap
+   * @return object
+  */
   public static function createMockEntityManager($unitTestCase, $returnValueMap) {
     $entityManager = $unitTestCase->getMockBuilder('Drupal\Core\Entity\EntityManagerInterface')
       ->disableOriginalConstructor()
