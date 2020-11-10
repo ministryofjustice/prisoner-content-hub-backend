@@ -129,7 +129,7 @@ class SeriesContentApiClass
       $result["duration"] = $curr->field_moj_duration ? $curr->field_moj_duration->value : 0;
       $result["description"] = $curr->field_moj_description[0];
       $result["categories"] = $curr->field_moj_top_level_categories;
-      $result["prison_types"] = $curr->field_prison_types;
+      $result["prison_categories"] = $curr->field_prison_categories;
 
       if ($curr->field_moj_secondary_tags) {
         $result["secondary_tags"] = $curr->field_moj_secondary_tags;
@@ -227,10 +227,10 @@ class SeriesContentApiClass
       );
     }
 
-    $prison_types = [];
+    $prison_categories = [];
 
-    foreach ($prison->field_prison_types as $prison_type) {
-      array_push($prison_types, $prison_type->target_id);
+    foreach ($prison->field_prison_categories as $prison_category) {
+      array_push($prison_categories, $prison_category->target_id);
     }
 
     $series = $this->term_storage->load($series_id);
@@ -243,17 +243,17 @@ class SeriesContentApiClass
       );
     }
 
-    $series_prison_types = [];
+    $series_prison_categories = [];
 
-    foreach ($series->field_prison_types as $prison_type) {
-      array_push($series_prison_types, $prison_type->target_id);
+    foreach ($series->field_prison_categories as $prison_category) {
+      array_push($series_prison_categories, $prison_category->target_id);
     }
 
-    $has_no_matching_scopes = empty(array_intersect($prison_types, $series_prison_types));
+    $has_no_matching_prison_categories = empty(array_intersect($prison_categories, $series_prison_categories));
 
-    if (!empty($series_prison_types) && $has_no_matching_scopes) {
+    if (!empty($series_prison_categories) && $has_no_matching_prison_categories) {
       throw new BadRequestHttpException(
-        t('The Series does not have a matching scope for that prison'),
+        t('The Series does not have a matching prison categories for this prison'),
         null,
         400
       );
@@ -268,7 +268,7 @@ class SeriesContentApiClass
     }
 
     $query = Utilities::filterByPrison($prison_id, $query);
-    $query = Utilities::filterByPrisonTypes($prison_types, $query);
+    $query = Utilities::filterByPrisonCategories($prison_categories, $query);
 
     if ($number_to_return) {
       $query->range($offset, $number_to_return);

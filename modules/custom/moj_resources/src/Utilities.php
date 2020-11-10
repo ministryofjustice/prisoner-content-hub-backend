@@ -8,14 +8,14 @@ namespace Drupal\moj_resources;
 
 class Utilities
 {
-  public static function filterByPrisonTypes($prison_types, $query) {
-    $prison_type_or_group = $query
+  public static function filterByPrisonCategories($prison_categories, $query) {
+    $prison_categories_or_group = $query
       ->orConditionGroup()
-      ->condition('field_prison_types', $prison_types, 'IN')
-      ->condition('field_prison_types', NULL, 'IS NULL')
-      ->notExists('field_prison_types');
+      ->condition('field_prison_categories', $prison_categories, 'IN')
+      ->condition('field_prison_categories', NULL, 'IS NULL') // this condition needs to remain in until we do a full launch otherwise no series will work
+      ->notExists('field_prison_categories');
 
-    $query->condition($prison_type_or_group);
+    $query->condition($prison_categories_or_group);
 
     return $query;
   }

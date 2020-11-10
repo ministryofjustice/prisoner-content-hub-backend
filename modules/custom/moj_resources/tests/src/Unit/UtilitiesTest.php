@@ -47,18 +47,18 @@ class UtilitiesTest extends UnitTestCase
   }
 
   /*
-  * Test filter by prison type
+  * Test filter by prison categories
   *
   * @return void
   */
-  public function testFilterByPrisonType() {
+  public function testFilterByPrisonCategories() {
     $this->entityQueryFactory->expects($this->once())
       ->method('orConditionGroup');
 
     $this->entityQueryFactory->expects($this->atLeastOnce())
       ->method('condition');
 
-    $query = Utilities::filterByPrisonTypes(123, $this->entityQueryFactory->get('node'));
+    $query = Utilities::filterByPrisonCategories(123, $this->entityQueryFactory->get('node'));
 
     $this->assertInstanceOf('Drupal\Core\Entity\Query\QueryFactory', $query);
   }
