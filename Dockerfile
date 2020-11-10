@@ -1,4 +1,4 @@
-FROM drupal:8.9-apache AS test
+FROM drupal:8.9.6-apache AS base
 
 # Install Composer and it's dependencies
 RUN apt-get update && apt-get install -y \
@@ -13,6 +13,12 @@ RUN php -r "unlink('composer-setup.php');"
 
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
+
+###########################################################################################
+# Run test suite
+###########################################################################################
+
+FROM base AS test
 
 # Remove the memory limit for the CLI only.
 RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
@@ -28,34 +34,22 @@ RUN composer dump-autoload --optimize
 
 # Install custom modules and run PHPUnit
 WORKDIR /opt/drupal/web
+
 COPY phpunit.xml core/phpunit.xml
 COPY modules/custom modules/custom
+
 RUN ../vendor/bin/phpunit -c core --testsuite unit --debug --verbose
 
 ###########################################################################################
 # Create runtime image
 ###########################################################################################
 
-FROM drupal:8.9-apache
+FROM base
 
-# Install Composer and it's dependencies
-RUN apt-get update && apt-get install -y \
-  curl \
-  git-core \
-  mediainfo \
-  unzip \
-  && rm -rf /var/lib/apt/lists/*
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16
-RUN php -r "unlink('composer-setup.php');"
-
-# Set Timezone
-RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
+WORKDIR /opt/drupal/web
 
 # Copy in Composer configuration
-WORKDIR /opt/drupal/web
 COPY composer.json composer.lock /opt/drupal/web/
-
 # Copy in patches we want to apply to modules in Drupal using Composer
 COPY patches/ patches/
 
