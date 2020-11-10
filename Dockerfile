@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y \
   unzip \
   && rm -rf /var/lib/apt/lists/*
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-  php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 && \
-  php -r "unlink('composer-setup.php');"
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 \
+  && php -r "unlink('composer-setup.php');"
 
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
@@ -41,6 +41,8 @@ RUN vendor/bin/phpunit -c web/core --testsuite unit --debug --verbose
 
 FROM base
 
+WORKDIR /opt/drupal/web
+
 # Copy in Composer configuration
 COPY composer.json composer.lock ./
 # Copy in patches we want to apply to modules in Drupal using Composer
@@ -58,15 +60,15 @@ RUN composer install \
   composer clear-cache
 
 # Copy Project
-COPY --from=test /opt/drupal/web/modules/custom web/modules/custom
+COPY --from=test /opt/drupal/web/modules/custom modules/custom
 COPY ./apache/ /etc/apache2/
-COPY sites/ web/sites/
+COPY sites/ sites/
 
 # Remove write permissions for added security
-RUN chmod u-w web/sites/default/settings.php \
-  && chmod u-w web/sites/default/services.yml
+RUN chmod u-w sites/default/settings.php \
+  && chmod u-w sites/default/services.yml
 
 # Change ownership of files
-RUN chown -R www-data:www-data web/
+RUN chown -R www-data:www-data ./
 
 USER www-data
