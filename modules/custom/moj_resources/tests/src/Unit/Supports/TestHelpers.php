@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
  */
 
 class TestHelpers {
+
   /**
    * Create a mock node
    *
@@ -34,6 +35,7 @@ class TestHelpers {
 
     return $node;
   }
+
   /**
    * Create a mock QueryFactory which returns an array of Node IDs
    *
@@ -57,6 +59,7 @@ class TestHelpers {
 
     return $queryFactory;
   }
+
   /**
    * Create a mock NodeStorage which returns an array of Nodes
    *
@@ -75,6 +78,7 @@ class TestHelpers {
 
     return $nodeStorage;
   }
+
   /**
    * Create a mock EntityManager
    *
@@ -93,4 +97,5 @@ class TestHelpers {
 
     return $entityManager;
   }
+
 }

@@ -13,7 +13,6 @@ use Drupal\moj_resources\SeriesContentApiClass;
  *
  * @group unit_moj_resources
  */
-
 class SeriesContentApiClassTest extends UnitTestCase
 {
     public function testGetSeriesContentVideoFormat() {

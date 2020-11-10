@@ -2,7 +2,13 @@
 
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
+/**
+ * Abstract base class for creating content helpers
+ *
+ * @group unit_moj_resources
+ */
 abstract class Content {
+
   public $nid;
   public $title;
   public $description;
@@ -23,33 +29,89 @@ abstract class Content {
     $this->episode = (object) array("value" => 0);
   }
 
+  /**
+   * Set the title
+   *
+   * @param string $title
+   * @return Content
+  */
+  public function setTitle($title) {
+    $this->title = $title;
+    return $this;
+  }
+
+  /**
+   * Set the season number
+   *
+   * @param int $season
+   * @return Content
+  */
   public function setSeason($season) {
     $this->season = (object) array("value" => $season);
     return $this;
   }
 
+  /**
+   * Set the episode number
+   *
+   * @param int $episode
+   * @return Content
+  */
   public function setEpisode($episode) {
     $this->episode = (object) array("value" => $episode);
     return $this;
   }
 
+  /**
+   * Add a prison ID
+   *
+   * @param int $prisonId
+   * @return Content
+  */
   public function addPrison($prisonId) {
      array_push($this->prisons, (object) array("target_id" => $prisonId));
      return $this;
   }
+
+  /**
+   * Add a series ID
+   *
+   * @param int $seriesId
+   * @return Content
+  */
   public function addSeries($seriesId) {
      array_push($this->series, (object) array("target_id" => $seriesId));
      return $this;
   }
+
+  /**
+   * Add a secondary tag ID
+   *
+   * @param int $secondaryTagId
+   * @return Content
+  */
   public function addSecondaryTag($secondaryTagId) {
      array_push($this->secondaryTags, (object) array("target_id" => $secondaryTagId));
      return $this;
   }
+
+  /**
+   * Add a category ID
+   *
+   * @param int $categoryId
+   * @return Content
+  */
   public function addCategory($categoryId) {
      array_push($this->categories, (object) array("target_id" => $categoryId));
      return $this;
   }
 
+  /**
+   * Create a description object
+   *
+   * @param string $description
+   * @return array
+  */
   private function createDescription($description) {
     $description = (object) array(
       "raw" => $description,
@@ -61,9 +123,11 @@ abstract class Content {
     return array($description);
   }
 
+  /**
+   * Create a returnValueMap object for testing
+   *
+   * @return array
+  */
   abstract public function createReturnValueMap();
-  public function setTitle($title) {
-    $this->title = $title;
-    return $this;
-  }
+
 }

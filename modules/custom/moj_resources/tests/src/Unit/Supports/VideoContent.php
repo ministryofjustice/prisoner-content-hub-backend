@@ -4,6 +4,11 @@ namespace Drupal\Tests\moj_resources\Unit\Supports;
 
 use Drupal\Tests\moj_resources\Unit\Supports\Content;
 
+/**
+ * Test Helper for creating Video Items
+ *
+ * @group unit_moj_resources
+ */
 class VideoContent extends Content {
   public $type;
   public $duration;
@@ -16,11 +21,22 @@ class VideoContent extends Content {
     $this->duration = (object) array("value" => 60);
   }
 
+  /**
+   * Create a new instance of VideoContent with a node ID
+   *
+   * @param string $title
+   * @return Content
+  */
   static public function createWithNodeId($nid) {
     $videoContent = new self($nid);
     return $videoContent;
   }
 
+  /**
+   * Create a returnValueMap object for testing
+   *
+   * @return array
+  */
   public function createReturnValueMap() {
      return array(
         array("field_moj_season", $this->season),
