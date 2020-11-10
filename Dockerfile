@@ -7,9 +7,10 @@ RUN apt-get update && apt-get install -y \
   mediainfo \
   unzip \
   && rm -rf /var/lib/apt/lists/*
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16
-RUN php -r "unlink('composer-setup.php');"
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+  php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 && \
+  php -r "unlink('composer-setup.php');"
 
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
@@ -29,16 +30,10 @@ RUN rm -rf ..?* .[!.]* *
 # Install Drupal 8.x Dev
 RUN composer create-project drupal-composer/drupal-project:8.x-dev . --stability dev --no-interaction
 
-# Update autoloads
-RUN composer dump-autoload --optimize
+COPY phpunit.xml web/core/phpunit.xml
+COPY modules/custom web/modules/custom
 
-# Install custom modules and run PHPUnit
-WORKDIR /opt/drupal/web
-
-COPY phpunit.xml core/phpunit.xml
-COPY modules/custom modules/custom
-
-RUN ../vendor/bin/phpunit -c core --testsuite unit --debug --verbose
+RUN vendor/bin/phpunit -c web/core --testsuite unit --debug --verbose
 
 ###########################################################################################
 # Create runtime image
@@ -46,10 +41,8 @@ RUN ../vendor/bin/phpunit -c core --testsuite unit --debug --verbose
 
 FROM base
 
-WORKDIR /opt/drupal/web
-
 # Copy in Composer configuration
-COPY composer.json composer.lock /opt/drupal/web/
+COPY composer.json composer.lock ./
 # Copy in patches we want to apply to modules in Drupal using Composer
 COPY patches/ patches/
 
@@ -60,25 +53,20 @@ RUN composer install \
   --no-dev \
   --no-autoloader \
   --no-interaction \
-  --prefer-dist
+  --prefer-dist && \
+  composer dump-autoload --optimize && \
+  composer clear-cache
 
 # Copy Project
-COPY --from=test /opt/drupal/web/modules/custom modules/custom
-COPY sites/ sites/
+COPY --from=test /opt/drupal/web/modules/custom web/modules/custom
+COPY ./apache/ /etc/apache2/
+COPY sites/ web/sites/
 
 # Remove write permissions for added security
-RUN chmod u-w sites/default/settings.php \
-  && chmod u-w sites/default/services.yml
+RUN chmod u-w web/sites/default/settings.php \
+  && chmod u-w web/sites/default/services.yml
 
-COPY ./apache/ /etc/apache2/
-
-# Update autoloads
-RUN composer dump-autoload --optimize
-
-# Remove composer cache
-RUN composer clear-cache
-
-# Update permisions
-RUN chown -R www-data:www-data /opt/drupal/web/
+# Change ownership of files
+RUN chown -R www-data:www-data web/
 
 USER www-data
