@@ -157,16 +157,19 @@ class PromotedContentApiClass
   {
     $termIds = [];
 
-    foreach ($terms as $id => $item) {
-      array_push($termIds, $item->tid);
+    foreach ($terms as $id => $term) {
+      array_push($termIds, $term->tid);
     }
 
     $loadedTerms = $this->term_storage->loadMultiple($termIds);
 
-    $promotedTerms = array_filter($loadedTerms, function ($item) use ($prison) {
-      if ($item->field_moj_promoted->value == true && $prison == $item->field_promoted_to_prison->target_id) {
+    $promotedTerms = array_filter($loadedTerms, function ($term) use ($prison) {
+      $isPromotedTerm = $term->field_moj_promoted->value == true;
+      $promotedPrisonForTerm = $term->field_promoted_to_prison->target_id;
+      $termIsPromotedToThisPrison = $prison == $promotedPrison;
+      if ($isPromotedTerm && $termIsPromotedToThisPrison) {
         return true;
-      } elseif ($item->field_moj_promoted->value == true && !$item->field_promoted_to_prison->target_id) {
+      } elseif ($isPromotedTerm && !$promotedPrisonForTerm) {
         return true;
       } else {
         return false;
