@@ -19,7 +19,7 @@ class PromotedContentApiClass
    *
    * @var array
    */
-  protected $nids = array();
+  protected $node_ids = array();
 
   /**
    * Nodes
@@ -83,7 +83,7 @@ class PromotedContentApiClass
     return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
   }
   /**
-   * Get nids
+   * Get node_ids
    *
    * @return void
    */
@@ -125,18 +125,18 @@ class PromotedContentApiClass
 
   private function promotedNodes($prison)
   {
-    $results = $this->entity_query->get('node')
+    $query = $this->entity_query->get('node')
       ->condition('status', 1)
       ->condition('sticky', 1)
       ->sort('changed', 'DESC');
 
-    $results = getPrisonResults($prison, $results);
+    $query = getPrisonResults($prison, $query);
 
-    $results
+    $query
       ->range(0, 1)
       ->accessCheck(false);
 
-    return $results->execute();
+    return $query->execute();
   }
 
   private function promotedSeries($prison)
@@ -153,17 +153,17 @@ class PromotedContentApiClass
     return $this->promotedTerms($tags, $prison);
   }
 
-  private function promotedTerms($data, $prison)
+  private function promotedTerms($terms, $prison)
   {
     $termIds = [];
 
-    foreach ($data as $id => $item) {
-      $termIds[] = $item->tid;
+    foreach ($terms as $id => $item) {
+      array_push($termIds, $item->tid);
     }
 
-    $terms = $this->term_storage->loadMultiple($termIds);
+    $loadedTerms = $this->term_storage->loadMultiple($termIds);
 
-    $promotedTerms = array_filter($terms, function ($item) use ($prison) {
+    $promotedTerms = array_filter($loadedTerms, function ($item) use ($prison) {
       if ($item->field_moj_promoted->value == true && $prison == $item->field_promoted_to_prison->target_id) {
         return true;
       } elseif ($item->field_moj_promoted->value == true && !$item->field_promoted_to_prison->target_id) {
@@ -183,13 +183,13 @@ class PromotedContentApiClass
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $node_ids
    * @return array
    */
-  protected function loadNodesDetails(array $nids)
+  protected function loadNodesDetails(array $node_ids)
   {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
+      $this->node_storage->loadMultiple($node_ids),
       function ($item) {
         return $item->access();
       }
