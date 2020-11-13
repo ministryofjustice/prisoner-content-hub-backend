@@ -65,7 +65,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Provides a Suggested Content Resource
  *
  * @RestResource(
- *   id = "suggestedContent_resource",
+ *   id = "suggested_content_resource",
  *   label = @Translation("Suggested Content resource"),
  *   uri_paths = {
  *     "canonical" = "/v1/api/content/suggestions"
