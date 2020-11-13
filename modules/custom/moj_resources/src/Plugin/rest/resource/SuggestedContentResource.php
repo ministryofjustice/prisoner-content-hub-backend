@@ -87,7 +87,7 @@ class SuggestedContentResource extends ResourceBase
 
     protected $numberOfResults;
 
-    Protected $language;
+    protected $language;
 
     protected $prisonId;
 
@@ -127,9 +127,9 @@ class SuggestedContentResource extends ResourceBase
             $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
-            $container->get('moj_resources.suggestedContentApiClass'),
+            $container->get('moj_resources.suggested_content_api_class'),
             $container->get('request_stack')->getCurrentRequest(),
-            $container->get('languageManager')
+            $container->get('language_manager')
         );
     }
 
