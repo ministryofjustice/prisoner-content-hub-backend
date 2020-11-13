@@ -33,7 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          in="query",
  *          required=false,
  *          type="integer",
- *          description="ID of category to return, the default is to being back all categories.",
+ *          description="ID of category to return, the default is to bring back all categories.",
  *      ),
  *      @SWG\Parameter(
  *          name="_number",
@@ -65,7 +65,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Provides a Suggested Content Resource
  *
  * @RestResource(
- *   id = "suggested_content_resource",
+ *   id = "suggestedContent_resource",
  *   label = @Translation("Suggested Content resource"),
  *   uri_paths = {
  *     "canonical" = "/v1/api/content/suggestions"
@@ -75,89 +75,87 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SuggestedContentResource extends ResourceBase
 {
-    protected $suggestedContentApiController;
+    protected $suggestedContentApiClass;
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $availableLanguages;
 
     protected $languageManager;
 
-    protected $parameter_node_id;
+    protected $categoryId;
 
-    protected $paramater_number;
+    protected $numberOfResults;
 
-    protected $paramater_offset;
+    Protected $language;
 
-    Protected $paramater_language_tag;
-
-    Protected $paramater_number_results;
-
-    protected $paramater_prison;
+    protected $prisonId;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
-        SuggestedContentApiClass $SuggestedContentApiClass,
+        SuggestedContentApiClass $suggestedContentApiClass,
         Request $currentRequest,
         LanguageManager $languageManager
     ) {
-        $this->suggestedContentApiClass = $SuggestedContentApiClass;
+        $this->suggestedContentApiClass = $suggestedContentApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->parameter_node_id = self::setNodeId();
-        $this->paramater_language_tag = self::setLanguage();
-        $this->paramater_number = self::setNumberOfResults();
-        $this->paramater_prison = self::setPrison();
-        self::checklanguageParameterIsValid();
+        $this->availableLanguages = $this->languageManager->getLanguages();
+        $this->categoryId = self::setCategoryId();
+        $this->language = self::setLanguage();
+        $this->numberOfResults = self::setNumberOfResults();
+        $this->prisonId = self::setPrisonId();
+        self::checkLanguageParameterIsValid();
         self::checkCategoryIsNumeric();
         self::checkNumberOfResultsIsNumeric();
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
 
     public static function create(
         ContainerInterface $container,
         array $configuration,
-        $plugin_id,
-        $plugin_definition
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
-            $container->get('moj_resources.suggested_content_api_class'),
+            $container->get('moj_resources.suggestedContentApiClass'),
             $container->get('request_stack')->getCurrentRequest(),
-            $container->get('language_manager')
+            $container->get('languageManager')
         );
     }
 
     public function get()
     {
         $suggestedContent = $this->suggestedContentApiClass->SuggestedContentApiEndpoint(
-            $this->paramater_language_tag,
-            $this->parameter_node_id,
-            $this->paramater_number,
-            $this->paramater_prison
+            $this->language,
+            $this->categoryId,
+            $this->numberOfResults,
+            $this->prisonId
         );
-        if (!empty($suggestedContent)) {
-            $response = new ResourceResponse($suggestedContent);
-            $response->addCacheableDependency($suggestedContent);
-            return $response;
+
+        if (empty($suggestedContent)) {
+          throw new NotFoundHttpException(t('No suggested content found'));
         }
-        throw new NotFoundHttpException(t('No suggested content found'));
+
+        $response = new ResourceResponse($suggestedContent);
+        $response->addCacheableDependency($suggestedContent);
+        return $response;
     }
 
-    protected function checklanguageParameterIsValid()
+    protected function checkLanguageParameterIsValid()
     {
-        foreach($this->availableLangs as $lang)
+        foreach($this->availableLanguages as $language)
         {
-            if ($lang->getid() === $this->paramater_language_tag) {
+            if ($language->getid() === $this->language) {
                 return true;
             }
         }
@@ -170,7 +168,7 @@ class SuggestedContentResource extends ResourceBase
 
     protected function checkCategoryIsNumeric()
     {
-        if (is_numeric($this->parameter_node_id)) {
+        if (is_numeric($this->categoryId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -182,7 +180,7 @@ class SuggestedContentResource extends ResourceBase
 
     protected function checkNumberOfResultsIsNumeric()
     {
-        if (is_numeric($this->paramater_number)) {
+        if (is_numeric($this->numberOfResults)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -197,7 +195,7 @@ class SuggestedContentResource extends ResourceBase
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 
-    protected function setNodeId()
+    protected function setCategoryId()
     {
         return is_null($this->currentRequest->get('_category')) ? 0 : $this->currentRequest->get('_category');
     }
@@ -207,7 +205,7 @@ class SuggestedContentResource extends ResourceBase
         return is_null($this->currentRequest->get('_number')) ? 4 : $this->currentRequest->get('_number');
     }
 
-    protected function setPrison()
+    protected function setPrisonId()
     {
         return is_null($this->currentRequest->get('_prison')) ? 0 : $this->currentRequest->get('_prison');
     }

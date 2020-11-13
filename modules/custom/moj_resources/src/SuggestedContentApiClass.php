@@ -1,5 +1,4 @@
 <?php
-
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
@@ -19,25 +18,19 @@ class SuggestedContentApiClass
    *
    * @var array
    */
-  protected $nids = array();
-  /**
-   * Nodes
-   *
-   * @var array
-   */
-  protected $nodes = array();
+  protected $nodeIds = array();
   /**
    * Language Tag
    *
    * @var string
    */
-  protected $lang;
+  protected $language;
   /**
    * Node_storage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $node_storage;
+  protected $nodeStorage;
   /**
    * Entitity Query object
    *
@@ -45,7 +38,12 @@ class SuggestedContentApiClass
    *
    * Instance of querfactory
    */
-  protected $entity_query;
+  protected $entityQuery;
+
+  protected $prisonId;
+  protected $categoryId;
+  protected $numberOfResults;
+
   /**
    * Class Constructor
    *
@@ -56,21 +54,26 @@ class SuggestedContentApiClass
     EntityTypeManagerInterface $entityTypeManager,
     QueryFactory $entityQuery
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->entityQuery = $entityQuery;
   }
 
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param [string] $language
    * @return array
    */
-  public function SuggestedContentApiEndpoint($lang, $nid, $number, $prison)
+  public function SuggestedContentApiEndpoint($language, $categoryId, $numberOfResults, $prisonId)
   {
-    $this->lang = $lang;
-    $nodes = $this->getSuggestions($nid, $number, $prison);
-    $content = array_map([$this, 'translateNode'], $nodes);
+    $this->language = $language;
+    $this->prisonId = $prisonId;
+    $this->categoryId = $categoryId;
+    $this->numberOfResults = $numberOfResults;
+
+    $results = $this->getSuggestions();
+    $content = array_map([$this, 'translateNode'], $results);
+
     return array_map([$this, 'decorateContent'], array_values($content));
   }
 
@@ -83,42 +86,38 @@ class SuggestedContentApiClass
    */
   private function translateNode(NodeInterface $node)
   {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
+    return $node->hasTranslation($this->language) ? $node->getTranslation($this->language) : $node;
   }
 
   /**
    * Get the relevant matching items
    *
-   * @param int $nid
-   * @param int $number
-   * @param string $prison
-   *
    * @return array
    */
-  private function getSuggestions($nid, $number, $prison)
+  private function getSuggestions()
   {
-    $node = $this->node_storage->load($nid);
-    $secondary_tag_ids = $this->getTagIds($node->field_moj_secondary_tags);
-    $matching_ids = array_unique($this->getSecondaryTagItemsFor($secondary_tag_ids, $number, $prison));
+    $category = $this->nodeStorage->load($this->categoryId);
+    $secondaryTagIds = $this->getTagIds($category->field_moj_secondary_tags);
+    $matchingIds = array_unique($this->getSecondaryTagItemsFor($secondaryTagIds));
 
-    if (count($matching_ids) < $number) {
-      $matching_any_secondary_tags_ids = $this->getTagItemsFor($secondary_tag_ids, $number, $prison, false);
-      $matching_ids = array_unique(array_merge($matching_ids, $matching_any_secondary_tags_ids));
+    if (count($matchingIds) < $this->numberOfResults) {
+      $matchingAnySecondaryTagsIds = $this->getTagItemsFor($secondaryTagIds, false);
+      $matchingIds = array_unique(array_merge($matchingIds, $matchingAnySecondaryTagsIds));
     }
 
-    if (count($matching_ids) < $number) {
-      $primary_tag_ids = $this->getTagIds($node->field_moj_top_level_categories);
-      $matching_any_primary_tags_ids = $this->getTagItemsFor($primary_tag_ids, $number, $prison);
-      $matching_ids = array_unique(array_merge($matching_ids, $matching_any_primary_tags_ids));
+    if (count($matchingIds) < $this->numberOfResults) {
+      $primaryTagIds = $this->getTagIds($category->field_moj_top_level_categories);
+      $matchingAnyPrimaryTagsIds = $this->getTagItemsFor($primaryTagIds);
+      $matchingIds = array_unique(array_merge($matchingIds, $matchingAnyPrimaryTagsIds));
     }
 
-    $current_id_index = array_search($nid, $matching_ids);
+    $currentIdIndex = array_search($this->categoryId, $matchingIds);
 
-    if ($current_id_index !== FALSE) {
-      unset($matching_ids[$current_id_index]);
+    if ($currentIdIndex !== FALSE) {
+      unset($matchingIds[$currentIdIndex]);
     }
 
-    return $this->loadNodesDetails(array_slice($matching_ids, 0, $number));
+    return $this->loadNodesDetails(array_slice($matchingIds, 0));
   }
 
   /**
@@ -129,88 +128,79 @@ class SuggestedContentApiClass
    * @return array
    */
   private function getTagIds($tags) {
-    $tag_ids = [];
-    $number_tags = count($tags);
+    $tagIds = [];
+    $numberTags = count($tags);
 
-    for ($i = 0; $i < $number_tags; $i++) {
-      array_push($tag_ids, $tags[$i]->target_id);
+    for ($i = 0; $i < $numberTags; $i++) {
+      array_push($tagIds, $tags[$i]->target_id);
     }
 
-    return $tag_ids;
+    return $tagIds;
   }
 
   /**
-   * Get matching primary or secondary items for a given id, excluding the passed in ids
+   * Get matching primary or secondary items excluding the passed in ids
    *
-   * @param int $id
-   * @param int $number
-   * @param string $prison
    * @param boolean $primary
    *
    * @return array
    */
-  private function getTagItemsFor($ids, $number, $prison, $primary = true)
+  private function getTagItemsFor($tagIds, $primary = true)
   {
-    $results = $this->getInitialQuery($prison);
+    $query = $this->getInitialQuery($this->prisonId);
 
-    if ($id !== 0) {
-      if ($primary) {
-        $results->condition('field_moj_top_level_categories', $ids, 'IN');
-      } else {
-        $group = $results
-          ->orConditionGroup()
-          ->condition('field_moj_secondary_tags', $ids, 'IN')
-          ->condition('field_moj_tags', $ids, 'IN');
+    if ($primary) {
+      $query->condition('field_moj_top_level_categories', $tagIds, 'IN');
+    } else {
+      $group = $query
+        ->orConditionGroup()
+        ->condition('field_moj_secondary_tags', $tagIds, 'IN')
+        ->condition('field_moj_tags', $tagIds, 'IN');
 
-        $results->condition($group);
-      }
+      $query->condition($group);
     }
 
-    $results->sort('nid', 'DESC');
-    return $results->range(0, $number)->execute();
+    $query->sort('categoryId', 'DESC');
+
+    return $query->range(0, $this->numberOfResults)->execute();
   }
 
   /**
    * Get matching primary or secondary items for a given id
    *
    * @param array[int] $ids
-   * @param int $number
-   * @param string $prison
    *
    * @return array
    */
-  private function getSecondaryTagItemsFor($ids, $number, $prison)
+  private function getSecondaryTagItemsFor($tagIds)
   {
-    $results = $this->getInitialQuery($prison);
+    $query = $this->getInitialQuery($this->prisonId);
 
     if (count($ids) > 0) {
-      for ($i = 0; $i < count($ids); $i++) {
-          $results->condition("field_moj_secondary_tags.$i", $ids[$i]);
+      for ($i = 0; $i < count($tagIds); $i++) {
+          $query->condition("field_moj_secondary_tags.$i", $tagIds[$i]);
       }
     }
 
-    $results->sort('nid', 'DESC');
-    return $results->range(0, $number)->execute();
+    return $query
+      ->sort('categoryId', 'DESC')
+      ->range(0, $this->numberOfResults)->execute();
   }
 
   /**
    * Setup a query
    *
-   * @param int $prison_id
-   *
    * @return array
    */
-  private function getInitialQuery($prison_id = 0)
+  private function getInitialQuery()
   {
-    $types = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item',);
-    $results = $this->entity_query->get('node')
+    $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item',);
+    $query = $this->entityQuery->get('node')
       ->condition('status', 1)
-      ->condition('type', $types, 'IN')
+      ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
 
-    $results = getPrisonResults($prison_id, $results);
-
-    return $results;
+    return getPrisonResults($query);
   }
 
   /**
@@ -221,27 +211,27 @@ class SuggestedContentApiClass
    */
   private function decorateContent($node)
   {
-    $result = [];
-    $result['id'] = $node->nid->value;
-    $result['title'] = $node->title->value;
-    $result['content_type'] = $node->type->target_id;
-    $result['summary'] = $node->field_moj_description->summary;
-    $result['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
-    $result['duration'] = $node->field_moj_duration->value;
+    $content = [];
+    $content['id'] = $node->categoryId->value;
+    $content['title'] = $node->title->value;
+    $content['content_type'] = $node->type->target_id;
+    $content['summary'] = $node->field_moj_description->summary;
+    $content['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
+    $content['duration'] = $node->field_moj_duration->value;
 
-    return $result;
+    return $content;
   }
 
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $nodeIds
    * @return array
    */
-  private function loadNodesDetails(array $nids)
+  private function loadNodesDetails(array $nodeIds)
   {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
+      $this->nodeStorage->loadMultiple($nodeIds),
       function ($item) {
         return $item->access();
       }
