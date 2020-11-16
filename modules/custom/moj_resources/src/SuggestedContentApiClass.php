@@ -72,9 +72,9 @@ class SuggestedContentApiClass
     $this->numberOfResults = $numberOfResults;
 
     $results = $this->getSuggestions();
-    $content = array_map([$this, 'translateNode'], $results);
+    $suggestions = array_map([$this, 'translateNode'], $results);
 
-    return array_map([$this, 'decorateContent'], array_values($content));
+    return array_map([$this, 'decorateContent'], array_values($suggestions));
   }
 
   /**
@@ -98,22 +98,22 @@ class SuggestedContentApiClass
   {
     $category = $this->nodeStorage->load($this->categoryId);
     $secondaryTagIds = $this->getTagIds($category->field_moj_secondary_tags);
-    $matchingIds = array_unique($this->getSecondaryTagItemsFor($secondaryTagIds));
+    $matchingIds = array_unique($this->getOnlySecondaryTagItemsFor($secondaryTagIds));
 
     if (count($matchingIds) < $this->numberOfResults) {
-      $matchingAnySecondaryTagsIds = $this->getTagItemsFor($secondaryTagIds, false);
+      $matchingAnySecondaryTagsIds = $this->getSecondaryTagItemsFor($secondaryTagIds);
       $matchingIds = array_unique(array_merge($matchingIds, $matchingAnySecondaryTagsIds));
     }
 
     if (count($matchingIds) < $this->numberOfResults) {
       $primaryTagIds = $this->getTagIds($category->field_moj_top_level_categories);
-      $matchingAnyPrimaryTagsIds = $this->getTagItemsFor($primaryTagIds);
+      $matchingAnyPrimaryTagsIds = $this->getPrimaryTagItemsFor($primaryTagIds);
       $matchingIds = array_unique(array_merge($matchingIds, $matchingAnyPrimaryTagsIds));
     }
 
     $currentIdIndex = array_search($this->categoryId, $matchingIds);
 
-    if ($currentIdIndex !== FALSE) {
+    if ($currentIdIndex !== false) {
       unset($matchingIds[$currentIdIndex]);
     }
 
@@ -128,41 +128,54 @@ class SuggestedContentApiClass
    * @return array
    */
   private function getTagIds($tags) {
-    $tagIds = [];
-    $numberTags = count($tags);
+    $getTagId = function($tag) {
+        return $tag->target_id;
+    };
 
-    for ($i = 0; $i < $numberTags; $i++) {
-      array_push($tagIds, $tags[$i]->target_id);
-    }
-
-    return $tagIds;
+    return array_map($getTagId, $tags);
   }
 
   /**
-   * Get matching primary or secondary items excluding the passed in ids
+   * Get matching primary matching tags
    *
-   * @param boolean $primary
+   * @param array[int] $tagIds
    *
    * @return array
    */
-  private function getTagItemsFor($tagIds, $primary = true)
+  private function getPrimaryTagItemsFor($tagIds)
   {
     $query = $this->getInitialQuery($this->prisonId);
 
-    if ($primary) {
-      $query->condition('field_moj_top_level_categories', $tagIds, 'IN');
-    } else {
-      $group = $query
-        ->orConditionGroup()
-        ->condition('field_moj_secondary_tags', $tagIds, 'IN')
-        ->condition('field_moj_tags', $tagIds, 'IN');
+    $query
+      ->condition('field_moj_top_level_categories', $tagIds, 'IN')
+      ->sort('categoryId', 'DESC')
+      ->range(0, $this->numberOfResults);
 
-      $query->condition($group);
-    }
+    return $query->execute();
+  }
 
-    $query->sort('categoryId', 'DESC');
+  /**
+   * Get matching secondary matching tags
+   *
+   * @param array[int] $tagIds
+   *
+   * @return array
+   */
+  private function getSecondaryTagItemsFor($tagIds)
+  {
+    $query = $this->getInitialQuery($this->prisonId);
 
-    return $query->range(0, $this->numberOfResults)->execute();
+    $group = $query
+      ->orConditionGroup()
+      ->condition('field_moj_secondary_tags', $tagIds, 'IN')
+      ->condition('field_moj_tags', $tagIds, 'IN');
+
+    $query
+      ->condition($group)
+      ->sort('categoryId', 'DESC')
+      ->range(0, $this->numberOfResults);
+
+    return $query->execute();
   }
 
   /**
@@ -172,7 +185,7 @@ class SuggestedContentApiClass
    *
    * @return array
    */
-  private function getSecondaryTagItemsFor($tagIds)
+  private function getOnlySecondaryTagItemsFor($tagIds)
   {
     $query = $this->getInitialQuery($this->prisonId);
 
