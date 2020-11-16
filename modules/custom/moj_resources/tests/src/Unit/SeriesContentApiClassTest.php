@@ -6,6 +6,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
 use Drupal\Tests\moj_resources\Unit\Supports\VideoContent;
 use Drupal\Tests\moj_resources\Unit\Supports\AudioContent;
+use Drupal\Tests\moj_resources\Unit\Supports\Prison;
+use Drupal\Tests\moj_resources\Unit\Supports\Series;
 use Drupal\moj_resources\SeriesContentApiClass;
 
 /**
@@ -24,24 +26,39 @@ class SeriesContentApiClassTest extends UnitTestCase
         ->addSecondaryTag(789)
         ->addCategory(123);
 
+      $testSeries = Series::createWithNodeId(456)
+        ->addPrisonCategory(1234);
+
+      $testPrison = Prison::createWithNodeId(123)
+        ->addPrisonCategory(1234);
+
       $node = TestHelpers::createMockNode($this, $testContent);
-      $nodeStorage = TestHelpers::createMockNodeStorage($this, array(
-        $node
+      $series = TestHelpers::createMockNode($this, $testSeries);
+      $prison = TestHelpers::createMockNode($this, $testPrison);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(1234 => 1234), array($node))
       ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, $series),
+        array(123, $prison)
+      ));
+
       $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
           array("node", $nodeStorage),
-          array("taxonomy_term", $nodeStorage)
-        ));
+          array("taxonomy_term", $termStorage)
+      ));
       $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(1234 => 1234));
 
       $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
 
       $series = $seriesContentApiClass->SeriesContentApiEndpoint(
         "en/GB",
-        123,
-        null,
-        null,
         456,
+        null,
+        null,
+        123,
         "ASC"
       );
 
@@ -71,24 +88,40 @@ class SeriesContentApiClassTest extends UnitTestCase
         ->addSecondaryTag(789)
         ->addCategory(123);
 
+      $testSeries = Series::createWithNodeId(456)
+        ->addPrisonCategory(1234);
+
+      $testPrison = Prison::createWithNodeId(123)
+        ->addPrisonCategory(1234);
+
       $node = TestHelpers::createMockNode($this, $testContent);
-      $nodeStorage = TestHelpers::createMockNodeStorage($this, array(
-        $node
+      $series = TestHelpers::createMockNode($this, $testSeries);
+      $prison = TestHelpers::createMockNode($this, $testPrison);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(1234 => 1234), array($node))
       ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, $series),
+        array(123, $prison)
+      ));
+
       $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
-          array("node", $nodeStorage),
-          array("taxonomy_term", $nodeStorage)
-        ));
+        array("node", $nodeStorage),
+        array("taxonomy_term", $termStorage)
+      ));
+
       $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(1234 => 1234));
 
       $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
 
       $series = $seriesContentApiClass->SeriesContentApiEndpoint(
         "en/GB",
-        123,
-        null,
-        null,
         456,
+        null,
+        null,
+        123,
         "ASC"
       );
 

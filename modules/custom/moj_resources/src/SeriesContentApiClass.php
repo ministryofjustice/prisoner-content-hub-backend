@@ -222,7 +222,7 @@ class SeriesContentApiClass
 
     if (!$series) {
       throw new NotFoundHttpException(
-        t('Series not found'),
+        'Series not found',
         null,
         404
       );
@@ -243,7 +243,7 @@ class SeriesContentApiClass
 
     if (!$prison) {
       throw new NotFoundHttpException(
-        t('Prison not found'),
+        'Prison not found',
         null,
         404
       );
@@ -273,17 +273,17 @@ class SeriesContentApiClass
       array_push($seriesPrisonCategories, $prisonCategory->target_id);
     }
 
-    if (empty($prisonCategories['series'])) {
+    if (empty($seriesPrisonCategories)) {
       throw new BadRequestHttpException(
-        t('The Series does not have any prison categories selected'),
+        'The Series does not have any prison categories selected',
         null,
         400
       );
     }
 
-    if (empty($prisonCategories['prison'])) {
+    if (empty($prisonCategories)) {
       throw new BadRequestHttpException(
-        t('The Prison does not have any prison categories selected'),
+        'The Prison does not have any prison categories selected',
         null,
         400
       );
@@ -298,7 +298,7 @@ class SeriesContentApiClass
   private function getPrisonFilteredQuery($prisonId, $idToCheck, $prisonCategories, $query) {
     if ($idToCheck !== $prisonId) {
       throw new BadRequestHttpException(
-        t('Supplied prison does not match id to check'),
+        'Supplied prison does not match id to check',
         null,
         400
       );
@@ -333,6 +333,10 @@ class SeriesContentApiClass
     $prison = $this->getPrison($prisonId);
     $prisonCategories = $this->getPrisonCategories($prison, $series);
 
+    $query = $this->entity_query->get('node')
+      ->condition('status', 1)
+      ->accessCheck(false);
+
     // checking filter by prison
     if ($series->field_promoted_to_prison !== null) {
       $query = $this->getPrisonFilteredQuery(
@@ -354,10 +358,6 @@ class SeriesContentApiClass
 
       $query->condition('field_prison_categories', $prisonCategories, 'IN');
     }
-
-    $query = $this->entity_query->get('node')
-      ->condition('status', 1)
-      ->accessCheck(false);
 
     $query->condition('field_moj_series', $seriesId);
 

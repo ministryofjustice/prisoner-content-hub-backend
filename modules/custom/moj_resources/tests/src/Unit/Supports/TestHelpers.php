@@ -67,14 +67,14 @@ class TestHelpers {
    * @param object[] $nodesToReturn
    * @return object
   */
-  public static function createMockNodeStorage($unitTestCase, $nodesToReturn) {
+  public static function createMockNodeStorage($unitTestCase, $method, $nodesToReturn) {
     $nodeStorage = $unitTestCase->getMockBuilder('Drupal\node\NodeStorage')
       ->disableOriginalConstructor()
       ->getMock();
 
     $nodeStorage->expects($unitTestCase->any())
-      ->method('loadMultiple')
-      ->will($unitTestCase->returnValue($nodesToReturn));
+      ->method($method)
+      ->will($unitTestCase->returnValueMap($nodesToReturn));
 
     return $nodeStorage;
   }

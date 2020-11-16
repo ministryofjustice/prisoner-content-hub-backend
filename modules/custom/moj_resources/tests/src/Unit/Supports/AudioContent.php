@@ -50,6 +50,7 @@ class AudioContent extends Content {
         array("field_moj_top_level_categories", $this->categories),
         array("field_moj_secondary_tags", $this->secondaryTags),
         array("field_moj_prisons", $this->prisons),
+        array("field_prison_categories", $this->prisonCategories),
         array("field_moj_audio", $this->audio),
     );
   }

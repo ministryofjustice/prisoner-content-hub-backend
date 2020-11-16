@@ -15,6 +15,7 @@ abstract class Content {
   public $season;
   public $episode;
   public $prisons = [];
+  public $prisonCategories = [];
   public $series = [];
   public $secondaryTags = [];
   public $categories = [];
@@ -70,6 +71,17 @@ abstract class Content {
   */
   public function addPrison($prisonId) {
      array_push($this->prisons, (object) array("target_id" => $prisonId));
+     return $this;
+  }
+
+  /**
+   * Add a prison ID
+   *
+   * @param int $prisonCategoryId
+   * @return Content
+  */
+  public function addPrisonCategory($prisonCategoryId) {
+     array_push($this->prisonCategories, (object) array("target_id" => $prisonCategoryId));
      return $this;
   }
 
