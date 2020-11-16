@@ -350,7 +350,7 @@ class SeriesContentApiClass
 
       if ($hasNoMatchingPrisonCategories) {
         throw new BadRequestHttpException(
-          t('The Series does not have a matching prison category for this prison'),
+          'The Series does not have a matching prison category for this prison',
           null,
           400
         );

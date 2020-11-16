@@ -37,7 +37,7 @@ class SeriesContentApiClassTest extends UnitTestCase
       $prison = TestHelpers::createMockNode($this, $testPrison);
 
       $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
-        array(array(1234 => 1234), array($node))
+        array(array(123), array($node))
       ));
 
       $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
@@ -49,7 +49,7 @@ class SeriesContentApiClassTest extends UnitTestCase
           array("node", $nodeStorage),
           array("taxonomy_term", $termStorage)
       ));
-      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(1234 => 1234));
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
 
       $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
 
@@ -99,7 +99,7 @@ class SeriesContentApiClassTest extends UnitTestCase
       $prison = TestHelpers::createMockNode($this, $testPrison);
 
       $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
-        array(array(1234 => 1234), array($node))
+        array(array(123), array($node))
       ));
 
       $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
@@ -112,7 +112,7 @@ class SeriesContentApiClassTest extends UnitTestCase
         array("taxonomy_term", $termStorage)
       ));
 
-      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(1234 => 1234));
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
 
       $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
 
@@ -140,5 +140,197 @@ class SeriesContentApiClassTest extends UnitTestCase
       $this->assertEquals($content["secondary_tags"][0]->target_id, 789);
       $this->assertEquals(count($content["categories"]), 1);
       $this->assertEquals($content["categories"][0]->target_id, 123);
+    }
+
+    public function testThrowsWhenSeriesDoesNotExist() {
+      $testContent = AudioContent::createWithNodeId(123);
+      $testPrison = Prison::createWithNodeId(123)
+        ->addPrisonCategory(1234);
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+      $prison = TestHelpers::createMockNode($this, $testPrison);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(123), array($node))
+      ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, null),
+        array(123, $prison)
+      ));
+
+      $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
+        array("node", $nodeStorage),
+        array("taxonomy_term", $termStorage)
+      ));
+
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
+
+      $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
+
+      $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+      $series = $seriesContentApiClass->SeriesContentApiEndpoint(
+        "en/GB",
+        456,
+        null,
+        null,
+        123,
+        "ASC"
+      );
+    }
+
+    public function testThrowsWhenPrisonDoesNotExist() {
+      $testContent = AudioContent::createWithNodeId(123);
+      $testSeries = Series::createWithNodeId(456)
+        ->addPrisonCategory(1234);
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+      $series = TestHelpers::createMockNode($this, $testSeries);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(123), array($node))
+      ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, $series),
+        array(123, null)
+      ));
+
+      $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
+        array("node", $nodeStorage),
+        array("taxonomy_term", $termStorage)
+      ));
+
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
+
+      $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
+
+      $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+      $series = $seriesContentApiClass->SeriesContentApiEndpoint(
+        "en/GB",
+        456,
+        null,
+        null,
+        123,
+        "ASC"
+      );
+    }
+
+    public function testThrowsWhenSeriesHasNoPrisonCategory() {
+      $testContent = AudioContent::createWithNodeId(123);
+      $testSeries = Series::createWithNodeId(456);
+      $testPrison = Prison::createWithNodeId(123)
+        ->addPrisonCategory(1234);
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+      $series = TestHelpers::createMockNode($this, $testSeries);
+      $prison = TestHelpers::createMockNode($this, $testPrison);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(123), array($node))
+      ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, $series),
+        array(123, $prison)
+      ));
+
+      $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
+        array("node", $nodeStorage),
+        array("taxonomy_term", $termStorage)
+      ));
+
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
+
+      $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
+
+      $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+      $series = $seriesContentApiClass->SeriesContentApiEndpoint(
+        "en/GB",
+        456,
+        null,
+        null,
+        123,
+        "ASC"
+      );
+    }
+
+    public function testThrowsWhenPrisonHasNoPrisonCategory() {
+      $testContent = AudioContent::createWithNodeId(123);
+      $testSeries = Series::createWithNodeId(456)
+        ->addPrisonCategory(1234);
+      $testPrison = Prison::createWithNodeId(123);
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+      $series = TestHelpers::createMockNode($this, $testSeries);
+      $prison = TestHelpers::createMockNode($this, $testPrison);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(123), array($node))
+      ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, $series),
+        array(123, $prison)
+      ));
+
+      $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
+        array("node", $nodeStorage),
+        array("taxonomy_term", $termStorage)
+      ));
+
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
+
+      $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
+
+      $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+      $series = $seriesContentApiClass->SeriesContentApiEndpoint(
+        "en/GB",
+        456,
+        null,
+        null,
+        123,
+        "ASC"
+      );
+    }
+
+    public function testThrowsWhenPrisonAndSeriesHaveNoMatchingPrisonCategories() {
+      $testContent = AudioContent::createWithNodeId(123);
+      $testSeries = Series::createWithNodeId(456)
+        ->addPrisonCategory(1234);
+        $testPrison = Prison::createWithNodeId(123)
+        ->addPrisonCategory(5678);
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+      $series = TestHelpers::createMockNode($this, $testSeries);
+      $prison = TestHelpers::createMockNode($this, $testPrison);
+
+      $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
+        array(array(123), array($node))
+      ));
+
+      $termStorage = TestHelpers::createMockNodeStorage($this, 'load', array(
+        array(456, $series),
+        array(123, $prison)
+      ));
+
+      $entityManager = TestHelpers::createMockEntityManager($this, array( // Refactor this to return different NodeStorage objects
+        array("node", $nodeStorage),
+        array("taxonomy_term", $termStorage)
+      ));
+
+      $entityQueryFactory = TestHelpers::createMockQueryFactory($this, array(123));
+
+      $seriesContentApiClass = new SeriesContentApiClass($entityManager, $entityQueryFactory);
+
+      $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+      $series = $seriesContentApiClass->SeriesContentApiEndpoint(
+        "en/GB",
+        456,
+        null,
+        null,
+        123,
+        "ASC"
+      );
     }
 }
