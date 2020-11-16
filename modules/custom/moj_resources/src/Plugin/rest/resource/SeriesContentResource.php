@@ -75,7 +75,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   id = "series_content_resource",
  *   label = @Translation("Series Content resource"),
  *   uri_paths = {
- *     "canonical" = "/v1/api/content/series/{seriesId}"
+ *     "canonical" = "/v1/api/content/series/{id}"
  *   }
  * )
  */
@@ -152,7 +152,7 @@ class SeriesContentResource extends ResourceBase
   {
     $contentForSeries = $this->seriesContentApiClass->SeriesContentApiEndpoint(
       $this->language,
-      $this->currentRequest->get('seriesId'),
+      $this->currentRequest->get('id'),
       $this->numberOfResults,
       $this->resultsOffset,
       $this->prisonId,
