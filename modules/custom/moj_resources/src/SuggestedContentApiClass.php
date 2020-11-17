@@ -66,20 +66,8 @@ class SuggestedContentApiClass
     $this->numberOfResults = $numberOfResults;
     $this->prisonId = $prisonId;
     $suggestions = $this->getSuggestions();
-    $translatedSuggestions = array_map([$this, 'translateNode'], $suggestions);
+    $translatedSuggestions = array_map([$this, 'translateContent'], $suggestions);
     return array_map([$this, 'decorateContent'], array_values($translatedSuggestions));
-  }
-
-  /**
-   * TranslateNode function
-   *
-   * @param NodeInterface $node
-   *
-   * @return $node
-   */
-  private function translateNode(NodeInterface $node)
-  {
-    return $node->hasTranslation($this->language) ? $node->getTranslation($this->language) : $node;
   }
 
   /**
@@ -121,47 +109,44 @@ class SuggestedContentApiClass
    * @return array
    */
   private function getTagIds($tags) {
-    $tagIds = [];
-    $numberOfTags = count($tags);
-
-    for ($i = 0; $i < $numberOfTags; $i++) {
-      array_push($tagIds, $tags[$i]->target_id);
-    }
-
-    return $tagIds;
+    return array_map(
+      function($tag) {
+        return $tag->target_id;
+      },
+      $tags
+    );
   }
 
   /**
-   * Get matching primary items for a given id
+   * Get matching primary items for supplied tag ids
    *
-   * @param int $id
+   * @param array[int] $tagIds
    *
    * @return array
    */
-  private function getPrimaryTagItemsFor($ids)
+  private function getPrimaryTagItemsFor($tagIds)
   {
     return $this->getInitialQuery()
-      ->condition('field_moj_top_level_categories', $ids, 'IN')
+      ->condition('field_moj_top_level_categories', $tagIds, 'IN')
       ->sort('nid', 'DESC')
       ->range(0, $this->numberOfResults)
       ->execute();
   }
 
   /**
-   * Get matching primary or secondary items for a given id, excluding the passed in ids
+   * Get matching secondary items for supplied tag ids
    *
-   * @param int $id
-   * @param boolean $primary
+   * @param array[int] $tagIds
    *
    * @return array
    */
-  private function getAllSecondaryTagItemsFor($ids)
+  private function getAllSecondaryTagItemsFor($tagIds)
   {
     $query = $this->getInitialQuery();
     $group = $query
       ->orConditionGroup()
-      ->condition('field_moj_secondary_tags', $ids, 'IN')
-      ->condition('field_moj_tags', $ids, 'IN');
+      ->condition('field_moj_secondary_tags', $tagIds, 'IN')
+      ->condition('field_moj_tags', $tagIds, 'IN');
 
     return $query
       ->condition($group)
@@ -171,18 +156,18 @@ class SuggestedContentApiClass
   }
 
   /**
-   * Get matching primary or secondary items for a given id
+   * Get matching secondary items for supplied tag ids
    *
-   * @param array[int] $ids
+   * @param array[int] $tagIds
    *
    * @return array
    */
-  private function getSecondaryTagItemsFor($ids)
+  private function getSecondaryTagItemsFor($tagIds)
   {
     $query = $this->getInitialQuery();
 
-    for ($i = 0; $i < count($ids); $i++) {
-        $query->condition("field_moj_secondary_tags.$i", $ids[$i]);
+    for ($i = 0; $i < count($tagIds); $i++) {
+        $query->condition("field_moj_secondary_tags.$i", $tagIds[$i]);
     }
 
     return $query
@@ -205,6 +190,18 @@ class SuggestedContentApiClass
       ->accessCheck(false);
 
     return getPrisonResults($this->prisonId, $query);
+  }
+
+  /**
+   * TranslateNode function
+   *
+   * @param NodeInterface $node
+   *
+   * @return $node
+   */
+  private function translateContent(NodeInterface $node)
+  {
+    return $node->hasTranslation($this->language) ? $node->getTranslation($this->language) : $node;
   }
 
   /**
