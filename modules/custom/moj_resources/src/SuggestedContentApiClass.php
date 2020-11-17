@@ -226,15 +226,15 @@ class SuggestedContentApiClass
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $nodeIds
    * @return array
    */
-  private function loadNodesDetails(array $nids)
+  private function loadNodesDetails(array $nodeIds)
   {
     return array_filter(
-      $this->nodeStorage->loadMultiple($nids),
-      function ($item) {
-        return $item->access();
+      $this->nodeStorage->loadMultiple($nodeIds),
+      function ($node) {
+        return $node->access();
       }
     );
   }
