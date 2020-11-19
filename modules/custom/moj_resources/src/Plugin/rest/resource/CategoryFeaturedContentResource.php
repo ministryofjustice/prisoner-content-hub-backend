@@ -79,23 +79,23 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $availableLanguages;
 
     protected $languageManager;
 
-    protected $paramater_category;
+    protected $categoryId;
 
-    protected $paramater_prison;
+    protected $prisonId;
 
-    Protected $paramater_language_tag;
+    Protected $languageId;
 
-    Protected $paramater_number_results;
+    Protected $numberOfResults;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
         CategoryFeaturedContentApiClass $CategoryFeaturedContentApiClass,
         Request $currentRequest,
@@ -104,28 +104,28 @@ class CategoryFeaturedContentResource extends ResourceBase
         $this->CategoryFeaturedContentApiClass = $CategoryFeaturedContentApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_category = self::setCategory();
-        $this->paramater_prison = self::setPrison();
-        $this->paramater_number_results = self::setNumberOfResults();
-        $this->paramater_language_tag = self::setLanguage();
-        self::checklanguageParameterIsValid();
+        $this->availableLanguages = $this->languageManager->getLanguages();
+        $this->categoryId = self::setCategory();
+        $this->prisonId = self::setPrison();
+        $this->numberOfResults = self::setNumberOfResults();
+        $this->languageId = self::setLanguage();
+        self::checkLanguageIsValid();
         self::checkNumberOfResultsIsNumeric();
-        self::checkCatgeoryIsNumeric();
+        self::checkCategoryIsNumeric();
         self::checkPrisonIsNumeric();
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
 
     public static function create(
         ContainerInterface $container,
         array $configuration,
-        $plugin_id,
-        $plugin_definition
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.category_featured_content_api_class'),
@@ -137,10 +137,10 @@ class CategoryFeaturedContentResource extends ResourceBase
     public function get()
     {
         $featuredContent = $this->CategoryFeaturedContentApiClass->CategoryFeaturedContentApiEndpoint(
-            $this->paramater_language_tag,
-            $this->paramater_category,
-            $this->paramater_number_results,
-            $this->paramater_prison
+            $this->languageId,
+            $this->categoryId,
+            $this->numberOfResults,
+            $this->prisonId
         );
         if (!empty($featuredContent)) {
             $response = new ResourceResponse($featuredContent);
@@ -150,24 +150,24 @@ class CategoryFeaturedContentResource extends ResourceBase
         throw new NotFoundHttpException(t('No featured content found'));
     }
 
-    protected function checklanguageParameterIsValid()
+    protected function checkLanguageIsValid()
     {
-        foreach($this->availableLangs as $lang)
+        foreach($this->availableLanguages as $language)
         {
-            if ($lang->getid() === $this->paramater_language_tag) {
+            if ($language->getid() === $this->languageId) {
                 return true;
             }
         }
         throw new NotFoundHttpException(
-            t('The language tag invalid or translation for this tag is not avilable'),
+            t('The language Id is invalid or translation for this content is not available'),
             null,
             404
         );
     }
 
-    protected function checkCatgeoryIsNumeric()
+    protected function checkCategoryIsNumeric()
     {
-        if (is_numeric($this->paramater_category)) {
+        if (is_numeric($this->categoryId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -179,7 +179,7 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected function checkPrisonIsNumeric()
     {
-        if (is_numeric($this->paramater_category)) {
+        if (is_numeric($this->prisonId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -191,7 +191,7 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected function checkNumberOfResultsIsNumeric()
     {
-        if (is_numeric($this->paramater_number_results)) {
+        if (is_numeric($this->numberOfResults)) {
             return true;
         }
         throw new NotFoundHttpException(
