@@ -99,7 +99,7 @@ class ContentResource extends ResourceBase
         $this->languageManager = $languageManager;
         $this->availableLanguages = $this->languageManager->getLanguages();
         $this->prisonId = self::setPrisonId();
-        $this->contentId = $this->currentRequest->get('nid');
+        $this->contentId = $this->currentRequest->get('contentId');
         $this->languageId =self::setLanguageId();
         self::checkLanguageIdIsValid();
         self::checkPrisonIdIsNumeric();
