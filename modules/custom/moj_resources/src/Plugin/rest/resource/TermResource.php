@@ -88,7 +88,7 @@ class TermResource extends ResourceBase
         $this->languageManager = $languageManager;
         $this->availableLanguages = $this->languageManager->getLanguages();
         $this->languageId = self::setLanguageId();
-        $this->termId = $this->currentRequest->get('tid');
+        $this->termId = $this->currentRequest->get('termId');
 
         self::checkLanguageIdIsValid();
 
