@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
  /**
  * @SWG\Get(
- *     path="/api/term/{tid}",
+ *     path="/api/term/{termId}",
  *     tags={"Category"},
  *     @SWG\Parameter(
  *          name="_format",
@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          type="string",
  *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
  *      ),
- *      
+ *
  *     @SWG\Response(response="200", description="Hub term resource")
  * )
  */
@@ -54,70 +54,69 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   id = "term_resource",
  *   label = @Translation("Term resource"),
  *   uri_paths = {
- *     "canonical" = "/v1/api/term/{tid}"
+ *     "canonical" = "/v1/api/term/{termId}"
  *   }
  * )
  */
 
-class TermResource extends ResourceBase 
+class TermResource extends ResourceBase
 {
     protected $termApiClass;
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $availableLanguages;
 
     protected $languageManager;
 
-    protected $paramater_term_id;
+    protected $termId;
 
-    Protected $paramater_language_tag;
+    Protected $language;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
-        TermApiClass $TermApiClass,
+        TermApiClass $termApiClass,
         Request $currentRequest,
         LanguageManager $languageManager
-    ) {        
-        $this->termApiClass = $TermApiClass;
+    ) {
+        $this->termApiClass = $termApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
+        $this->availableLanguages = $this->languageManager->getLanguages();
+        $this->languageId = self::setLanguageId();
+        $this->termId = $this->currentRequest->get('tid');
 
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_language_tag = self::setLanguage();
-        $this->paramater_term_id = $this->currentRequest->get('tid');
-        
-        self::checklanguageParameterIsValid();
+        self::checkLanguageIdIsValid();
 
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
-  
+
     public static function create(
         ContainerInterface $container,
-        array $configuration, 
-        $plugin_id, 
-        $plugin_definition
+        array $configuration,
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.term_api_class'),
             $container->get('request_stack')->getCurrentRequest(),
             $container->get('language_manager')
         );
-    }   
+    }
 
-    public function get() 
+    public function get()
     {
-        self::checkTermIsNumeric();
-        $content = $this->termApiClass->TermApiEndpoint($this->paramater_language_tag, $this->paramater_term_id);
+        self::checkTermIdIsNumeric();
+        $content = $this->termApiClass->TermApiEndpoint($this->languageId, $this->termId);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
@@ -126,25 +125,25 @@ class TermResource extends ResourceBase
         throw new NotFoundHttpException(t('No term found'));
     }
 
-    
-    protected function checklanguageParameterIsValid() 
+
+    protected function checkLanguageIdIsValid()
     {
-        foreach($this->availableLangs as $lang)
+        foreach($this->availableLanguages as $language)
         {
-            if ($lang->getid() === $this->paramater_language_tag) {
+            if ($language->getid() === $this->languageId) {
                 return true;
-            } 
+            }
         }
         throw new NotFoundHttpException(
-            t('The language tag invalid or translation for this tag is not avilable'),
+            t('The language tag is invalid or a translation for this tag is not available'),
             null,
             404
         );
     }
 
-    protected function checkTermIsNumeric()
+    protected function checkTermIdIsNumeric()
     {
-        if (is_numeric($this->paramater_term_id)) {
+        if (is_numeric($this->termId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -154,7 +153,7 @@ class TermResource extends ResourceBase
         );
     }
 
-    protected function setLanguage()
+    protected function setLanguageId()
     {
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
