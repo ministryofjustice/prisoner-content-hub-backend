@@ -252,21 +252,21 @@ class SeriesContentApiClass
   }
 
   /**
-   * Get Prison Categories for a Drupal term object
+   * Get Prison Categories for a Drupal node object
    *
    * @param EntityInterface $term
    * @return int[]
   */
-  private function getPrisonCategoriesForTerm($term) {
+  private function getPrisonCategoriesFor($node) {
     $prisonCategories = [];
 
-    foreach ($term->field_prison_categories as $prisonCategory) {
+    foreach ($node->field_prison_categories as $prisonCategory) {
       array_push($prisonCategories, $prisonCategory->target_id);
     }
 
     if (empty($prisonCategories)) {
       throw new BadRequestHttpException(
-        'Term does not have any prison categories selected',
+        'The node does not have any prison categories selected',
         null,
         400
       );
@@ -335,8 +335,8 @@ class SeriesContentApiClass
   private function getSeriesContentIds($seriesId, $numberOfResultsToReturn, $resultsOffset, $prisonId) {
     $series = $this->getTermForRequest($seriesId);
     $prison = $this->getTermForRequest($prisonId);
-    $seriesPrisonCategories = $this->getPrisonCategoriesForTerm($series);
-    $prisonCategories = $this->getPrisonCategoriesForTerm($prison);
+    $seriesPrisonCategories = $this->getPrisonCategoriesFor($series);
+    $prisonCategories = $this->getPrisonCategoriesFor($prison);
 
     $query = $this->entity_query->get('node')
       ->condition('status', 1)
