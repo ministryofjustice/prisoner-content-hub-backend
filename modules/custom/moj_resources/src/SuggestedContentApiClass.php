@@ -78,17 +78,21 @@ class SuggestedContentApiClass
   private function getSuggestions()
   {
     $category = $this->nodeStorage->load($this->categoryId);
-    $secondaryTagIds = $this->getTagIds($category->field_moj_secondary_tags);
-    $matchingIds = array_unique($this->getSecondaryTagItemsFor($secondaryTagIds));
+    $prison = $this->nodeStorage->load($this->prisonId);
+
+    $prisonCategories = $this->getPrisonCategoriesFor($prison);
+
+    $secondaryTagIds = $this->getTagIds($category->field_moj_secondary_tags, );
+    $matchingIds = array_unique($this->getSecondaryTagItemsFor($secondaryTagIds, $prisonCategories));
 
     if (count($matchingIds) < $this->numberOfResults) {
-      $matchingSecondaryTagIds = $this->getAllSecondaryTagItemsFor($secondaryTagIds);
+      $matchingSecondaryTagIds = $this->getAllSecondaryTagItemsFor($secondaryTagIds, $prisonCategories);
       $matchingIds = array_unique(array_merge($matchingIds, $matchingSecondaryTagIds));
     }
 
     if (count($matchingIds) < $this->numberOfResults) {
       $primaryTagIds = $this->getTagIds($category->field_moj_top_level_categories);
-      $matchingPrimaryTagIds = $this->getPrimaryTagItemsFor($primaryTagIds);
+      $matchingPrimaryTagIds = $this->getPrimaryTagItemsFor($primaryTagIds, $prisonCategories);
       $matchingIds = array_unique(array_merge($matchingIds, $matchingPrimaryTagIds));
     }
 
@@ -98,7 +102,33 @@ class SuggestedContentApiClass
       unset($matchingIds[$categoryIdIndex]);
     }
 
-    return $this->loadNodesDetails(array_slice($matchingIds, 0, $this->numberOfResults));
+    $suggestions = $this->loadNodesDetails(array_slice($matchingIds, 0, $this->numberOfResults));
+
+    return $suggestions;
+  }
+
+  /**
+   * Get Prison Categories for a Drupal term object
+   *
+   * @param EntityInterface $term
+   * @return int[]
+  */
+  private function getPrisonCategoriesFor($term) {
+    $prisonCategories = [];
+
+    foreach ($term->field_prison_categories as $prisonCategory) {
+      array_push($prisonCategories, $prisonCategory->target_id);
+    }
+
+    if (empty($prisonCategories)) {
+      throw new BadRequestHttpException(
+        'Term does not have any prison categories selected',
+        null,
+        400
+      );
+    }
+
+    return $prisonCategories;
   }
 
   /**
@@ -124,10 +154,11 @@ class SuggestedContentApiClass
    *
    * @return array
    */
-  private function getPrimaryTagItemsFor($tagIds)
+  private function getPrimaryTagItemsFor($tagIds, $prisonCategories)
   {
     return $this->getInitialQuery()
       ->condition('field_moj_top_level_categories', $tagIds, 'IN')
+      ->condition('field_prison_categories', $prisonCategories, 'IN')
       ->sort('nid', 'DESC')
       ->range(0, $this->numberOfResults)
       ->execute();
@@ -140,7 +171,7 @@ class SuggestedContentApiClass
    *
    * @return array
    */
-  private function getAllSecondaryTagItemsFor($tagIds)
+  private function getAllSecondaryTagItemsFor($tagIds, $prisonCategories)
   {
     $query = $this->getInitialQuery();
     $group = $query
@@ -150,6 +181,7 @@ class SuggestedContentApiClass
 
     return $query
       ->condition($group)
+      ->condition('field_prison_categories', $prisonCategories, 'IN')
       ->sort('nid', 'DESC')
       ->range(0, $this->numberOfResults)
       ->execute();
@@ -162,7 +194,7 @@ class SuggestedContentApiClass
    *
    * @return array
    */
-  private function getSecondaryTagItemsFor($tagIds)
+  private function getSecondaryTagItemsFor($tagIds, $prisonCategories)
   {
     $query = $this->getInitialQuery();
 
@@ -171,6 +203,7 @@ class SuggestedContentApiClass
     }
 
     return $query
+      ->condition('field_prison_categories', $prisonCategories, 'IN')
       ->sort('nid', 'DESC')
       ->range(0, $this->numberOfResults)
       ->execute();
