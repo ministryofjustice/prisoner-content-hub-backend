@@ -91,6 +91,7 @@ class TermResource extends ResourceBase
         $this->termId = $this->currentRequest->get('termId');
 
         self::checkLanguageIdIsValid();
+        self::checkTermIdIsNumeric();
 
         parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
@@ -115,7 +116,6 @@ class TermResource extends ResourceBase
 
     public function get()
     {
-        self::checkTermIdIsNumeric();
         $content = $this->termApiClass->TermApiEndpoint($this->languageId, $this->termId);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
