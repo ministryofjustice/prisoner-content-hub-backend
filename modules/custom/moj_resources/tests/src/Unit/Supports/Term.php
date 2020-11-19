@@ -2,22 +2,25 @@
 
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
+
 /**
  * Abstract base class for creating term helpers
  *
  * @group unit_moj_resources
  */
 abstract class Term {
+  protected $testHelpers;
+  protected $nid;
+  protected $title;
+  protected $description;
+  protected $prisonCategories = [];
 
-  public $nid;
-  public $title;
-  public $description;
-  public $prisonCategories = [];
-
-  public function __construct($nid = 123) {
-    $this->nid = (object) array("value" => $nid);
-    $this->title = (object) array("value" => "Test Term");
-    $this->description = $this->createDescription("This is a test term");
+  public function __construct($unitTestCase, $nid = 123) {
+    $this->testHelpers = new TestHelpers($unitTestCase);
+    $this->nid = $this->testHelpers->createFieldWith('value', $nid);
+    $this->title = $this->testHelpers->createFieldWith('Test Term', $nid);
+    $this->description = $this->testHelpers->createDescriptionField("This is a test term");
   }
 
   /**
@@ -38,25 +41,8 @@ abstract class Term {
    * @return Term
   */
   public function addPrisonCategory($prisonCategoryId) {
-     array_push($this->prisonCategories, (object) array("target_id" => $prisonCategoryId));
+     array_push($this->prisonCategories, $this->testHelpers->createFieldWith('target_id', $prisonCategoryId));
      return $this;
-  }
-
-  /**
-   * Create a description object
-   *
-   * @param string $description
-   * @return array
-  */
-  private function createDescription($description) {
-    $description = (object) array(
-      "raw" => $description,
-      "processed" => $description,
-      "summary" => $description,
-      "sanitized" => $description
-    );
-
-    return array($description);
   }
 
   /**

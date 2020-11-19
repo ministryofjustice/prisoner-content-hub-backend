@@ -18,7 +18,7 @@ use Drupal\moj_resources\SeriesContentApiClass;
 class SeriesContentApiClassTest extends UnitTestCase
 {
     public function testGetSeriesContentVideoFormat() {
-      $testContent = VideoContent::createWithNodeId(123)
+      $testContent = VideoContent::createWithNodeId($this, 123)
         ->setSeason(1)
         ->setEpisode(1)
         ->addPrison(123)
@@ -26,10 +26,10 @@ class SeriesContentApiClassTest extends UnitTestCase
         ->addSecondaryTag(789)
         ->addCategory(123);
 
-      $testSeries = Series::createWithNodeId(456)
+      $testSeries = Series::createWithNodeId($this, 456)
         ->addPrisonCategory(1234);
 
-      $testPrison = Prison::createWithNodeId(123)
+      $testPrison = Prison::createWithNodeId($this, 123)
         ->addPrisonCategory(1234);
 
       $node = TestHelpers::createMockNode($this, $testContent);
@@ -80,7 +80,7 @@ class SeriesContentApiClassTest extends UnitTestCase
     }
 
     public function testGetSeriesContentAudioFormat() {
-      $testContent = AudioContent::createWithNodeId(123)
+      $testContent = AudioContent::createWithNodeId($this, 123)
         ->setSeason(1)
         ->setEpisode(1)
         ->addPrison(123)
@@ -88,14 +88,15 @@ class SeriesContentApiClassTest extends UnitTestCase
         ->addSecondaryTag(789)
         ->addCategory(123);
 
-      $testSeries = Series::createWithNodeId(456)
+      $testSeries = Series::createWithNodeId($this, 456)
         ->addPrisonCategory(1234);
 
-      $testPrison = Prison::createWithNodeId(123)
+      $testPrison = Prison::createWithNodeId($this, 123)
         ->addPrisonCategory(1234);
 
       $node = TestHelpers::createMockNode($this, $testContent);
       $series = TestHelpers::createMockNode($this, $testSeries);
+
       $prison = TestHelpers::createMockNode($this, $testPrison);
 
       $nodeStorage = TestHelpers::createMockNodeStorage($this, 'loadMultiple', array(
@@ -143,8 +144,8 @@ class SeriesContentApiClassTest extends UnitTestCase
     }
 
     public function testThrowsWhenSeriesDoesNotExist() {
-      $testContent = AudioContent::createWithNodeId(123);
-      $testPrison = Prison::createWithNodeId(123)
+      $testContent = AudioContent::createWithNodeId($this, 123);
+      $testPrison = Prison::createWithNodeId($this, 123)
         ->addPrisonCategory(1234);
 
       $node = TestHelpers::createMockNode($this, $testContent);
@@ -180,8 +181,8 @@ class SeriesContentApiClassTest extends UnitTestCase
     }
 
     public function testThrowsWhenPrisonDoesNotExist() {
-      $testContent = AudioContent::createWithNodeId(123);
-      $testSeries = Series::createWithNodeId(456)
+      $testContent = AudioContent::createWithNodeId($this, 123);
+      $testSeries = Series::createWithNodeId($this, 456)
         ->addPrisonCategory(1234);
 
       $node = TestHelpers::createMockNode($this, $testContent);
@@ -217,9 +218,9 @@ class SeriesContentApiClassTest extends UnitTestCase
     }
 
     public function testThrowsWhenSeriesHasNoPrisonCategory() {
-      $testContent = AudioContent::createWithNodeId(123);
-      $testSeries = Series::createWithNodeId(456);
-      $testPrison = Prison::createWithNodeId(123)
+      $testContent = AudioContent::createWithNodeId($this, 123);
+      $testSeries = Series::createWithNodeId($this, 456);
+      $testPrison = Prison::createWithNodeId($this, 123)
         ->addPrisonCategory(1234);
 
       $node = TestHelpers::createMockNode($this, $testContent);
@@ -256,10 +257,10 @@ class SeriesContentApiClassTest extends UnitTestCase
     }
 
     public function testThrowsWhenPrisonHasNoPrisonCategory() {
-      $testContent = AudioContent::createWithNodeId(123);
-      $testSeries = Series::createWithNodeId(456)
+      $testContent = AudioContent::createWithNodeId($this, 123);
+      $testSeries = Series::createWithNodeId($this, 456)
         ->addPrisonCategory(1234);
-      $testPrison = Prison::createWithNodeId(123);
+      $testPrison = Prison::createWithNodeId($this, 123);
 
       $node = TestHelpers::createMockNode($this, $testContent);
       $series = TestHelpers::createMockNode($this, $testSeries);
@@ -295,10 +296,10 @@ class SeriesContentApiClassTest extends UnitTestCase
     }
 
     public function testThrowsWhenPrisonAndSeriesHaveNoMatchingPrisonCategories() {
-      $testContent = AudioContent::createWithNodeId(123);
-      $testSeries = Series::createWithNodeId(456)
+      $testContent = AudioContent::createWithNodeId($this, 123);
+      $testSeries = Series::createWithNodeId($this, 456)
         ->addPrisonCategory(1234);
-        $testPrison = Prison::createWithNodeId(123)
+        $testPrison = Prison::createWithNodeId($this, 123)
         ->addPrisonCategory(5678);
 
       $node = TestHelpers::createMockNode($this, $testContent);

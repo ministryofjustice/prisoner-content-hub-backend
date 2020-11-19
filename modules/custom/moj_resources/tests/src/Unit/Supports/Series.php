@@ -3,6 +3,7 @@
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
 use Drupal\Tests\moj_resources\Unit\Supports\Term;
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
 
 /**
  * Test Helper for creating mock series
@@ -10,11 +11,13 @@ use Drupal\Tests\moj_resources\Unit\Supports\Term;
  * @group unit_moj_resources
  */
 class Series extends Term {
-  public $type;
+  private $type;
+  private $prison;
 
-  public function __construct($nid) {
-    parent::__construct($nid);
-    $this->type = (object) array("target_id" => "series");
+  public function __construct($unitTestCase, $nid) {
+    parent::__construct($unitTestCase, $nid);
+    $this->type = $this->testHelpers->createFieldWith('target_id', 'series');
+    $this->prison = $this->testHelpers->createEmptyField();
   }
 
   /**
@@ -23,9 +26,20 @@ class Series extends Term {
    * @param string $title
    * @return Term
   */
-  static public function createWithNodeId($nid) {
-    $prisonTerm = new self($nid);
+  static public function createWithNodeId($unitTestCase, $nid) {
+    $prisonTerm = new self($unitTestCase, $nid);
     return $prisonTerm;
+  }
+
+  /**
+   * Add a prison ID
+   *
+   * @param int $prisonId
+   * @return Term
+  */
+  public function setPromotedPrison($prisonId) {
+      $this->prison = $this->testHelpers->createFieldWith('target_id', $prisonId);
+      return $this;
   }
 
   /**
@@ -39,7 +53,8 @@ class Series extends Term {
         array("type", $this->type),
         array("title", $this->title),
         array("field_moj_description", $this->description),
-        array("field_prison_categories", $this->prisonCategories)
+        array("field_prison_categories", $this->prisonCategories),
+        array("field_promoted_to_prison", $this->prison)
     );
   }
 }

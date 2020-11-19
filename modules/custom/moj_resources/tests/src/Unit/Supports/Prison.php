@@ -3,6 +3,7 @@
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
 use Drupal\Tests\moj_resources\Unit\Supports\Term;
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
 
 /**
  * Test Helper for creating mock prisons
@@ -10,11 +11,11 @@ use Drupal\Tests\moj_resources\Unit\Supports\Term;
  * @group unit_moj_resources
  */
 class Prison extends Term {
-  public $type;
+  private $type;
 
-  public function __construct($nid) {
-    parent::__construct($nid);
-    $this->type = (object) array("target_id" => "prisons");
+  public function __construct($unitTestCase, $nid) {
+    parent::__construct($unitTestCase, $nid);
+    $this->type = $this->testHelpers->createFieldWith('target_id', 'prisons');
   }
 
   /**
@@ -23,8 +24,8 @@ class Prison extends Term {
    * @param string $title
    * @return Term
   */
-  static public function createWithNodeId($nid) {
-    $prisonTerm = new self($nid);
+  static public function createWithNodeId($unitTestCase, $nid) {
+    $prisonTerm = new self($unitTestCase, $nid);
     return $prisonTerm;
   }
 

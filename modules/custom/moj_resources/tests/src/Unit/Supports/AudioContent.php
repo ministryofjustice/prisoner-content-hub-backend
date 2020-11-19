@@ -3,6 +3,7 @@
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
 use Drupal\Tests\moj_resources\Unit\Supports\Content;
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
 
 /**
  * Test Helper for creating Audio Items
@@ -10,15 +11,15 @@ use Drupal\Tests\moj_resources\Unit\Supports\Content;
  * @group unit_moj_resources
  */
 class AudioContent extends Content {
-  public $type;
-  public $duration;
-  public $audio = [];
+  private $type;
+  private $duration;
+  private $audio = [];
 
-  public function __construct($nid) {
-    parent::__construct($nid);
-    array_push($this->audio, (object) array("url" => "/foo.mp3"));
-    $this->type = (object) array("target_id" => "moj_radio_item");
-    $this->duration = (object) array("value" => 60);
+  public function __construct($unitTestCase, $nid) {
+    parent::__construct($unitTestCase, $nid);
+    array_push($this->audio, $this->testHelpers->createFieldWith('url', '/foo.mp3'));
+    $this->type = $this->testHelpers->createFieldWith('target_id', 'moj_radio_item');
+    $this->duration = $this->testHelpers->createFieldWith('value', 60);
   }
 
   /**
@@ -27,8 +28,8 @@ class AudioContent extends Content {
    * @param string $title
    * @return Content
   */
-  static public function createWithNodeId($nid) {
-    $audioContent = new self($nid);
+  static public function createWithNodeId($unitTestCase, $nid) {
+    $audioContent = new self($unitTestCase, $nid);
     return $audioContent;
   }
 
