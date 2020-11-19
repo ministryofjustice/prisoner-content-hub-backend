@@ -71,7 +71,7 @@ class TermResource extends ResourceBase
 
     protected $termId;
 
-    Protected $language;
+    protected $languageId;
 
     public function __construct(
         array $configuration,
