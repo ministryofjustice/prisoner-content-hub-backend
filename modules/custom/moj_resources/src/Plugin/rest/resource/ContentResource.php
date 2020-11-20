@@ -19,10 +19,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
  /**
  * @SWG\Get(
- *     path="/api/content/{contentId}",
+ *     path="/api/content/{nid}",
  *     tags={"Content"},
  *     @SWG\Parameter(
- *          name="{contentId}",
+ *          name="{nid}",
  *          in="path",
  *          required=true,
  *          type="integer",
@@ -61,7 +61,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   id = "content_resource",
  *   label = @Translation("Content resource"),
  *   uri_paths = {
- *     "canonical" = "/v1/api/content/{contentId}"
+ *     "canonical" = "/v1/api/content/{nid}"
  *   }
  * )
  */
@@ -82,7 +82,7 @@ class ContentResource extends ResourceBase
 
     protected $contentId;
 
-    Protected $languageId;
+    protected $languageId;
 
     public function __construct(
         array $configuration,
@@ -99,11 +99,10 @@ class ContentResource extends ResourceBase
         $this->languageManager = $languageManager;
         $this->availableLanguages = $this->languageManager->getLanguages();
         $this->prisonId = self::setPrisonId();
-        $this->contentId = $this->currentRequest->get('contentId');
+        $this->contentId = $this->currentRequest->get('nid');
         $this->languageId =self::setLanguageId();
         self::checkLanguageIdIsValid();
         self::checkPrisonIdIsNumeric();
-        self::checkContentIdIsNumeric();
         parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
 
@@ -127,6 +126,7 @@ class ContentResource extends ResourceBase
 
     public function get()
     {
+        self::checkContentIdIsNumeric();
         $content = $this->contentApiClass->ContentApiEndpoint($this->languageId, $this->contentId, $this->prisonId);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
@@ -155,7 +155,7 @@ class ContentResource extends ResourceBase
             }
         }
         throw new NotFoundHttpException(
-            t('The language id is invalid or a translation for this content is not available'),
+            t('The language tag is invalid or a translation for this tag is not available'),
             null,
             400
         );
@@ -185,5 +185,3 @@ class ContentResource extends ResourceBase
         );
     }
 }
-
-
