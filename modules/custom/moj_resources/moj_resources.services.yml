@@ -39,6 +39,3 @@ services:
         "@entity.query",
         "@moj_pdf_item.link.serializer.default",
       ]
-  moj_resources.menu_api_class:
-    class: Drupal\moj_resources\MenuApiClass
-    arguments: ["@menu.link_tree", "@plugin.manager.menu.link"]
