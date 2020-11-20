@@ -108,6 +108,7 @@ class CategoryMenuResource extends ResourceBase
     $this->prisonId = self::setPrisonId();
     self::checkLanguageIdIsValid();
     self::checkCategoryIdIsNumeric();
+    self::checkPrisonIdIsNumeric();
     parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
   }
 
@@ -166,6 +167,18 @@ class CategoryMenuResource extends ResourceBase
     }
     throw new NotFoundHttpException(
       t('The category id must be a numeric'),
+      null,
+      404
+    );
+  }
+
+  protected function checkPrisonIdIsNumeric()
+  {
+    if (is_numeric($this->prisonId)) {
+      return true;
+    }
+    throw new NotFoundHttpException(
+      t('The prison id must be a numeric'),
       null,
       404
     );
