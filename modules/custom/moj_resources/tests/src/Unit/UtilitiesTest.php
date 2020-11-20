@@ -35,14 +35,25 @@ class UtilitiesTest extends UnitTestCase
   * @return void
   */
   public function testFilterByPrisonCategories() {
-    $this->entityQueryFactory->expects($this->atLeastOnce())
-      ->method('orConditionGroup');
-
     $this->entityQueryFactory->expects($this->once())
       ->method('andConditionGroup');
 
+      $this->entityQueryFactory->expects($this->atLeastOnce())
+      ->method('orConditionGroup');
+
     $this->entityQueryFactory->expects($this->atLeastOnce())
-      ->method('condition');
+      ->method('condition')
+      ->withConsecutive(
+        array('field_moj_prisons', 123, '='),
+        array('field_prison_categories', [456], 'IN')
+      );
+
+    $this->entityQueryFactory->expects($this->atLeastOnce())
+      ->method('notExists')
+      ->withConsecutive(
+        array('field_moj_prisons'),
+        array('field_prison_categories')
+      );
 
     $query = Utilities::filterByPrisonCategories(123, [456], $this->entityQueryFactory->get('node'));
 
