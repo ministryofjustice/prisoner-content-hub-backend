@@ -13,112 +13,79 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class ContentApiClass
 {
   /**
-   * Node IDs
-   *
-   * @var array
-   */
-  protected $nid = array();
-
-  /**
-   * Nodes
-   *
-   * @var array
-   */
-  protected $node = array();
-  /**
    * Language Tag
    *
    * @var string
    */
-  protected $lang;
+  protected $languageId;
   /**
    * Prison Id
    *
    * @var integer
    */
-  protected $prison;
+  protected $prisonId;
   /**
    * Node_storage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $node_storage;
+  protected $nodeStorage;
   /**
-   * Entitity Query object
+   * EntitEntityity Query object
    *
    * @var Drupal\Core\Entity\Query\QueryFactory
    *
-   * Instance of querfactory
-   */
-  protected $entity_query;
-  /**
-   * Class Constructor
-   *
-   * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
+   * Instance of QueryFactory
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
   }
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param [string] $languageId
    * @return array
    */
-  public function ContentApiEndpoint($lang, $nid, $prison = 0)
+  public function ContentApiEndpoint($languageId, $contentId, $prisonId = 0)
   {
-    $this->lang = $lang;
-    $this->prison = $prison;
-    $node = $this->loadNodesDetails($nid);
+    $this->languageId = $languageId;
+    $this->prisonId = $prisonId;
+    $content = $this->nodeStorage->load($contentId);
 
-    if (is_null($node)) {
+    if (is_null($content)) {
       return array();
     }
 
-    $translatedNodes = $this->translateNode($node);
+    $translatedContent = $this->translateNode($content);
 
-    return $this->decorateContent($translatedNodes);
+    return $this->createReturnObject($translatedContent);
   }
   /**
    * TranslateNode function
    *
-   * @param NodeInterface $node
+   * @param NodeInterface $content
    *
-   * @return $node
+   * @return $content
    */
-  private function translateNode(NodeInterface $node)
+  private function translateNode(NodeInterface $content)
   {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
-  }
-
-  /**
-   * Load full node details
-   *
-   * @param array $nids
-   * @return array
-   */
-  private function loadNodesDetails($nid)
-  {
-    return $this->node_storage->load($nid);
+    return $content->hasTranslation($this->languageId) ? $content->getTranslation($this->languageId) : $content;
   }
 
   /**
    *
    */
-  private function decorateContent($node)
+  private function createReturnObject($content)
   {
-    $content_type = $node->type->target_id;
+    $contentType = $content->type->target_id;
 
-    if (($this->prison != 0) && (count($node->field_moj_prisons) > 0)) {
+    if (($this->prisonId != 0) && (count($content->field_moj_prisons) > 0)) {
       $found = false;
 
-      foreach ($node->field_moj_prisons as $key => $n) {
-        if ($this->prison == $n->target_id) {
+      foreach ($content->field_moj_prisons as $key => $n) {
+        if ($this->prisonId == $n->target_id) {
           $found = true;
           break;
         }
@@ -129,98 +96,98 @@ class ContentApiClass
       }
     }
 
-    $defaults = $this->createItemResponse($node);
+    $response = $this->createItemResponse($content);
 
-    switch ($content_type) {
+    switch ($contentType) {
       case 'moj_radio_item':
-        return array_merge($defaults, $this->createAudioItemResponse($node));
+        return array_merge($response, $this->createAudioItemResponse($content));
       case 'moj_video_item':
-        return array_merge($defaults, $this->createVideoItemResponse($node));
+        return array_merge($response, $this->createVideoItemResponse($content));
       case 'moj_pdf_item':
-        return array_merge($defaults, $this->createPDFItemResponse($node));
+        return array_merge($response, $this->createPDFItemResponse($content));
       case 'page':
-        return array_merge($defaults, $this->createPageItemResponse($node));
+        return array_merge($response, $this->createPageItemResponse($content));
       case 'landing_page':
-        return array_merge($defaults, $this->createLandingPageItemResponse($node));
+        return array_merge($response, $this->createLandingPageItemResponse($content));
 
       default:
-        return $defaults;
+        return $response;
     }
   }
 
-  private function createItemResponse($node)
+  private function createItemResponse($content)
   {
-    $result = [];
-    $result["content_type"] =  $node->type->target_id;
-    $result["title"] =  $node->title->value;
-    $result["id"] =  $node->nid->value;
-    $result["image"] =  $node->field_moj_thumbnail_image[0];
-    $result["description"] =  $node->field_moj_description[0];
-    $result["categories"] =  $node->field_moj_top_level_categories;
-    if ($node->field_moj_secondary_tags) {
-      $result["secondary_tags"] =  $node->field_moj_secondary_tags;
+    $response = [];
+    $response["content_type"] =  $content->type->target_id;
+    $response["title"] =  $content->title->value;
+    $response["id"] =  $content->nid->value;
+    $response["image"] =  $content->field_moj_thumbnail_image[0];
+    $response["description"] =  $content->field_moj_description[0];
+    $response["categories"] =  $content->field_moj_top_level_categories;
+    if ($content->field_moj_secondary_tags) {
+      $response["secondary_tags"] =  $content->field_moj_secondary_tags;
     } else {
-      $result["secondary_tags"] =  $node->field_moj_tags;
+      $response["secondary_tags"] =  $content->field_moj_tags;
     }
-    $result["prisons"] =  $node->field_moj_prisons;
+    $response["prisons"] =  $content->field_moj_prisons;
 
-    return  $result;
+    return  $response;
   }
 
-  private function createAudioItemResponse($node)
+  private function createAudioItemResponse($content)
   {
-    $result = [];
+    $response = [];
 
-    $result['media'] = $node->field_moj_audio[0];
-    $result["episode_id"] = $this->createEpisodeId($node);
-    $result["series_id"] = $node->field_moj_series[0]->target_id;
-    $result["season"] = $node->field_moj_season->value;
-    $result["episode"] = $node->field_moj_episode->value;
-    $result["duration"] = $node->field_moj_duration->value;
-    $result["programme_code"] = $node->field_moj_programme_code->value;
+    $response['media'] = $content->field_moj_audio[0];
+    $response["episode_id"] = $this->createEpisodeId($content);
+    $response["series_id"] = $content->field_moj_series[0]->target_id;
+    $response["season"] = $content->field_moj_season->value;
+    $response["episode"] = $content->field_moj_episode->value;
+    $response["duration"] = $content->field_moj_duration->value;
+    $response["programme_code"] = $content->field_moj_programme_code->value;
 
-    return $result;
+    return $response;
   }
 
-  private function createVideoItemResponse($node)
+  private function createVideoItemResponse($content)
   {
-    $result = [];
-    $result['media'] = $node->field_video[0];
-    $result["episode_id"] = $this->createEpisodeId($node);
-    $result["series_id"] = $node->field_moj_series[0]->target_id;
-    $result["season"] = $node->field_moj_season->value;
-    $result["episode"] = $node->field_moj_episode->value;
-    $result["duration"] = $node->field_moj_duration->value;
+    $response = [];
+    $response['media'] = $content->field_video[0];
+    $response["episode_id"] = $this->createEpisodeId($content);
+    $response["series_id"] = $content->field_moj_series[0]->target_id;
+    $response["season"] = $content->field_moj_season->value;
+    $response["episode"] = $content->field_moj_episode->value;
+    $response["duration"] = $content->field_moj_duration->value;
 
-    return $result;
+    return $response;
   }
 
-  private function createPageItemResponse($node)
+  private function createPageItemResponse($content)
   {
-    $result = [];
-    $result['stand_first'] = $node->field_moj_stand_first->value;
-    return $result;
+    $response = [];
+    $response['stand_first'] = $content->field_moj_stand_first->value;
+    return $response;
   }
 
 
-  private function createPDFItemResponse($node)
+  private function createPDFItemResponse($content)
   {
-    $result = [];
-    $result['media'] = $node->field_moj_pdf[0];
+    $response = [];
+    $response['media'] = $content->field_moj_pdf[0];
 
-    return $result;
+    return $response;
   }
 
-  private function createEpisodeId($node)
+  private function createEpisodeId($content)
   {
-    return ($node->field_moj_season->value * 1000) + ($node->field_moj_episode->value);
+    return ($content->field_moj_season->value * 1000) + ($content->field_moj_episode->value);
   }
 
-  private function createLandingPageItemResponse($node)
+  private function createLandingPageItemResponse($content)
   {
-    $result = [];
-    $result['featured_content_id'] =  $node->field_moj_landing_feature_contet[0]->target_id;
-    $result['category_id'] =  $node->field_moj_landing_page_term[0]->target_id;
-    return  $result;
+    $response = [];
+    $response['featured_content_id'] =  $content->field_moj_landing_feature_contet[0]->target_id;
+    $response['category_id'] =  $content->field_moj_landing_page_term[0]->target_id;
+    return  $response;
   }
 }
