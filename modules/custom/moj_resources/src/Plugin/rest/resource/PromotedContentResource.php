@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\moj_resources\Plugin\rest\resource\TermResource.
+ * Contains Drupal\\moj_resources\Plugin\rest\resource\PromotedContentResource.
  */
 
 namespace Drupal\moj_resources\Plugin\rest\resource;
@@ -11,29 +11,22 @@ use Psr\Log\LoggerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\moj_resources\TermApiClass;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\moj_resources\PromotedContentApiClass;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
- /**
+/**
  * @SWG\Get(
- *     path="/api/term/{tid}",
- *     tags={"Category"},
- *     @SWG\Parameter(
+ *     path="/api/content/promoted",
+ *      tags={"Content"},
+ *      @SWG\Parameter(
  *          name="_format",
  *          in="query",
  *          required=true,
  *          type="string",
  *          description="Response format, should be 'json'",
- *      ),
- *      @SWG\Parameter(
- *          name="{term}",
- *          in="query",
- *          required=true,
- *          type="integer",
- *          description="ID of term to return",
  *      ),
  *      @SWG\Parameter(
  *          name="_lang",
@@ -43,25 +36,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
  *      ),
  *
- *     @SWG\Response(response="200", description="Hub term resource")
+ *     @SWG\Response(response="200", description="Hub featured content resource")
  * )
  */
 
 /**
- * Provides a Term Resource
+ * Provides a Featured Content Resource
  *
  * @RestResource(
- *   id = "term_resource",
- *   label = @Translation("Term resource"),
+ *   id = "promoted_content_resource",
+ *   label = @Translation("Promoted content resource"),
  *   uri_paths = {
- *     "canonical" = "/v1/api/term/{tid}"
+ *     "canonical" = "/v1/api/content/promoted"
  *   }
  * )
  */
 
-class TermResource extends ResourceBase
+class PromotedContentResource extends ResourceBase
 {
-    protected $termApiClass;
+    protected $promotedContentApiController;
+
+    protected $promotedContentApiClass;
 
     protected $currentRequest;
 
@@ -69,28 +64,26 @@ class TermResource extends ResourceBase
 
     protected $languageManager;
 
-    protected $paramater_term_id;
-
     Protected $paramater_language_tag;
 
+    protected $paramater_prison;
+
     public function __construct(
-        array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
-        LoggerInterface $logger,
-        TermApiClass $TermApiClass,
-        Request $currentRequest,
-        LanguageManager $languageManager
+      array $configuration,
+      $plugin_id,
+      $plugin_definition,
+      array $serializer_formats,
+      LoggerInterface $logger,
+      PromotedContentApiClass $promotedContentApiClass,
+      Request $currentRequest,
+      LanguageManager $languageManager
     ) {
-        $this->termApiClass = $TermApiClass;
+        $this->promotedContentApiClass = $promotedContentApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
-
         $this->availableLangs = $this->languageManager->getLanguages();
         $this->paramater_language_tag = self::setLanguage();
-        $this->paramater_term_id = $this->currentRequest->get('tid');
-
+        $this->paramater_prison = self::setPrison();
         self::checklanguageParameterIsValid();
 
         parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
@@ -108,7 +101,7 @@ class TermResource extends ResourceBase
             $plugin_definition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
-            $container->get('moj_resources.term_api_class'),
+            $container->get('moj_resources.promoted_content_api_class'),
             $container->get('request_stack')->getCurrentRequest(),
             $container->get('language_manager')
         );
@@ -116,16 +109,18 @@ class TermResource extends ResourceBase
 
     public function get()
     {
-        self::checkTermIsNumeric();
-        $content = $this->termApiClass->TermApiEndpoint($this->paramater_language_tag, $this->paramater_term_id);
-        if (!empty($content)) {
-            $response = new ResourceResponse($content);
-            $response->addCacheableDependency($content);
+        $lang = $this->currentRequest->get('_lang');
+        $promoted = $this->promotedContentApiClass->PromotedContentApiEndpoint(
+          $lang,
+          $this->paramater_prison
+        );
+        if (!empty($promoted)) {
+            $response = new ResourceResponse($promoted);
+            $response->addCacheableDependency($promoted);
             return $response;
         }
-        throw new NotFoundHttpException(t('No term found'));
+        throw new NotFoundHttpException(t('No promoted content found'));
     }
-
 
     protected function checklanguageParameterIsValid()
     {
@@ -142,21 +137,13 @@ class TermResource extends ResourceBase
         );
     }
 
-    protected function checkTermIsNumeric()
-    {
-        if (is_numeric($this->paramater_term_id)) {
-            return true;
-        }
-        throw new NotFoundHttpException(
-            t('The term parameter must be a numeric'),
-            null,
-            404
-        );
-    }
-
     protected function setLanguage()
     {
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
-}
 
+    protected function setPrison()
+    {
+        return is_null($this->currentRequest->get('_prison')) ? 0 : $this->currentRequest->get('_prison');
+    }
+}
