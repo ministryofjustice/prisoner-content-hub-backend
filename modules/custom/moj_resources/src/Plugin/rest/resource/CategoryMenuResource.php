@@ -79,48 +79,49 @@ class CategoryMenuResource extends ResourceBase
 
   protected $currentRequest;
 
-  protected $availableLangs;
+  protected $availableLanguages;
 
   protected $languageManager;
 
-  protected $parameter_category;
+  protected $categoryId;
 
-  protected $parameter_language_tag;
+  protected $languageId;
 
-  protected $parameter_prison;
+  protected $prisonId;
 
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    array $serializer_formats,
+    $pluginId,
+    $pluginDefinition,
+    array $serializerFormats,
     LoggerInterface $logger,
-    CategoryMenuApiClass $CategoryMenuApiClass,
+    CategoryMenuApiClass $categoryMenuApiClass,
     Request $currentRequest,
     LanguageManager $languageManager
   ) {
-    $this->categoryMenuApiClass = $CategoryMenuApiClass;
+    $this->categoryMenuApiClass = $categoryMenuApiClass;
     $this->currentRequest = $currentRequest;
     $this->languageManager = $languageManager;
-    $this->availableLangs = $this->languageManager->getLanguages();
-    $this->parameter_category = self::setCategory();
-    $this->parameter_language_tag = self::setLanguage();
-    $this->parameter_prison = self::setPrison();
-    self::checkLanguageParameterIsValid();
-    self::checkCategoryIsNumeric();
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+    $this->availableLanguages = $this->languageManager->getLanguages();
+    $this->categoryId = self::setCategoryId();
+    $this->languageId = self::setLanguageId();
+    $this->prisonId = self::setPrisonId();
+    self::checkLanguageIdIsValid();
+    self::checkCategoryIdIsNumeric();
+    self::checkPrisonIdIsNumeric();
+    parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
   }
 
   public static function create(
     ContainerInterface $container,
     array $configuration,
-    $plugin_id,
-    $plugin_definition
+    $pluginId,
+    $pluginDefinition
   ) {
     return new static(
       $configuration,
-      $plugin_id,
-      $plugin_definition,
+      $pluginId,
+      $pluginDefinition,
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
       $container->get('moj_resources.category_menu_api_class'),
@@ -132,9 +133,9 @@ class CategoryMenuResource extends ResourceBase
   public function get()
   {
     $categoryMenu = $this->categoryMenuApiClass->CategoryMenuApiEndpoint(
-      $this->parameter_language_tag,
-      $this->parameter_category,
-      $this->parameter_prison
+      $this->languageId,
+      $this->categoryId,
+      $this->prisonId
     );
 
     if (!empty($categoryMenu)) {
@@ -145,43 +146,55 @@ class CategoryMenuResource extends ResourceBase
     throw new NotFoundHttpException(t('No related content found'));
   }
 
-  protected function checkLanguageParameterIsValid()
+  protected function checkLanguageIdIsValid()
   {
-    foreach ($this->availableLangs as $lang) {
-      if ($lang->getid() === $this->parameter_language_tag) {
+    foreach ($this->availableLanguages as $language) {
+      if ($language->getid() === $this->languageId) {
         return true;
       }
     }
     throw new NotFoundHttpException(
-      t('The language tag invalid or translation for this tag is not avilable'),
+      t('The language tag is invalid or a translation for this tag is not available'),
       null,
       404
     );
   }
 
-  protected function checkCategoryIsNumeric()
+  protected function checkCategoryIdIsNumeric()
   {
-    if (is_numeric($this->parameter_category)) {
+    if (is_numeric($this->categoryId)) {
       return true;
     }
     throw new NotFoundHttpException(
-      t('The category parameter must be a numeric'),
+      t('The category id must be a numeric'),
       null,
       404
     );
   }
 
-  protected function setLanguage()
+  protected function checkPrisonIdIsNumeric()
+  {
+    if (is_numeric($this->prisonId)) {
+      return true;
+    }
+    throw new NotFoundHttpException(
+      t('The prison id must be a numeric'),
+      null,
+      404
+    );
+  }
+
+  protected function setLanguageId()
   {
     return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
   }
 
-  protected function setCategory()
+  protected function setCategoryId()
   {
     return is_null($this->currentRequest->get('_category')) ? 0 : $this->currentRequest->get('_category');
   }
 
-  protected function setPrison()
+  protected function setPrisonId()
   {
     return is_null($this->currentRequest->get('_prison')) ? 0 : $this->currentRequest->get('_prison');
   }
