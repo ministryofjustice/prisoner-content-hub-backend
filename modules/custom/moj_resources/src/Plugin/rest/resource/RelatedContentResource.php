@@ -117,6 +117,7 @@ class RelatedContentResource extends ResourceBase
         $this->sortOrder = self::setSortOrder();
         self::checkLanguageIdIsValid();
         self::checkCategoryIdIsNumeric();
+        self::checkPrisonIdIsNumeric();
         self::checkNumberOfResultsIsNumeric();
         self::checkOffsetIntoNumberOfResultsIsNumeric();
         parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
@@ -207,6 +208,18 @@ class RelatedContentResource extends ResourceBase
             t('The offset of results parameter must be a numeric'),
             null,
             404
+        );
+    }
+
+    protected function checkPrisonIdIsNumeric()
+    {
+        if (is_numeric($this->prisonId)) {
+            return true;
+        }
+        throw new NotFoundHttpException(
+            t('The prison ID must be numeric'),
+            null,
+            400
         );
     }
 
