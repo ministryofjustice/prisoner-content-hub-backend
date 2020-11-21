@@ -56,7 +56,7 @@ class ContentApiClass
     $this->languageId = $languageId;
     $this->prisonId = $prisonId;
     $prison  = Utilities::getTermFor($prisonId, $this->termStorage);
-    $content  = Utilities::getNodeFor($prisonId, $this->nodeStorage);
+    $content  = Utilities::getNodeFor($contentId, $this->nodeStorage);
 
     $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
     $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
