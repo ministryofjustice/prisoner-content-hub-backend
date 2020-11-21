@@ -67,8 +67,6 @@ class ContentApiClass
 
     $content = $this->getMatchingContent();
 
-    $translatedContent = $this->translateNode($content);
-
     return $this->createReturnObject($translatedContent);
   }
 
@@ -105,7 +103,9 @@ class ContentApiClass
       }
     }
 
-    return $content;
+    $translatedContent = $this->translateNode($content);
+
+    return $translatedContent;
   }
   /**
    * TranslateNode function
