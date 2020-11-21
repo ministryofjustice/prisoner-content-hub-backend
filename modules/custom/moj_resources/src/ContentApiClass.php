@@ -26,6 +26,12 @@ class ContentApiClass
    */
   protected $prisonId;
   /**
+   * Content Id
+   *
+   * @var integer
+   */
+  protected $contentId;
+  /**
    * Node_storage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
@@ -48,15 +54,32 @@ class ContentApiClass
   /**
    * API resource function
    *
-   * @param [string] $languageId
+   * @param string $languageId
+   * @param string $contentId
+   * @param string $prisonId
    * @return array
    */
   public function ContentApiEndpoint($languageId, $contentId, $prisonId = 0)
   {
     $this->languageId = $languageId;
     $this->prisonId = $prisonId;
-    $prison  = Utilities::getTermFor($prisonId, $this->termStorage);
-    $content  = Utilities::getNodeFor($contentId, $this->nodeStorage);
+    $this->contentId = $contentId;
+
+    $content = $this->getMatchingContent();
+
+    $translatedContent = $this->translateNode($content);
+
+    return $this->createReturnObject($translatedContent);
+  }
+
+  /**
+   * Validate the content is OK for prison/prison categories
+   *
+   * @return NodeInterface
+   */
+  private function getMatchingContent() {
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $content = Utilities::getNodeFor($this->contentId, $this->nodeStorage);
 
     $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
     $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
@@ -72,7 +95,7 @@ class ContentApiClass
         );
       }
     } else {
-      $matchingPrisons = in_array($prisonId, $contentPrisons);
+      $matchingPrisons = in_array($this->prisonId, $contentPrisons);
       if (!$matchingPrisons) {
         throw new BadRequestHttpException(
           'The content does not have a matching prison category for this prison',
@@ -82,16 +105,14 @@ class ContentApiClass
       }
     }
 
-    $translatedContent = $this->translateNode($content);
-
-    return $this->createReturnObject($translatedContent);
+    return $content;
   }
   /**
    * TranslateNode function
    *
    * @param NodeInterface $content
    *
-   * @return $content
+   * @return NodeInterface
    */
   private function translateNode(NodeInterface $content)
   {
@@ -99,7 +120,11 @@ class ContentApiClass
   }
 
   /**
+   * Return the content data
    *
+   * @param NodeInterface $content
+   *
+   * @return array
    */
   private function createReturnObject($content)
   {
@@ -124,6 +149,13 @@ class ContentApiClass
     }
   }
 
+  /**
+   * Return the default content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createItemResponse($content)
   {
     $response = [];
@@ -143,6 +175,13 @@ class ContentApiClass
     return  $response;
   }
 
+  /**
+   * Return the audio item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createAudioItemResponse($content)
   {
     $response = [];
@@ -158,6 +197,13 @@ class ContentApiClass
     return $response;
   }
 
+  /**
+   * Return the video item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createVideoItemResponse($content)
   {
     $response = [];
@@ -171,6 +217,13 @@ class ContentApiClass
     return $response;
   }
 
+  /**
+   * Return the page item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createPageItemResponse($content)
   {
     $response = [];
@@ -178,7 +231,13 @@ class ContentApiClass
     return $response;
   }
 
-
+  /**
+   * Return the PDF item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createPDFItemResponse($content)
   {
     $response = [];
@@ -187,14 +246,30 @@ class ContentApiClass
     return $response;
   }
 
+  /**
+   * Return the episode if for a piece of content
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createEpisodeId($content)
   {
     return ($content->field_moj_season->value * 1000) + ($content->field_moj_episode->value);
   }
 
+  /**
+   * Return the landing page item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
   private function createLandingPageItemResponse($content)
   {
     $response = [];
+
+    // IMPORTANT: DO NOT change the incorrectly spelt field name, it is incorrect in Drupal
     $response['featured_content_id'] =  $content->field_moj_landing_feature_contet[0]->target_id;
     $response['category_id'] =  $content->field_moj_landing_page_term[0]->target_id;
     return  $response;
