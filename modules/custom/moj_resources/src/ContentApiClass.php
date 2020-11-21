@@ -5,6 +5,7 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\moj_resources\Utilities;
 
 /**
  * ContentApiClass
@@ -30,17 +31,19 @@ class ContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
+
   /**
-   * EntitEntityity Query object
+   * TermStorage object
    *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of QueryFactory
-   */
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
+
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
   }
   /**
    * API resource function
@@ -52,10 +55,33 @@ class ContentApiClass
   {
     $this->languageId = $languageId;
     $this->prisonId = $prisonId;
+    $prison  = Utilities::getPrison($prisonId);
     $content = $this->nodeStorage->load($contentId);
 
     if (is_null($content)) {
-      return array();
+      throw new NotFoundHttpException(
+        'No matching content found',
+        null,
+        404
+      );
+    }
+
+    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+    $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
+    $contentPrisons = Utilities::getPrisonsFor($content);
+
+    if (count($contentPrisons) === 0) {
+      $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
+      if (empty($matchingPrisonCategories)) {
+        throw new BadRequestHttpException(
+          'The content does not have a matching prison category for this prison',
+          null,
+          400
+        );
+      }
+    } else {
+      $matchingPrisons = in_array($prisonId, $contentPrisons);
+      $hasNoMatchingPrisonCategories = empty($matchingPrisons);
     }
 
     $translatedContent = $this->translateNode($content);
