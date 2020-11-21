@@ -113,21 +113,6 @@ class ContentApiClass
   {
     $contentType = $content->type->target_id;
 
-    if (($this->prisonId != 0) && (count($content->field_moj_prisons) > 0)) {
-      $found = false;
-
-      foreach ($content->field_moj_prisons as $key => $n) {
-        if ($this->prisonId == $n->target_id) {
-          $found = true;
-          break;
-        }
-      }
-
-      if (!$found) {
-        return [];
-      }
-    }
-
     $response = $this->createItemResponse($content);
 
     switch ($contentType) {
