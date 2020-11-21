@@ -55,7 +55,7 @@ class ContentApiClass
   {
     $this->languageId = $languageId;
     $this->prisonId = $prisonId;
-    $prison  = Utilities::getPrison($prisonId);
+    $prison  = Utilities::getPrison($prisonId, $this->termStorage);
     $content = $this->nodeStorage->load($contentId);
 
     if (is_null($content)) {
@@ -81,7 +81,13 @@ class ContentApiClass
       }
     } else {
       $matchingPrisons = in_array($prisonId, $contentPrisons);
-      $hasNoMatchingPrisonCategories = empty($matchingPrisons);
+      if (!$matchingPrisons) {
+        throw new BadRequestHttpException(
+          'The content does not have a matching prison category for this prison',
+          null,
+          400
+        );
+      }
     }
 
     $translatedContent = $this->translateNode($content);
