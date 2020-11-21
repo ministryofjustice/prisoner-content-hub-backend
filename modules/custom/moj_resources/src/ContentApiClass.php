@@ -55,16 +55,8 @@ class ContentApiClass
   {
     $this->languageId = $languageId;
     $this->prisonId = $prisonId;
-    $prison  = Utilities::getPrison($prisonId, $this->termStorage);
-    $content = $this->nodeStorage->load($contentId);
-
-    if (is_null($content)) {
-      throw new NotFoundHttpException(
-        'No matching content found',
-        null,
-        404
-      );
-    }
+    $prison  = Utilities::getTermFor($prisonId, $this->termStorage);
+    $content  = Utilities::getNodeFor($prisonId, $this->nodeStorage);
 
     $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
     $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);

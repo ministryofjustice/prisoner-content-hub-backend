@@ -37,25 +37,47 @@ class Utilities {
   }
 
   /**
-   * Loads prison for ID
+   * Loads term for ID
    *
-   * @param int $prisonId
-   * @param EntityTypeManagerInterface $termStoragee
+   * @param int $termId
+   * @param EntityTypeManagerInterface $termStorage
    *
    * @return EntityInterface
   */
-  private function getPrison($prisonId, $termStorage) {
-    $prison = $termStorage->load($prisonId);
+  private function getTermFor($termId, $termStorage) {
+    $term = $termStorage->load($termId);
 
-    if (!$prison) {
+    if (!$term) {
       throw new NotFoundHttpException(
-        'Prison not found',
+        'Term not found',
         null,
         404
       );
     }
 
-    return $prison;
+    return $term;
+  }
+
+  /**
+   * Loads node for ID
+   *
+   * @param int $nodeId
+   * @param EntityTypeManagerInterface $nodeStorage
+   *
+   * @return EntityInterface
+  */
+  private function getNodeFor($nodeId, $nodeStorage) {
+    $node = $nodeStorage->load($nodeId);
+
+    if (!$node) {
+      throw new NotFoundHttpException(
+        'Node not found',
+        null,
+        404
+      );
+    }
+
+    return $node;
   }
 
   /**

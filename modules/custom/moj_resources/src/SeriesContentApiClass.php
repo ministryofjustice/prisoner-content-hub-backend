@@ -231,27 +231,6 @@ class SeriesContentApiClass
   }
 
   /**
-   * Loads term for ID
-   *
-   * @param int $prisonId
-   *
-   * @return EntityInterface
-  */
-  private function getTermForRequest($termId) {
-    $term = $this->termStorage->load($termId);
-
-    if (!$term) {
-      throw new NotFoundHttpException(
-        'Term not found',
-        null,
-        404
-      );
-    }
-
-    return $term;
-  }
-
-  /**
    * Filter content by Prison
    *
    * @param int $prisonId
@@ -309,8 +288,8 @@ class SeriesContentApiClass
    * @return int[]
   */
   private function getSeriesContentIds($seriesId, $numberOfResultsToReturn, $resultsOffset, $prisonId) {
-    $series = $this->getTermForRequest($seriesId);
-    $prison = $this->getTermForRequest($prisonId);
+    $series = Utilities::getTermFor($seriesId, $this->termStorage);
+    $prison = Utilities::getTermFor($prisonId, $this->termStorage);
     $seriesPrisonCategories = Utilities::getPrisonCategoriesFor($series);
     $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
