@@ -251,17 +251,4 @@ class CategoryFeaturedContentApiClass
       }
     );
   }
-
-  /**
-   * Sanitise node
-   *
-   * @param [type] $term
-   *
-   * @return void
-   */
-  protected function serialize($term)
-  {
-    $serializer = \Drupal::service($term->getType() . '.serializer.default'); // TODO: Inject dependency
-    return $serializer->serialize($term, 'json', ['plugin_id' => 'entity']);
-  }
 }
