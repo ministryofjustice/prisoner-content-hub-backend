@@ -3,9 +3,10 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * PromotedContentApiClass
@@ -13,6 +14,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 class TermApiClass
 {
+  /**
+   * TermStorage object
+   *
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
 
   /**
    * Class Constructor
@@ -26,10 +33,11 @@ class TermApiClass
   ) {
     $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
   }
+
   /**
    * API resource function
    *
-   * @param string $termId
+   * @param int $termId
    * @return array
    */
   public function TermApiEndpoint($termId)
@@ -37,10 +45,11 @@ class TermApiClass
     $term = $this->termStorage->load($termId);
     return $this->createReturnObject($term);
   }
+
   /**
    * Decorate term response
    *
-   * @param Node $term
+   * @param NodeInterface $term
    * @return array
    */
   private function createReturnObject($term)

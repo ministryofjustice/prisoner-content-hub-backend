@@ -54,8 +54,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TermResource extends ResourceBase
 {
+    /**
+     * TermApiClass object
+     *
+     * @var TermApiClass
+    */
     protected $termApiClass;
 
+    /**
+     * Term id
+     *
+     * @var int
+    */
     protected $termId;
 
     public function __construct(
