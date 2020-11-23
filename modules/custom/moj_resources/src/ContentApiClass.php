@@ -78,13 +78,13 @@ class ContentApiClass
   private function getMatchingContent() {
     $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
     $content = Utilities::getNodeFor($this->contentId, $this->nodeStorage);
-
-    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
-    $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
     $contentPrisons = Utilities::getPrisonsFor($content);
 
     if (count($contentPrisons) === 0) {
+      $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+      $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
       $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
+
       if (empty($matchingPrisonCategories)) {
         throw new BadRequestHttpException(
           'The content does not have a matching prison category for this prison',
@@ -94,9 +94,10 @@ class ContentApiClass
       }
     } else {
       $matchingPrisons = in_array($this->prisonId, $contentPrisons);
+
       if (!$matchingPrisons) {
         throw new BadRequestHttpException(
-          'The content does not have a matching prison category for this prison',
+          'The content is not available for this prison',
           null,
           400
         );
