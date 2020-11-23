@@ -10,7 +10,6 @@ namespace Drupal\moj_resources\Plugin\rest\resource;
 use Psr\Log\LoggerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\moj_resources\CategoryFeaturedContentApiClass;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -49,13 +48,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          type="integer",
  *          description="ID of category to return, the default is to being back all categories.",
  *      ),
- *      @SWG\Parameter(
- *          name="_lang",
- *          in="query",
- *          required=false,
- *          type="string",
- *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
- *      ),
  *
  *     @SWG\Response(response="200", description="Hub featured content resource")
  * )
@@ -79,15 +71,9 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected $currentRequest;
 
-    protected $availableLanguages;
-
-    protected $languageManager;
-
     protected $categoryId;
 
     protected $prisonId;
-
-    Protected $languageId;
 
     Protected $numberOfResults;
 
@@ -98,18 +84,13 @@ class CategoryFeaturedContentResource extends ResourceBase
         array $serializerFormats,
         LoggerInterface $logger,
         CategoryFeaturedContentApiClass $CategoryFeaturedContentApiClass,
-        Request $currentRequest,
-        LanguageManager $languageManager
+        Request $currentRequest
     ) {
         $this->CategoryFeaturedContentApiClass = $CategoryFeaturedContentApiClass;
         $this->currentRequest = $currentRequest;
-        $this->languageManager = $languageManager;
-        $this->availableLanguages = $this->languageManager->getLanguages();
         $this->categoryId = self::setCategory();
         $this->prisonId = self::setPrison();
         $this->numberOfResults = self::setNumberOfResults();
-        $this->languageId = self::setLanguage();
-        self::checkLanguageIsValid();
         self::checkNumberOfResultsIsNumeric();
         self::checkCategoryIsNumeric();
         self::checkPrisonIsNumeric();
@@ -129,15 +110,13 @@ class CategoryFeaturedContentResource extends ResourceBase
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.category_featured_content_api_class'),
-            $container->get('request_stack')->getCurrentRequest(),
-            $container->get('language_manager')
+            $container->get('request_stack')->getCurrentRequest()
         );
     }
 
     public function get()
     {
         $featuredContent = $this->CategoryFeaturedContentApiClass->CategoryFeaturedContentApiEndpoint(
-            $this->languageId,
             $this->categoryId,
             $this->numberOfResults,
             $this->prisonId
@@ -148,21 +127,6 @@ class CategoryFeaturedContentResource extends ResourceBase
             return $response;
         }
         throw new NotFoundHttpException(t('No featured content found'));
-    }
-
-    protected function checkLanguageIsValid()
-    {
-        foreach($this->availableLanguages as $language)
-        {
-            if ($language->getid() === $this->languageId) {
-                return true;
-            }
-        }
-        throw new NotFoundHttpException(
-            t('The language Id is invalid or translation for this content is not available'),
-            null,
-            404
-        );
     }
 
     protected function checkCategoryIsNumeric()
@@ -199,11 +163,6 @@ class CategoryFeaturedContentResource extends ResourceBase
             null,
             404
         );
-    }
-
-    protected function setLanguage()
-    {
-        return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 
     protected function setNumberOfResults()

@@ -14,24 +14,12 @@ require_once('Utils.php');
 
 class CategoryFeaturedContentApiClass
 {
-  /**
-   * Node IDs
-   *
-   * @var array
-   */
-  protected $nodeIds = array();
-  /**
+   /**
    * Nodes
    *
    * @var array
    */
   protected $nodes = array();
-  /**
-   * Language Tag
-   *
-   * @var string
-   */
-  protected $lang;
   /**
    * Node_storage object
    *
@@ -39,13 +27,21 @@ class CategoryFeaturedContentApiClass
    */
   protected $nodeStorage;
   /**
-   * Entitity Query object
+   * Entity Query object
    *
    * @var Drupal\Core\Entity\Query\QueryFactory
    *
-   * Instance of querfactory
+   * Instance of queryfactory
    */
   protected $entityQuery;
+    /**
+   * Term Query object
+   *
+   * @var Drupal\Core\Entity\Query\QueryFactory
+   *
+   * Instance of queryfactory
+   */
+  protected $termStorage;
 
   /**
    * Class Constructor
@@ -64,26 +60,15 @@ class CategoryFeaturedContentApiClass
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param [string]
    * @return array
    */
-  public function CategoryFeaturedContentApiEndpoint($lang, $category, $number, $prison)
+  public function CategoryFeaturedContentApiEndpoint($category, $number, $prison)
   {
     return self::getFeaturedContentNodeIds($category, $number, $prison);
   }
   /**
-   * TranslateNode function
-   *
-   * @param NodeInterface $node
-   *
-   * @return $node
-   */
-  protected function translateNode(NodeInterface $node)
-  {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
-  }
-  /**
-   * Get node ids
+   * Get content ids
    *
    * @return void
    */
@@ -91,10 +76,10 @@ class CategoryFeaturedContentApiClass
   {
     $series = $this->promotedSeries($category, $prison);
     $nodes = $this->promotedNodes($category, $number, $prison);
-    $query = array_merge($series, $nodes);
+    $results = array_merge($series, $nodes);
 
     //sort them out
-    usort($query, function ($a, $b) {
+    usort($results, function ($a, $b) {
       if ($a->changed && $b->changed) {
         return $b->changed->value - $a->changed->value;
       }
@@ -102,7 +87,7 @@ class CategoryFeaturedContentApiClass
       return 0;
     });
 
-    return array_slice($query, 0, $number);
+    return array_slice($results, 0, $number);
   }
 
   private function decorateContent($node)
@@ -159,11 +144,7 @@ class CategoryFeaturedContentApiClass
       ->accessCheck(false);
 
     $query = getPrisonResults($prison, $query);
-
-    if ($category !== 0) {
-      $query->condition('field_moj_top_level_categories', $category);
-    };
-
+    $query->condition('field_moj_top_level_categories', $category);
     $query->range(0, $number);
     $nodes = $query->execute();
 
@@ -177,10 +158,7 @@ class CategoryFeaturedContentApiClass
     $query = $this->entityQuery->get('node')
       ->condition('status', 1)
       ->accessCheck(false);
-
-    if ($category !== 0) {
       $query->condition('field_moj_top_level_categories', $category);
-    };
 
     return $query->execute();
   }
