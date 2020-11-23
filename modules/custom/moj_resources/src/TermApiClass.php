@@ -3,10 +3,10 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Symfony\Component\Serializer\Serializer;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * PromotedContentApiClass
@@ -15,38 +15,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class TermApiClass
 {
   /**
-   * Term
+   * TermStorage object
    *
-   * @var array
-   */
-  protected $term;
-  /**
-   * Language Tag
-   *
-   * @var string
-   */
-  protected $lang;
-  /**
-   * Node_storage object
-   *
-   * @var Drupal\Core\Entity\EntityTypeManager
-   */
-  protected $node_storage;
-  /**
-   * Entitity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entity_query;
-
-  /**
-   * The custom serializer for terms.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $termSerializer;
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
 
   /**
    * Class Constructor
@@ -56,57 +29,42 @@ class TermApiClass
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery,
-    Serializer $termSerializer
+    QueryFactory $entityQuery
   ) {
-    $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
-    $this->entity_query = $entityQuery;
-    $this->termSerializer = $termSerializer;
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
   }
+
   /**
    * API resource function
    *
-   * @param [string] $lang
-   * @param [string] $category
+   * @param int $termId
    * @return array
    */
-  public function TermApiEndpoint($lang, $term_id)
+  public function TermApiEndpoint($termId)
   {
-    $this->lang = $lang;
-    $terms = $this->term_storage->load($term_id);
-    return $this->decorateResponse($terms);
+    $term = $this->termStorage->load($termId);
+    return $this->createReturnObject($term);
   }
+
   /**
    * Decorate term response
    *
-   * @param Node $term
+   * @param NodeInterface $term
    * @return array
    */
-  private function decorateResponse($term)
+  private function createReturnObject($term)
   {
-    $result = [];
-    $result['id'] = $term->tid->value;
-    $result['content_type'] = $term->vid[0]->target_id;
-    $result['title'] = $term->name->value;
-    $result['description'] = $term->description[0];
-    $result['summary'] = $term->field_content_summary ? $term->field_content_summary->value : '';
-    $result['image'] = $term->field_featured_image[0];
-    $result['video'] = $term->field_featured_video[0];
-    $result['audio'] = $term->field_featured_audio[0];
-    $result['programme_code'] = $term->field_feature_programme_code ? $term->field_feature_programme_code->value : '';
+    $response = [];
+    $response['id'] = $term->tid->value;
+    $response['content_type'] = $term->vid[0]->target_id;
+    $response['title'] = $term->name->value;
+    $response['description'] = $term->description[0];
+    $response['summary'] = $term->field_content_summary ? $term->field_content_summary->value : '';
+    $response['image'] = $term->field_featured_image[0];
+    $response['video'] = $term->field_featured_video[0];
+    $response['audio'] = $term->field_featured_audio[0];
+    $response['programme_code'] = $term->field_feature_programme_code ? $term->field_feature_programme_code->value : '';
 
-    return $result;
-  }
-
-  /**
-   * TranslateNode function
-   *
-   * @param NodeInterface $term
-   *
-   * @return $term
-   */
-  protected function translateNode($term)
-  {
-    return $term->hasTranslation($this->lang) ? $term->getTranslation($this->lang) : $term;
+    return $response;
   }
 }
