@@ -10,7 +10,6 @@ namespace Drupal\moj_resources\Plugin\rest\resource;
 use Psr\Log\LoggerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\moj_resources\CategoryFeaturedContentApiClass;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -49,13 +48,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          type="integer",
  *          description="ID of category to return, the default is to being back all categories.",
  *      ),
- *      @SWG\Parameter(
- *          name="_lang",
- *          in="query",
- *          required=false,
- *          type="string",
- *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
- *      ),
  *
  *     @SWG\Response(response="200", description="Hub featured content resource")
  * )
@@ -79,68 +71,55 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $categoryId;
 
-    protected $languageManager;
+    protected $prisonId;
 
-    protected $paramater_category;
-
-    protected $paramater_prison;
-
-    Protected $paramater_language_tag;
-
-    Protected $paramater_number_results;
+    Protected $numberOfResults;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
         CategoryFeaturedContentApiClass $CategoryFeaturedContentApiClass,
-        Request $currentRequest,
-        LanguageManager $languageManager
+        Request $currentRequest
     ) {
         $this->CategoryFeaturedContentApiClass = $CategoryFeaturedContentApiClass;
         $this->currentRequest = $currentRequest;
-        $this->languageManager = $languageManager;
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_category = self::setCategory();
-        $this->paramater_prison = self::setPrison();
-        $this->paramater_number_results = self::setNumberOfResults();
-        $this->paramater_language_tag = self::setLanguage();
-        self::checklanguageParameterIsValid();
+        $this->categoryId = self::setCategory();
+        $this->prisonId = self::setPrison();
+        $this->numberOfResults = self::setNumberOfResults();
         self::checkNumberOfResultsIsNumeric();
-        self::checkCatgeoryIsNumeric();
+        self::checkCategoryIsNumeric();
         self::checkPrisonIsNumeric();
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
 
     public static function create(
         ContainerInterface $container,
         array $configuration,
-        $plugin_id,
-        $plugin_definition
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.category_featured_content_api_class'),
-            $container->get('request_stack')->getCurrentRequest(),
-            $container->get('language_manager')
+            $container->get('request_stack')->getCurrentRequest()
         );
     }
 
     public function get()
     {
         $featuredContent = $this->CategoryFeaturedContentApiClass->CategoryFeaturedContentApiEndpoint(
-            $this->paramater_language_tag,
-            $this->paramater_category,
-            $this->paramater_number_results,
-            $this->paramater_prison
+            $this->categoryId,
+            $this->numberOfResults,
+            $this->prisonId
         );
         if (!empty($featuredContent)) {
             $response = new ResourceResponse($featuredContent);
@@ -150,24 +129,9 @@ class CategoryFeaturedContentResource extends ResourceBase
         throw new NotFoundHttpException(t('No featured content found'));
     }
 
-    protected function checklanguageParameterIsValid()
+    protected function checkCategoryIsNumeric()
     {
-        foreach($this->availableLangs as $lang)
-        {
-            if ($lang->getid() === $this->paramater_language_tag) {
-                return true;
-            }
-        }
-        throw new NotFoundHttpException(
-            t('The language tag invalid or translation for this tag is not avilable'),
-            null,
-            404
-        );
-    }
-
-    protected function checkCatgeoryIsNumeric()
-    {
-        if (is_numeric($this->paramater_category)) {
+        if (is_numeric($this->categoryId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -179,7 +143,7 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected function checkPrisonIsNumeric()
     {
-        if (is_numeric($this->paramater_category)) {
+        if (is_numeric($this->prisonId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -191,7 +155,7 @@ class CategoryFeaturedContentResource extends ResourceBase
 
     protected function checkNumberOfResultsIsNumeric()
     {
-        if (is_numeric($this->paramater_number_results)) {
+        if (is_numeric($this->numberOfResults)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -199,11 +163,6 @@ class CategoryFeaturedContentResource extends ResourceBase
             null,
             404
         );
-    }
-
-    protected function setLanguage()
-    {
-        return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 
     protected function setNumberOfResults()
