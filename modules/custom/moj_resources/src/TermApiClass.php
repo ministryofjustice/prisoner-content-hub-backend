@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * PromotedContentApiClass
 */
-
 class TermApiClass {
   /**
    * TermStorage object
@@ -48,6 +47,14 @@ class TermApiClass {
     return $this->createReturnObject($term);
   }
 
+  /**
+   * Get Term and filter by Prison/Prison Categories
+   *
+   * @param int $termId
+   * @param int $prisonId
+   *
+   * @return EntityInterface
+  */
   private function getTerm($termId, $prisonId) {
     $prison = $this->getPrison($prisonId);
     $term = $this->termStorage->load($termId);
@@ -110,6 +117,13 @@ class TermApiClass {
     return $term;
   }
 
+  /**
+   * Get Prison by a Prison ID
+   *
+   * @param int $prisonId
+   *
+   * @return EntityInterface
+  */
   private function getPrison($prisonId) {
     $prison = $this->termStorage->load($prisonId);
 
@@ -125,9 +139,9 @@ class TermApiClass {
   }
 
   /**
-   * Decorate term response
+   * Create response object for a Term
    *
-   * @param NodeInterface $ter
+   * @param NodeInterface $term
    *
    * @return array
   */
