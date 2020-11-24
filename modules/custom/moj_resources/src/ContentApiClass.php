@@ -6,6 +6,8 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\moj_resources\Utilities;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * ContentApiClass
@@ -34,7 +36,7 @@ class ContentApiClass
   /**
    * Node_storage object
    *
-   * @var Drupal\Core\Entity\EntityManagerInterface
+   * @var EntityManagerInterface
    */
   protected $nodeStorage;
 
@@ -59,7 +61,7 @@ class ContentApiClass
    * @param string $prisonId
    * @return array
    */
-  public function ContentApiEndpoint($languageId, $contentId, $prisonId = 0)
+  public function ContentApiEndpoint($languageId, $contentId, $prisonId)
   {
     $this->languageId = $languageId;
     $this->prisonId = $prisonId;
@@ -67,7 +69,7 @@ class ContentApiClass
 
     $content = $this->getMatchingContent();
 
-    return $this->createReturnObject($translatedContent);
+    return $this->createReturnObject($content);
   }
 
   /**
@@ -85,7 +87,7 @@ class ContentApiClass
       $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
       $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
 
-      if (empty($matchingPrisonCategories)) {
+      if (count($matchingPrisonCategories) === 0) {
         throw new BadRequestHttpException(
           'The content does not have a matching prison category for this prison',
           null,
@@ -129,9 +131,8 @@ class ContentApiClass
    */
   private function createReturnObject($content)
   {
-    $contentType = $content->type->target_id;
-
     $response = $this->createItemResponse($content);
+    $contentType = $content->type->target_id;
 
     switch ($contentType) {
       case 'moj_radio_item':
@@ -166,11 +167,7 @@ class ContentApiClass
     $response["image"] =  $content->field_moj_thumbnail_image[0];
     $response["description"] =  $content->field_moj_description[0];
     $response["categories"] =  $content->field_moj_top_level_categories;
-    if ($content->field_moj_secondary_tags) {
-      $response["secondary_tags"] =  $content->field_moj_secondary_tags;
-    } else {
-      $response["secondary_tags"] =  $content->field_moj_tags;
-    }
+    $response["secondary_tags"] = $content->field_moj_secondary_tags ? $content->field_moj_secondary_tags : $content->field_moj_tags;
     $response["prisons"] =  $content->field_moj_prisons;
 
     return  $response;
@@ -186,7 +183,6 @@ class ContentApiClass
   private function createAudioItemResponse($content)
   {
     $response = [];
-
     $response['media'] = $content->field_moj_audio[0];
     $response["episode_id"] = $this->createEpisodeId($content);
     $response["series_id"] = $content->field_moj_series[0]->target_id;
@@ -229,6 +225,7 @@ class ContentApiClass
   {
     $response = [];
     $response['stand_first'] = $content->field_moj_stand_first->value;
+
     return $response;
   }
 
@@ -256,7 +253,7 @@ class ContentApiClass
    */
   private function createEpisodeId($content)
   {
-    return ($content->field_moj_season->value * 1000) + ($content->field_moj_episode->value);
+    return ($content->field_moj_season->value * 1000) + $content->field_moj_episode->value;
   }
 
   /**
@@ -273,6 +270,6 @@ class ContentApiClass
     // IMPORTANT: DO NOT change the incorrectly spelt field name, it is incorrect in Drupal
     $response['featured_content_id'] =  $content->field_moj_landing_feature_contet[0]->target_id;
     $response['category_id'] =  $content->field_moj_landing_page_term[0]->target_id;
-    return  $response;
+    return $response;
   }
 }

@@ -3,7 +3,10 @@
 namespace Drupal\moj_resources;
 
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Utility class for Prisoner Content Hub endpoints
@@ -44,7 +47,7 @@ class Utilities {
    *
    * @return EntityInterface
   */
-  private function getTermFor($termId, $termStorage) {
+  public static function getTermFor($termId, $termStorage) {
     $term = $termStorage->load($termId);
 
     if (!$term) {
@@ -66,7 +69,7 @@ class Utilities {
    *
    * @return EntityInterface
   */
-  private function getNodeFor($nodeId, $nodeStorage) {
+  public static function getNodeFor($nodeId, $nodeStorage) {
     $node = $nodeStorage->load($nodeId);
 
     if (!$node) {
@@ -86,8 +89,8 @@ class Utilities {
    * @param EntityInterface $node
    * @return int[]
   */
-  private function getPrisonsFor($node) {
-    $prisons = [];
+  public static function getPrisonsFor($node) {
+    $prisons = array();
 
     foreach ($node->field_moj_prisons as $prison) {
       array_push($prisons, $prison->target_id);
@@ -102,14 +105,14 @@ class Utilities {
    * @param EntityInterface $term
    * @return int[]
   */
-  private function getPrisonCategoriesFor($node) {
-    $prisonCategories = [];
+  public static function getPrisonCategoriesFor($node) {
+    $prisonCategories = array();
 
     foreach ($node->field_prison_categories as $prisonCategory) {
       array_push($prisonCategories, $prisonCategory->target_id);
     }
 
-    if (empty($prisonCategories)) {
+    if (count($prisonCategories) === 0) {
       throw new BadRequestHttpException(
         'The node does not have any prison categories selected',
         null,
