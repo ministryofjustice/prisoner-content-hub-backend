@@ -2,11 +2,10 @@
 
 namespace Drupal\moj_resources;
 
-use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\moj_resources\Utilities;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
