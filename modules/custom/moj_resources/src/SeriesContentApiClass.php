@@ -231,51 +231,6 @@ class SeriesContentApiClass
   }
 
   /**
-   * Loads term for ID
-   *
-   * @param int $prisonId
-   *
-   * @return EntityInterface
-  */
-  private function getTermForRequest($termId) {
-    $term = $this->termStorage->load($termId);
-
-    if (!$term) {
-      throw new NotFoundHttpException(
-        'Term not found',
-        null,
-        404
-      );
-    }
-
-    return $term;
-  }
-
-  /**
-   * Get Prison Categories for a Drupal node object
-   *
-   * @param EntityInterface $term
-   * @return int[]
-  */
-  private function getPrisonCategoriesFor($node) {
-    $prisonCategories = [];
-
-    foreach ($node->field_prison_categories as $prisonCategory) {
-      array_push($prisonCategories, $prisonCategory->target_id);
-    }
-
-    if (empty($prisonCategories)) {
-      throw new BadRequestHttpException(
-        'The node does not have any prison categories selected',
-        null,
-        400
-      );
-    }
-
-    return $prisonCategories;
-  }
-
-  /**
    * Filter content by Prison
    *
    * @param int $prisonId
@@ -333,10 +288,10 @@ class SeriesContentApiClass
    * @return int[]
   */
   private function getSeriesContentIds($seriesId, $numberOfResultsToReturn, $resultsOffset, $prisonId) {
-    $series = $this->getTermForRequest($seriesId);
-    $prison = $this->getTermForRequest($prisonId);
-    $seriesPrisonCategories = $this->getPrisonCategoriesFor($series);
-    $prisonCategories = $this->getPrisonCategoriesFor($prison);
+    $series = Utilities::getTermFor($seriesId, $this->termStorage);
+    $prison = Utilities::getTermFor($prisonId, $this->termStorage);
+    $seriesPrisonCategories = Utilities::getPrisonCategoriesFor($series);
+    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query = $this->entity_query->get('node')
       ->condition('status', 1)
