@@ -28,8 +28,7 @@ class TermApiClass {
    * @param QueryFactory $entityQuery
   */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
   }
@@ -41,7 +40,7 @@ class TermApiClass {
    *
    * @return array
   */
-  public function TermApiEndpoint($termId, $prisonId) {
+  public function termApiEndpoint($termId, $prisonId) {
 
     $term = $this->getTerm($termId, $prisonId);
     return $this->createReturnObject($term);

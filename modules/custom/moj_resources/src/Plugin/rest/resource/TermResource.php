@@ -120,7 +120,7 @@ class TermResource extends ResourceBase {
     }
 
     public function get() {
-        $content = $this->termApiClass->TermApiEndpoint($this->termId, $this->prisonId);
+        $content = $this->termApiClass->termApiEndpoint($this->termId, $this->prisonId);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
