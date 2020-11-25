@@ -10,10 +10,8 @@ namespace Drupal\moj_resources\Plugin\rest\resource;
 use Psr\Log\LoggerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\moj_resources\TermApiClass;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -67,6 +65,11 @@ class TermResource extends ResourceBase {
     */
     protected $termApiClass;
 
+    /**
+     * Current request object
+     *
+     * @var Request
+    */
     protected $currentRequest;
 
     /**
