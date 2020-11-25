@@ -112,7 +112,7 @@ class Utilities {
       array_push($prisonCategories, $prisonCategory->target_id);
     }
 
-    if (count($prisonCategories) === 0) {
+    if (empty($prisonCategories)) {
       throw new BadRequestHttpException(
         'The node does not have any prison categories selected',
         null,

@@ -81,12 +81,12 @@ class ContentApiClass
     $content = Utilities::getNodeFor($this->contentId, $this->nodeStorage);
     $contentPrisons = Utilities::getPrisonsFor($content);
 
-    if (count($contentPrisons) === 0) {
+    if (empty($contentPrisons)) {
       $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
       $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
       $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
 
-      if (count($matchingPrisonCategories) === 0) {
+      if (empty($matchingPrisonCategories)) {
         throw new BadRequestHttpException(
           'The content does not have a matching prison category for this prison',
           null,
