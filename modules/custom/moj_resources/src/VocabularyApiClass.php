@@ -16,93 +16,87 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class VocabularyApiClass
 {
     /**
-     * Node IDs
+     * Term IDs
      *
      * @var array
      */
-    protected $nids = array();
+    protected $termIds = array();
     /**
-     * Nodes
+     * Terms
      *
      * @var array
      */
-    protected $nodes = array();
+    protected $terms;
     /**
      * Language Tag
      *
      * @var string
      */
-    protected $lang;
+    protected $languageId;
     /**
-     * Node_storage object
+     * Term storage object
      *
-     * @var Drupal\Core\Entity\EntityTypeManager
+     * @var EntityTypeManager
      */
-    protected $node_storage;
+    protected $termStorage;
     /**
-     * Entitity Query object
+     * Entity Query object
      *
-     * @var Drupal\Core\Entity\Query\QueryFactory
-     * 
-     * Instance of querfactory 
+     * @var QueryFactory
+     *
+     * Instance of QueryFactory
      */
-    protected $entity_query;
+    protected $entityQuery;
 
     /**
-     * The custom serializer for terms.
-     *
-     * @var \Symfony\Component\Serializer\Serializer
-     */
-    protected $termSerializer;
-
-    /**
-     * Class Constructor 
+     * Class Constructor
      *
      * @param EntityTypeManager $entityTypeManager
      * @param QueryFactory $entityQuery
      */
     public function __construct(
         EntityTypeManagerInterface $entityTypeManager,
-        QueryFactory $entityQuery,
-        Serializer $termSerializer
+        QueryFactory $entityQuery
     ) {
-        $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
-        $this->entity_query = $entityQuery;
-        $this->termSerializer = $termSerializer;
+        $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
+        $this->entityQuery = $entityQuery;
     }
     /**
      * API resource function
      *
-     * @param [string] $lang
-     * @param [string] $category
+     * @param int $languageId
+     * @param string $category
      * @return array
      */
-    public function VocabularyApiEndpoint($lang, $category)
+    public function VocabularyApiEndpoint($languageId, $category)
     {
-        $this->lang = $lang;
-        $this->tids = self::getVocabularyTids($category); 
-        $this->nodes = $this->term_storage->loadMultiple($this->tids);
-        return array_map('self::translateNode', $this->nodes);
+        $this->languageId = $languageId;
+        $this->termIds = self::getVocabularyTermIds($category);
+        $this->terms = $this->termStorage->loadMultiple($this->termIds);
+
+        return array_map('self::translateTerm', $this->terms);
     }
     /**
      * TranslateNode function
      *
      * @param NodeInterface $term
-     * 
-     * @return $term
+     *
+     * @return NodeInterface
      */
-    protected function translateNode($term) 
+    protected function translateTerm($term)
     {
-        return $term->hasTranslation($this->lang) ? $term->getTranslation($this->lang) : $term;
+        return $term->hasTranslation($this->languageId) ? $term->getTranslation($this->languageId) : $term;
     }
     /**
-     * Get tids
+     * Get termIds
      *
-     * @return $tids
+     * @param string $category
+     *
+     * @return NodeInterface[]
      */
-    protected function getVocabularyTids($category) 
+    protected function getVocabularyTermIds($category)
     {
-        return $this->entity_query->get('taxonomy_term')
+        return $this->entityQuery->get('taxonomy_term')
             ->condition('vid', $category)
             ->execute();
     }
