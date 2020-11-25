@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\\moj_resources\Plugin\rest\resource\FeaturedContentResource.
+ * Contains Drupal\\moj_resources\Plugin\rest\resource\VocabularyResource.
  */
 
 namespace Drupal\moj_resources\Plugin\rest\resource;
@@ -69,7 +69,7 @@ class VocabularyResource extends ResourceBase
 
     protected $languageManager;
 
-    protected $category;
+    protected $taxonomyName;
 
     Protected $languageId;
 
@@ -89,7 +89,7 @@ class VocabularyResource extends ResourceBase
 
         $this->availableLanguages = $this->languageManager->getLanguages();
         $this->languageId = self::setLanguageId();
-        $this->category = $this->currentRequest->get('category');
+        $this->taxonomyName = $this->currentRequest->get('category');
 
         self::checkLanguageIdIsValid();
 
@@ -116,8 +116,8 @@ class VocabularyResource extends ResourceBase
 
     public function get()
     {
-        self::checkCategoryIsString();
-        $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->languageId, $this->category);
+        self::checkTaxonomyNameIsString();
+        $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->languageId, $this->taxonomyName);
 
         if (!empty($content)) {
             $response = new ResourceResponse($content);
@@ -142,13 +142,13 @@ class VocabularyResource extends ResourceBase
         );
     }
 
-    protected function checkCategoryIsString()
+    protected function checkTaxonomyNameIsString()
     {
         if (is_string($this->category)) {
             return true;
         }
         throw new NotFoundHttpException(
-            t('The category parameter must the machine name of the drupal catgeory'),
+            t('The taxonomy name must the machine name of a drupal taxonomy'),
             null,
             404
         );

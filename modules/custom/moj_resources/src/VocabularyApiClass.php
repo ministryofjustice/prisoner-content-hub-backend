@@ -65,13 +65,13 @@ class VocabularyApiClass
      * API resource function
      *
      * @param int $languageId
-     * @param string $category
+     * @param string $taxonomyName
      * @return array
      */
-    public function VocabularyApiEndpoint($languageId, $category)
+    public function VocabularyApiEndpoint($languageId, $taxonomyName)
     {
         $this->languageId = $languageId;
-        $this->termIds = self::getVocabularyTermIds($category);
+        $this->termIds = self::getVocabularyTermIds($taxonomyName);
         $this->terms = $this->termStorage->loadMultiple($this->termIds);
 
         return array_map('self::translateTerm', $this->terms);
@@ -90,14 +90,14 @@ class VocabularyApiClass
     /**
      * Get termIds
      *
-     * @param string $category
+     * @param string $taxonomyName
      *
      * @return NodeInterface[]
      */
-    protected function getVocabularyTermIds($category)
+    protected function getVocabularyTermIds($taxonomyName)
     {
         return $this->entityQuery->get('taxonomy_term')
-            ->condition('vid', $category)
+            ->condition('vid', $taxonomyName)
             ->execute();
     }
 }
