@@ -10,10 +10,8 @@ namespace Drupal\moj_resources\Plugin\rest\resource;
 use Psr\Log\LoggerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\moj_resources\TermApiClass;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -27,6 +25,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          required=true,
  *          type="string",
  *          description="Response format, should be 'json'",
+ *      ),
+ *      @SWG\Parameter(
+ *          name="_prison",
+ *          in="query",
+ *          required=true,
+ *          type="integer",
+ *          description="The ID of the prison to return content for",
  *      ),
  *      @SWG\Parameter(
  *          name="{term}",
@@ -52,8 +57,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * )
  */
 
-class TermResource extends ResourceBase
-{
+class TermResource extends ResourceBase {
     /**
      * TermApiClass object
      *
@@ -62,11 +66,25 @@ class TermResource extends ResourceBase
     protected $termApiClass;
 
     /**
+     * Current request object
+     *
+     * @var Request
+    */
+    protected $currentRequest;
+
+    /**
      * Term id
      *
      * @var int
     */
     protected $termId;
+
+    /**
+     * Prison id
+     *
+     * @var int
+    */
+    protected $prisonId;
 
     public function __construct(
         array $configuration,
@@ -78,8 +96,12 @@ class TermResource extends ResourceBase
         Request $currentRequest
     ) {
         $this->termApiClass = $termApiClass;
+        $this->currentRequest = $currentRequest;
         $this->termId = $currentRequest->get('tid');
+        $this->prisonId = $this->getPrisonId();
 
+        self::checkTermIdIsNumeric();
+        self::checkPrisonIdIsNumeric();
         parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
 
@@ -100,10 +122,8 @@ class TermResource extends ResourceBase
         );
     }
 
-    public function get()
-    {
-        self::checkTermIdIsNumeric();
-        $content = $this->termApiClass->TermApiEndpoint($this->termId);
+    public function get() {
+        $content = $this->termApiClass->termApiEndpoint($this->termId, $this->prisonId);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
@@ -112,16 +132,31 @@ class TermResource extends ResourceBase
         throw new NotFoundHttpException(t('No term found'));
     }
 
-    protected function checkTermIdIsNumeric()
-    {
+    protected function getPrisonId() {
+      $prisonId = $this->currentRequest->get('_prison');
+      return is_null($prisonId) ? 0 : $prisonId;
+    }
+
+    protected function checkTermIdIsNumeric() {
         if (is_numeric($this->termId)) {
             return true;
         }
         throw new NotFoundHttpException(
-            t('The term id must be a numeric'),
+            t('The Term ID must be a numeric'),
             null,
             404
         );
+    }
+
+    protected function checkPrisonIdIsNumeric() {
+      if (is_numeric($this->prisonId)) {
+        return true;
+      }
+      throw new NotFoundHttpException(
+        t('The Prison ID must be numeric'),
+        null,
+        404
+      );
     }
 }
 
