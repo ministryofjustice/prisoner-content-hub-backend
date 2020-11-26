@@ -147,29 +147,29 @@ class TermApiClass {
   private function createReturnObject($term) {
     $response = [];
     $response['id'] = $term->tid->value;
-    $response['content_type'] = $term->vid[0]->target_id;
+    $response['content_type'] = $term->vid->target_id;
     $response['title'] = $term->name->value;
-    $response['description'] = $term->description[0];
+    $response['description'] = ['processed' =>$term->description->processed];
     $response['summary'] = $term->field_content_summary ? $term->field_content_summary->value : '';
-    $response['image'] = $term->field_featured_image[0];
-    $response['video'] = $term->field_featured_video[0];
-    $response['audio'] = $term->field_featured_audio[0];
+    $response['image'] = $term->field_featured_image ? ['url' => $term->field_featured_image->url] : null;
+    $response['video'] = $term->field_featured_video ? ['url' => $term->field_featured_video->url] : null;
+    $response['audio'] = $term->field_featured_audio ? ['url' => $term->field_featured_audio->url] : null;
     $response['programme_code'] = $term->field_feature_programme_code ? $term->field_feature_programme_code->value : '';
 
-    if ($term->hasField('field_prison_categories')) {
+    if ($term->field_prison_categories) {
       $prisonCategories = [];
 
-      foreach($term->get('field_prison_categories') as $prisonCategory) {
+      foreach($term->field_prison_categories as $prisonCategory) {
         array_push($prisonCategories, $prisonCategory->target_id);
       }
 
       $response['prison_categories'] = $prisonCategories;
     }
 
-    if ($term->hasField('field_promoted_to_prison')) {
+    if ($term->field_promoted_to_prison) {
       $prisons = [];
 
-      foreach($term->get('field_promoted_to_prison') as $prison) {
+      foreach($term->field_promoted_to_prison as $prison) {
         array_push($prisons, $prison->target_id);
       }
 

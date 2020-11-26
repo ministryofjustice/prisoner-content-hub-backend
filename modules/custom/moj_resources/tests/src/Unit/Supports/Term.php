@@ -11,15 +11,15 @@ use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
  */
 abstract class Term {
   protected $testHelpers;
-  protected $nid;
-  protected $title;
+  protected $tid;
+  protected $name;
   protected $description;
   protected $prisonCategories = [];
 
-  public function __construct($unitTestCase, $nid = 123) {
+  public function __construct($unitTestCase, $tid = 123) {
     $this->testHelpers = new TestHelpers($unitTestCase);
-    $this->nid = $this->testHelpers->createFieldWith('value', $nid);
-    $this->title = $this->testHelpers->createFieldWith('Test Term', $nid);
+    $this->tid = $this->testHelpers->createFieldWith('value', $tid);
+    $this->name = $this->testHelpers->createFieldWith('value', 'Test Term');
     $this->description = $this->testHelpers->createDescriptionField("This is a test term");
   }
 
@@ -29,8 +29,8 @@ abstract class Term {
    * @param string $title
    * @return Term
   */
-  public function setTitle($title) {
-    $this->title = $title;
+  public function setTitle($name) {
+    $this->name = $name;
     return $this;
   }
 

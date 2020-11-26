@@ -164,7 +164,12 @@ class TestHelpers {
 
     $field->expects($this->unitTestCase->any())
       ->method('__get')
-      ->with('raw', 'processed', 'summary', 'sanitized')
+      ->with($this->unitTestCase->logicalOr(
+        $this->unitTestCase->equalTo('raw'),
+        $this->unitTestCase->equalTo('processed'),
+        $this->unitTestCase->equalTo('summary'),
+        $this->unitTestCase->equalTo('sanitized')
+      ))
       ->willReturn($description);
 
     return $field;

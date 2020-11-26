@@ -11,11 +11,11 @@ use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
  * @group unit_moj_resources
  */
 class Prison extends Term {
-  private $type;
+  private $vid;
 
   public function __construct($unitTestCase, $nid) {
     parent::__construct($unitTestCase, $nid);
-    $this->type = $this->testHelpers->createFieldWith('target_id', 'prisons');
+    $this->vid = $this->testHelpers->createFieldWith('target_id', 'prisons');
   }
 
   /**
@@ -24,8 +24,8 @@ class Prison extends Term {
    * @param string $title
    * @return Term
   */
-  static public function createWithNodeId($unitTestCase, $nid) {
-    $prisonTerm = new self($unitTestCase, $nid);
+  static public function createWithNodeId($unitTestCase, $tid) {
+    $prisonTerm = new self($unitTestCase, $tid);
     return $prisonTerm;
   }
 
@@ -36,9 +36,9 @@ class Prison extends Term {
   */
   public function createReturnValueMap() {
      return array(
-        array("nid", $this->nid),
-        array("type", $this->type),
-        array("title", $this->title),
+        array("tid", $this->tid),
+        array("vid", $this->vid),
+        array("name", $this->name),
         array("field_moj_description", $this->description),
         array("field_prison_categories", $this->prisonCategories)
     );
