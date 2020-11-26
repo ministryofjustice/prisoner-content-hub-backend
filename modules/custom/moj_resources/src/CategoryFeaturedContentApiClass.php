@@ -148,7 +148,7 @@ class CategoryFeaturedContentApiClass
       $seriesIds[] = $n->field_moj_series->target_id;
     }
 
-    return $seriesIds;
+    return array_unique($seriesIds);
   }
   /**
    * Creates the object to return
@@ -164,7 +164,8 @@ class CategoryFeaturedContentApiClass
     $nodes = $this->loadNodesDetails($nodeIds);
     $series = $this->extractSeriesIdsFrom($nodes);
 
-    return $this->promotedTerms(array_unique($series), $prisonId);
+
+    return $this->promotedTerms($series, $prisonId);
   }
   /**
    * Creates the object to return
@@ -219,17 +220,10 @@ class CategoryFeaturedContentApiClass
   {
     $loadedTerms = $this->termStorage->loadMultiple($termIds);
     $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
-      if ($term->field_moj_category_featured_item->value == true && $prisonId == $term->field_promoted_to_prison->target_id) {
-        return true;
-      } elseif ($term->field_moj_category_featured_item->value == true && !$term->field_promoted_to_prison->target_id) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+      $promotedContent = $term->field_moj_category_featured_item->value;
+      $promotedToPrison = $term->field_promoted_to_prison->target_id;
 
-    usort($promotedTerms, function ($a, $b) {
-      return $b->changed->value - $a->changed->value;
+      return ($promotedContent && ($prisonId == $promotedToPrison || !$promotedToPrison));
     });
 
     return array_map(array($this, 'decorateTerm'), $promotedTerms);
