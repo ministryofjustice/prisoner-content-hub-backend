@@ -2,9 +2,12 @@
 
 namespace Drupal\Tests\moj_resources\Unit;
 
-use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\moj_resources\Utilities;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\moj_resources\Unit\Supports\AudioContent;
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
+use Drupal\Tests\moj_resources\Unit\Supports\VideoContent;
 
 /**
  * MOJ Resources Utilities
@@ -16,7 +19,6 @@ class UtilitiesTest extends UnitTestCase
 {
   public $entityQueryFactory;
 
-
   public function setUp() {
       $this->entityQueryFactory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
         ->disableOriginalConstructor()
@@ -27,7 +29,6 @@ class UtilitiesTest extends UnitTestCase
         ->method($this->anything())
         ->will($this->returnSelf());
   }
-
 
   /*
   * Test filter by prison
@@ -58,5 +59,66 @@ class UtilitiesTest extends UnitTestCase
     $query = Utilities::filterByPrisonCategories(123, [456], $this->entityQueryFactory->get('node'));
 
     $this->assertInstanceOf('Drupal\Core\Entity\Query\QueryFactory', $query);
+  }
+
+  /*
+  * Test get prisons for a node
+  *
+  * @return void
+  */
+  public function testGetPrisonsFor() {
+    $tests = array(
+      array(123, 456),
+      array(123),
+      array(123, 456, 789),
+      array()
+    );
+
+    foreach ($tests as $testData) {
+      $testContent = AudioContent::createWithNodeId($this, 123);
+
+      foreach ($testData as $prisonId) {
+        $testContent->addPrison($prisonId);
+      }
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+
+      $prisons = Utilities::getPrisonsFor($node);
+      $this->assertEquals(count($prisons), count($testData));
+      $this->assertEquals($prisons, $testData);
+    }
+  }
+
+  /*
+  * Test get prison categories for a node
+  *
+  * @return void
+  */
+  public function testGetPrisonCategoriesFor() {
+    $tests = array(
+      array(123, 456),
+      array(123),
+      array(123, 456, 789),
+      array()
+    );
+
+    foreach ($tests as $testData) {
+      $testContent = AudioContent::createWithNodeId($this, 123);
+
+      foreach ($testData as $prisonCategoryId) {
+        $testContent->addPrisonCategory($prisonCategoryId);
+      }
+
+      $node = TestHelpers::createMockNode($this, $testContent);
+
+      if (empty($testData)) {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+        $prisonCategories = Utilities::getPrisonCategoriesFor($node);
+      } else {
+        $prisonCategories = Utilities::getPrisonCategoriesFor($node);
+        $this->assertEquals(count($prisonCategories), count($testData));
+        $this->assertEquals($prisonCategories, $testData);
+      }
+    }
   }
 }
