@@ -5,6 +5,7 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 
 require_once('Utils.php');
 
@@ -14,38 +15,32 @@ require_once('Utils.php');
 
 class CategoryFeaturedContentApiClass
 {
-  /**
-   * Node IDs
-   *
-   * @var array
-   */
-  protected $nids = array();
-  /**
+   /**
    * Nodes
    *
    * @var array
    */
   protected $nodes = array();
   /**
-   * Language Tag
+   * Node_storage object
    *
-   * @var string
+   * @var EntityManagerInterface
    */
-  protected $lang;
+  protected $nodeStorage;
+  /**
+   * Entity Query object
+   *
+   * @var QueryFactory
+   *
+   * Instance of QueryFactory
+   */
+  protected $entityQuery;
   /**
    * Node_storage object
    *
-   * @var Drupal\Core\Entity\EntityManagerInterface
+   * @var EntityManagerInterface
    */
-  protected $node_storage;
-  /**
-   * Entitity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entity_query;
+  protected $termStorage;
 
   /**
    * Class Constructor
@@ -57,43 +52,39 @@ class CategoryFeaturedContentApiClass
     EntityTypeManagerInterface $entityTypeManager,
     QueryFactory $entityQuery
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
+    $this->entityQuery = $entityQuery;
   }
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param int $categoryId
+   * @param int $numberOfResults
+   * @param int $prisonId
+   *
    * @return array
    */
-  public function CategoryFeaturedContentApiEndpoint($lang, $category, $number, $prison)
+  public function CategoryFeaturedContentApiEndpoint($categoryId, $numberOfResults, $prisonId)
   {
-    return self::getFeaturedContentNodeIds($category, $number, $prison);
+    return self::getFeaturedContentNodeIds($categoryId, $numberOfResults, $prisonId);
   }
   /**
-   * TranslateNode function
+   * Get content ids
    *
-   * @param NodeInterface $node
+   * @param int $categoryId
+   * @param int $numberOfResults
+   * @param int $prisonId
    *
-   * @return $node
+   * @return array
    */
-  protected function translateNode(NodeInterface $node)
+  protected function getFeaturedContentNodeIds($categoryId, $numberOfResults, $prisonId = 0)
   {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
-  }
-  /**
-   * Get nids
-   *
-   * @return void
-   */
-  protected function getFeaturedContentNodeIds($category, $number, $prison = 0)
-  {
-    $series = $this->promotedSeries($category, $prison);
-    $nodes = $this->promotedNodes($category, $number, $prison);
+    $series = $this->promotedSeries($categoryId, $prisonId);
+    $nodes = $this->promotedNodes($categoryId, $numberOfResults, $prisonId);
     $results = array_merge($series, $nodes);
 
-    //sort them out
+  //sort them out
     usort($results, function ($a, $b) {
       if ($a->changed && $b->changed) {
         return $b->changed->value - $a->changed->value;
@@ -102,36 +93,54 @@ class CategoryFeaturedContentApiClass
       return 0;
     });
 
-    return array_slice($results, 0, $number);
+    return array_slice($results, 0, $numberOfResults);
   }
-
+  /**
+   * Creates the object to return
+   *
+   * @param NodeInterface[] $node
+   *
+   * @return array
+  */
   private function decorateContent($node)
   {
-    $result = [];
-    $result['id'] = $node->nid->value;
-    $result['title'] = $node->title->value;
-    $result['content_type'] = $node->type->target_id;
-    $result['summary'] = $node->field_moj_description->summary;
-    $result['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
-    $result['duration'] = $node->field_moj_duration->value;
+    $content = [];
+    $content['id'] = $node->nid->value;
+    $content['title'] = $node->title->value;
+    $content['content_type'] = $node->type->target_id;
+    $content['summary'] = $node->field_moj_description->summary;
+    $content['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
+    $content['duration'] = $node->field_moj_duration->value;
 
-    return $result;
+    return $content;
   }
-
+  /**
+   * Creates the object to return
+   *
+   * @param NodeInterface[] $term
+   *
+   * @return array
+  */
   private function decorateTerm($term)
   {
-    $result = [];
-    $result['id'] = $term->tid->value;
-    $result['title'] = $term->name->value;
-    $result['content_type'] = $term->vid->target_id;
-    $result['summary'] = $term->field_content_summary->value;
-    $result['image'] = $term->field_featured_image[0];
-    $result['audio'] = $term->field_featured_audio[0];
-    $result['video'] = $term->field_featured_video[0];
+    $content = [];
+    $content['id'] = $term->tid->value;
+    $content['title'] = $term->name->value;
+    $content['content_type'] = $term->vid->target_id;
+    $content['summary'] = $term->field_content_summary->value;
+    $content['image'] = $term->field_featured_image[0];
+    $content['audio'] = $term->field_featured_audio[0];
+    $content['video'] = $term->field_featured_video[0];
 
-    return $result;
+    return $content;
   }
-
+  /**
+   * Creates the object to return
+   *
+   * @param NodeInterface[] $nodes
+   *
+   * @return array
+  */
   private function extractSeriesIdsFrom($nodes)
   {
     $seriesIds = [];
@@ -141,57 +150,78 @@ class CategoryFeaturedContentApiClass
 
     return $seriesIds;
   }
-
-  private function promotedSeries($category, $prison)
+  /**
+   * Creates the object to return
+   *
+   * @param int $categoryId
+   * @param int $prisonId
+   *
+   * @return array
+  */
+  private function promotedSeries($categoryId, $prisonId)
   {
-    $nids = $this->allNodes($category);
-    $nodes = $this->loadNodesDetails($nids);
+    $nodeIds = $this->allContentFor($categoryId);
+    $nodes = $this->loadNodesDetails($nodeIds);
     $series = $this->extractSeriesIdsFrom($nodes);
 
-    return $this->promotedTerms(array_unique($series), $prison);
+    return $this->promotedTerms(array_unique($series), $prisonId);
   }
-
-  private function promotedNodes($category, $number, $prison)
+  /**
+   * Creates the object to return
+   *
+   * @param int $categoryId
+   * @param int $numberOfResults
+   * @param int $prisonId
+   *
+   * @return array
+  */
+  private function promotedNodes($categoryId, $numberOfResults, $prisonId)
   {
-    $results = $this->entity_query->get('node')
+    $query = $this->entityQuery->get('node')
       ->condition('status', 1)
       ->condition('field_moj_category_featured_item', 1)
       ->accessCheck(false);
 
-    $results = getPrisonResults($prison, $results);
-
-    if ($category !== 0) {
-      $results->condition('field_moj_top_level_categories', $category);
-    };
-
-    $results->range(0, $number);
-    $nodes = $results->execute();
+    $query = getPrisonResults($prisonId, $query);
+    $query->condition('field_moj_top_level_categories', $categoryId);
+    $query->range(0, $numberOfResults);
+    $nodes = $query->execute();
 
     $promotedContent = $this->loadNodesDetails($nodes);
 
     return array_map(array($this, 'decorateContent'), $promotedContent);
   }
-
-  private function allNodes($category)
+  /**
+   * Creates the object to return
+   *
+   * @param int $categoryId
+   *
+   * @return NodeInterface
+  */
+  private function allContentFor($categoryId)
   {
-    $results = $this->entity_query->get('node')
+    $query = $this->entityQuery->get('node')
       ->condition('status', 1)
       ->accessCheck(false);
+      $query->condition('field_moj_top_level_categories', $categoryId);
 
-    if ($category !== 0) {
-      $results->condition('field_moj_top_level_categories', $category);
-    };
-
-    return $results->execute();
+    return $query->execute();
   }
-
-  private function promotedTerms($termIds, $prison)
+  /**
+   * Creates the object to return
+   *
+   * @param int[] $termIds
+   * @param int $prisonId
+   *
+   * @return array
+  */
+  private function promotedTerms($termIds, $prisonId)
   {
-    $terms = $this->term_storage->loadMultiple($termIds);
-    $promotedTerms = array_filter($terms, function ($item) use ($prison) {
-      if ($item->field_moj_category_featured_item->value == true && $prison == $item->field_promoted_to_prison->target_id) {
+    $loadedTerms = $this->termStorage->loadMultiple($termIds);
+    $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
+      if ($term->field_moj_category_featured_item->value == true && $prisonId == $term->field_promoted_to_prison->target_id) {
         return true;
-      } elseif ($item->field_moj_category_featured_item->value == true && !$item->field_promoted_to_prison->target_id) {
+      } elseif ($term->field_moj_category_featured_item->value == true && !$term->field_promoted_to_prison->target_id) {
         return true;
       } else {
         return false;
@@ -208,28 +238,17 @@ class CategoryFeaturedContentApiClass
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $nodeIds
+   *
    * @return array
    */
-  protected function loadNodesDetails(array $nids)
+  protected function loadNodesDetails(array $nodeIds)
   {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
-      function ($item) {
-        return $item->access();
+      $this->nodeStorage->loadMultiple($nodeIds),
+      function ($term) {
+        return $term->access();
       }
     );
-  }
-
-  /**
-   * Sanitise node
-   *
-   * @param [type] $item
-   * @return void
-   */
-  protected function serialize($item)
-  {
-    $serializer = \Drupal::service($item->getType() . '.serializer.default'); // TODO: Inject dependency
-    return $serializer->serialize($item, 'json', ['plugin_id' => 'entity']);
   }
 }
