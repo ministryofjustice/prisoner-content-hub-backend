@@ -79,59 +79,60 @@ class RelatedContentResource extends ResourceBase
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $availableLanguages;
 
     protected $languageManager;
 
-    protected $paramater_category;
+    protected $categoryId;
 
-    protected $paramater_number;
+    protected $numberOfResults;
 
-    protected $paramater_offset;
+    protected $offsetIntoNumberOfResults;
 
-    Protected $paramater_language_tag;
+    protected $languageId;
 
-    Protected $paramater_number_results;
+    protected $prisonId;
 
-    protected $paramater_prison;
+    protected $sortOrder;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
-        RelatedContentApiClass $RelatedContentApiClass,
+        RelatedContentApiClass $relatedContentApiClass,
         Request $currentRequest,
         LanguageManager $languageManager
     ) {
-        $this->relatedContentApiClass = $RelatedContentApiClass;
+        $this->relatedContentApiClass = $relatedContentApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_category = self::setCategory();
-        $this->paramater_language_tag = self::setLanguage();
-        $this->paramater_number = self::setNumberOfResults();
-        $this->paramater_offset = self::setOffsetOfResults();
-        $this->paramater_prison = self::setPrison();
-        $this->paramater_sort_order = self::setSortOrder();
-        self::checklanguageParameterIsValid();
-        self::checkCategoryIsNumeric();
+        $this->availableLanguages = $this->languageManager->getLanguages();
+        $this->categoryId = self::setCategoryId();
+        $this->languageId = self::setLanguageId();
+        $this->prisonId = self::setPrisonId();
+        $this->numberOfResults = self::setNumberOfResults();
+        $this->offsetIntoNumberOfResults = self::setOffsetIntoNumberOfResults();
+        $this->sortOrder = self::setSortOrder();
+        self::checkLanguageIdIsValid();
+        self::checkCategoryIdIsNumeric();
+        self::checkPrisonIdIsNumeric();
         self::checkNumberOfResultsIsNumeric();
-        self::checkOffsetOfResultsIsNumeric();
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        self::checkOffsetIntoNumberOfResultsIsNumeric();
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
 
     public static function create(
         ContainerInterface $container,
         array $configuration,
-        $plugin_id,
-        $plugin_definition
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.related_content_api_class'),
@@ -143,26 +144,27 @@ class RelatedContentResource extends ResourceBase
     public function get()
     {
         $relatedContent = $this->relatedContentApiClass->RelatedContentApiEndpoint(
-            $this->paramater_language_tag,
-            $this->paramater_category,
-            $this->paramater_number,
-            $this->paramater_offset,
-            $this->paramater_prison,
-            $this->paramater_sort_order
+            $this->languageId,
+            $this->categoryId,
+            $this->numberOfResults,
+            $this->offsetIntoNumberOfResults,
+            $this->prisonId,
+            $this->sortOrder
         );
-        if (!empty($relatedContent)) {
-            $response = new ResourceResponse($relatedContent);
-            $response->addCacheableDependency($relatedContent);
-            return $response;
+        if (empty($relatedContent)) {
+            throw new NotFoundHttpException(t('No related content found'));
         }
-        throw new NotFoundHttpException(t('No related content found'));
+
+        $response = new ResourceResponse($relatedContent);
+        $response->addCacheableDependency($relatedContent);
+        return $response;
     }
 
-    protected function checklanguageParameterIsValid()
+    protected function checkLanguageIdIsValid()
     {
-        foreach($this->availableLangs as $lang)
+        foreach($this->availableLanguages as $language)
         {
-            if ($lang->getid() === $this->paramater_language_tag) {
+            if ($language->getid() === $this->languageId) {
                 return true;
             }
         }
@@ -173,9 +175,9 @@ class RelatedContentResource extends ResourceBase
         );
     }
 
-    protected function checkCategoryIsNumeric()
+    protected function checkCategoryIdIsNumeric()
     {
-        if (is_numeric($this->paramater_category)) {
+        if (is_numeric($this->categoryId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -187,7 +189,7 @@ class RelatedContentResource extends ResourceBase
 
     protected function checkNumberOfResultsIsNumeric()
     {
-        if (is_numeric($this->paramater_number)) {
+        if (is_numeric($this->numberOfResults)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -197,9 +199,9 @@ class RelatedContentResource extends ResourceBase
         );
     }
 
-    protected function checkOffsetOfResultsIsNumeric()
+    protected function checkOffsetIntoNumberOfResultsIsNumeric()
     {
-        if (is_numeric($this->paramater_offset)) {
+        if (is_numeric($this->offsetIntoNumberOfResults)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -209,12 +211,24 @@ class RelatedContentResource extends ResourceBase
         );
     }
 
-    protected function setLanguage()
+    protected function checkPrisonIdIsNumeric()
+    {
+        if (is_numeric($this->prisonId)) {
+            return true;
+        }
+        throw new NotFoundHttpException(
+            t('The prison ID must be numeric'),
+            null,
+            400
+        );
+    }
+
+    protected function setLanguageId()
     {
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 
-    protected function setCategory()
+    protected function setCategoryId()
     {
         return is_null($this->currentRequest->get('_category')) ? 0 : $this->currentRequest->get('_category');
     }
@@ -224,12 +238,12 @@ class RelatedContentResource extends ResourceBase
         return is_null($this->currentRequest->get('_number')) ? 8 : $this->currentRequest->get('_number');
     }
 
-    protected function setOffsetOfResults()
+    protected function setOffsetIntoNumberOfResults()
     {
         return is_null($this->currentRequest->get('_offset')) ? 0 : $this->currentRequest->get('_offset');
     }
 
-    protected function setPrison()
+    protected function setPrisonId()
     {
         return is_null($this->currentRequest->get('_prison')) ? 0 : $this->currentRequest->get('_prison');
     }
@@ -239,5 +253,3 @@ class RelatedContentResource extends ResourceBase
         return is_null($this->currentRequest->get('_sort_order')) ? 'ASC' : $this->currentRequest->get('_sort_order');
     }
 }
-
-
