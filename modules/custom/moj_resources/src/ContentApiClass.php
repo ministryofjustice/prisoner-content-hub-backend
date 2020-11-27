@@ -2,9 +2,11 @@
 
 namespace Drupal\moj_resources;
 
+use Drupal\moj_resources\Utilities;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * ContentApiClass
@@ -13,214 +15,260 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class ContentApiClass
 {
   /**
-   * Node IDs
-   *
-   * @var array
-   */
-  protected $nid = array();
-
-  /**
-   * Nodes
-   *
-   * @var array
-   */
-  protected $node = array();
-  /**
    * Language Tag
    *
    * @var string
    */
-  protected $lang;
+  protected $languageId;
   /**
    * Prison Id
    *
    * @var integer
    */
-  protected $prison;
+  protected $prisonId;
+  /**
+   * Content Id
+   *
+   * @var integer
+   */
+  protected $contentId;
   /**
    * Node_storage object
    *
-   * @var Drupal\Core\Entity\EntityManagerInterface
+   * @var EntityManagerInterface
    */
-  protected $node_storage;
+  protected $nodeStorage;
+
   /**
-   * Entitity Query object
+   * TermStorage object
    *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entity_query;
-  /**
-   * Class Constructor
-   *
-   * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
-   */
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
+
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
   }
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param string $languageId
+   * @param string $contentId
+   * @param string $prisonId
    * @return array
    */
-  public function ContentApiEndpoint($lang, $nid, $prison = 0)
+  public function ContentApiEndpoint($languageId, $contentId, $prisonId)
   {
-    $this->lang = $lang;
-    $this->prison = $prison;
-    $node = $this->loadNodesDetails($nid);
+    $this->languageId = $languageId;
+    $this->prisonId = $prisonId;
+    $this->contentId = $contentId;
 
-    if (is_null($node)) {
-      return array();
+    $content = $this->getMatchingContent();
+
+    return $this->createReturnObject($content);
+  }
+
+  /**
+   * Validate the content is OK for prison/prison categories
+   *
+   * @return NodeInterface
+   */
+  private function getMatchingContent() {
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $content = Utilities::getNodeFor($this->contentId, $this->nodeStorage);
+    $contentPrisons = Utilities::getPrisonsFor($content);
+
+    if (empty($contentPrisons)) {
+      $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+      $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
+      $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
+
+      if (empty($matchingPrisonCategories)) {
+        throw new BadRequestHttpException(
+          'The content does not have a matching prison category for this prison',
+          null,
+          400
+        );
+      }
+    } else {
+      $matchingPrisons = in_array($this->prisonId, $contentPrisons);
+
+      if (!$matchingPrisons) {
+        throw new BadRequestHttpException(
+          'The content is not available for this prison',
+          null,
+          400
+        );
+      }
     }
 
-    $translatedNodes = $this->translateNode($node);
+    $translatedContent = $this->translateNode($content);
 
-    return $this->decorateContent($translatedNodes);
+    return $translatedContent;
   }
   /**
    * TranslateNode function
    *
-   * @param NodeInterface $node
+   * @param NodeInterface $content
    *
-   * @return $node
+   * @return NodeInterface
    */
-  private function translateNode(NodeInterface $node)
+  private function translateNode(NodeInterface $content)
   {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
+    return $content->hasTranslation($this->languageId) ? $content->getTranslation($this->languageId) : $content;
   }
 
   /**
-   * Load full node details
+   * Return the content data
    *
-   * @param array $nids
+   * @param NodeInterface $content
+   *
    * @return array
    */
-  private function loadNodesDetails($nid)
+  private function createReturnObject($content)
   {
-    return $this->node_storage->load($nid);
+    $response = $this->createItemResponse($content);
+    $contentType = $content->type->target_id;
+
+    switch ($contentType) {
+      case 'moj_radio_item':
+        return array_merge($response, $this->createAudioItemResponse($content));
+      case 'moj_video_item':
+        return array_merge($response, $this->createVideoItemResponse($content));
+      case 'moj_pdf_item':
+        return array_merge($response, $this->createPDFItemResponse($content));
+      case 'page':
+        return array_merge($response, $this->createPageItemResponse($content));
+      case 'landing_page':
+        return array_merge($response, $this->createLandingPageItemResponse($content));
+
+      default:
+        return $response;
+    }
   }
 
   /**
+   * Return the default content data
    *
+   * @param NodeInterface $content
+   *
+   * @return array
    */
-  private function decorateContent($node)
+  private function createItemResponse($content)
   {
-    $content_type = $node->type->target_id;
+    $response = [];
+    $response["content_type"] =  $content->type->target_id;
+    $response["title"] =  $content->title->value;
+    $response["id"] =  $content->nid->value;
+    $response["image"] =  $content->field_moj_thumbnail_image[0];
+    $response["description"] =  $content->field_moj_description[0];
+    $response["categories"] =  $content->field_moj_top_level_categories;
+    $response["secondary_tags"] = $content->field_moj_secondary_tags ? $content->field_moj_secondary_tags : $content->field_moj_tags;
+    $response["prisons"] =  $content->field_moj_prisons;
 
-    if (($this->prison != 0) && (count($node->field_moj_prisons) > 0)) {
-      $found = false;
-
-      foreach ($node->field_moj_prisons as $key => $n) {
-        if ($this->prison == $n->target_id) {
-          $found = true;
-          break;
-        }
-      }
-
-      if (!$found) {
-        return [];
-      }
-    }
-
-    $defaults = $this->createItemResponse($node);
-
-    switch ($content_type) {
-      case 'moj_radio_item':
-        return array_merge($defaults, $this->createAudioItemResponse($node));
-      case 'moj_video_item':
-        return array_merge($defaults, $this->createVideoItemResponse($node));
-      case 'moj_pdf_item':
-        return array_merge($defaults, $this->createPDFItemResponse($node));
-      case 'page':
-        return array_merge($defaults, $this->createPageItemResponse($node));
-      case 'landing_page':
-        return array_merge($defaults, $this->createLandingPageItemResponse($node));
-
-      default:
-        return $defaults;
-    }
+    return  $response;
   }
 
-  private function createItemResponse($node)
+  /**
+   * Return the audio item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
+  private function createAudioItemResponse($content)
   {
-    $result = [];
-    $result["content_type"] =  $node->type->target_id;
-    $result["title"] =  $node->title->value;
-    $result["id"] =  $node->nid->value;
-    $result["image"] =  $node->field_moj_thumbnail_image[0];
-    $result["description"] =  $node->field_moj_description[0];
-    $result["categories"] =  $node->field_moj_top_level_categories;
-    if ($node->field_moj_secondary_tags) {
-      $result["secondary_tags"] =  $node->field_moj_secondary_tags;
-    } else {
-      $result["secondary_tags"] =  $node->field_moj_tags;
-    }
-    $result["prisons"] =  $node->field_moj_prisons;
+    $response = [];
+    $response['media'] = $content->field_moj_audio[0];
+    $response["episode_id"] = $this->createEpisodeId($content);
+    $response["series_id"] = $content->field_moj_series[0]->target_id;
+    $response["season"] = $content->field_moj_season->value;
+    $response["episode"] = $content->field_moj_episode->value;
+    $response["duration"] = $content->field_moj_duration->value;
+    $response["programme_code"] = $content->field_moj_programme_code->value;
 
-    return  $result;
+    return $response;
   }
 
-  private function createAudioItemResponse($node)
+  /**
+   * Return the video item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
+  private function createVideoItemResponse($content)
   {
-    $result = [];
+    $response = [];
+    $response['media'] = $content->field_video[0];
+    $response["episode_id"] = $this->createEpisodeId($content);
+    $response["series_id"] = $content->field_moj_series[0]->target_id;
+    $response["season"] = $content->field_moj_season->value;
+    $response["episode"] = $content->field_moj_episode->value;
+    $response["duration"] = $content->field_moj_duration->value;
 
-    $result['media'] = $node->field_moj_audio[0];
-    $result["episode_id"] = $this->createEpisodeId($node);
-    $result["series_id"] = $node->field_moj_series[0]->target_id;
-    $result["season"] = $node->field_moj_season->value;
-    $result["episode"] = $node->field_moj_episode->value;
-    $result["duration"] = $node->field_moj_duration->value;
-    $result["programme_code"] = $node->field_moj_programme_code->value;
-
-    return $result;
+    return $response;
   }
 
-  private function createVideoItemResponse($node)
+  /**
+   * Return the page item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
+  private function createPageItemResponse($content)
   {
-    $result = [];
-    $result['media'] = $node->field_video[0];
-    $result["episode_id"] = $this->createEpisodeId($node);
-    $result["series_id"] = $node->field_moj_series[0]->target_id;
-    $result["season"] = $node->field_moj_season->value;
-    $result["episode"] = $node->field_moj_episode->value;
-    $result["duration"] = $node->field_moj_duration->value;
+    $response = [];
+    $response['stand_first'] = $content->field_moj_stand_first->value;
 
-    return $result;
+    return $response;
   }
 
-  private function createPageItemResponse($node)
+  /**
+   * Return the PDF item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
+  private function createPDFItemResponse($content)
   {
-    $result = [];
-    $result['stand_first'] = $node->field_moj_stand_first->value;
-    return $result;
+    $response = [];
+    $response['media'] = $content->field_moj_pdf[0];
+
+    return $response;
   }
 
-
-  private function createPDFItemResponse($node)
+  /**
+   * Return the episode if for a piece of content
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
+  private function createEpisodeId($content)
   {
-    $result = [];
-    $result['media'] = $node->field_moj_pdf[0];
-
-    return $result;
+    return ($content->field_moj_season->value * 1000) + $content->field_moj_episode->value;
   }
 
-  private function createEpisodeId($node)
+  /**
+   * Return the landing page item specific content data
+   *
+   * @param NodeInterface $content
+   *
+   * @return array
+   */
+  private function createLandingPageItemResponse($content)
   {
-    return ($node->field_moj_season->value * 1000) + ($node->field_moj_episode->value);
-  }
+    $response = [];
 
-  private function createLandingPageItemResponse($node)
-  {
-    $result = [];
-    $result['featured_content_id'] =  $node->field_moj_landing_feature_contet[0]->target_id;
-    $result['category_id'] =  $node->field_moj_landing_page_term[0]->target_id;
-    return  $result;
+    // IMPORTANT: DO NOT change the incorrectly spelt field name, it is incorrect in Drupal
+    $response['featured_content_id'] =  $content->field_moj_landing_feature_contet[0]->target_id;
+    $response['category_id'] =  $content->field_moj_landing_page_term[0]->target_id;
+    return $response;
   }
 }
