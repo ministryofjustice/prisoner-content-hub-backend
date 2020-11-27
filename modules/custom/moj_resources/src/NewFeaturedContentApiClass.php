@@ -15,29 +15,11 @@ require_once('Utils.php');
 class NewFeaturedContentApiClass
 {
   /**
-   * Node IDs
-   *
-   * @var array
-   */
-  protected $nids = array();
-  /**
-   * Nodes
-   *
-   * @var array
-   */
-  protected $nodes = array();
-  /**
-   * Language Tag
-   *
-   * @var string
-   */
-  protected $lang;
-  /**
    * Node_storage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $node_storage;
+  protected $nodeStorage;
   /**
    * Entitity Query object
    *
@@ -45,7 +27,7 @@ class NewFeaturedContentApiClass
    *
    * Instance of querfactory
    */
-  protected $entity_query;
+  protected $entityQuery;
 
   /**
    * Class Constructor
@@ -57,104 +39,83 @@ class NewFeaturedContentApiClass
     EntityTypeManagerInterface $entityTypeManager,
     QueryFactory $entityQuery
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->entityQuery = $entityQuery;
   }
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param [string] $prisonId
    * @return array
    */
-  public function FeaturedContentApiEndpoint($lang, $prison)
+  public function FeaturedContentApiEndpoint($prisonId = 0)
   {
-    return $this->getFeaturedContentNodeIds($prison);
-  }
-  /**
-   * TranslateNode function
-   *
-   * @param NodeInterface $node
-   *
-   * @return $node
-   */
-  protected function translateNode(NodeInterface $node)
-  {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
-  }
-  /**
-   * Get nids
-   *
-   * @return void
-   */
-  private function getFeaturedContentNodeIds($number, $prison = 0)
-  {
-    $results = $this->featuredNodes($number, $prison);
+    $results = $this->getFeaturedContent($prisonId);
 
-    return array_slice($results, 0, $number);
+    return array_slice($results, 0, 1);
   }
 
-  private function decorateContent($node)
+  private function decorateContent($featuredContent)
   {
-    $result = [];
-    $result['id'] = $node->nid->value;
-    $result['title'] = $node->title->value;
-    $result['content_type'] = $node->type->target_id;
-    $result['large_tiles'] = $this->getItems($node->field_moj_featured_tile_large);
-    $result['small_tiles'] = $this->getItems($node->field_moj_featured_tile_small);
+    $response = [];
+    $response['id'] = $featuredContent->nid->value;
+    $response['title'] = $featuredContent->title->value;
+    $response['content_type'] = $featuredContent->type->target_id;
+    $response['large_tiles'] = $this->getTiles($featuredContent->field_moj_featured_tile_large);
+    $response['small_tiles'] = $this->getTiles($featuredContent->field_moj_featured_tile_small);
 
-    return $result;
+    return $response;
   }
 
-  private function getItems($nodes) {
-    $nids = [];
-    $number_nodes = count($nodes);
+  private function getTiles($tiles) {
+    $tileIds = [];
+    $numberOfTiles = count($tiles);
 
-    for ($i = 0; $i < $number_nodes; $i++) {
-      array_push($nids, $nodes[$i]->target_id);
+    for ($i = 0; $i < $numberOfTiles; $i++) {
+      array_push($tileIds, $tiles[$i]->target_id);
     }
-    $results = $this->loadNodesDetails($nids);
-    return array_values(array_map(array($this, 'decorateItem'), $results));
+    $results = $this->loadNodesDetails($tileIds);
+    return array_values(array_map(array($this, 'decorateTile'), $results));
   }
 
-  private function decorateItem($node)
+  private function decorateTile($tile)
   {
-    $result = [];
-    $result['id'] = $node->nid->value;
-    $result['title'] = $node->title->value;
-    $result['content_type'] = $node->type->target_id;
-    $result['summary'] = $node->field_moj_description->summary;
-    $result['image'] = $node->field_moj_thumbnail_image ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
-    $result['series'] = $node->field_moj_series;
+    $response = [];
+    $response['id'] = $tile->nid->value;
+    $response['title'] = $tile->title->value;
+    $response['content_type'] = $tile->type->target_id;
+    $response['summary'] = $tile->field_moj_description->summary;
+    $response['image'] = $tile->field_moj_thumbnail_image ? $tile->field_moj_thumbnail_image[0] : $tile->field_image[0];
+    $response['series'] = $tile->field_moj_series;
 
-    return $result;
+    return $response;
   }
 
-  private function featuredNodes($prison)
+  private function getFeaturedContent($prisonId)
   {
-    $results = $this->entity_query->get('node')
+    $query = $this->entityQuery->get('node')
       ->condition('type', 'featured_articles')
       ->condition('status', 1)
       ->accessCheck(false);
 
-    $results = getPrisonResults($prison, $results);
+    $query = getPrisonResults($prisonId, $query);
 
-    $nodes = $results->execute();
+    $results = $query->execute();
 
-    $content = $this->loadNodesDetails($nodes);
+    $featuredContent = $this->loadNodesDetails($results);
 
-    return array_map(array($this, 'decorateContent'), $content);
+    return array_map(array($this, 'decorateContent'), $featuredContent);
   }
 
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $nodeIds
    * @return array
    */
-  protected function loadNodesDetails(array $nids)
+  protected function loadNodesDetails(array $nodeIds)
   {
-    return $this->node_storage->loadMultiple($nids);
+    return $this->nodeStorage->loadMultiple($nodeIds);
   }
 
   /**

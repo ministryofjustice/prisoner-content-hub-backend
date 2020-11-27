@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\\moj_resources\Plugin\rest\resource\FeaturedContentResource.
+ * Contains Drupal\\moj_resources\Plugin\rest\resource\VocabularyResource.
  */
 
 namespace Drupal\moj_resources\Plugin\rest\resource;
@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          type="string",
  *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
  *      ),
- *      
+ *
  *     @SWG\Response(response="200", description="Hub vocabulary resource")
  * )
  */
@@ -59,66 +59,66 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * )
  */
 
-class VocabularyResource extends ResourceBase 
+class VocabularyResource extends ResourceBase
 {
     protected $vocabularyApiClass;
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $availableLanguages;
 
     protected $languageManager;
 
-    protected $paramater_category;
+    protected $taxonomyName;
 
-    Protected $paramater_language_tag;
+    Protected $languageId;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
-        VocabularyApiClass $VocabularyApiClass,
+        VocabularyApiClass $vocabularyApiClass,
         Request $currentRequest,
         LanguageManager $languageManager
-    ) {        
-        $this->vocabularyApiClass = $VocabularyApiClass;
+    ) {
+        $this->vocabularyApiClass = $vocabularyApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
 
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_language_tag = self::setLanguage();
-        $this->paramater_category = $this->currentRequest->get('category');
-        
-        self::checklanguageParameterIsValid();
-        
+        $this->availableLanguages = $this->languageManager->getLanguages();
+        $this->languageId = self::setLanguageId();
+        $this->taxonomyName = $this->currentRequest->get('category');
 
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        self::checkLanguageIdIsValid();
+
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
-  
+
     public static function create(
         ContainerInterface $container,
-        array $configuration, 
-        $plugin_id, 
-        $plugin_definition
+        array $configuration,
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.vocabulary_api_class'),
             $container->get('request_stack')->getCurrentRequest(),
             $container->get('language_manager')
         );
-    }   
+    }
 
-    public function get() 
+    public function get()
     {
-        self::checkCatgeoryIsString();
-        $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->paramater_language_tag, $this->paramater_category);
+        self::checkTaxonomyNameIsString();
+        $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->languageId, $this->taxonomyName);
+
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
@@ -127,13 +127,13 @@ class VocabularyResource extends ResourceBase
         throw new NotFoundHttpException(t('No featured content found'));
     }
 
-    protected function checklanguageParameterIsValid() 
+    protected function checkLanguageIdIsValid()
     {
-        foreach($this->availableLangs as $lang)
+        foreach($this->availableLanguages as $language)
         {
-            if ($lang->getid() === $this->paramater_language_tag) {
+            if ($language->getid() === $this->languageId) {
                 return true;
-            } 
+            }
         }
         throw new NotFoundHttpException(
             t('The language tag invalid or translation for this tag is not avilable'),
@@ -142,22 +142,20 @@ class VocabularyResource extends ResourceBase
         );
     }
 
-    protected function checkCatgeoryIsString()
+    protected function checkTaxonomyNameIsString()
     {
-        if (is_string($this->paramater_category)) {
+        if (is_string($this->taxonomyName)) {
             return true;
         }
         throw new NotFoundHttpException(
-            t('The category parameter must the machine name of the drupal catgeory'),
+            t('The taxonomy name must the machine name of a drupal taxonomy'),
             null,
             404
         );
     }
 
-    protected function setLanguage()
+    protected function setLanguageId()
     {
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 }
-
-

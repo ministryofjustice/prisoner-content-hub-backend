@@ -15,29 +15,23 @@ require_once('Utils.php');
 class CategoryMenuApiClass
 {
   /**
-     * Node IDs
-     *
-     * @var array
-     */
-  protected $nids = array();
-  /**
-     * Nodes
-     *
-     * @var array
-     */
-  protected $nodes = array();
-  /**
      * Language Tag
      *
      * @var string
      */
-  protected $lang;
+  protected $languageId;
   /**
      * Node_storage object
      *
      * @var Drupal\Core\Entity\EntityManagerInterface
      */
-  protected $node_storage;
+  protected $nodeStorage;
+  /**
+     * Term storage object
+     *
+     * @var Drupal\Core\Entity\EntityManagerInterface
+     */
+  protected $termStorage;
   /**
      * Entitity Query object
      *
@@ -45,7 +39,11 @@ class CategoryMenuApiClass
      *
      * Instance of querfactory
      */
-  protected $entity_query;
+  protected $entityQuery;
+
+  protected $categoryId;
+
+  protected $prisonId;
 
   /**
      * Class Constructor
@@ -57,21 +55,23 @@ class CategoryMenuApiClass
     EntityTypeManagerInterface $entityTypeManager,
     QueryFactory $entityQuery
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
-
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
+    $this->entityQuery = $entityQuery;
   }
   /**
      * API resource function
      *
-     * @param [string] $lang
+     * @param [string] $languageId
      * @return array
      */
-  public function CategoryMenuApiEndpoint($lang, $category, $prison)
+  public function CategoryMenuApiEndpoint($languageId, $categoryId, $prisonId)
   {
-    $this->lang = $lang;
-    return $this->getCategoryMenuNodeIds($category, $prison);
+    $this->languageId = $languageId;
+    $this->categoryId = $categoryId;
+    $this->prisonId = $prisonId;
+
+    return $this->getCategoryMenuItems();
   }
   /**
      * TranslateNode function
@@ -82,118 +82,91 @@ class CategoryMenuApiClass
      */
   private function translateNode(NodeInterface $node)
   {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
+    return $node->hasTranslation($this->languageId) ? $node->getTranslation($this->languageId) : $node;
   }
   /**
      * Get nids
      *
      * @return void
      */
-  private function getCategoryMenuNodeIds($category, $prison)
+  private function getCategoryMenuItems()
   {
-    $bundle = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item', );
+    $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item', );
 
-    $results = $this->entity_query->get('node')
+    $query = $this->entityQuery->get('node')
       ->condition('status', 1)
-      ->condition('type', $bundle, 'IN')
+      ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
 
-    if ($category !== 0) {
-      $group = $results
+    if ($this->categoryId !== 0) {
+      $categoryIdCondition = $query
         ->orConditionGroup()
-        ->condition('field_moj_top_level_categories', $category)
-        ->condition('field_moj_tags', $category);
-      $results->condition($group);
+        ->condition('field_moj_top_level_categories', $this->categoryId)
+        ->condition('field_moj_tags', $this->categoryId);
+      $query->condition($categoryIdCondition);
     }
 
-    $results = getPrisonResults($prison, $results);
+    $query = getPrisonResults($this->prisonId, $query);
 
-    $nids = $results->execute();
-    $nodes = $this->loadNodesDetails($nids);
+    $results = $query->execute();
+    $content = $this->loadContentDetails($results);
 
-    return $this->generateMenuFrom($nodes);
+    return $this->generateMenuFrom($content);
   }
 
   /**
    * Extract Series And Secondary Tag Ids
    *
-   * @param array $nodes
+   * @param array $content
    * @return array
    */
 
-  private function extractSeriesAndSecondaryTagIdsFrom($data)
+  private function loadSecondaryTagsAndSeries($menuIds)
   {
-    return array_map(function ($n) {
-      $arr = [];
-      $arr['id'] = $n->nid->value;
-      $arr['secondary_tag_id'] = $n->field_moj_secondary_tags->target_id;
-      $arr['series_id'] = $n->field_moj_series->target_id;
-      return $arr;
-    }, $data);
+    $response = array();
+    $response['secondary_tag_ids'] = array_map($this->translateNode, $this->loadTermDetails($menuIds['secondary_tag_ids']));
+    $response['series_ids'] = array_map($this->translateNode, $this->loadTermDetails($menuIds['series_ids']));
+
+    return $response;
   }
 
-  private function filterOutNonSeriesOrSecondaryTags($data)
+  private function generateMenuFrom($content)
   {
-    return array_filter($data, function ($n) {
-      return boolval($n['secondary_tag_id']) || boolval($n['series_id']);
-    });
-  }
+    $menuIds = ['secondary_tag_ids' => [], 'series_ids' => []];
 
-  private function splitSecondaryTagsAndSeries($data)
-  {
-    return array_reduce($data, function ($acc, $curr) {
-      if (boolval($curr['secondary_tag_id'])) {
-        $exists = in_array($curr['secondary_tag_id'], $acc['secondary_tag_ids']);
-        if (!$exists) {
-          $acc['secondary_tag_ids'][] = $curr['secondary_tag_id'];
-        }
+    foreach($content as $contentItem) {
+      $secondaryTagId = $contentItem->field_moj_secondary_tags->target_id;
+      $seriesId = $contentItem->field_moj_series->target_id;
+
+      if (boolval($secondaryTagId) && !in_array($secondaryTagId, $menuIds['secondary_tag_ids'])) {
+        array_push($menuIds['secondary_tag_ids'], $secondaryTagId);
       }
-      if (boolval($curr['series_id'])) {
-        $exists = in_array($curr['series_id'], $acc['series_ids']);
-        if (!$exists) {
-          $acc['series_ids'][] = $curr['series_id'];
-        }
+
+      if (boolval($seriesId) && !in_array($seriesId, $menuIds['series_ids'])) {
+        array_push($menuIds['series_ids'], $seriesId);
       }
-      return $acc;
-    }, ['secondary_tag_ids' => [], 'series_ids' => []]);
-  }
+    }
 
-  private function fillSecondaryTagsAndSeries($data)
-  {
-    $result = array();
-    $result['secondary_tag_ids'] = array_map($this->translateNode, $this->loadTermDetails($data['secondary_tag_ids']));
-    $result['series_ids'] = array_map($this->translateNode, $this->loadTermDetails($data['series_ids']));
-
-    return $result;
-  }
-
-  private function generateMenuFrom($nodes)
-  {
-    $menu = $this->extractSeriesAndSecondaryTagIdsFrom($nodes);
-    $menu = $this->filterOutNonSeriesOrSecondaryTags($menu);
-    $menu = $this->splitSecondaryTagsAndSeries($menu);
-    $menu = $this->fillSecondaryTagsAndSeries($menu);
-
-    return $menu;
+    return $this->loadSecondaryTagsAndSeries($menuIds);
   }
   /**
      * Load full node details
      *
-     * @param array $nids
+     * @param array $contentIds
      * @return array
      */
-  private function loadNodesDetails(array $nids)
+  private function loadContentDetails(array $contentIds)
   {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
-      function ($item) {
-        return $item->access();
+      $this->nodeStorage->loadMultiple($contentIds),
+      function ($content) {
+        return $content->access();
       }
     );
   }
 
-  private function loadTermDetails(array $nids)
+  private function loadTermDetails(array $termIds)
   {
-    return $this->term_storage->loadMultiple($nids);
+    return $this->termStorage->loadMultiple($termIds);
   }
 }

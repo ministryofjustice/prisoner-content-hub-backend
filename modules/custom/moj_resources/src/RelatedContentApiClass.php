@@ -15,29 +15,17 @@ require_once('Utils.php');
 class RelatedContentApiClass
 {
   /**
-   * Node IDs
-   *
-   * @var array
-   */
-  protected $nids = array();
-  /**
-   * Nodes
-   *
-   * @var array
-   */
-  protected $nodes = array();
-  /**
    * Language Tag
    *
    * @var string
    */
-  protected $lang;
+  protected $languageId;
   /**
    * Node_storage object
    *
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $node_storage;
+  protected $nodeStorage;
   /**
    * Entitity Query object
    *
@@ -45,7 +33,7 @@ class RelatedContentApiClass
    *
    * Instance of querfactory
    */
-  protected $entity_query;
+  protected $entityQuery;
   /**
    * Class Constructor
    *
@@ -56,23 +44,23 @@ class RelatedContentApiClass
     EntityTypeManagerInterface $entityTypeManager,
     QueryFactory $entityQuery
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->entity_query = $entityQuery;
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->entityQuery = $entityQuery;
   }
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param [string] $languageId
    * @return array
    */
-  public function RelatedContentApiEndpoint($lang, $category, $number, $offset, $prison, $sort_order = 'ASC')
+  public function RelatedContentApiEndpoint($languageId, $categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder = 'ASC')
   {
-    $this->lang = $lang;
-    $nids = $this->getRelatedContentNodeIds($category, $number, $offset, $prison, $sort_order);
-    $nodes = $this->loadNodesDetails($nids);
-    $content = array_map([$this, 'translateNode'], $nodes);
+    $this->languageId = $languageId;
+    $relatedContentIds = $this->getRelatedContentIds($categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder);
+    $populatedContent = $this->loadRelatedContentDetail($relatedContentIds);
+    $translatedContent = array_map([$this, 'translateNode'], $populatedContent);
 
-    return array_map([$this, 'decorateContent'], array_values($content));
+    return array_map([$this, 'createReturnObject'], array_values($translatedContent));
   }
   /**
    * TranslateNode function
@@ -83,72 +71,73 @@ class RelatedContentApiClass
    */
   private function translateNode(NodeInterface $node)
   {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
+    return $node->hasTranslation($this->languageId) ? $node->getTranslation($this->languageId) : $node;
   }
   /**
    * Get nids
    *
    * @return void
    */
-  private function getRelatedContentNodeIds($category, $number, $offset, $prison, $sort_order = 'ASC')
+  private function getRelatedContentIds($categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder = 'ASC')
   {
-    $bundle = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item',);
-    $results = $this->entity_query->get('node')
+    $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item');
+
+    $query = $this->entityQuery->get('node')
       ->condition('status', 1)
-      ->condition('type', $bundle, 'IN')
+      ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
 
-    if ($category !== 0) {
-      $group = $results
+    if ($categoryId !== 0) {
+      $categoryCondition = $query
         ->orConditionGroup()
-        ->condition('field_moj_top_level_categories', $category)
-        ->condition('field_moj_tags', $category)
-        ->condition('field_moj_secondary_tags', $category);
+        ->condition('field_moj_top_level_categories', $categoryId)
+        ->condition('field_moj_tags', $categoryId)
+        ->condition('field_moj_secondary_tags', $categoryId);
 
-      $results->condition($group);
+      $query->condition($categoryCondition);
     }
 
-    $results = getPrisonResults($prison, $results);
+    $query = getPrisonResults($prisonId, $query);
 
-    $relatedContent = $results
-      ->sort('nid', $sort_order)
-      ->range($offset, $number)
+    $relatedContent = $query
+      ->sort('nid', $sortOrder)
+      ->range($offsetIntoNumberOfResults, $numberOfResults)
       ->execute();
 
     return $relatedContent;
   }
 
   /**
-   * decorateContent
+   * createReturnObject
    *
-   * @param Node $node
+   * @param Node $relatedContentItem
    * @return array
    */
-  private function decorateContent($node)
+  private function createReturnObject($relatedContentItem)
   {
-    $result = [];
-    $result['id'] = $node->nid->value;
-    $result['title'] = $node->title->value;
-    $result['content_type'] = $node->type->target_id;
-    $result['summary'] = $node->field_moj_description->summary;
-    $result['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
-    $result['duration'] = $node->field_moj_duration ? $node->field_moj_duration->value : 0;
+    $response = [];
+    $response['id'] = $relatedContentItem->nid->value;
+    $response['title'] = $relatedContentItem->title->value;
+    $response['content_type'] = $relatedContentItem->type->target_id;
+    $response['summary'] = $relatedContentItem->field_moj_description->summary;
+    $response['image'] = $relatedContentItem->field_moj_thumbnail_image[0] ? $relatedContentItem->field_moj_thumbnail_image[0] : $relatedContentItem->field_image[0];
+    $response['duration'] = $relatedContentItem->field_moj_duration ? $relatedContentItem->field_moj_duration->value : 0;
 
-    return $result;
+    return $response;
   }
 
   /**
    * Load full node details
    *
-   * @param array $nids
+   * @param array $relatedContentIds
    * @return array
    */
-  private function loadNodesDetails(array $nids)
+  private function loadRelatedContentDetail(array $relatedContentIds)
   {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
-      function ($item) {
-        return $item->access();
+      $this->nodeStorage->loadMultiple($relatedContentIds),
+      function ($relatedContentItem) {
+        return $relatedContentItem->access();
       }
     );
   }
