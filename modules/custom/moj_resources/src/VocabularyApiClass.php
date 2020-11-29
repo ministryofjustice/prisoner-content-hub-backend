@@ -2,12 +2,12 @@
 
 namespace Drupal\moj_resources;
 
+use Drupal\moj_resources\Utilities;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Symfony\Component\Serializer\Serializer;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * PromotedContentApiClass
@@ -16,23 +16,23 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class VocabularyApiClass
 {
     /**
-     * Term IDs
-     *
-     * @var array
-     */
-    protected $termIds = array();
-    /**
      * Terms
      *
      * @var array
      */
     protected $terms;
     /**
-     * Language Tag
+     * Language id
      *
      * @var string
      */
     protected $languageId;
+    /**
+     * Prison id
+     *
+     * @var string
+     */
+    protected $prisonId;
     /**
      * Term storage object
      *
@@ -68,13 +68,16 @@ class VocabularyApiClass
      * @param string $taxonomyName
      * @return array
      */
-    public function VocabularyApiEndpoint($languageId, $taxonomyName)
+    public function VocabularyApiEndpoint($languageId, $taxonomyName, $prisonId)
     {
         $this->languageId = $languageId;
-        $this->termIds = self::getVocabularyTermIds($taxonomyName);
-        $this->terms = $this->termStorage->loadMultiple($this->termIds);
+        $this->prisonId = $prisonId;
 
-        return array_map('self::translateTerm', $this->terms);
+        $termIds = $this->getVocabularyTermIds($taxonomyName);
+
+        $this->terms = $this->termStorage->loadMultiple($termIds);
+
+        return array_map([$this, 'translateTerm'], $this->terms);
     }
     /**
      * TranslateNode function
@@ -96,8 +99,22 @@ class VocabularyApiClass
      */
     protected function getVocabularyTermIds($taxonomyName)
     {
-        return $this->entityQuery->get('taxonomy_term')
+        $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+        $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+
+        $query = $this->entityQuery->get('taxonomy_term');
+
+        $prisonCategoriesCondition = Utilities::filterByPrisonCategories(
+          $this->prisonId,
+          $prisonCategories,
+          $query,
+          true
+        );
+
+        $query
             ->condition('vid', $taxonomyName)
-            ->execute();
+            ->condition($prisonCategoriesCondition);
+
+        return $query->execute();
     }
 }
