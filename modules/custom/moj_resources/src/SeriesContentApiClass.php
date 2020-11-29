@@ -231,53 +231,6 @@ class SeriesContentApiClass
   }
 
   /**
-   * Filter content by Prison
-   *
-   * @param int $prisonId
-   * @param int $seriesPrisonId
-   * @param int[] $prisonCategories
-   * @param QueryInterface $query
-   *
-   * @return QueryInterface
-  */
-  private function filterByPrison($prisonId, $seriesPrisonId, $prisonCategories, $query) {
-    if ($prisonId !== $seriesPrisonId) {
-      throw new BadRequestHttpException(
-        'The prison for the series does no match the supplied prison',
-        null,
-        400
-      );
-    }
-
-    return Utilities::filterByPrisonCategories($prisonId, $prisonCategories, $query);
-  }
-
-  /**
-   * Filter content by Prison Categories
-   *
-   * @param int $prisonId
-   * @param int[] $seriesPrisonCategories
-   * @param int[] $prisonCategories
-   * @param QueryInterface $query
-   *
-   * @return QueryInterface
-  */
-  private function filterByPrisonCategories($prisonId, $seriesPrisonCategories, $prisonCategories, $query) {
-    $matchingPrisonCategories = array_intersect($prisonCategories, $seriesPrisonCategories);
-    $hasNoMatchingPrisonCategories = empty($matchingPrisonCategories);
-
-    if ($hasNoMatchingPrisonCategories) {
-      throw new BadRequestHttpException(
-        'The Series does not have a matching prison category for this prison',
-        null,
-        400
-      );
-    }
-
-    return Utilities::filterByPrisonCategories($prisonId, $matchingPrisonCategories, $query);
-  }
-
-  /**
    * Returns a prepared statement for selecting Series Content
    *
    * @param int $seriesId
@@ -301,14 +254,14 @@ class SeriesContentApiClass
     $seriesHasPrisonSelected = !$seriesPrison->isEmpty();
 
     if ($seriesHasPrisonSelected) {
-      $query->condition($this->filterByPrison(
+      $query->condition(Utilities::filterByTypePrison(
         $prisonId,
         $seriesPrison->target_id,
         $prisonCategories,
         $query
       ));
     } else {
-      $query->condition($this->filterByPrisonCategories(
+      $query->condition(Utilities::filterByTypePrisonCategories(
         $prisonId,
         $seriesPrisonCategories,
         $prisonCategories,
