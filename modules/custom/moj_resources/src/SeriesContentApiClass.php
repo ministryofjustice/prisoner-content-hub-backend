@@ -6,8 +6,12 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\moj_resources\Utilities;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * PromotedContentApiClass
@@ -227,6 +231,53 @@ class SeriesContentApiClass
   }
 
   /**
+   * Filter content by Prison
+   *
+   * @param int $prisonId
+   * @param int $seriesPrisonId
+   * @param int[] $prisonCategories
+   * @param QueryInterface $query
+   *
+   * @return QueryInterface
+  */
+  private function filterByPrison($prisonId, $seriesPrisonId, $prisonCategories, $query) {
+    if ($prisonId !== $seriesPrisonId) {
+      throw new BadRequestHttpException(
+        'The prison for the series does no match the supplied prison',
+        null,
+        400
+      );
+    }
+
+    return Utilities::filterByPrisonCategories($prisonId, $prisonCategories, $query);
+  }
+
+  /**
+   * Filter content by Prison Categories
+   *
+   * @param int $prisonId
+   * @param int[] $seriesPrisonCategories
+   * @param int[] $prisonCategories
+   * @param QueryInterface $query
+   *
+   * @return QueryInterface
+  */
+  private function filterByPrisonCategories($prisonId, $seriesPrisonCategories, $prisonCategories, $query) {
+    $matchingPrisonCategories = array_intersect($prisonCategories, $seriesPrisonCategories);
+    $hasNoMatchingPrisonCategories = empty($matchingPrisonCategories);
+
+    if ($hasNoMatchingPrisonCategories) {
+      throw new BadRequestHttpException(
+        'The Series does not have a matching prison category for this prison',
+        null,
+        400
+      );
+    }
+
+    return Utilities::filterByPrisonCategories($prisonId, $matchingPrisonCategories, $query);
+  }
+
+  /**
    * Returns a prepared statement for selecting Series Content
    *
    * @param int $seriesId
@@ -250,14 +301,14 @@ class SeriesContentApiClass
     $seriesHasPrisonSelected = !$seriesPrison->isEmpty();
 
     if ($seriesHasPrisonSelected) {
-      $query->condition(Utilities::filterByTypePrison(
+      $query->condition($this->filterByPrison(
         $prisonId,
         $seriesPrison->target_id,
         $prisonCategories,
         $query
       ));
     } else {
-      $query->condition(Utilities::filterByTypePrisonCategories(
+      $query->condition($this->filterByPrisonCategories(
         $prisonId,
         $seriesPrisonCategories,
         $prisonCategories,
