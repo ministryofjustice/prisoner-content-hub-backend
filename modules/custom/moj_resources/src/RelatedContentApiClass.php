@@ -27,6 +27,7 @@ class RelatedContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
+  protected $termStorage;
   /**
    * Entitity Query object
    *
@@ -48,6 +49,7 @@ class RelatedContentApiClass
     QueryFactory $entityQuery
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entityQuery = $entityQuery;
   }
   /**
@@ -87,8 +89,6 @@ class RelatedContentApiClass
   {
     $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item');
     $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
-    $category = Utilities::getTermFor($this->categoryId, $this->termStorage);
-    $categoryPrisonCategories = Utilities::getPrisonCategoriesFor($category);
     $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query = $this->entityQuery->get('node')
@@ -96,24 +96,11 @@ class RelatedContentApiClass
       ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
 
-    $categoryPrison = $category->get('field_promoted_to_prison');
-    $categoryHasPrisonSelected = !$categoryPrison->isEmpty();
-
-    if ($categoryHasPrisonSelected) {
-      $query->condition(Utilities::filterByTypePrison(
-        $prisonId,
-        $categoryPrison->target_id,
-        $prisonCategories,
-        $query
-      ));
-    } else {
-      $query->condition(Utilities::filterByTypePrisonCategories(
-        $prisonId,
-        $categoryPrisonCategories,
-        $prisonCategories,
-        $query
-      ));
-    }
+    $query->condition(Utilities::filterByPrisonCategories(
+      $prisonId,
+      $prisonCategories,
+      $query
+    ));
 
     $categoryCondition = $query
       ->orConditionGroup()
