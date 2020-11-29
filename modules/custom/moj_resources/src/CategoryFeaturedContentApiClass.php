@@ -74,15 +74,6 @@ class CategoryFeaturedContentApiClass
     $this->prisonId = $prisonId;
     $this->numberOfResults = $numberOfResults;
 
-    return self::getFeaturedContentNodeIds();
-  }
-  /**
-   * Get content ids
-   *
-   * @return array
-   */
-  protected function getFeaturedContentNodeIds()
-  {
     $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
     $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison, false);
 
@@ -101,6 +92,7 @@ class CategoryFeaturedContentApiClass
 
     return array_slice($results, 0, $this->numberOfResults);
   }
+
   /**
    * Creates the object to return
    *
