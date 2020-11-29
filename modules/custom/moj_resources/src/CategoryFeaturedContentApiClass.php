@@ -220,7 +220,6 @@ class CategoryFeaturedContentApiClass
 
     $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
       $promotedContent = $term->field_moj_category_featured_item->value;
-      $promotedToPrison = $term->field_promoted_to_prison->target_id;
 
       if ($promotedContent) {
         if ($term->hasField('field_promoted_to_prison') && !$term->get('field_promoted_to_prison')->isEmpty()) {
