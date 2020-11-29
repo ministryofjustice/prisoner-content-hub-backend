@@ -5,8 +5,8 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-
-require_once('Utils.php');
+use Drupal\moj_resources\Utilities;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * NewFeaturedContentApiClass
@@ -20,6 +20,13 @@ class NewFeaturedContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
+
+  /**
+   * TermStorage object
+   *
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
   /**
    * Entitity Query object
    *
@@ -28,6 +35,8 @@ class NewFeaturedContentApiClass
    * Instance of querfactory
    */
   protected $entityQuery;
+  protected $prisonId;
+  protected $prison;
 
   /**
    * Class Constructor
@@ -40,6 +49,7 @@ class NewFeaturedContentApiClass
     QueryFactory $entityQuery
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entityQuery = $entityQuery;
   }
   /**
@@ -48,9 +58,10 @@ class NewFeaturedContentApiClass
    * @param [string] $prisonId
    * @return array
    */
-  public function FeaturedContentApiEndpoint($prisonId = 0)
+  public function FeaturedContentApiEndpoint($prisonId)
   {
-    $results = $this->getFeaturedContent($prisonId);
+    $this->prisonId = $prisonId;
+    $results = $this->getFeaturedContent();
 
     return array_slice($results, 0, 1);
   }
@@ -75,7 +86,41 @@ class NewFeaturedContentApiClass
       array_push($tileIds, $tiles[$i]->target_id);
     }
     $results = $this->loadNodesDetails($tileIds);
-    return array_values(array_map(array($this, 'decorateTile'), $results));
+    $filteredResults = array();
+
+    foreach ($results as $content) {
+      $contentPrisons = Utilities::getPrisonsFor($content);
+
+      if (empty($contentPrisons)) {
+        $prisonCategories = Utilities::getPrisonCategoriesFor($this->prison);
+        $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
+        $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
+
+        if (empty($matchingPrisonCategories)) {
+          throw new BadRequestHttpException(
+            'The content does not have a matching prison category for this prison',
+            null,
+            400
+          );
+        }
+
+        array_push($filteredResults, $content);
+      } else {
+        $matchingPrisons = in_array($this->prisonId, $contentPrisons);
+
+        if (!$matchingPrisons) {
+          throw new BadRequestHttpException(
+            'The content is not available for this prison',
+            null,
+            400
+          );
+        }
+
+        array_push($filteredResults, $content);
+      }
+    }
+
+    return array_values(array_map(array($this, 'decorateTile'), $filteredResults));
   }
 
   private function decorateTile($tile)
@@ -91,14 +136,21 @@ class NewFeaturedContentApiClass
     return $response;
   }
 
-  private function getFeaturedContent($prisonId)
+  private function getFeaturedContent()
   {
     $query = $this->entityQuery->get('node')
       ->condition('type', 'featured_articles')
       ->condition('status', 1)
       ->accessCheck(false);
 
-    $query = getPrisonResults($prisonId, $query);
+    $this->prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $prisonCategories = Utilities::getPrisonCategoriesFor($this->prison);
+
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $prisonCategories,
+      $query
+    ));
 
     $results = $query->execute();
 
@@ -118,15 +170,4 @@ class NewFeaturedContentApiClass
     return $this->nodeStorage->loadMultiple($nodeIds);
   }
 
-  /**
-   * Sanitise node
-   *
-   * @param [type] $item
-   * @return void
-   */
-  protected function serialize($item)
-  {
-    $serializer = \Drupal::service($item->getType() . '.serializer.default');
-    return $serializer->serialize($item, 'json', ['plugin_id' => 'entity']);
-  }
 }
