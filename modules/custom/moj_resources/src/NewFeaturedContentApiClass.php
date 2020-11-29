@@ -36,7 +36,7 @@ class NewFeaturedContentApiClass
    */
   protected $entityQuery;
   protected $prisonId;
-  protected $prison;
+  protected $prisonCategories;
 
   /**
    * Class Constructor
@@ -92,9 +92,8 @@ class NewFeaturedContentApiClass
       $contentPrisons = Utilities::getPrisonsFor($content);
 
       if (empty($contentPrisons)) {
-        $prisonCategories = Utilities::getPrisonCategoriesFor($this->prison);
         $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
-        $matchingPrisonCategories = array_intersect($prisonCategories, $contentPrisonCategories);
+        $matchingPrisonCategories = array_intersect($this->prisonCategories, $contentPrisonCategories);
 
         if (empty($matchingPrisonCategories)) {
           throw new BadRequestHttpException(
@@ -143,12 +142,12 @@ class NewFeaturedContentApiClass
       ->condition('status', 1)
       ->accessCheck(false);
 
-    $this->prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
-    $prisonCategories = Utilities::getPrisonCategoriesFor($this->prison);
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query->condition(Utilities::filterByPrisonCategories(
       $this->prisonId,
-      $prisonCategories,
+      $this->prisonCategories,
       $query
     ));
 
