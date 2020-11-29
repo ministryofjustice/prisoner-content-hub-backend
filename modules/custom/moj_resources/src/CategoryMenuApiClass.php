@@ -5,8 +5,7 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-
-require_once('Utils.php');
+use Drupal\moj_resources\Utilities;
 
 /**
  * CategoryMenuApiClass
@@ -44,6 +43,8 @@ class CategoryMenuApiClass
   protected $categoryId;
 
   protected $prisonId;
+
+  protected $prisonCategories;
 
   /**
      * Class Constructor
@@ -92,21 +93,25 @@ class CategoryMenuApiClass
   private function getCategoryMenuItems()
   {
     $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item', );
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query = $this->entityQuery->get('node')
       ->condition('status', 1)
       ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
 
-    if ($this->categoryId !== 0) {
-      $categoryIdCondition = $query
-        ->orConditionGroup()
-        ->condition('field_moj_top_level_categories', $this->categoryId)
-        ->condition('field_moj_tags', $this->categoryId);
-      $query->condition($categoryIdCondition);
-    }
+    $categoryIdCondition = $query
+      ->orConditionGroup()
+      ->condition('field_moj_top_level_categories', $this->categoryId)
+      ->condition('field_moj_tags', $this->categoryId);
+    $query->condition($categoryIdCondition);
 
-    $query = getPrisonResults($this->prisonId, $query);
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $this->prisonCategories,
+      $query
+    ));
 
     $results = $query->execute();
     $content = $this->loadContentDetails($results);
@@ -125,9 +130,32 @@ class CategoryMenuApiClass
   {
     $response = array();
     $response['secondary_tag_ids'] = array_map($this->translateNode, $this->loadTermDetails($menuIds['secondary_tag_ids']));
-    $response['series_ids'] = array_map($this->translateNode, $this->loadTermDetails($menuIds['series_ids']));
+    $filteredSeries = array();
 
-    return $response;
+    $series = array_map($this->translateNode, $this->loadTermDetails($menuIds['series_ids']));
+
+    foreach ($series as $singleSeries) {
+      $seriesPrison = $singleSeries->get('field_promoted_to_prison');
+      $seriesHasPrisonSelected = !$seriesPrison->isEmpty();
+
+      if ($seriesHasPrisonSelected) {
+        if ($this->prisonId == $seriesPrison->target_id) {
+          array_push($filteredSeries, $singleSeries);
+        }
+      } else {
+        $seriesPrisonCategories = Utilities::getPrisonCategoriesFor($singleSeries, false);
+        $matchingPrisonCategories = array_intersect($this->prisonCategories, $seriesPrisonCategories);
+
+        if (!empty($matchingPrisonCategories)) {
+          array_push($filteredSeries, $singleSeries);
+        }
+      }
+    }
+
+    return array(
+      'secondary_tag_ids' => $response['secondary_tag_ids'],
+      'series_ids' => $filteredSeries
+    );
   }
 
   private function generateMenuFrom($content)

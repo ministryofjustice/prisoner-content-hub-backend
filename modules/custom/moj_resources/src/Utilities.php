@@ -103,16 +103,17 @@ class Utilities {
    * Get Prison Categories for a Drupal node object
    *
    * @param EntityInterface $term
+   * @param bool $throwError
    * @return int[]
   */
-  public static function getPrisonCategoriesFor($node) {
+  public static function getPrisonCategoriesFor($node, $throwError = true) {
     $prisonCategories = array();
 
     foreach ($node->field_prison_categories as $prisonCategory) {
       array_push($prisonCategories, $prisonCategory->target_id);
     }
 
-    if (empty($prisonCategories)) {
+    if ($throwError && empty($prisonCategories)) {
       throw new BadRequestHttpException(
         'The node does not have any prison categories selected',
         null,
