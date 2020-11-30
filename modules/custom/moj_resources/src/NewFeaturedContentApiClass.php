@@ -61,6 +61,8 @@ class NewFeaturedContentApiClass
   public function FeaturedContentApiEndpoint($prisonId)
   {
     $this->prisonId = $prisonId;
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison);
     $results = $this->getFeaturedContent();
 
     return array_slice($results, 0, 1);
@@ -85,39 +87,20 @@ class NewFeaturedContentApiClass
     for ($i = 0; $i < $numberOfTiles; $i++) {
       array_push($tileIds, $tiles[$i]->target_id);
     }
-    $results = $this->loadNodesDetails($tileIds);
-    $filteredResults = array();
 
-    foreach ($results as $content) {
-      $contentPrisons = Utilities::getPrisonsFor($content);
+    $query = $this->entityQuery->get('node')
+      ->condition('nid', array_values($tileIds), 'IN')
+      ->condition('status', 1)
+      ->accessCheck(false);
 
-      if (empty($contentPrisons)) {
-        $contentPrisonCategories = Utilities::getPrisonCategoriesFor($content);
-        $matchingPrisonCategories = array_intersect($this->prisonCategories, $contentPrisonCategories);
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $this->prisonCategories,
+      $query
+    ));
 
-        if (empty($matchingPrisonCategories)) {
-          throw new BadRequestHttpException(
-            'The content does not have a matching prison category for this prison',
-            null,
-            400
-          );
-        }
-
-        array_push($filteredResults, $content);
-      } else {
-        $matchingPrisons = in_array($this->prisonId, $contentPrisons);
-
-        if (!$matchingPrisons) {
-          throw new BadRequestHttpException(
-            'The content is not available for this prison',
-            null,
-            400
-          );
-        }
-
-        array_push($filteredResults, $content);
-      }
-    }
+    $filteredTiles = $query->execute();
+    $filteredResults = $this->loadNodesDetails($filteredTiles);
 
     return array_values(array_map(array($this, 'decorateTile'), $filteredResults));
   }
@@ -141,9 +124,6 @@ class NewFeaturedContentApiClass
       ->condition('type', 'featured_articles')
       ->condition('status', 1)
       ->accessCheck(false);
-
-    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
-    $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query->condition(Utilities::filterByPrisonCategories(
       $this->prisonId,
