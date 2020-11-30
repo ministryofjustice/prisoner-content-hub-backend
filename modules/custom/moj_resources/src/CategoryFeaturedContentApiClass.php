@@ -180,6 +180,8 @@ class CategoryFeaturedContentApiClass
       $query
     ));
 
+    $query->range(0, $this->numberOfResults);
+
     $nodes = $query->execute();
 
     $promotedContent = $this->loadNodesDetails($nodes);
@@ -227,6 +229,8 @@ class CategoryFeaturedContentApiClass
       $query,
       true
     ));
+
+    $query->range(0, $this->numberOfResults);
 
     $filteredTermIds = $query->execute();
     $promotedTerms = $this->termStorage->loadMultiple($filteredTermIds);
