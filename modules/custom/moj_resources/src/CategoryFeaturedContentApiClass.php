@@ -215,42 +215,21 @@ class CategoryFeaturedContentApiClass
   */
   private function promotedTerms($termIds)
   {
-    $loadedTerms = $this->termStorage->loadMultiple($termIds);
-    $prisonId = $this->prisonId;
+    $query = $this->entityQuery->get('taxonomy_term')
+      ->condition('status', 1)
+      ->condition('tid', array_values($termIds), 'IN')
+      ->condition('field_moj_category_featured_item', 1)
+      ->accessCheck(false);
 
-    $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
-      $promotedContent = $term->field_moj_category_featured_item->value;
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $this->prisonCategories,
+      $query,
+      true
+    ));
 
-      if ($promotedContent) {
-        if ($term->hasField('field_promoted_to_prison') && !$term->get('field_promoted_to_prison')->isEmpty()) {
-          $selectedPrisonDoesNotMatchRequest = intval($term->get('field_promoted_to_prison')->target_id) !== intval($prisonId);
-
-          if ($selectedPrisonDoesNotMatchRequest) {
-            return false;
-          }
-        }
-
-        if ($term->hasField('field_prison_categories')
-          && !$term->get('field_prison_categories')->isEmpty()) {
-          $termPrisonCategories = [];
-
-          foreach($term->get('field_prison_categories') as $termPrisonCategory) {
-            array_push($termPrisonCategories, intval($termPrisonCategory->target_id));
-          }
-
-          $matchingPrisonCategories = array_intersect($this->prisonCategories, $termPrisonCategories);
-          $hasNoMatchingPrisonCategories = empty($matchingPrisonCategories);
-
-          if ($hasNoMatchingPrisonCategories) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-
-      return false;
-    });
+    $filteredTermIds = $query->execute();
+    $promotedTerms = $this->termStorage->loadMultiple($filteredTermIds);
 
     return array_map(array($this, 'decorateTerm'), $promotedTerms);
   }
