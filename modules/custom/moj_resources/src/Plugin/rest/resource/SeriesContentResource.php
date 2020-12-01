@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @SWG\Get(
- *     path="/api/content/series/{seriesId}",
+ *     path="/api/content/series/{id}",
  *     tags={"Content"},
  *     @SWG\Parameter(
  *          name="_format",
@@ -28,12 +28,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          type="string",
  *          description="Response format, should be 'json'",
  *      ),
- *     @SWG\Parameter(
+ *      @SWG\Parameter(
  *          name="_sort_order",
  *          in="query",
  *          required=false,
  *          type="string",
  *          description="The order of the results to return, default DESC",
+ *      ),
+ *      @SWG\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=false,
+ *          type="integer",
+ *          description="Term ID of category to return, the default is to being back all categories.",
  *      ),
  *      @SWG\Parameter(
  *          name="_number",
@@ -92,7 +99,7 @@ class SeriesContentResource extends ResourceBase
 
   protected $categoryId;
 
-  protected $language;
+  protected $languageId;
 
   protected $numberOfResults;
 
@@ -118,13 +125,12 @@ class SeriesContentResource extends ResourceBase
     $this->languageManager = $languageManager;
     $this->availableLanguages = $this->languageManager->getLanguages();
     $this->numberOfResults = self::setNumberOfResults();
-    $this->language = self::setLanguage();
+    $this->languageId = self::setLanguage();
     $this->resultsOffset = self::setOffsetOfResults();
     $this->prisonId = self::setPrisonId();
     $this->sortOrder = self::setSortOrder();
 
-
-    self::checkLanguageParameterIsValid();
+    self::checkLanguageIdIsValid();
     self::checkNumberOfResultsIsNumeric();
     self::checkPrisonIdIsNumeric();
     parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
@@ -151,7 +157,7 @@ class SeriesContentResource extends ResourceBase
   public function get()
   {
     $contentForSeries = $this->seriesContentApiClass->SeriesContentApiEndpoint(
-      $this->language,
+      $this->languageId,
       $this->currentRequest->get('id'),
       $this->numberOfResults,
       $this->resultsOffset,
@@ -166,10 +172,10 @@ class SeriesContentResource extends ResourceBase
     throw new NotFoundHttpException(t('No series content found'));
   }
 
-  protected function checkLanguageParameterIsValid()
+  protected function checkLanguageIdIsValid()
   {
     foreach ($this->availableLanguages as $language) {
-      if ($language->getid() === $this->language) {
+      if ($language->getid() === $this->languageId) {
         return true;
       }
     }

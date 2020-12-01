@@ -117,9 +117,9 @@ class SeriesContentApiClass
 
     $series = $this->createReturnObject($this->nodes);
     $series = $this->sortSeries($series, $sortOrder);
-    $series = $this->getNextEpisodes($episodeId, $series, $numberOfResults);
+    $nextEpisodes = $this->getNextEpisodes($episodeId, $series, $numberOfResults);
 
-    return $series;
+    return $nextEpisodes;
   }
 
   /**
