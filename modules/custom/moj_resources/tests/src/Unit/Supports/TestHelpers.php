@@ -62,7 +62,7 @@ class TestHelpers {
   public static function createMockQueryFactory($unitTestCase, $nodeIdsToReturn) {
     $queryFactory = $unitTestCase->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
       ->disableOriginalConstructor()
-      ->setMethods(array('get', 'condition', 'sort', 'range', 'execute', 'accessCheck', 'orConditionGroup', 'notExists', 'andConditionGroup'))
+      ->setMethods(array('get', 'condition', 'sort', 'range', 'execute', 'accessCheck', 'orConditionGroup', 'notExists', 'exists', 'andConditionGroup'))
       ->getMock();
 
     $queryFactory->expects($unitTestCase->any())
