@@ -22,7 +22,7 @@ class UtilitiesTest extends UnitTestCase
   public function setUp() {
       $this->entityQueryFactory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
         ->disableOriginalConstructor()
-        ->setMethods(array('get', 'condition','andConditionGroup', 'orConditionGroup', 'notExists'))
+        ->setMethods(array('get', 'condition','andConditionGroup', 'orConditionGroup', 'notExists', 'exists'))
         ->getMock();
 
       $this->entityQueryFactory->expects($this->any())
@@ -36,10 +36,10 @@ class UtilitiesTest extends UnitTestCase
   * @return void
   */
   public function testFilterByPrisonCategories() {
-    $this->entityQueryFactory->expects($this->once())
+    $this->entityQueryFactory->expects($this->atLeastOnce())
       ->method('andConditionGroup');
 
-      $this->entityQueryFactory->expects($this->atLeastOnce())
+      $this->entityQueryFactory->expects($this->once())
       ->method('orConditionGroup');
 
     $this->entityQueryFactory->expects($this->atLeastOnce())
@@ -50,7 +50,7 @@ class UtilitiesTest extends UnitTestCase
       );
 
     $this->entityQueryFactory->expects($this->atLeastOnce())
-      ->method('notExists')
+      ->method('exists')
       ->withConsecutive(
         array('field_moj_prisons'),
         array('field_prison_categories')
