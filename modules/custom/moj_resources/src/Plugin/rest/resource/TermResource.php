@@ -36,13 +36,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          description="ID of term to return",
  *      ),
  *      @SWG\Parameter(
- *          name="_lang",
+ *          name="_prison",
  *          in="query",
  *          required=false,
- *          type="string",
- *          description="The language tag to translate results, if there is no translation available then the site default is returned, the default is 'en' (English). Options are 'en' (English) or 'cy' (Welsh).",
+ *          type="integer",
+ *          description="ID of prison term to belong to to return, the default is belonging to all prisons.",
  *      ),
- *      
+ *
  *     @SWG\Response(response="200", description="Hub term resource")
  * )
  */
@@ -59,92 +59,67 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * )
  */
 
-class TermResource extends ResourceBase 
+class TermResource extends ResourceBase
 {
     protected $termApiClass;
 
     protected $currentRequest;
 
-    protected $availableLangs;
+    protected $termId;
 
-    protected $languageManager;
-
-    protected $paramater_term_id;
-
-    Protected $paramater_language_tag;
+    protected $prisonId;
 
     public function __construct(
         array $configuration,
-        $plugin_id,
-        $plugin_definition,
-        array $serializer_formats,
+        $pluginId,
+        $pluginDefinition,
+        array $serializerFormats,
         LoggerInterface $logger,
-        TermApiClass $TermApiClass,
-        Request $currentRequest,
-        LanguageManager $languageManager
-    ) {        
-        $this->termApiClass = $TermApiClass;
+        TermApiClass $termApiClass,
+        Request $currentRequest
+    ) {
+        $this->termApiClass = $termApiClass;
         $this->currentRequest = $currentRequest;
-        $this->languageManager = $languageManager;
+        $this->prisonId = self::setPrisonId();
+        $this->termId = $this->currentRequest->get('tid');
+        self::checkPrisonIdIsNumeric();
 
-        $this->availableLangs = $this->languageManager->getLanguages();
-        $this->paramater_language_tag = self::setLanguage();
-        $this->paramater_term_id = $this->currentRequest->get('tid');
-        
-        self::checklanguageParameterIsValid();
-
-        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }
-  
+
     public static function create(
         ContainerInterface $container,
-        array $configuration, 
-        $plugin_id, 
-        $plugin_definition
+        array $configuration,
+        $pluginId,
+        $pluginDefinition
     ) {
         return new static(
             $configuration,
-            $plugin_id,
-            $plugin_definition,
+            $pluginId,
+            $pluginDefinition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.term_api_class'),
             $container->get('request_stack')->getCurrentRequest(),
             $container->get('language_manager')
         );
-    }   
+    }
 
-    public function get() 
+    public function get()
     {
-        self::checkTermIsNumeric();
-        $content = $this->termApiClass->TermApiEndpoint($this->paramater_language_tag, $this->paramater_term_id);
-        if (!empty($content)) {
-            $response = new ResourceResponse($content);
-            $response->addCacheableDependency($content);
+        self::checkTermIdIsNumeric();
+        $term = $this->termApiClass->TermApiEndpoint($this->termId, $this->prisonId);
+        if (!empty($term)) {
+            $response = new ResourceResponse($term);
+            $response->addCacheableDependency($term);
             return $response;
         }
         throw new NotFoundHttpException(t('No term found'));
     }
 
-    
-    protected function checklanguageParameterIsValid() 
+    protected function checkTermIdIsNumeric()
     {
-        foreach($this->availableLangs as $lang)
-        {
-            if ($lang->getid() === $this->paramater_language_tag) {
-                return true;
-            } 
-        }
-        throw new NotFoundHttpException(
-            t('The language tag invalid or translation for this tag is not avilable'),
-            null,
-            404
-        );
-    }
-
-    protected function checkTermIsNumeric()
-    {
-        if (is_numeric($this->paramater_term_id)) {
+        if (is_numeric($this->termId)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -154,9 +129,21 @@ class TermResource extends ResourceBase
         );
     }
 
-    protected function setLanguage()
+    protected function checkPrisonIdIsNumeric()
     {
-        return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
+        if (is_numeric($this->prisonId)) {
+            return true;
+        }
+        throw new NotFoundHttpException(
+            t('The prison ID must be numeric'),
+            null,
+            400
+        );
+    }
+
+    protected function setPrisonId()
+    {
+        return is_null($this->currentRequest->get('_prison')) ? 0 : intval($this->currentRequest->get('_prison'));
     }
 }
 
