@@ -28,23 +28,23 @@ class Utilities {
 
     if ($isTerm) {
       $filterByPrisonId = $query
-        ->orConditionGroup()
-        ->notExists('field_promoted_to_prison')
+        ->andConditionGroup()
+        ->exists('field_promoted_to_prison')
         ->condition('field_promoted_to_prison', $prisonId, '=');
     } else {
       $filterByPrisonId = $query
-        ->orConditionGroup()
-        ->notExists('field_moj_prisons')
+        ->andConditionGroup()
+        ->exists('field_moj_prisons')
         ->condition('field_moj_prisons', $prisonId, '=');
     }
 
     $filterByPrisonCategories = $query
-      ->orConditionGroup()
-      ->notExists('field_prison_categories')
+      ->andConditionGroup()
+      ->exists('field_prison_categories')
       ->condition('field_prison_categories', $prisonCategories, 'IN');
 
     return $query
-      ->andConditionGroup()
+      ->orConditionGroup()
       ->condition($filterByPrisonId)
       ->condition($filterByPrisonCategories);
   }
