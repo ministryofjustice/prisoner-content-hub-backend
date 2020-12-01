@@ -95,7 +95,7 @@ class RelatedContentApiClass
       ->accessCheck(false);
 
     $query->condition(Utilities::filterByPrisonCategories(
-      $prisonId,
+      $this->prisonId,
       $prisonCategories,
       $query
     ));
