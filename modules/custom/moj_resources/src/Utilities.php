@@ -24,11 +24,6 @@ class Utilities {
     * @return QueryInterface
   */
   public static function filterByPrisonCategories($prisonId, $prisonCategories, $query, $isTerm = false) {
-    $filterByPrisonCategories = $query
-      ->orConditionGroup()
-      ->notExists('field_prison_categories')
-      ->condition('field_prison_categories', $prisonCategories, 'IN');
-
     $filterByPrisonId = null;
 
     if ($isTerm) {
@@ -42,6 +37,11 @@ class Utilities {
         ->notExists('field_moj_prisons')
         ->condition('field_moj_prisons', $prisonId, '=');
     }
+
+    $filterByPrisonCategories = $query
+      ->orConditionGroup()
+      ->notExists('field_prison_categories')
+      ->condition('field_prison_categories', $prisonCategories, 'IN');
 
     return $query
       ->andConditionGroup()
