@@ -18,25 +18,35 @@ class Utilities {
     *
     * @param int $prisonId
     * @param int[] $prisonCategories
-    * @param QueryInterface
+    * @param QueryInterface $query
+    * @param bool $isTerm
     *
     * @return QueryInterface
   */
-  public static function filterByPrisonCategories($prisonId, $prisonCategories, $query) {
-    $filterByPrisonId = $query
-      ->orConditionGroup()
-      ->condition('field_moj_prisons', $prisonId, '=')
-      ->notExists('field_moj_prisons');
-
+  public static function filterByPrisonCategories($prisonId, $prisonCategories, $query, $isTerm = false) {
     $filterByPrisonCategories = $query
       ->orConditionGroup()
-      ->condition('field_prison_categories', $prisonCategories, 'IN')
-      ->notExists('field_prison_categories');
+      ->notExists('field_prison_categories')
+      ->condition('field_prison_categories', $prisonCategories, 'IN');
+
+    $filterByPrisonId = null;
+
+    if ($isTerm) {
+      $filterByPrisonId = $query
+        ->orConditionGroup()
+        ->notExists('field_promoted_to_prison')
+        ->condition('field_promoted_to_prison', $prisonId, '=');
+    } else {
+      $filterByPrisonId = $query
+        ->orConditionGroup()
+        ->notExists('field_moj_prisons')
+        ->condition('field_moj_prisons', $prisonId, '=');
+    }
 
     return $query
       ->andConditionGroup()
-      ->condition($filterByPrisonCategories)
-      ->condition($filterByPrisonId);
+      ->condition($filterByPrisonId)
+      ->condition($filterByPrisonCategories);
   }
 
   /**
@@ -93,7 +103,7 @@ class Utilities {
     $prisons = array();
 
     foreach ($node->field_moj_prisons as $prison) {
-      array_push($prisons, $prison->target_id);
+      array_push($prisons, intval($prison->target_id));
     }
 
     return $prisons;
@@ -109,7 +119,7 @@ class Utilities {
     $prisonCategories = array();
 
     foreach ($node->field_prison_categories as $prisonCategory) {
-      array_push($prisonCategories, $prisonCategory->target_id);
+      array_push($prisonCategories, intval($prisonCategory->target_id));
     }
 
     if (empty($prisonCategories)) {
