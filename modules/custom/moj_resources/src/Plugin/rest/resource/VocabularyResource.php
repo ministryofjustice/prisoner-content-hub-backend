@@ -36,6 +36,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          description="ID of category to return",
  *      ),
  *      @SWG\Parameter(
+ *          name="_prison",
+ *          in="query",
+ *          required=false,
+ *          type="integer",
+ *          description="ID of prison content to belong to to return, the default is belonging to all prisons.",
+ *      ),
+ *      @SWG\Parameter(
  *          name="_lang",
  *          in="query",
  *          required=false,
@@ -71,7 +78,9 @@ class VocabularyResource extends ResourceBase
 
     protected $taxonomyName;
 
-    Protected $languageId;
+    protected $languageId;
+
+    protected $prisonId;
 
     public function __construct(
         array $configuration,
@@ -89,6 +98,7 @@ class VocabularyResource extends ResourceBase
 
         $this->availableLanguages = $this->languageManager->getLanguages();
         $this->languageId = self::setLanguageId();
+        $this->prisonId = self::setPrisonId();
         $this->taxonomyName = $this->currentRequest->get('category');
 
         self::checkLanguageIdIsValid();
@@ -117,7 +127,8 @@ class VocabularyResource extends ResourceBase
     public function get()
     {
         self::checkTaxonomyNameIsString();
-        $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->languageId, $this->taxonomyName);
+        self::checkPrisonIdIsNumeric();
+        $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->languageId, $this->taxonomyName, $this->prisonId);
 
         if (!empty($content)) {
             $response = new ResourceResponse($content);
@@ -154,8 +165,25 @@ class VocabularyResource extends ResourceBase
         );
     }
 
+    protected function checkPrisonIdIsNumeric()
+    {
+        if (is_numeric($this->prisonId)) {
+            return true;
+        }
+        throw new NotFoundHttpException(
+            t('The prison ID must be numeric'),
+            null,
+            400
+        );
+    }
+
     protected function setLanguageId()
     {
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
+    }
+
+    protected function setPrisonId()
+    {
+        return is_null($this->currentRequest->get('_prison')) ? 0 : intval($this->currentRequest->get('_prison'));
     }
 }
