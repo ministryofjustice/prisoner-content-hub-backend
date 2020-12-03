@@ -9,6 +9,8 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\Serializer\Serializer;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
+require_once('Utils.php');
+
 /**
  * PromotedContentApiClass
  */
@@ -47,6 +49,7 @@ class VocabularyApiClass
      * Instance of QueryFactory
      */
     protected $entityQuery;
+    protected $prisonId;
 
     /**
      * Class Constructor
@@ -68,14 +71,57 @@ class VocabularyApiClass
      * @param string $taxonomyName
      * @return array
      */
-    public function VocabularyApiEndpoint($languageId, $taxonomyName)
+    public function VocabularyApiEndpoint($languageId, $taxonomyName, $prisonId)
     {
         $this->languageId = $languageId;
+        $this->prisonId = $prisonId;
         $this->termIds = self::getVocabularyTermIds($taxonomyName);
-        $this->terms = $this->termStorage->loadMultiple($this->termIds);
+        $filteredTermIds = array();
+
+        if ($taxonomyName == 'tags') {
+          foreach ($this->termIds as $termId) {
+            $contentForTerm = $this->getAllSecondaryTagItemsFor($termId);
+
+            if (!empty($contentForTerm)) {
+              array_push($filteredTermIds, $termId);
+            }
+          }
+        } else {
+          $filteredTermIds = $this->termIds;
+        }
+
+        $this->terms = $this->termStorage->loadMultiple($filteredTermIds);
 
         return array_map('self::translateTerm', $this->terms);
     }
+    /**
+     * Get matching secondary items for supplied tag ids
+     *
+     * @param array[int] $tagIds
+     *
+     * @return array
+     */
+    private function getAllSecondaryTagItemsFor($termId)
+    {
+      $types = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item');
+
+      $query = $this->entityQuery->get('node')
+        ->condition('status', 1)
+        ->condition('type', $types, 'IN')
+        ->accessCheck(false);
+
+      $query = getPrisonResults($this->prisonId, $query);
+
+      $group = $query
+        ->orConditionGroup()
+        ->condition('field_moj_secondary_tags', $termId)
+        ->condition('field_moj_tags', $termId);
+
+      return $query
+        ->condition($group)
+        ->execute();
+    }
+
     /**
      * TranslateNode function
      *
