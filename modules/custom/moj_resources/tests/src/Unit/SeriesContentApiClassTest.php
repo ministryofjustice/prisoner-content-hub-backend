@@ -53,6 +53,8 @@ class SeriesContentApiClassTest extends UnitTestCase
       $this->assertEquals($content["season"], 1);
       $this->assertEquals($content["episode"], 1);
       $this->assertEquals($content["episode_id"], 1001);
+      $this->assertEquals($content["date"], "field_moj_date");
+      $this->assertEquals($content["last_updated"], "changed");
       $this->assertEquals($content["duration"], 60);
       $this->assertEquals($content["media"]->url, "/foo.mp4");
       $this->assertEquals($content["image"]->url, "/foo.jpg");
@@ -100,6 +102,8 @@ class SeriesContentApiClassTest extends UnitTestCase
       $this->assertEquals($content["season"], 1);
       $this->assertEquals($content["episode"], 1);
       $this->assertEquals($content["episode_id"], 1001);
+      $this->assertEquals($content["date"], "field_moj_date");
+      $this->assertEquals($content["last_updated"], "changed");
       $this->assertEquals($content["duration"], 60);
       $this->assertEquals($content["media"]->url, "/foo.mp3");
       $this->assertEquals($content["image"]->url, "/foo.jpg");

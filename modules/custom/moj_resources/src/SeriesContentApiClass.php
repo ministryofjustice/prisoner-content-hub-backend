@@ -73,7 +73,7 @@ class SeriesContentApiClass
     $this->nodes = $this->loadNodesDetails($this->nids);
 
     $series = $this->decorateSeries($this->nodes);
-    $series = $this->sortSeries($series, $sort_order);
+    $series = $this->sortSeries($series, $sort_order, $number);
 
     return $series;
   }
@@ -101,9 +101,16 @@ class SeriesContentApiClass
   private function decorateSeries($node)
   {
     $results = array_reduce($node, function ($acc, $curr) {
-      $episode_id = ($curr->field_moj_season->value * 1000) + ($curr->field_moj_episode->value);
+      $episode_id = 0;
+      $season = $curr->field_moj_season->value;
+      $episode = $curr->field_moj_episode->value;
+      if (intval($season) > 0 && intval($episode) > 0) {
+        $episode_id = ($season * 1000) + $episode;
+      }
       $result = [];
       $result["episode_id"] = $episode_id;
+      $result["last_updated"] = $curr->changed->value;
+      $result["date"] = $curr->field_moj_date->value;
       $result["content_type"] = $curr->type->target_id;
       $result["title"] = $curr->title->value;
       $result["id"] = $curr->nid->value;
@@ -137,9 +144,21 @@ class SeriesContentApiClass
    * sortSeries
    *
    */
-  private function sortSeries(&$series, $sort_order)
+
+
+  private function sortSeries($series, $sort_order, $number)
   {
-    usort($series, function ($a, $b) use ($sort_order) {
+    $no_episode = array_filter($series, function($node) {
+      return $node["episode_id"] === 0;
+    });
+
+    $has_episode = array_filter($series, function($node) {
+      return $node["episode_id"] !== 0;
+    });
+
+
+
+    usort($has_episode, function ($a, $b) use ($sort_order) {
       if ($a['episode_id'] == $b['episode_id']) {
         return 0;
       }
@@ -148,10 +167,22 @@ class SeriesContentApiClass
         return ($a['episode_id'] < $b['episode_id']) ? -1 : 1;
       }
 
-      return ($b['episode_id'] > $a['episode_id']) ? 1 : -1;
+      return ($a['episode_id'] < $b['episode_id']) ? 1 : -1;
     });
 
-    return $series;
+    usort($no_episode, function ($a, $b) use ($sort_order) {
+      if ($a['episode_id'] == $b['episode_id']) {
+        return 0;
+      }
+
+      if ($sort_order == 'ASC') {
+        return ($a['date'] < $b['date']) ? -1 : 1;
+      }
+
+      return ($a['date'] < $b['date']) ? 1 : -1;
+    });
+
+    return array_slice(array_merge($no_episode, $has_episode), 0, $number);
   }
   /**
    * getNextEpisodes
@@ -205,9 +236,9 @@ class SeriesContentApiClass
       ->condition('status', 1)
       ->accessCheck(false);
 
-    if ($series_id !== 0) {
+    // if ($series_id !== 0) {
       $results->condition('field_moj_series', $series_id);
-    }
+    // }
 
     $results = getPrisonResults($prison, $results);
 
