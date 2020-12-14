@@ -171,10 +171,6 @@ class SeriesContentApiClass
     });
 
     usort($no_episode, function ($a, $b) use ($sort_order) {
-      if ($a['episode_id'] == $b['episode_id']) {
-        return 0;
-      }
-
       if ($sort_order == 'ASC') {
         return ($a['date'] < $b['date']) ? -1 : 1;
       }
@@ -236,9 +232,7 @@ class SeriesContentApiClass
       ->condition('status', 1)
       ->accessCheck(false);
 
-    // if ($series_id !== 0) {
-      $results->condition('field_moj_series', $series_id);
-    // }
+    $results->condition('field_moj_series', $series_id);
 
     $results = getPrisonResults($prison, $results);
 
