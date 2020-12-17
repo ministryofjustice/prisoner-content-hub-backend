@@ -39,11 +39,11 @@ class SeriesContentApiClass
    */
   protected $node_storage;
   /**
-   * Entitity Query object
+   * Entity Query object
    *
    * @var Drupal\Core\Entity\Query\QueryFactory
    *
-   * Instance of querfactory
+   * Instance of queryfactory
    */
   protected $entity_query;
 
@@ -66,14 +66,14 @@ class SeriesContentApiClass
    * @param [string] $lang
    * @return array
    */
-  public function SeriesContentApiEndpoint($lang, $series_id, $number, $offset, $prison, $sort_order)
+  public function SeriesContentApiEndpoint($lang, $seriesId, $number, $offset, $prison, $sortOrder)
   {
     $this->lang = $lang;
-    $this->nids = $this->getSeriesContentNodeIds($series_id, $number, $offset, $prison);
+    $this->nids = $this->getSeriesContentNodeIds($seriesId, $number, $offset, $prison);
     $this->nodes = $this->loadNodesDetails($this->nids);
 
     $series = $this->decorateSeries($this->nodes);
-    $series = $this->sortSeries($series, $sort_order, $number);
+    $series = $this->sortSeries($series, $sortOrder, $number);
 
     return $series;
   }
@@ -83,14 +83,14 @@ class SeriesContentApiClass
    * @param [string] $lang
    * @return array
    */
-  public function SeriesNextEpisodeApiEndpoint($lang, $series_id, $number, $episode_id, $prison, $sort_order)
+  public function SeriesNextEpisodeApiEndpoint($lang, $seriesId, $number, $episodeId, $prison, $sortOrder)
   {
     $this->lang = $lang;
-    $this->nids = $this->getSeriesContentNodeIds($series_id, null, null, $prison);
+    $this->nids = $this->getSeriesContentNodeIds($seriesId, null, null, $prison);
     $this->nodes = $this->loadNodesDetails($this->nids);
     $series = $this->decorateSeries($this->nodes);
-    $series = $this->sortSeries($series, $sort_order);
-    $series = $this->getNextEpisodes($episode_id, $series, $number);
+    $series = $this->sortSeries($series, $sortOrder);
+    $series = $this->getNextEpisodes($episodeId, $series, $number);
 
     return $series;
   }
@@ -101,14 +101,14 @@ class SeriesContentApiClass
   private function decorateSeries($node)
   {
     $results = array_reduce($node, function ($acc, $curr) {
-      $episode_id = 0;
+      $episodeId = 0;
       $season = $curr->field_moj_season->value;
       $episode = $curr->field_moj_episode->value;
       if (intval($season) > 0 && intval($episode) > 0) {
-        $episode_id = ($season * 1000) + $episode;
+        $episodeId = ($season * 1000) + $episode;
       }
       $result = [];
-      $result["episode_id"] = $episode_id;
+      $result["episode_id"] = $episodeId;
       $result["last_updated"] = $curr->changed->value;
       $result["date"] = $curr->field_moj_date->value;
       $result["content_type"] = $curr->type->target_id;
@@ -146,45 +146,44 @@ class SeriesContentApiClass
    */
 
 
-  private function sortSeries($series, $sort_order, $number)
+  private function sortSeries($series, $sortOrder, $number)
   {
-    $no_episode = array_filter($series, function($node) {
+    $noEpisode = array_filter($series, function($node) {
       return $node["episode_id"] === 0;
     });
 
-    $has_episode = array_filter($series, function($node) {
+    $hasEpisode = array_filter($series, function($node) {
       return $node["episode_id"] !== 0;
     });
 
-
-
-    usort($has_episode, function ($a, $b) use ($sort_order) {
+    usort($hasEpisode, function ($a, $b) use ($sortOrder) {
       if ($a['episode_id'] == $b['episode_id']) {
         return 0;
       }
 
-      if ($sort_order == 'ASC') {
+      if ($sortOrder == 'ASC') {
         return ($a['episode_id'] < $b['episode_id']) ? -1 : 1;
       }
 
       return ($a['episode_id'] < $b['episode_id']) ? 1 : -1;
     });
 
-    usort($no_episode, function ($a, $b) use ($sort_order) {
-      if ($sort_order == 'ASC') {
+    usort($noEpisode, function ($a, $b) use ($sortOrder) {
+      if ($sortOrder == 'ASC') {
         return ($a['date'] < $b['date']) ? -1 : 1;
       }
 
       return ($a['date'] < $b['date']) ? 1 : -1;
     });
 
-    return array_slice(array_merge($no_episode, $has_episode), 0, $number);
+    return array_slice(array_merge($noEpisode, $hasEpisode), 0, $number);
   }
+
   /**
    * getNextEpisodes
    *
    */
-  private function getNextEpisodes($episode_id, $series, $number)
+  private function getNextEpisodes($episodeId, $series, $number)
   {
     function indexOf($comp, $array)
     {
@@ -195,17 +194,17 @@ class SeriesContentApiClass
       }
     }
 
-    $episode_index = indexOf(function ($value) use ($episode_id) {
-      return $value['episode_id'] == $episode_id;
+    $episodeIndex = indexOf(function ($value) use ($episodeId) {
+      return $value['episode_id'] == $episodeId;
     }, $series);
 
-    if (is_null($episode_index)) {
+    if (is_null($episodeIndex)) {
       return array();
     }
 
-    $episode_offset = $episode_index + 1;
+    $episodeOffset = $episodeIndex + 1;
 
-    $episodes = array_slice($series, $episode_offset, $number);
+    $episodes = array_slice($series, $episodeOffset, $number);
 
     return $episodes;
   }
@@ -226,13 +225,13 @@ class SeriesContentApiClass
    *
    * @return void
    */
-  private function getSeriesContentNodeIds($series_id, $number, $offset, $prison)
+  private function getSeriesContentNodeIds($seriesId, $number, $offset, $prison)
   {
     $results = $this->entity_query->get('node')
       ->condition('status', 1)
       ->accessCheck(false);
 
-    $results->condition('field_moj_series', $series_id);
+    $results->condition('field_moj_series', $seriesId);
 
     $results = getPrisonResults($prison, $results);
 
