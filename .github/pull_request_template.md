@@ -1,10 +1,8 @@
-## Bug Fix
-
 ### Context
 
 > Does this issue have a Trello card?
 
-> Do we have steps to reproduce the issue?
+> If this is an issue, do we have steps to reproduce?
 
 ### Intent
 
