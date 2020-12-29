@@ -107,6 +107,8 @@ spec:
               value: {{ .Values.application.sentry_environment }}
             - name: SENTRY_RELEASE
               value: {{ quote .Values.application.sentry_release }}
+            - name: TRUSTED_HOSTS
+              value: {{ include "prisoner-content-hub-backend.trustedHosts" . }}
           ports:
             - name: http
               containerPort: {{ .Values.application.port }}

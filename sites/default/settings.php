@@ -12,6 +12,12 @@ $databases['default']['default'] = array(
   'driver' => 'mysql',
 );
 
+$trusted_hosts = getenv('TRUSTED_HOSTS', true);
+
+$settings['trusted_host_patterns'] = [
+  $trusted_hosts
+];
+
 /**
  * Flysystem S3 filesystem configuration
  */
@@ -116,3 +122,4 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 
 // TODO: Remove, added for long execution time of moj_video_item migration
 ini_set('max_execution_time', 3000);
+
