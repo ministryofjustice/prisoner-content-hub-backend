@@ -79,4 +79,5 @@ Create trusted host pattern
 {{- range (slice .Values.ingress.hosts 1) -}}
 |^{{ (.host | replace "." "\\.")}}$
 {{- end }}
+{{- printf "|^%s\\.%s\\.svc\\.cluster\\.local$" (include "prisoner-content-hub-backend.fullname" .) .Release.Namespace }}
 {{- end }}
