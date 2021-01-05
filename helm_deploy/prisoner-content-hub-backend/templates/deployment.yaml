@@ -117,12 +117,18 @@ spec:
             httpGet:
               path: {{ .Values.application.liveness.endpoint }}
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ (index .Values.ingress.hosts 0).host }}
             initialDelaySeconds: {{ .Values.application.liveness.delaySeconds }}
             timeoutSeconds: {{ .Values.application.liveness.timeoutSeconds }}
           readinessProbe:
             httpGet:
               path: {{ .Values.application.readiness.endpoint }}
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ (index .Values.ingress.hosts 0).host }}
             initialDelaySeconds: {{ .Values.application.readiness.delaySeconds }}
             timeoutSeconds: {{ .Values.application.readiness.timeoutSeconds }}
           resources:
