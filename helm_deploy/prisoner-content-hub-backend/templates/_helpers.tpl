@@ -68,3 +68,16 @@ Create external Kubernetes hostname
 {{- end }}
 {{- printf "%s://%s" $protocol (index .Values.ingress.hosts 0).host }}
 {{- end }}
+
+{{/*
+Create trusted host pattern
+*/}}
+{{- define "prisoner-content-hub-backend.trustedHosts" -}}
+{{- with (first .Values.ingress.hosts) -}}
+^{{ (.host | replace "." "\\.") }}$
+{{- end }}
+{{- range (slice .Values.ingress.hosts 1) -}}
+|^{{ (.host | replace "." "\\.")}}$
+{{- end }}
+{{- printf "|^%s\\.%s\\.svc\\.cluster\\.local$" (include "prisoner-content-hub-backend.fullname" .) .Release.Namespace }}
+{{- end }}
