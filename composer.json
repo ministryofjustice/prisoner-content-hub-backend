@@ -31,6 +31,7 @@
         "drupal/video": "^1.4",
         "drupal/videojs": "^1.0",
         "drupal/view_unpublished": "^1.0",
+        "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0"
     },
     "conflict": {
@@ -88,5 +89,8 @@
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         }
-    ]
+    ],
+    "require-dev": {
+        "drupal/core-dev": "^8.9"
+    }
 }
