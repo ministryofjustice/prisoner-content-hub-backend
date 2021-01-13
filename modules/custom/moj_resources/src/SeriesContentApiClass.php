@@ -131,7 +131,12 @@ class SeriesContentApiClass
   */
   private function createReturnObject($seriesContent) {
     return array_map(function ($node) {
-      $episodeId = ($node->field_moj_season->value * 1000) + ($node->field_moj_episode->value);
+      $episodeId = 0;
+      $season = $node->field_moj_season->value;
+      $episode = $node->field_moj_episode->value;
+      if (intval($season) > 0 && intval($episode) > 0) {
+        $episodeId = ($season * 1000) + $episode;
+      }
       $content = [];
       $content["episode_id"] = $episodeId;
       $content["content_type"] = $node->type->target_id;
@@ -167,10 +172,20 @@ class SeriesContentApiClass
    * @param array $series
    * @param string $sortOrder
    *
-   * @return array
-  */
-  private function sortSeries($series, $sortOrder) {
-    usort($series, function ($a, $b) use ($sortOrder) {
+   */
+
+
+  private function sortSeries($series, $sortOrder, $number)
+  {
+    $noEpisode = array_filter($series, function($node) {
+      return $node["episode_id"] === 0;
+    });
+
+    $hasEpisode = array_filter($series, function($node) {
+      return $node["episode_id"] !== 0;
+    });
+
+    usort($hasEpisode, function ($a, $b) use ($sortOrder) {
       if ($a['episode_id'] == $b['episode_id']) {
         return 0;
       }
@@ -179,10 +194,18 @@ class SeriesContentApiClass
         return ($a['episode_id'] < $b['episode_id']) ? -1 : 1;
       }
 
-      return ($b['episode_id'] > $a['episode_id']) ? 1 : -1;
+      return ($a['episode_id'] < $b['episode_id']) ? 1 : -1;
     });
 
-    return $series;
+    usort($noEpisode, function ($a, $b) use ($sortOrder) {
+      if ($sortOrder == 'ASC') {
+        return ($a['date'] < $b['date']) ? -1 : 1;
+      }
+
+      return ($a['date'] < $b['date']) ? 1 : -1;
+    });
+
+    return array_slice(array_merge($noEpisode, $hasEpisode), 0, $number);
   }
 
   /**

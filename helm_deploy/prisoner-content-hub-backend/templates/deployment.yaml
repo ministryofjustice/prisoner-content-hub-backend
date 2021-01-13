@@ -107,6 +107,8 @@ spec:
               value: {{ .Values.application.sentry_environment }}
             - name: SENTRY_RELEASE
               value: {{ quote .Values.application.sentry_release }}
+            - name: TRUSTED_HOSTS
+              value: {{ include "prisoner-content-hub-backend.trustedHosts" . }}
           ports:
             - name: http
               containerPort: {{ .Values.application.port }}
@@ -115,12 +117,18 @@ spec:
             httpGet:
               path: {{ .Values.application.liveness.endpoint }}
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ (index .Values.ingress.hosts 0).host }}
             initialDelaySeconds: {{ .Values.application.liveness.delaySeconds }}
             timeoutSeconds: {{ .Values.application.liveness.timeoutSeconds }}
           readinessProbe:
             httpGet:
               path: {{ .Values.application.readiness.endpoint }}
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ (index .Values.ingress.hosts 0).host }}
             initialDelaySeconds: {{ .Values.application.readiness.delaySeconds }}
             timeoutSeconds: {{ .Values.application.readiness.timeoutSeconds }}
           resources:

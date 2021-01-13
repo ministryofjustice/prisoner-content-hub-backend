@@ -14,8 +14,8 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  kubernetes: circleci/kubernetes@0.3.0
-  helm: circleci/helm@1.0.0
+  kubernetes: circleci/kubernetes@0.11.2
+  helm: circleci/helm@1.2.0
 
 commands:
   release_to_namespace:
@@ -141,20 +141,20 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
+      - build_preview:
+          <<: *feature_branch
+
       - approve_preview_build:
           <<: *feature_branch
           type: approval
-
-      - build_preview:
-          <<: *feature_branch
           requires:
-            - approve_preview_build
+            - build_preview
 
       - deploy_cloud_platform_development_preview:
           <<: *feature_branch
           context: prisoner-content-hub-development
           requires:
-            - build_preview
+            - approve_preview_build
 
       - build_production:
           <<: *main_branch

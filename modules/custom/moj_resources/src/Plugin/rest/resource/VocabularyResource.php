@@ -78,7 +78,7 @@ class VocabularyResource extends ResourceBase
 
     protected $taxonomyName;
 
-    Protected $languageId;
+    protected $languageId;
 
     protected $prisonId;
 
@@ -99,6 +99,7 @@ class VocabularyResource extends ResourceBase
         $this->availableLanguages = $this->languageManager->getLanguages();
         $this->prisonId = self::setPrisonId();
         $this->languageId = self::setLanguageId();
+        $this->prisonId = self::setPrisonId();
         $this->taxonomyName = $this->currentRequest->get('category');
 
         self::checkLanguageIdIsValid();
@@ -128,6 +129,7 @@ class VocabularyResource extends ResourceBase
     public function get()
     {
         self::checkTaxonomyNameIsString();
+        self::checkPrisonIdIsNumeric();
         $content = $this->vocabularyApiClass->VocabularyApiEndpoint($this->languageId, $this->taxonomyName, $this->prisonId);
 
         if (!empty($content)) {
