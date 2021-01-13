@@ -93,7 +93,7 @@ class SeriesContentApiClass
     $this->nodes = $this->loadContent($this->nodeIds);
 
     $series = $this->createReturnObject($this->nodes);
-    $series = $this->sortSeries($series, $sortOrder);
+    $series = $this->sortSeries($series, $sortOrder, $numberOfResults);
 
     return $series;
   }
