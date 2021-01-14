@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y \
   unzip \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pecl install uploadprogress \
+    && docker-php-ext-enable uploadprogress
+
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 \
   && php -r "unlink('composer-setup.php');"
