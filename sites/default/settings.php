@@ -75,7 +75,6 @@ $flysystem_schemes = [
 
 $settings['flysystem'] = $flysystem_schemes;
 
-$settings['install_profile'] = 'standard';
 $settings['hash_salt'] = getenv('HASH_SALT', true);
 $settings['update_free_access'] = FALSE;
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
