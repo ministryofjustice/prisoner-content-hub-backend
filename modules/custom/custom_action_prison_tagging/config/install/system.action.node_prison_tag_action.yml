@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node_prison_tag_action
+label: 'Tag content with prisons'
+type: node
+plugin: node_prison_tag_action
+configuration: {  }

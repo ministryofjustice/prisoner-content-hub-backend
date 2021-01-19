@@ -1,0 +1,5 @@
+name: Prison tagging custom action
+description: A custom action to tag content that have no prisons tagged
+package: MoJ
+type: module
+core_version_requirement: ^8.8.0 || ^9.0
