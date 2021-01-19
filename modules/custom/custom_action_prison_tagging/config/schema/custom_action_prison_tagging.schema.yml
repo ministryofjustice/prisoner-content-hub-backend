@@ -1,3 +1,0 @@
-action.configuration.custom_action_prison_tagging:
-  type: node_prison_tag_action
-  label: 'Tag content with prisons'
