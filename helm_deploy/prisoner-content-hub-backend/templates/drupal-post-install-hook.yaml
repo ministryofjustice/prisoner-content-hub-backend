@@ -19,9 +19,6 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - name: post-install-job
-        image: "alpine:3.3"
-      containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
