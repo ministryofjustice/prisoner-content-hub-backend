@@ -1,0 +1,77 @@
+{{/*
+Environment variables for Drupal & Drush containers
+*/}}
+{{- define "drupal-deployment.envs" }}
+env:
+  - name: HUB_DB_ENV_MYSQL_DATABASE
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: database_name
+  - name: HUB_DB_ENV_MYSQL_USER
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: database_username
+  - name: HUB_DB_ENV_MYSQL_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: database_password
+  - name: HUB_DB_PORT_3306_TCP_ADDR
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: rds_instance_address
+  - name: FLYSYSTEM_S3_KEY
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3.secretName }}
+        key: access_key_id
+  - name: FLYSYSTEM_S3_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3.secretName }}
+        key: secret_access_key
+  - name: FLYSYSTEM_S3_REGION
+    value: {{ .Values.application.s3.region }}
+  - name: FLYSYSTEM_S3_BUCKET
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3.secretName }}
+        key: bucket_name
+  - name: FLYSYSTEM_S3_CNAME
+    value: {{ .Values.application.s3.cname }}
+  - name: FLYSYSTEM_S3_CNAME_IS_BUCKET
+    value: {{ .Values.application.s3.cnameIsBucket | quote }}
+  - name: HASH_SALT
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "prisoner-content-hub-backend.fullname" . }}
+        key: hashSalt
+  - name: FILE_PUBLIC_BASE_URL
+    value: {{ include "prisoner-content-hub-backend.externalHost" . }}/sites/default/files
+  - name: PHP_MEMORY_LIMIT
+    value: {{ .Values.application.config.phpMemoryLimit }}
+  - name: PHP_UPLOAD_MAX_FILE_SIZE
+    value: {{ .Values.application.config.phpUploadMaxFileSize }}
+  - name: PHP_POST_MAX_SIZE
+    value: {{ .Values.application.config.phpPostMaxSize }}
+  - name: XDEBUG_IP
+    value: {{ .Values.application.config.xDebugIp }}
+  - name: SERVER_PORT
+    value: {{ .Values.application.port | quote }}
+  - name: ELASTICSEARCH_CLUSTER
+    value: {{ .Values.application.config.elasticsearchCluster }}
+  - name: ELASTICSEARCH_HOST
+    value: {{ include "prisoner-content-hub-backend.elasticsearchServiceHost" . }}
+  - name: SENTRY_DSN
+    value: {{ .Values.application.sentry_dsn }}
+  - name: SENTRY_ENVIRONMENT
+    value: {{ .Values.application.sentry_environment }}
+  - name: SENTRY_RELEASE
+    value: {{ quote .Values.application.sentry_release }}
+  - name: TRUSTED_HOSTS
+    value: {{ include "prisoner-content-hub-backend.trustedHosts" . }}
+
+{{- end -}}
