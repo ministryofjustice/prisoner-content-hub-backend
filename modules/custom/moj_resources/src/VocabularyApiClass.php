@@ -141,10 +141,14 @@ class VocabularyApiClass
      */
     protected function getVocabularyTermIds($taxonomyName)
     {
+
+      $query = $this->entityQuery->get('taxonomy_term');
+      $query->condition('vid', $taxonomyName);
+
+      if ($taxonomyName == "series") {
+
         $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
         $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
-
-        $query = $this->entityQuery->get('taxonomy_term');
 
         $prisonCategoriesCondition = Utilities::filterByPrisonCategories(
           $this->prisonId,
@@ -153,10 +157,10 @@ class VocabularyApiClass
           true
         );
 
-        $query
-            ->condition('vid', $taxonomyName)
-            ->condition($prisonCategoriesCondition);
+        $query->condition($prisonCategoriesCondition);
 
-        return $query->execute();
+      }
+
+      return $query->execute();
     }
 }
