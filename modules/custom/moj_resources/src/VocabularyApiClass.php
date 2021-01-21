@@ -9,8 +9,6 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 
-require_once('Utils.php');
-
 /**
  * PromotedContentApiClass
  */
@@ -109,7 +107,16 @@ class VocabularyApiClass
         ->condition('type', $types, 'IN')
         ->accessCheck(false);
 
-      $query = getPrisonResults($this->prisonId, $query);
+      $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+      $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+
+      $prisonCategoriesCondition = Utilities::filterByPrisonCategories(
+        $this->prisonId,
+        $prisonCategories,
+        $query
+      );
+
+      $query->condition($prisonCategoriesCondition);
 
       $group = $query
         ->orConditionGroup()
