@@ -109,10 +109,10 @@ $config['raven.settings'] = [
   'fatal_error_handler' => true
 ];
 
-$config_directories['sync'] = 'sites/default/files/config/sync';
+$config_directories['sync'] = 'sites/default/config/sync';
 
 $config_directories = [
-  CONFIG_SYNC_DIRECTORY => 'sites/default/files/config/sync'
+  CONFIG_SYNC_DIRECTORY => 'sites/default/config/sync'
 ];
 
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
