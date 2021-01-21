@@ -148,7 +148,7 @@ class TermApiClass
     $response['summary'] = $term->field_content_summary ? $term->field_content_summary->value : '';
     $response['image'] = $term->field_featured_image ? $term->field_featured_image[0] : null;
     $response['video'] = $term->field_featured_video ? $term->field_featured_video[0] : null;
-    $response['audio'] = $$term->field_featured_audio ? $term->field_featured_audio[0] : null;
+    $response['audio'] = $term->field_featured_audio ? $term->field_featured_audio[0] : null;
     $response['programme_code'] = $term->field_feature_programme_code ? $term->field_feature_programme_code->value : '';
 
     if ($term->hasField('field_prison_categories')) {
