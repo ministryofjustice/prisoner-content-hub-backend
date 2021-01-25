@@ -2,31 +2,35 @@
 
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
+
 /**
  * Abstract base class for creating content helpers
  *
  * @group unit_moj_resources
  */
 abstract class Content {
+  protected $testHelpers;
+  protected $nid;
+  protected $title;
+  protected $description;
+  protected $season;
+  protected $episode;
+  protected $prisons = [];
+  protected $prisonCategories = [];
+  protected $series = [];
+  protected $secondaryTags = [];
+  protected $categories = [];
+  protected $image = [];
 
-  public $nid;
-  public $title;
-  public $description;
-  public $season;
-  public $episode;
-  public $prisons = [];
-  public $series = [];
-  public $secondaryTags = [];
-  public $categories = [];
-  public $image = [];
-
-  public function __construct($nid = 123) {
-    array_push($this->image, (object) array("url" => "/foo.jpg"));
-    $this->nid = (object) array("value" => $nid);
-    $this->title = (object) array("value" => "Test Content");
-    $this->description = $this->createDescription("This is some test content");
-    $this->season = (object) array("value" => 0);
-    $this->episode = (object) array("value" => 0);
+  public function __construct($unitTestCase, $nid = 123) {
+    $this->testHelpers = new TestHelpers($unitTestCase);
+    array_push($this->image, $this->testHelpers->createFieldWith('url', '/foo.jpg'));
+    $this->nid = $this->testHelpers->createFieldWith('value', $nid);
+    $this->title = $this->testHelpers->createFieldWith('value', 'Test Content');
+    $this->season = $this->testHelpers->createFieldWith('value', 0);
+    $this->episode = $this->testHelpers->createFieldWith('value', 0);
+    $this->description = $this->testHelpers->createDescriptionField("This is some test content");
   }
 
   /**
@@ -47,7 +51,7 @@ abstract class Content {
    * @return Content
   */
   public function setSeason($season) {
-    $this->season = (object) array("value" => $season);
+    $this->season = $this->testHelpers->createFieldWith('value', $season);
     return $this;
   }
 
@@ -58,7 +62,7 @@ abstract class Content {
    * @return Content
   */
   public function setEpisode($episode) {
-    $this->episode = (object) array("value" => $episode);
+    $this->episode = $this->testHelpers->createFieldWith('value', $episode);
     return $this;
   }
 
@@ -69,7 +73,18 @@ abstract class Content {
    * @return Content
   */
   public function addPrison($prisonId) {
-     array_push($this->prisons, (object) array("target_id" => $prisonId));
+     array_push($this->prisons, $this->testHelpers->createFieldWith('target_id', $prisonId));
+     return $this;
+  }
+
+  /**
+   * Add a prison ID
+   *
+   * @param int $prisonCategoryId
+   * @return Content
+  */
+  public function addPrisonCategory($prisonCategoryId) {
+     array_push($this->prisonCategories, $this->testHelpers->createFieldWith('target_id', $prisonCategoryId));
      return $this;
   }
 
@@ -80,7 +95,7 @@ abstract class Content {
    * @return Content
   */
   public function addSeries($seriesId) {
-     array_push($this->series, (object) array("target_id" => $seriesId));
+     array_push($this->series, $this->testHelpers->createFieldWith('target_id', $seriesId));
      return $this;
   }
 
@@ -91,7 +106,7 @@ abstract class Content {
    * @return Content
   */
   public function addSecondaryTag($secondaryTagId) {
-     array_push($this->secondaryTags, (object) array("target_id" => $secondaryTagId));
+     array_push($this->secondaryTags, $this->testHelpers->createFieldWith('target_id', $secondaryTagId));
      return $this;
   }
 
@@ -102,25 +117,8 @@ abstract class Content {
    * @return Content
   */
   public function addCategory($categoryId) {
-     array_push($this->categories, (object) array("target_id" => $categoryId));
+     array_push($this->categories, $this->testHelpers->createFieldWith('target_id', $categoryId));
      return $this;
-  }
-
-  /**
-   * Create a description object
-   *
-   * @param string $description
-   * @return array
-  */
-  private function createDescription($description) {
-    $description = (object) array(
-      "raw" => $description,
-      "processed" => $description,
-      "summary" => $description,
-      "sanitized" => $description
-    );
-
-    return array($description);
   }
 
   /**

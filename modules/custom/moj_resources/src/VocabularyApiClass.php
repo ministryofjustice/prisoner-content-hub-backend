@@ -2,14 +2,12 @@
 
 namespace Drupal\moj_resources;
 
+use Drupal\moj_resources\Utilities;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Symfony\Component\Serializer\Serializer;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-
-require_once('Utils.php');
+use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * PromotedContentApiClass
@@ -18,23 +16,23 @@ require_once('Utils.php');
 class VocabularyApiClass
 {
     /**
-     * Term IDs
-     *
-     * @var array
-     */
-    protected $termIds = array();
-    /**
      * Terms
      *
      * @var array
      */
     protected $terms;
     /**
-     * Language Tag
+     * Language id
      *
      * @var string
      */
     protected $languageId;
+    /**
+     * Prison id
+     *
+     * @var string
+     */
+    protected $prisonId;
     /**
      * Term storage object
      *
@@ -49,7 +47,6 @@ class VocabularyApiClass
      * Instance of QueryFactory
      */
     protected $entityQuery;
-    protected $prisonId;
 
     /**
      * Class Constructor
@@ -92,7 +89,7 @@ class VocabularyApiClass
 
         $this->terms = $this->termStorage->loadMultiple($filteredTermIds);
 
-        return array_map('self::translateTerm', $this->terms);
+        return array_map([$this, 'translateTerm'], $this->terms);
     }
     /**
      * Get matching secondary items for supplied tag ids
@@ -110,7 +107,16 @@ class VocabularyApiClass
         ->condition('type', $types, 'IN')
         ->accessCheck(false);
 
-      $query = getPrisonResults($this->prisonId, $query);
+      $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+      $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+
+      $prisonCategoriesCondition = Utilities::filterByPrisonCategories(
+        $this->prisonId,
+        $prisonCategories,
+        $query
+      );
+
+      $query->condition($prisonCategoriesCondition);
 
       $group = $query
         ->orConditionGroup()
@@ -142,8 +148,26 @@ class VocabularyApiClass
      */
     protected function getVocabularyTermIds($taxonomyName)
     {
-        return $this->entityQuery->get('taxonomy_term')
-            ->condition('vid', $taxonomyName)
-            ->execute();
+
+      $query = $this->entityQuery->get('taxonomy_term');
+      $query->condition('vid', $taxonomyName);
+
+      if ($taxonomyName == "series") {
+
+        $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+        $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+
+        $prisonCategoriesCondition = Utilities::filterByPrisonCategories(
+          $this->prisonId,
+          $prisonCategories,
+          $query,
+          true
+        );
+
+        $query->condition($prisonCategoriesCondition);
+
+      }
+
+      return $query->execute();
     }
 }

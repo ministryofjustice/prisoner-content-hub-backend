@@ -5,46 +5,59 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-
-require_once('Utils.php');
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\moj_resources\Utilities;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * PromotedContentApiClass
- */
-
+*/
 class SeriesContentApiClass
 {
   /**
    * Node IDs
    *
    * @var array
-   */
-  protected $nids = array();
+  */
+  protected $nodeIds = array();
+
   /**
    * Nodes
    *
    * @var array
-   */
+  */
   protected $nodes = array();
+
   /**
-   * Language Tag
+   * language Tag
    *
    * @var string
-   */
-  protected $lang;
+  */
+  protected $language;
+
   /**
-   * Node_storage object
+   * NodeStorage object
    *
-   * @var Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $node_storage;
+   * @var EntityManagerInterface
+  */
+  protected $nodeStorage;
+
+  /**
+   * TermStorage object
+   *
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
+
   /**
    * Entity Query object
    *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of queryfactory
-   */
+   * @var QueryFactory
+  */
   protected $entity_query;
 
   /**
@@ -52,96 +65,112 @@ class SeriesContentApiClass
    *
    * @param EntityTypeManagerInterface $entityTypeManager
    * @param QueryFactory $entityQuery
-   */
+  */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     QueryFactory $entityQuery
   ) {
-    $this->node_storage = $entityTypeManager->getStorage('node');
+    $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entity_query = $entityQuery;
   }
+
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param string $language
+   * @param int $seriesId
+   * @param int $numberOfResults
+   * @param int $resultsOffset
+   * @param int $prisonId
+   * @param string $sortOrder
+   *
    * @return array
-   */
-  public function SeriesContentApiEndpoint($lang, $seriesId, $number, $offset, $prison, $sortOrder)
-  {
-    $this->lang = $lang;
-    $this->nids = $this->getSeriesContentNodeIds($seriesId, $number, $offset, $prison);
-    $this->nodes = $this->loadNodesDetails($this->nids);
+  */
+  public function SeriesContentApiEndpoint($language, $seriesId, $numberOfResults, $resultsOffset, $prisonId, $sortOrder) {
+    $this->language = $language;
+    $this->nodeIds = $this->getSeriesContentIds($seriesId, $numberOfResults, $resultsOffset, $prisonId);
+    $this->nodes = $this->loadContent($this->nodeIds);
 
-    $series = $this->decorateSeries($this->nodes);
-    $series = $this->sortSeries($series, $sortOrder, $number);
+    $series = $this->createReturnObject($this->nodes);
+    $series = $this->sortSeries($series, $sortOrder, $numberOfResults);
 
     return $series;
   }
+
   /**
    * API resource function
    *
-   * @param [string] $lang
+   * @param string $language
+   * @param int $seriesId
+   * @param int $numberOfResults
+   * @param int $episodeId
+   * @param int $prisonId
+   * @param string $sortOrder
+   *
    * @return array
-   */
-  public function SeriesNextEpisodeApiEndpoint($lang, $seriesId, $number, $episodeId, $prison, $sortOrder)
-  {
-    $this->lang = $lang;
-    $this->nids = $this->getSeriesContentNodeIds($seriesId, null, null, $prison);
-    $this->nodes = $this->loadNodesDetails($this->nids);
-    $series = $this->decorateSeries($this->nodes);
+  */
+  public function SeriesNextEpisodeApiEndpoint($language, $seriesId, $numberOfResults, $episodeId, $prisonId, $sortOrder) {
+    $this->language = $language;
+    $this->nodeIds = $this->getSeriesContentIds($seriesId, null, null, $prisonId);
+    $this->nodes = $this->loadContent($this->nodeIds);
+
+    $series = $this->createReturnObject($this->nodes);
     $series = $this->sortSeries($series, $sortOrder);
-    $series = $this->getNextEpisodes($episodeId, $series, $number);
+    $nextEpisodes = $this->getNextEpisodes($episodeId, $series, $numberOfResults);
 
-    return $series;
+    return $nextEpisodes;
   }
+
   /**
-   * decorateSeries
+   * Creates the object to return
    *
-   */
-  private function decorateSeries($node)
-  {
-    $results = array_reduce($node, function ($acc, $curr) {
+   * @param NodeInterface[] $seriesContent
+   *
+   * @return array
+  */
+  private function createReturnObject($seriesContent) {
+    return array_map(function ($node) {
       $episodeId = 0;
-      $season = $curr->field_moj_season->value;
-      $episode = $curr->field_moj_episode->value;
+      $season = $node->field_moj_season->value;
+      $episode = $node->field_moj_episode->value;
       if (intval($season) > 0 && intval($episode) > 0) {
         $episodeId = ($season * 1000) + $episode;
       }
-      $result = [];
-      $result["episode_id"] = $episodeId;
-      $result["last_updated"] = $curr->changed->value;
-      $result["date"] = $curr->field_moj_date->value;
-      $result["content_type"] = $curr->type->target_id;
-      $result["title"] = $curr->title->value;
-      $result["id"] = $curr->nid->value;
-      $result["image"] = $curr->field_moj_thumbnail_image[0];
-      $result["season"] = $curr->field_moj_season->value;
-      $result["episode"] = $curr->field_moj_episode->value;
-      $result["duration"] = $curr->field_moj_duration ? $curr->field_moj_duration->value : 0;
-      $result["description"] = $curr->field_moj_description[0];
-      $result["categories"] = $curr->field_moj_top_level_categories;
-      if ($curr->field_moj_secondary_tags) {
-        $result["secondary_tags"] = $curr->field_moj_secondary_tags;
-      } else {
-        $result["secondary_tags"] = $curr->field_moj_tags;
-      }
-      $result["prisons"] = $curr->field_moj_prisons;
+      $content = [];
+      $content["episode_id"] = $episodeId;
+      $content["content_type"] = $node->type->target_id;
+      $content["title"] = $node->title->value;
+      $content["id"] = $node->nid->value;
+      $content["image"] = $node->field_moj_thumbnail_image[0];
+      $content["season"] = $node->field_moj_season->value;
+      $content["episode"] = $node->field_moj_episode->value;
+      $content["duration"] = $node->field_moj_duration ? $node->field_moj_duration->value : 0;
+      $content["description"] = $node->field_moj_description[0];
+      $content["categories"] = $node->field_moj_top_level_categories;
+      $content["prison_categories"] = $node->field_prison_categories;
 
-      if ($result["content_type"] === 'moj_radio_item') {
-        $result["media"] = $curr->field_moj_audio[0];
+      if ($node->field_moj_secondary_tags) {
+        $content["secondary_tags"] = $node->field_moj_secondary_tags;
       } else {
-        $result["media"] = $curr->field_video[0];
+        $content["secondary_tags"] = $node->field_moj_tags;
       }
 
-      $acc[] = $result;
+      if ($content["content_type"] === 'moj_radio_item') {
+        $content["media"] = $node->field_moj_audio[0];
+      } else {
+        $content["media"] = $node->field_video[0];
+      }
 
-      return $acc;
-    }, []);
-
-    return $results;
+      return $content;
+    }, $seriesContent);
   }
+
   /**
-   * sortSeries
+   * Sort series
+   *
+   * @param array $series
+   * @param string $sortOrder
    *
    */
 
@@ -180,11 +209,15 @@ class SeriesContentApiClass
   }
 
   /**
-   * getNextEpisodes
+   * Get next episodes for a series
    *
-   */
-  private function getNextEpisodes($episodeId, $series, $number)
-  {
+   * @param int $episodeId
+   * @param array $series
+   * @param int $numberOfNextEpisodes
+   *
+   * @return array
+  */
+  private function getNextEpisodes($episodeId, $series, $numberOfNextEpisodes) {
     function indexOf($comp, $array)
     {
       foreach ($array as $key => $value) {
@@ -204,68 +237,129 @@ class SeriesContentApiClass
 
     $episodeOffset = $episodeIndex + 1;
 
-    $episodes = array_slice($series, $episodeOffset, $number);
+    $episodes = array_slice($series, $episodeOffset, $numberOfNextEpisodes);
 
     return $episodes;
   }
+
   /**
    * TranslateNode function
    *
    * @param NodeInterface $node
    *
-   * @return $node
-   */
-  private function translateNode(NodeInterface $node)
-  {
-    return $node->hasTranslation($this->lang) ? $node->getTranslation($this->lang) : $node;
+   * @return NodeInterface
+  */
+  private function translateNode($node) {
+    return $node->hasTranslation($this->language) ? $node->getTranslation($this->language) : $node;
   }
 
   /**
-   * Get nids
+   * Filter content by Prison
    *
-   * @return void
-   */
-  private function getSeriesContentNodeIds($seriesId, $number, $offset, $prison)
-  {
-    $results = $this->entity_query->get('node')
+   * @param int $prisonId
+   * @param int $seriesPrisonId
+   * @param int[] $prisonCategories
+   * @param QueryInterface $query
+   *
+   * @return QueryInterface
+  */
+  private function filterByPrison($prisonId, $seriesPrisonId, $prisonCategories, $query) {
+    if ($prisonId !== $seriesPrisonId) {
+      throw new BadRequestHttpException(
+        'The prison for the series does no match the supplied prison',
+        null,
+        400
+      );
+    }
+
+    return Utilities::filterByPrisonCategories($prisonId, $prisonCategories, $query);
+  }
+
+  /**
+   * Filter content by Prison Categories
+   *
+   * @param int $prisonId
+   * @param int[] $seriesPrisonCategories
+   * @param int[] $prisonCategories
+   * @param QueryInterface $query
+   *
+   * @return QueryInterface
+  */
+  private function filterByPrisonCategories($prisonId, $seriesPrisonCategories, $prisonCategories, $query) {
+    $matchingPrisonCategories = array_intersect($prisonCategories, $seriesPrisonCategories);
+    $hasNoMatchingPrisonCategories = empty($matchingPrisonCategories);
+
+    if ($hasNoMatchingPrisonCategories) {
+      throw new BadRequestHttpException(
+        'The Series does not have a matching prison category for this prison',
+        null,
+        400
+      );
+    }
+
+    return Utilities::filterByPrisonCategories($prisonId, $matchingPrisonCategories, $query);
+  }
+
+  /**
+   * Returns a prepared statement for selecting Series Content
+   *
+   * @param int $seriesId
+   * @param int $numberOfResultsToReturn
+   * @param int $resultsOffset
+   * @param int $prisonId
+   *
+   * @return int[]
+  */
+  private function getSeriesContentIds($seriesId, $numberOfResultsToReturn, $resultsOffset, $prisonId) {
+    $series = Utilities::getTermFor($seriesId, $this->termStorage);
+    $prison = Utilities::getTermFor($prisonId, $this->termStorage);
+    $seriesPrisonCategories = Utilities::getPrisonCategoriesFor($series);
+    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+
+    $query = $this->entity_query->get('node')
       ->condition('status', 1)
       ->accessCheck(false);
 
-    $results->condition('field_moj_series', $seriesId);
+    $seriesPrison = $series->get('field_promoted_to_prison');
+    $seriesHasPrisonSelected = !$seriesPrison->isEmpty();
 
-    $results = getPrisonResults($prison, $results);
-
-    if ($number) {
-      $results->range($offset, $number);
+    if ($seriesHasPrisonSelected) {
+      $query->condition($this->filterByPrison(
+        $prisonId,
+        $seriesPrison->target_id,
+        $prisonCategories,
+        $query
+      ));
+    } else {
+      $query->condition($this->filterByPrisonCategories(
+        $prisonId,
+        $seriesPrisonCategories,
+        $prisonCategories,
+        $query
+      ));
     }
 
-    return $results
-      ->execute();
+    $query->condition('field_moj_series', $seriesId);
+
+    if ($numberOfResultsToReturn) {
+      $query->range($resultsOffset, $numberOfResultsToReturn);
+    }
+
+    return $query->execute();
   }
+
   /**
    * Load full node details
    *
-   * @param array $nids
-   * @return array
-   */
-  private function loadNodesDetails(array $nids)
-  {
+   * @param int[] $nodeIds
+   * @return NodeInterface[]
+  */
+  private function loadContent($nodeIds) {
     return array_filter(
-      $this->node_storage->loadMultiple($nids),
+      $this->nodeStorage->loadMultiple($nodeIds),
       function ($item) {
         return $item->access();
       }
     );
-  }
-  /**
-   * Sanitise node
-   *
-   * @param [type] $item
-   * @return void
-   */
-  private function serialize($item)
-  {
-    $serializer = \Drupal::service($item->getType() . '.serializer.default'); // TODO: Inject dependency
-    return $serializer->serialize($item, 'json', ['plugin_id' => 'entity']);
   }
 }

@@ -5,8 +5,8 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-
-require_once('Utils.php');
+use Drupal\moj_resources\Utilities;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * NewFeaturedContentApiClass
@@ -20,6 +20,13 @@ class NewFeaturedContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
+
+  /**
+   * TermStorage object
+   *
+   * @var EntityManagerInterface
+  */
+  protected $termStorage;
   /**
    * Entitity Query object
    *
@@ -28,6 +35,8 @@ class NewFeaturedContentApiClass
    * Instance of querfactory
    */
   protected $entityQuery;
+  protected $prisonId;
+  protected $prisonCategories;
 
   /**
    * Class Constructor
@@ -40,6 +49,7 @@ class NewFeaturedContentApiClass
     QueryFactory $entityQuery
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entityQuery = $entityQuery;
   }
   /**
@@ -48,9 +58,12 @@ class NewFeaturedContentApiClass
    * @param [string] $prisonId
    * @return array
    */
-  public function FeaturedContentApiEndpoint($prisonId = 0)
+  public function FeaturedContentApiEndpoint($prisonId)
   {
-    $results = $this->getFeaturedContent($prisonId);
+    $this->prisonId = $prisonId;
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison);
+    $results = $this->getFeaturedContent();
 
     return array_slice($results, 0, 1);
   }
@@ -74,8 +87,22 @@ class NewFeaturedContentApiClass
     for ($i = 0; $i < $numberOfTiles; $i++) {
       array_push($tileIds, $tiles[$i]->target_id);
     }
-    $results = $this->loadNodesDetails($tileIds);
-    return array_values(array_map(array($this, 'decorateTile'), $results));
+
+    $query = $this->entityQuery->get('node')
+      ->condition('nid', array_values($tileIds), 'IN')
+      ->condition('status', 1)
+      ->accessCheck(false);
+
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $this->prisonCategories,
+      $query
+    ));
+
+    $filteredTiles = $query->execute();
+    $filteredResults = $this->loadNodesDetails($filteredTiles);
+
+    return array_values(array_map(array($this, 'decorateTile'), $filteredResults));
   }
 
   private function decorateTile($tile)
@@ -91,14 +118,18 @@ class NewFeaturedContentApiClass
     return $response;
   }
 
-  private function getFeaturedContent($prisonId)
+  private function getFeaturedContent()
   {
     $query = $this->entityQuery->get('node')
       ->condition('type', 'featured_articles')
       ->condition('status', 1)
       ->accessCheck(false);
 
-    $query = getPrisonResults($prisonId, $query);
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $this->prisonCategories,
+      $query
+    ));
 
     $results = $query->execute();
 
@@ -118,15 +149,4 @@ class NewFeaturedContentApiClass
     return $this->nodeStorage->loadMultiple($nodeIds);
   }
 
-  /**
-   * Sanitise node
-   *
-   * @param [type] $item
-   * @return void
-   */
-  protected function serialize($item)
-  {
-    $serializer = \Drupal::service($item->getType() . '.serializer.default');
-    return $serializer->serialize($item, 'json', ['plugin_id' => 'entity']);
-  }
 }

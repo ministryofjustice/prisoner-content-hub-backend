@@ -97,11 +97,13 @@ class VocabularyResource extends ResourceBase
         $this->languageManager = $languageManager;
 
         $this->availableLanguages = $this->languageManager->getLanguages();
+        $this->prisonId = self::setPrisonId();
         $this->languageId = self::setLanguageId();
         $this->prisonId = self::setPrisonId();
         $this->taxonomyName = $this->currentRequest->get('category');
 
         self::checkLanguageIdIsValid();
+        self::checkPrisonIdIsNumeric();
 
         parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
     }

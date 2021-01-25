@@ -5,8 +5,7 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-
-require_once('Utils.php');
+use Drupal\moj_resources\Utilities;
 
 /**
  * RelatedContentApiClass
@@ -26,6 +25,7 @@ class RelatedContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
+  protected $termStorage;
   /**
    * Entitity Query object
    *
@@ -34,6 +34,8 @@ class RelatedContentApiClass
    * Instance of querfactory
    */
   protected $entityQuery;
+  protected $categoryId;
+  protected $prisonId;
   /**
    * Class Constructor
    *
@@ -45,6 +47,7 @@ class RelatedContentApiClass
     QueryFactory $entityQuery
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entityQuery = $entityQuery;
   }
   /**
@@ -56,7 +59,9 @@ class RelatedContentApiClass
   public function RelatedContentApiEndpoint($languageId, $categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder = 'ASC')
   {
     $this->languageId = $languageId;
-    $relatedContentIds = $this->getRelatedContentIds($categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder);
+    $this->categoryId = $categoryId;
+    $this->prisonId = $prisonId;
+    $relatedContentIds = $this->getRelatedContentIds($numberOfResults, $offsetIntoNumberOfResults, $sortOrder);
     $populatedContent = $this->loadRelatedContentDetail($relatedContentIds);
     $translatedContent = array_map([$this, 'translateNode'], $populatedContent);
 
@@ -78,26 +83,30 @@ class RelatedContentApiClass
    *
    * @return void
    */
-  private function getRelatedContentIds($categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder = 'ASC')
+  private function getRelatedContentIds($numberOfResults, $offsetIntoNumberOfResults, $sortOrder = 'ASC')
   {
     $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item');
+    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
+    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query = $this->entityQuery->get('node')
       ->condition('status', 1)
       ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
 
-    if ($categoryId !== 0) {
-      $categoryCondition = $query
-        ->orConditionGroup()
-        ->condition('field_moj_top_level_categories', $categoryId)
-        ->condition('field_moj_tags', $categoryId)
-        ->condition('field_moj_secondary_tags', $categoryId);
+    $query->condition(Utilities::filterByPrisonCategories(
+      $this->prisonId,
+      $prisonCategories,
+      $query
+    ));
 
-      $query->condition($categoryCondition);
-    }
+    $categoryCondition = $query
+      ->orConditionGroup()
+      ->condition('field_moj_top_level_categories', $this->categoryId)
+      ->condition('field_moj_tags', $this->categoryId)
+      ->condition('field_moj_secondary_tags', $this->categoryId);
 
-    $query = getPrisonResults($prisonId, $query);
+    $query->condition($categoryCondition);
 
     $relatedContent = $query
       ->sort('nid', $sortOrder)
