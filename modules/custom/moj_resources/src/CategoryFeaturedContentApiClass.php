@@ -6,7 +6,8 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\moj_resources\Utilities;
+
+require_once('Utils.php');
 
 /**
  * CategoryFeaturedContentApiClass
@@ -40,10 +41,6 @@ class CategoryFeaturedContentApiClass
    * @var EntityManagerInterface
    */
   protected $termStorage;
-  protected $categoryId;
-  protected $prisonId;
-  protected $numberOfResults;
-  protected $prisonCategories;
 
   /**
    * Class Constructor
@@ -70,18 +67,24 @@ class CategoryFeaturedContentApiClass
    */
   public function CategoryFeaturedContentApiEndpoint($categoryId, $numberOfResults, $prisonId)
   {
-    $this->categoryId = $categoryId;
-    $this->prisonId = $prisonId;
-    $this->numberOfResults = $numberOfResults;
-
-    $prison = Utilities::getTermFor($this->prisonId, $this->termStorage);
-    $this->prisonCategories = Utilities::getPrisonCategoriesFor($prison, false);
-
-    $series = $this->promotedSeries();
-    $nodes = $this->promotedNodes();
+    return self::getFeaturedContentNodeIds($categoryId, $numberOfResults, $prisonId);
+  }
+  /**
+   * Get content ids
+   *
+   * @param int $categoryId
+   * @param int $numberOfResults
+   * @param int $prisonId
+   *
+   * @return array
+   */
+  protected function getFeaturedContentNodeIds($categoryId, $numberOfResults, $prisonId = 0)
+  {
+    $series = $this->promotedSeries($categoryId, $prisonId);
+    $nodes = $this->promotedNodes($categoryId, $numberOfResults, $prisonId);
     $results = array_merge($series, $nodes);
 
-    //sort them out
+  //sort them out
     usort($results, function ($a, $b) {
       if ($a->changed && $b->changed) {
         return $b->changed->value - $a->changed->value;
@@ -90,9 +93,8 @@ class CategoryFeaturedContentApiClass
       return 0;
     });
 
-    return array_slice($results, 0, $this->numberOfResults);
+    return array_slice($results, 0, $numberOfResults);
   }
-
   /**
    * Creates the object to return
    *
@@ -146,42 +148,43 @@ class CategoryFeaturedContentApiClass
       $seriesIds[] = $n->field_moj_series->target_id;
     }
 
-    return array_unique($seriesIds);
+    return $seriesIds;
   }
   /**
    * Creates the object to return
    *
+   * @param int $categoryId
+   * @param int $prisonId
+   *
    * @return array
   */
-  private function promotedSeries()
+  private function promotedSeries($categoryId, $prisonId)
   {
-    $nodeIds = $this->allContentFor();
+    $nodeIds = $this->allContentFor($categoryId);
     $nodes = $this->loadNodesDetails($nodeIds);
     $series = $this->extractSeriesIdsFrom($nodes);
 
-    return $this->promotedTerms($series);
+    return $this->promotedTerms(array_unique($series), $prisonId);
   }
   /**
    * Creates the object to return
    *
+   * @param int $categoryId
+   * @param int $numberOfResults
+   * @param int $prisonId
+   *
    * @return array
   */
-  private function promotedNodes()
+  private function promotedNodes($categoryId, $numberOfResults, $prisonId)
   {
     $query = $this->entityQuery->get('node')
       ->condition('status', 1)
       ->condition('field_moj_category_featured_item', 1)
-      ->condition('field_moj_top_level_categories', $this->categoryId)
       ->accessCheck(false);
 
-    $query->condition(Utilities::filterByPrisonCategories(
-      $this->prisonId,
-      $this->prisonCategories,
-      $query
-    ));
-
-    $query->range(0, $this->numberOfResults);
-
+    $query = getPrisonResults($prisonId, $query);
+    $query->condition('field_moj_top_level_categories', $categoryId);
+    $query->range(0, $numberOfResults);
     $nodes = $query->execute();
 
     $promotedContent = $this->loadNodesDetails($nodes);
@@ -191,20 +194,16 @@ class CategoryFeaturedContentApiClass
   /**
    * Creates the object to return
    *
+   * @param int $categoryId
+   *
    * @return NodeInterface
   */
-  private function allContentFor()
+  private function allContentFor($categoryId)
   {
     $query = $this->entityQuery->get('node')
       ->condition('status', 1)
-      ->condition('field_moj_top_level_categories', $this->categoryId)
       ->accessCheck(false);
-
-    $query->condition(Utilities::filterByPrisonCategories(
-      $this->prisonId,
-      $this->prisonCategories,
-      $query
-    ));
+      $query->condition('field_moj_top_level_categories', $categoryId);
 
     return $query->execute();
   }
@@ -212,28 +211,26 @@ class CategoryFeaturedContentApiClass
    * Creates the object to return
    *
    * @param int[] $termIds
+   * @param int $prisonId
    *
    * @return array
   */
-  private function promotedTerms($termIds)
+  private function promotedTerms($termIds, $prisonId)
   {
-    $query = $this->entityQuery->get('taxonomy_term')
-      ->condition('status', 1)
-      ->condition('tid', array_values($termIds), 'IN')
-      ->condition('field_moj_category_featured_item', 1)
-      ->accessCheck(false);
+    $loadedTerms = $this->termStorage->loadMultiple($termIds);
+    $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
+      if ($term->field_moj_category_featured_item->value == true && $prisonId == $term->field_promoted_to_prison->target_id) {
+        return true;
+      } elseif ($term->field_moj_category_featured_item->value == true && !$term->field_promoted_to_prison->target_id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
 
-    $query->condition(Utilities::filterByPrisonCategories(
-      $this->prisonId,
-      $this->prisonCategories,
-      $query,
-      true
-    ));
-
-    $query->range(0, $this->numberOfResults);
-
-    $filteredTermIds = $query->execute();
-    $promotedTerms = $this->termStorage->loadMultiple($filteredTermIds);
+    usort($promotedTerms, function ($a, $b) {
+      return $b->changed->value - $a->changed->value;
+    });
 
     return array_map(array($this, 'decorateTerm'), $promotedTerms);
   }
