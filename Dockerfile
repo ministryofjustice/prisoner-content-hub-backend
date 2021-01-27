@@ -82,3 +82,6 @@ RUN pecl install xdebug-2.9.8 \
   && docker-php-ext-enable xdebug
 USER www-data
 
+# Make build (and not local) the default target.
+# By ensuring this is the last defined target in the file.
+FROM build as production
