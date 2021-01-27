@@ -313,15 +313,15 @@ class SeriesContentApiClass
   private function getSeriesContentIds($seriesId, $numberOfResultsToReturn, $resultsOffset, $prisonId) {
     $series = Utilities::getTermFor($seriesId, $this->termStorage);
     $prison = Utilities::getTermFor($prisonId, $this->termStorage);
+    $seriesPrisonCategories = Utilities::getPrisonCategoriesFor($series);
+    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     $query = $this->entity_query->get('node')
-    ->condition('status', 1)
-    ->accessCheck(false);
+      ->condition('status', 1)
+      ->accessCheck(false);
 
     $seriesPrison = $series->get('field_promoted_to_prison');
     $seriesHasPrisonSelected = !$seriesPrison->isEmpty();
-
-    $prisonCategories = Utilities::getPrisonCategoriesFor($prison);
 
     if ($seriesHasPrisonSelected) {
       $query->condition($this->filterByPrison(
@@ -331,8 +331,6 @@ class SeriesContentApiClass
         $query
       ));
     } else {
-      $seriesPrisonCategories = Utilities::getPrisonCategoriesFor($series);
-
       $query->condition($this->filterByPrisonCategories(
         $prisonId,
         $seriesPrisonCategories,
