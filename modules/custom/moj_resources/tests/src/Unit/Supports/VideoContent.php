@@ -3,6 +3,7 @@
 namespace Drupal\Tests\moj_resources\Unit\Supports;
 
 use Drupal\Tests\moj_resources\Unit\Supports\Content;
+use Drupal\Tests\moj_resources\Unit\Supports\TestHelpers;
 
 /**
  * Test Helper for creating Video Items
@@ -10,15 +11,15 @@ use Drupal\Tests\moj_resources\Unit\Supports\Content;
  * @group unit_moj_resources
  */
 class VideoContent extends Content {
-  public $type;
-  public $duration;
-  public $video = [];
+  private $type;
+  private $duration;
+  private $video = [];
 
-  public function __construct($nid) {
-    parent::__construct($nid);
-    array_push($this->video, (object) array("url" => "/foo.mp4"));
-    $this->type = (object) array("target_id" => "moj_video_item");
-    $this->duration = (object) array("value" => 60);
+  public function __construct($unitTestCase, $nid) {
+    parent::__construct($unitTestCase, $nid);
+    array_push($this->video, $this->testHelpers->createFieldWith('url', '/foo.mp4'));
+    $this->type = $this->testHelpers->createFieldWith('target_id', 'moj_video_item');
+    $this->duration = $this->testHelpers->createFieldWith('value', 60);
   }
 
   /**
@@ -27,8 +28,8 @@ class VideoContent extends Content {
    * @param string $title
    * @return Content
   */
-  static public function createWithNodeId($nid) {
-    $videoContent = new self($nid);
+  static public function createWithNodeId($unitTestCase, $nid) {
+    $videoContent = new self($unitTestCase, $nid);
     return $videoContent;
   }
 
@@ -50,6 +51,7 @@ class VideoContent extends Content {
         array("field_moj_top_level_categories", $this->categories),
         array("field_moj_secondary_tags", $this->secondaryTags),
         array("field_moj_prisons", $this->prisons),
+        array("field_prison_categories", $this->prisonCategories),
         array("field_video", $this->video),
     );
   }

@@ -29,11 +29,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          description="Response format, should be 'json'",
  *      ),
  *      @SWG\Parameter(
- *          name="_number",
+ *          name="_sort_order",
  *          in="query",
  *          required=false,
- *          type="integer",
- *          description="Number of results to bring back, the default is all",
+ *          type="string",
+ *          description="The order of the results to return, default DESC",
  *      ),
  *      @SWG\Parameter(
  *          name="id",
@@ -41,6 +41,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *          required=false,
  *          type="integer",
  *          description="Term ID of category to return, the default is to being back all categories.",
+ *      ),
+ *      @SWG\Parameter(
+ *          name="_number",
+ *          in="query",
+ *          required=false,
+ *          type="integer",
+ *          description="Number of results to bring back, the default is all",
+ *      ),
+ *      @SWG\Parameter(
+ *          name="_prison",
+ *          in="query",
+ *          required=true,
+ *          type="integer",
+ *          description="The ID of the prison to return content for",
+ *      ),
+ *      @SWG\Parameter(
+ *          name="seriesId",
+ *          in="path",
+ *          required=false,
+ *          type="integer",
+ *          description="The ID for the Series to return content for",
  *      ),
  *      @SWG\Parameter(
  *          name="_lang",
@@ -68,55 +89,61 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SeriesNextEpisodeResource extends ResourceBase
 {
-  protected $seriesContentApiController;
+  protected $seriesContentApiClass;
 
   protected $currentRequest;
 
-  protected $availableLangs;
+  protected $availableLanguages;
 
   protected $languageManager;
 
-  protected $paramater_category;
+  protected $languageId;
 
-  protected $parameter_language_tag;
+  protected $episodeId;
 
-  protected $parameter_number_results;
+  protected $prisonId;
+
+  protected $sortOrder;
+
+  protected $numberOfResults;
 
   public function __construct(
     array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    array $serializer_formats,
+    $pluginId,
+    $pluginDefinition,
+    array $serializerFormats,
     LoggerInterface $logger,
-    SeriesContentApiClass $SeriesContentApiClass,
+    SeriesContentApiClass $seriesContentApiClass,
     Request $currentRequest,
     LanguageManager $languageManager
   ) {
-    $this->seriesContentApiClass = $SeriesContentApiClass;
+    $this->seriesContentApiClass = $seriesContentApiClass;
     $this->currentRequest = $currentRequest;
     $this->languageManager = $languageManager;
-    $this->availableLangs = $this->languageManager->getLanguages();    
-    $this->parameter_number_results = self::setNumberOfResults();
-    $this->parameter_language_tag = self::setLanguage();
-    $this->parameter_episode_id = self::setEpisodeId();
-    $this->parameter_prison = self::setPrison();
-    $this->parameter_sort_order = self::setSortOrder();
+    $this->availableLanguages = $this->languageManager->getLanguages();
+    $this->numberOfResults = self::setNumberOfResults();
+    $this->languageId = self::setLanguageId();
+    $this->episodeId = self::setEpisodeId();
+    $this->prisonId = self::setPrisonId();
+    $this->sortOrder = self::setSortOrder();
 
-    self::checkLanguageParameterIsValid();
-    self::checkNumberOfResultsIsNumeric();    
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+    self::checkLanguageIdIsValid();
+    self::checkNumberOfResultsIsNumeric();
+    self::checkPrisonIdIsNumeric();
+    self::checkEpisodeIdIsNumeric();
+    parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
   }
 
   public static function create(
     ContainerInterface $container,
     array $configuration,
-    $plugin_id,
-    $plugin_definition
+    $pluginId,
+    $pluginDefinition
   ) {
     return new static(
       $configuration,
-      $plugin_id,
-      $plugin_definition,
+      $pluginId,
+      $pluginDefinition,
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
       $container->get('moj_resources.series_content_api_class'),
@@ -128,12 +155,12 @@ class SeriesNextEpisodeResource extends ResourceBase
   public function get()
   {
     $seriesContent = $this->seriesContentApiClass->SeriesNextEpisodeApiEndpoint(
-      $this->parameter_language_tag,
+      $this->languageId,
       $this->currentRequest->get('id'),
-      $this->parameter_number_results,
-      $this->parameter_episode_id,
-      $this->parameter_prison,
-      $this->parameter_sort_order
+      $this->numberOfResults,
+      $this->episodeId,
+      $this->prisonId,
+      $this->sortOrder
     );
 
     $response = new ResourceResponse($seriesContent);
@@ -141,10 +168,10 @@ class SeriesNextEpisodeResource extends ResourceBase
     return $response;
   }
 
-  protected function checkLanguageParameterIsValid()
+  protected function checkLanguageIdIsValid()
   {
-    foreach ($this->availableLangs as $lang) {
-      if ($lang->getid() === $this->parameter_language_tag) {
+    foreach ($this->availableLanguages as $language) {
+      if ($language->getid() === $this->languageId) {
         return true;
       }
     }
@@ -155,13 +182,25 @@ class SeriesNextEpisodeResource extends ResourceBase
     );
   }
 
-  protected function checkCategoryIsNumeric()
+  protected function checkEpisodeIdIsNumeric()
   {
-    if (is_numeric($this->paramater_category)) {
+    if (is_numeric($this->episodeId)) {
       return true;
     }
     throw new NotFoundHttpException(
-      t('The category parameter must be a numeric'),
+      t('The episode parameter must be a numeric'),
+      null,
+      404
+    );
+  }
+
+  protected function checkPrisonIdIsNumeric()
+  {
+    if (is_numeric($this->prisonId)) {
+      return true;
+    }
+    throw new NotFoundHttpException(
+      t('The prison parameter must be a numeric'),
       null,
       404
     );
@@ -169,7 +208,7 @@ class SeriesNextEpisodeResource extends ResourceBase
 
   protected function checkNumberOfResultsIsNumeric()
   {
-    if (is_numeric($this->parameter_number_results)) {
+    if (is_numeric($this->numberOfResults)) {
       return true;
     }
     throw new NotFoundHttpException(
@@ -179,7 +218,7 @@ class SeriesNextEpisodeResource extends ResourceBase
     );
   }
 
-  protected function setLanguage()
+  protected function setLanguageId()
   {
     return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
   }
@@ -195,7 +234,7 @@ class SeriesNextEpisodeResource extends ResourceBase
     return is_null($this->currentRequest->get('_episode_id')) ? 0 : $this->currentRequest->get('_episode_id');
   }
 
-  protected function setPrison()
+  protected function setPrisonId()
   {
     return is_null($this->currentRequest->get('_prison')) ? 0 : $this->currentRequest->get('_prison');
   }
