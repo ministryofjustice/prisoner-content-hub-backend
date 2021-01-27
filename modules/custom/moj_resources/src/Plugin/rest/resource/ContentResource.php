@@ -74,21 +74,21 @@ class ContentResource extends ResourceBase
 
     protected $currentRequest;
 
-    protected $availableLanguages;
+    protected $availableLangs;
 
     protected $languageManager;
 
-    protected $prisonId;
+    protected $parameter_prison;
 
-    protected $contentId;
+    protected $nid;
 
-    protected $languageId;
+    Protected $lang;
 
     public function __construct(
         array $configuration,
-        $pluginId,
-        $pluginDefinition,
-        array $serializerFormats,
+        $plugin_id,
+        $plugin_definition,
+        array $serializer_formats,
         LoggerInterface $logger,
         ContentApiClass $contentApiClass,
         Request $currentRequest,
@@ -97,25 +97,25 @@ class ContentResource extends ResourceBase
         $this->contentApiClass = $contentApiClass;
         $this->currentRequest = $currentRequest;
         $this->languageManager = $languageManager;
-        $this->availableLanguages = $this->languageManager->getLanguages();
-        $this->prisonId = self::setPrisonId();
-        $this->contentId = $this->currentRequest->get('nid');
-        $this->languageId =self::setLanguageId();
-        self::checkLanguageIdIsValid();
-        self::checkPrisonIdIsNumeric();
-        parent::__construct($configuration, $pluginId, $pluginDefinition, $serializerFormats, $logger);
+        $this->availableLangs = $this->languageManager->getLanguages();
+        $this->parameter_prison = self::setPrison();
+        $this->nid = $this->currentRequest->get('nid');
+        $this->lang =self::setLanguage();
+        self::checklanguageParameterIsValid();
+        self::checkPrisonIsNumeric();
+        parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     }
 
     public static function create(
         ContainerInterface $container,
         array $configuration,
-        $pluginId,
-        $pluginDefinition
+        $plugin_id,
+        $plugin_definition
     ) {
         return new static(
             $configuration,
-            $pluginId,
-            $pluginDefinition,
+            $plugin_id,
+            $plugin_definition,
             $container->getParameter('serializer.formats'),
             $container->get('logger.factory')->get('rest'),
             $container->get('moj_resources.content_api_class'),
@@ -126,8 +126,8 @@ class ContentResource extends ResourceBase
 
     public function get()
     {
-        self::checkContentIdIsNumeric();
-        $content = $this->contentApiClass->ContentApiEndpoint($this->languageId, $this->contentId, $this->prisonId);
+        self::checkContentIdParameterIsNumeric();
+        $content = $this->contentApiClass->ContentApiEndpoint($this->lang, $this->nid, $this->parameter_prison);
         if (!empty($content)) {
             $response = new ResourceResponse($content);
             $response->addCacheableDependency($content);
@@ -136,21 +136,21 @@ class ContentResource extends ResourceBase
         throw new NotFoundHttpException(t('No content found'));
     }
 
-    protected function setLanguageId()
+    protected function setLanguage()
     {
         return is_null($this->currentRequest->get('_lang')) ? 'en' : $this->currentRequest->get('_lang');
     }
 
-    protected function setPrisonId()
+    protected function setPrison()
     {
         return is_null($this->currentRequest->get('_prison')) ? 0 : intval($this->currentRequest->get('_prison'));
     }
 
-    protected function checkLanguageIdIsValid()
+    protected function checklanguageParameterIsValid()
     {
-        foreach($this->availableLanguages as $language)
+        foreach($this->availableLangs as $lang)
         {
-            if ($language->getid() === $this->languageId) {
+            if ($lang->getid() === $this->lang) {
                 return true;
             }
         }
@@ -161,9 +161,9 @@ class ContentResource extends ResourceBase
         );
     }
 
-    protected function checkContentIdIsNumeric()
+    protected function checkContentIdParameterIsNumeric()
     {
-        if (is_numeric($this->contentId)) {
+        if (is_numeric($this->nid)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -173,9 +173,9 @@ class ContentResource extends ResourceBase
         );
     }
 
-    protected function checkPrisonIdIsNumeric()
+    protected function checkPrisonIsNumeric()
     {
-        if (is_numeric($this->prisonId)) {
+        if (is_numeric($this->parameter_prison)) {
             return true;
         }
         throw new NotFoundHttpException(
@@ -185,3 +185,5 @@ class ContentResource extends ResourceBase
         );
     }
 }
+
+
