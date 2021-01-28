@@ -42,7 +42,7 @@ RUN vendor/bin/phpunit -c web/core --testsuite unit --debug --verbose
 # Create runtime image
 ###########################################################################################
 
-FROM base
+FROM base as build
 
 WORKDIR /opt/drupal/web
 
@@ -75,3 +75,13 @@ RUN chmod u-w sites/default/settings.php \
 RUN chown -R www-data:www-data ./
 
 USER www-data
+
+FROM build as local
+USER root
+RUN pecl install xdebug-2.9.8 \
+  && docker-php-ext-enable xdebug
+USER www-data
+
+# Make build (and not local) the default target.
+# By ensuring this is the last defined target in the file.
+FROM build as production
