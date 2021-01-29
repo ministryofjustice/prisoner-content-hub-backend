@@ -72,6 +72,7 @@ RUN chmod u-w docroot/sites/default/settings.php \
 
 # Change ownership of files
 RUN chown -R www-data:www-data ./
+RUN chown -R www-data:www-data /var/www
 
 USER www-data
 
