@@ -34,7 +34,7 @@ RUN rm -rf ..?* .[!.]* *
 RUN composer create-project drupal-composer/drupal-project:8.x-dev . --stability dev --no-interaction
 
 COPY phpunit.xml web/core/phpunit.xml
-COPY modules/custom web/modules/custom
+COPY docroot/modules/custom web/docroot/modules/custom
 
 RUN vendor/bin/phpunit -c web/core --testsuite unit --debug --verbose
 
@@ -63,13 +63,13 @@ RUN composer install \
   composer clear-cache
 
 # Copy Project
-COPY --from=test /opt/drupal/web/modules/custom modules/custom
+COPY --from=test /opt/drupal/web/docroot/modules/custom docroot/modules/custom
 COPY ./apache/ /etc/apache2/
-COPY sites/ sites/
+COPY docroot/sites/ docroot/sites/
 
 # Remove write permissions for added security
-RUN chmod u-w sites/default/settings.php \
-  && chmod u-w sites/default/services.yml
+RUN chmod u-w docroot/sites/default/settings.php \
+  && chmod u-w docroot/sites/default/services.yml
 
 # Change ownership of files
 RUN chown -R www-data:www-data ./
