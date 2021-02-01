@@ -22,7 +22,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["./vendor/drush/drush/drush", "updatedb"]
+          command: ["./vendor/bin/drush", "deploy"]
 {{ include "drupal-deployment.envs" . | nindent 10 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
