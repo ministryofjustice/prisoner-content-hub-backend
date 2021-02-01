@@ -1,0 +1,23 @@
+uuid: 45ffa621-ad7f-4294-b006-77f6dab43be4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_weight
+    - node.type.page
+id: node.page.field_moj_weight
+field_name: field_moj_weight
+entity_type: node
+bundle: page
+label: Weight
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

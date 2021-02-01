@@ -1,0 +1,29 @@
+uuid: 69f5f497-e6da-451b-86f4-ef60c927a28f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_prisons
+    - node.type.moj_radio_item
+    - taxonomy.vocabulary.prisons
+id: node.moj_radio_item.field_moj_prisons
+field_name: field_moj_prisons
+entity_type: node
+bundle: moj_radio_item
+label: Prisons
+description: 'All content is whitelisted by default if you wish to target specific prison(s) you can tag them using this field. Once tagged, the content will be distributed only to that prison.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prisons: prisons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

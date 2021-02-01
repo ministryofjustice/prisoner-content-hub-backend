@@ -1,0 +1,57 @@
+uuid: a5a0ed7c-9b19-4d2d-92bd-95a781cdfa5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.featured_articles.field_location
+    - field.field.node.featured_articles.field_moj_featured_tile_large
+    - field.field.node.featured_articles.field_moj_featured_tile_small
+    - field.field.node.featured_articles.field_moj_prisons
+    - node.type.featured_articles
+  module:
+    - user
+id: node.featured_articles.default
+targetEntityType: node
+bundle: featured_articles
+mode: default
+content:
+  field_location:
+    weight: 5
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_featured_tile_large:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_featured_tile_small:
+    weight: 2
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_prisons:
+    weight: 3
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  search_api_excerpt: true

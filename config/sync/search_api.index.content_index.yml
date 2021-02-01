@@ -1,0 +1,274 @@
+uuid: 29080dc1-35a3-41aa-a511-79a3a8509bd9
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+    - taxonomy
+    - search_api
+  config:
+    - field.storage.node.field_moj_categories
+    - field.storage.node.field_moj_top_level_categories
+    - field.storage.node.field_moj_date
+    - field.storage.node.field_moj_prisons
+    - field.storage.node.field_moj_secondary_tags
+    - field.storage.node.field_moj_series
+    - field.storage.node.field_moj_stand_first
+    - field.storage.node.field_moj_description
+    - field.storage.node.field_moj_tags
+    - search_api.server.elasticsearch
+id: content_index
+name: 'Content Index'
+description: ''
+read_only: false
+field_settings:
+  categories_name:
+    label: Categories
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_categories:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_categories
+      module:
+        - taxonomy
+  category_name:
+    label: Category
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_top_level_categories:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_top_level_categories
+      module:
+        - taxonomy
+  created:
+    label: 'Authored on'
+    datasource_id: 'entity:node'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - node
+  field_moj_date:
+    label: Date
+    datasource_id: 'entity:node'
+    property_path: field_moj_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_moj_date
+  name:
+    label: 'Authored by » User » Name'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:name'
+    type: string
+    dependencies:
+      module:
+        - node
+        - user
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+  prison_name:
+    label: Prisons
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_prisons:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_prisons
+      module:
+        - taxonomy
+  secondary_tag:
+    label: 'Secondary Tag'
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_secondary_tags:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_moj_secondary_tags
+      module:
+        - taxonomy
+  series_name:
+    label: Series
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_series:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_series
+      module:
+        - taxonomy
+  stand_first:
+    label: 'Stand First'
+    datasource_id: 'entity:node'
+    property_path: field_moj_stand_first
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_stand_first
+  status:
+    label: Status
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  summary:
+    label: Summary
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_description:summary'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_description
+  tags_name:
+    label: Tags
+    datasource_id: 'entity:node'
+    property_path: 'field_moj_tags:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_moj_tags
+      module:
+        - taxonomy
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: text
+    dependencies:
+      module:
+        - node
+  type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  uuid:
+    label: UUID
+    datasource_id: 'entity:node'
+    property_path: uuid
+    type: string
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - landing_page
+        - moj_pdf_item
+        - moj_radio_item
+        - moj_video_item
+        - page
+    languages:
+      default: false
+      selected:
+        - en
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  content_access:
+    weights:
+      preprocess_query: -30
+  entity_status: {  }
+  ignorecase:
+    all_fields: false
+    fields: {  }
+    weights:
+      preprocess_index: -48
+      preprocess_query: -20
+  language_with_fallback: {  }
+  rendered_item: {  }
+  stemmer:
+    all_fields: false
+    fields: {  }
+    exceptions:
+      mexican: mexic
+      texan: texa
+    weights:
+      preprocess_index: -44
+      preprocess_query: 0
+  stopwords:
+    all_fields: false
+    fields: {  }
+    stopwords:
+      - a
+      - an
+      - and
+      - are
+      - as
+      - at
+      - be
+      - but
+      - by
+      - for
+      - if
+      - in
+      - into
+      - is
+      - it
+      - 'no'
+      - not
+      - of
+      - 'on'
+      - or
+      - s
+      - such
+      - t
+      - that
+      - the
+      - their
+      - then
+      - there
+      - these
+      - they
+      - this
+      - to
+      - was
+      - will
+      - with
+    weights:
+      preprocess_index: -45
+      preprocess_query: -2
+  tokenizer:
+    all_fields: false
+    fields: {  }
+    spaces: ''
+    overlap_cjk: 0
+    minimum_word_size: '3'
+    weights:
+      preprocess_index: -49
+      preprocess_query: -6
+    ignored: ._-
+tracker_settings:
+  default:
+    indexing_order: lifo
+options:
+  index_directly: true
+  cron_limit: 100
+server: elasticsearch

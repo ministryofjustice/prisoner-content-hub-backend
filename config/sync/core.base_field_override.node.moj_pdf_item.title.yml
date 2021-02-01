@@ -1,0 +1,18 @@
+uuid: 283e0b48-1590-4c42-a9ae-f9e3d47be9f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.title
+field_name: title
+entity_type: node
+bundle: moj_pdf_item
+label: Title
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

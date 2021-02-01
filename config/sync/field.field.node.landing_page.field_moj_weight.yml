@@ -1,0 +1,23 @@
+uuid: 9b9763c6-9437-4916-b889-a25995291389
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_weight
+    - node.type.landing_page
+id: node.landing_page.field_moj_weight
+field_name: field_moj_weight
+entity_type: node
+bundle: landing_page
+label: Weight
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,19 @@
+uuid: 8490a860-a9e3-4759-bb6a-d214e37f4447
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_moj_stand_first
+field_name: field_moj_stand_first
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

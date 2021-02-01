@@ -1,0 +1,20 @@
+uuid: 18e5ff2b-5699-4948-9455-9063b3789f78
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_moj_episode
+field_name: field_moj_episode
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

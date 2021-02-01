@@ -1,0 +1,16 @@
+uuid: 2841e28d-3241-478e-a43d-9f74a6522f78
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.step_by_step
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.step_by_step
+target_entity_type_id: taxonomy_term
+target_bundle: step_by_step
+default_langcode: site_default
+language_alterable: true

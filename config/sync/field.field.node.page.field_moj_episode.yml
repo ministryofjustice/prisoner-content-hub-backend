@@ -1,0 +1,23 @@
+uuid: 0fe6181d-bf15-487a-8d9f-43f18c1b3909
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_episode
+    - node.type.page
+id: node.page.field_moj_episode
+field_name: field_moj_episode
+entity_type: node
+bundle: page
+label: Episode
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

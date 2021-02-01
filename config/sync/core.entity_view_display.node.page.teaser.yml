@@ -1,0 +1,52 @@
+uuid: d06386b6-07f0-4ab8-b85e-36360b0685ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.page.field_moj_category_featured_item
+    - field.field.node.page.field_moj_date
+    - field.field.node.page.field_moj_description
+    - field.field.node.page.field_moj_episode
+    - field.field.node.page.field_moj_prisons
+    - field.field.node.page.field_moj_season
+    - field.field.node.page.field_moj_secondary_tags
+    - field.field.node.page.field_moj_series
+    - field.field.node.page.field_moj_stand_first
+    - field.field.node.page.field_moj_step_by_setp
+    - field.field.node.page.field_moj_thumbnail_image
+    - field.field.node.page.field_moj_top_level_categories
+    - field.field.node.page.field_moj_weight
+    - field.field.node.page.field_prison_categories
+    - node.type.page
+  module:
+    - user
+_core:
+  default_config_hash: rN2zrScZAJ9xB16hm_Deb9QJKy6JXnn0PdI2n5Z3KRs
+id: node.page.teaser
+targetEntityType: node
+bundle: page
+mode: teaser
+content:
+  links:
+    weight: 101
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_moj_category_featured_item: true
+  field_moj_date: true
+  field_moj_description: true
+  field_moj_episode: true
+  field_moj_prisons: true
+  field_moj_season: true
+  field_moj_secondary_tags: true
+  field_moj_series: true
+  field_moj_stand_first: true
+  field_moj_step_by_setp: true
+  field_moj_thumbnail_image: true
+  field_moj_top_level_categories: true
+  field_moj_weight: true
+  field_prison_categories: true
+  langcode: true
+  search_api_excerpt: true

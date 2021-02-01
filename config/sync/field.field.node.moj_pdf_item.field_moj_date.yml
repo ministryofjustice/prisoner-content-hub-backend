@@ -1,0 +1,24 @@
+uuid: a054b4c2-8101-443d-af38-3a6244179671
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_date
+    - node.type.moj_pdf_item
+  module:
+    - datetime
+id: node.moj_pdf_item.field_moj_date
+field_name: field_moj_date
+entity_type: node
+bundle: moj_pdf_item
+label: Date
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,29 @@
+uuid: c1992911-a33d-46eb-9daa-cceb0dd0339f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_prison_categories
+    - node.type.landing_page
+    - taxonomy.vocabulary.prison_category
+id: node.landing_page.field_prison_categories
+field_name: field_prison_categories
+entity_type: node
+bundle: landing_page
+label: 'Prison Categories'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prison_category: prison_category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

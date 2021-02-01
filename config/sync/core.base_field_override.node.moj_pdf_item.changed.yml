@@ -1,0 +1,18 @@
+uuid: bc8c957f-8878-4ecc-b736-5b1197dcddd9
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.changed
+field_name: changed
+entity_type: node
+bundle: moj_pdf_item
+label: Changed
+description: 'The time that the node was last edited.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

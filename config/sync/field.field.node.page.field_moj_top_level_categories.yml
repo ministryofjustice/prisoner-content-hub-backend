@@ -1,0 +1,29 @@
+uuid: b7424564-2497-4696-bb84-9cb6f8a84ce7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_top_level_categories
+    - node.type.page
+    - taxonomy.vocabulary.moj_categories
+id: node.page.field_moj_top_level_categories
+field_name: field_moj_top_level_categories
+entity_type: node
+bundle: page
+label: Category
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      moj_categories: moj_categories
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: moj_categories
+field_type: entity_reference

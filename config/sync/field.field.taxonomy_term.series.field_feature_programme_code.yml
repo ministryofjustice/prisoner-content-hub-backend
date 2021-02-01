@@ -1,0 +1,19 @@
+uuid: 9008508c-927b-4de8-ae67-85e40d20b86a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_feature_programme_code
+    - taxonomy.vocabulary.series
+id: taxonomy_term.series.field_feature_programme_code
+field_name: field_feature_programme_code
+entity_type: taxonomy_term
+bundle: series
+label: 'Featured media programme code'
+description: 'Field used for featured audio if they need tracking'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

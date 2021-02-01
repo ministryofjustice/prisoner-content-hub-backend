@@ -1,0 +1,29 @@
+uuid: e8a49de7-1b78-4fb9-a59f-b1bfc1de812e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_secondary_tags
+    - node.type.moj_video_item
+    - taxonomy.vocabulary.tags
+id: node.moj_video_item.field_moj_secondary_tags
+field_name: field_moj_secondary_tags
+entity_type: node
+bundle: moj_video_item
+label: 'Secondary tags'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tags: tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

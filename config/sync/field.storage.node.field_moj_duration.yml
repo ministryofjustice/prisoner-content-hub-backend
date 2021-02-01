@@ -1,0 +1,23 @@
+uuid: 0f938acb-1d98-4287-b15e-bf2a6e2d93e6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: URLkarmqc7jUkUKG3cRINltmXjxi41sGxlk2EeaSbqE
+id: node.field_moj_duration
+field_name: field_moj_duration
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,23 @@
+uuid: bb75f1c9-76b9-4a4f-9c3e-d2e26a426825
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_description
+    - node.type.page
+  module:
+    - text
+id: node.page.field_moj_description
+field_name: field_moj_description
+entity_type: node
+bundle: page
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

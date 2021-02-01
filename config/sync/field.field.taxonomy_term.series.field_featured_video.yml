@@ -1,0 +1,26 @@
+uuid: 59b3cea8-875a-4c91-8d1e-9c854ad20f43
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_featured_video
+    - taxonomy.vocabulary.series
+  module:
+    - video
+id: taxonomy_term.series.field_featured_video
+field_name: field_featured_video
+entity_type: taxonomy_term
+bundle: series
+label: 'Featured video'
+description: 'The video that display in introduction of a series page.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_extensions: ''
+  file_directory: 'videos/[date:custom:Y]-[date:custom:m]'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: video
