@@ -1,0 +1,23 @@
+uuid: 3fbc27a4-5e57-46f5-aa4e-304a9aabaafd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_season
+    - node.type.moj_radio_item
+id: node.moj_radio_item.field_moj_season
+field_name: field_moj_season
+entity_type: node
+bundle: moj_radio_item
+label: Season
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

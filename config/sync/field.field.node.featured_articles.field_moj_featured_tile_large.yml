@@ -1,0 +1,39 @@
+uuid: 9e3f879e-fed9-4a5d-bc3a-1e93d8328fb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_featured_tile_large
+    - node.type.article
+    - node.type.featured_articles
+    - node.type.landing_page
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+id: node.featured_articles.field_moj_featured_tile_large
+field_name: field_moj_featured_tile_large
+entity_type: node
+bundle: featured_articles
+label: 'Large featured content'
+description: 'Featured content for the large tiles'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+      moj_radio_item: moj_radio_item
+      page: page
+      landing_page: landing_page
+      moj_pdf_item: moj_pdf_item
+      moj_video_item: moj_video_item
+    sort:
+      field: field_moj_weight
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: article
+field_type: entity_reference

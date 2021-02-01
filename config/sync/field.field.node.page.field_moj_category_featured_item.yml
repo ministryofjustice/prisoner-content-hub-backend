@@ -1,0 +1,23 @@
+uuid: a8de30ee-c3c6-4554-96df-9ca3789eb48f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_category_featured_item
+    - node.type.page
+id: node.page.field_moj_category_featured_item
+field_name: field_moj_category_featured_item
+entity_type: node
+bundle: page
+label: 'Category Featured Item'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

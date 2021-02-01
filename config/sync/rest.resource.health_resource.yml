@@ -1,0 +1,19 @@
+uuid: 91c579ea-5cfe-4d82-8826-ad3dacd09cd7
+langcode: en
+status: true
+dependencies:
+  module:
+    - moj_healthcheck
+    - serialization
+    - user
+_core:
+  default_config_hash: 7zF2niUrGN6uMP20uMbV4GUA1YPh4_gtzlDbd2hSeis
+id: health_resource
+plugin_id: health_resource
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie

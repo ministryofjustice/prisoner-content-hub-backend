@@ -1,0 +1,27 @@
+uuid: 8b4a8ebb-54fd-47e4-ad6b-898e72183555
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video
+    - node.type.moj_video_item
+  module:
+    - file
+id: node.moj_video_item.field_video
+field_name: field_video
+entity_type: node
+bundle: moj_video_item
+label: Video
+description: 'Video item for the content'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: 'videos/[date:custom:Y]-[date:custom:m]'
+  file_extensions: mp4
+  max_filesize: 500MB
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

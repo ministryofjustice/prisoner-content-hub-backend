@@ -1,0 +1,24 @@
+uuid: 98455685-80b9-492b-aa28-3231eacf032c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_date
+    - node.type.moj_video_item
+  module:
+    - datetime
+id: node.moj_video_item.field_moj_date
+field_name: field_moj_date
+entity_type: node
+bundle: moj_video_item
+label: Date
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

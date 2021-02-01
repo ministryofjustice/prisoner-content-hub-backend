@@ -1,0 +1,22 @@
+uuid: eae503b0-2569-4553-aac1-5a504a193a62
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.promote
+field_name: promote
+entity_type: node
+bundle: moj_pdf_item
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

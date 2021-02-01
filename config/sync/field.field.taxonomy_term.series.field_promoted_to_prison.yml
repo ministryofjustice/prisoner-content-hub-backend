@@ -1,0 +1,29 @@
+uuid: 820370b2-8063-49b5-96cc-8987f23b01b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_promoted_to_prison
+    - taxonomy.vocabulary.prisons
+    - taxonomy.vocabulary.series
+id: taxonomy_term.series.field_promoted_to_prison
+field_name: field_promoted_to_prison
+entity_type: taxonomy_term
+bundle: series
+label: 'Promote to a prison'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prisons: prisons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

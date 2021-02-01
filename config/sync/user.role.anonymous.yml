@@ -1,0 +1,31 @@
+uuid: de379ff6-f9c4-4bb2-912d-a3cee9310f2d
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Anonymous user'
+weight: -10
+is_admin: false
+permissions:
+  - 'access comments'
+  - 'access content'
+  - 'access site-wide contact form'
+  - 'restful get category_featured_content_resource'
+  - 'restful get category_menu_resource'
+  - 'restful get content_resource'
+  - 'restful get entity:node'
+  - 'restful get featured_content_resource'
+  - 'restful get health_resource'
+  - 'restful get menu_resource'
+  - 'restful get new_featured_content_resource'
+  - 'restful get promoted_content_resource'
+  - 'restful get related_content_resource'
+  - 'restful get series_content_resource'
+  - 'restful get series_next_episode_resource'
+  - 'restful get suggested_content_resource'
+  - 'restful get term_resource'
+  - 'restful get vocabulary_resource'
+  - 'search content'
+  - 'use text format restricted_html'

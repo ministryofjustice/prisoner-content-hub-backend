@@ -1,0 +1,14 @@
+uuid: 8643ffc9-73fe-4c7b-ac0a-eb5db19da8a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.moj_local_content_manager
+  module:
+    - user
+id: user_remove_role_action.moj_local_content_manager
+label: 'Remove the Local Content Manager role from the selected users'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: moj_local_content_manager

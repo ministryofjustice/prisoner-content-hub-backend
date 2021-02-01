@@ -1,0 +1,8 @@
+uuid: 023d4fd2-cfa5-4d07-96be-69f4191a009d
+langcode: en
+status: true
+dependencies: {  }
+name: Series
+vid: series
+description: 'The series the content fits in to'
+weight: 0
