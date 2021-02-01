@@ -63,6 +63,7 @@ RUN composer install \
   composer clear-cache
 
 # Copy Project
+COPY --from=test /opt/drupal/web/docroot/modules/custom docroot/modules/custom
 COPY ./apache/ /etc/apache2/
 COPY docroot/sites/ docroot/sites/
 
