@@ -25,7 +25,18 @@ The application is built using Docker, using a Drupal base image.
 
 All custom code specific to the Digital Hub project is implemented as Drupal modules, these are located in
 
-    ./modules/custom
+    ./docroot/modules/custom
+
+### Configuration
+Drupal configuration is stored inside the `config/sync` directory.
+This is imported during the deployment process, to simulate this on your local environment run the following:
+```
+vendor/bin/drush deploy
+```
+Please note that any configuration that has been modified on the environment you are importing to, will be wiped.
+
+To make any configuration changes, make the change on your local environment, and run `drush config-export`, then push
+the changes to git.
 
 ## Restoring a database dump
 
