@@ -45,7 +45,7 @@
     "extra": {
         "drupal-scaffold": {
             "locations": {
-                "web-root": "./"
+                "web-root": "docroot/"
             }
         },
         "_readme": [
@@ -56,25 +56,31 @@
             "https://www.drupal.org/node/2718229"
         ],
         "installer-paths": {
-            "core": [
+            "docroot/core": [
                 "type:drupal-core"
             ],
-            "modules/contrib/{$name}": [
+            "docroot/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "docroot/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
-            "profiles/contrib/{$name}": [
+            "docroot/profiles/contrib/{$name}": [
                 "type:drupal-profile"
             ],
-            "themes/contrib/{$name}": [
+            "docroot/themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
-            "drush/contrib/{$name}": [
+            "drush/Commands/contrib/{$name}": [
                 "type:drupal-drush"
             ],
-            "modules/custom/{$name}": [
+            "docroot/modules/custom/{$name}": [
                 "type:drupal-custom-module"
             ],
-            "themes/custom/{$name}": [
+            "docroot/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
+            ],
+            "docroot/themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ]
         },
