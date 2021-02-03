@@ -50,14 +50,16 @@ RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
 
 # Install dependencies (with dev)
 RUN composer install \
-  --ignore-platform-reqs \
   --no-ansi \
   --dev \
-  --no-autoloader \
   --no-interaction \
-  --prefer-dist && \
-  composer dump-autoload --optimize && \
-  composer clear-cache
+  --prefer-dist
+
+# Change ownership of files
+RUN chown -R www-data:www-data ./
+RUN chown -R www-data:www-data /var/www
+
+USER www-data
 
 ###########################################################################################
 # Create build
@@ -66,14 +68,11 @@ FROM base as build
 
 # Install dependencies
 RUN composer install \
-  --ignore-platform-reqs \
   --no-ansi \
   --no-dev \
-  --no-autoloader \
+  --optimize-autoloader \
   --no-interaction \
-  --prefer-dist && \
-  composer dump-autoload --optimize && \
-  composer clear-cache
+  --prefer-dist
 
 # Change ownership of files
 RUN chown -R www-data:www-data ./
