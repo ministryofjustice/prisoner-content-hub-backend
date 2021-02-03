@@ -77,6 +77,7 @@ RUN composer install \
 
 # Change ownership of files
 RUN chown -R www-data:www-data ./
+RUN chown -R www-data:www-data /var/www
 
 USER www-data
 
