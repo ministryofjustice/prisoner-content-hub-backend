@@ -61,6 +61,12 @@ RUN chown -R www-data:www-data /var/www
 
 USER www-data
 
+FROM test as local
+USER root
+RUN pecl install xdebug-2.9.8 \
+  && docker-php-ext-enable xdebug
+USER www-data
+
 ###########################################################################################
 # Create build
 ###########################################################################################
@@ -78,12 +84,6 @@ RUN composer install \
 RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
-USER www-data
-
-FROM build as local
-USER root
-RUN pecl install xdebug-2.9.8 \
-  && docker-php-ext-enable xdebug
 USER www-data
 
 # Make build (and not local) the default target.
