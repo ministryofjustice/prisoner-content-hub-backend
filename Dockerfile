@@ -68,9 +68,9 @@ RUN pecl install xdebug-2.9.8 \
 USER www-data
 
 ###########################################################################################
-# Create build
+# Create optimised build
 ###########################################################################################
-FROM base as build
+FROM base as optimised-build
 
 # Install dependencies
 RUN composer install \
@@ -85,7 +85,3 @@ RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
 USER www-data
-
-# Make build (and not local) the default target.
-# By ensuring this is the last defined target in the file.
-FROM build as production
