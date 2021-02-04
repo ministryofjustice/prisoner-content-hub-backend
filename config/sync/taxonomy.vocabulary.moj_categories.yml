@@ -1,0 +1,8 @@
+uuid: d7e7e479-0dcb-4b22-bad0-a48964c00be1
+langcode: en
+status: true
+dependencies: {  }
+name: Categories
+vid: moj_categories
+description: 'Top level categories'
+weight: 0

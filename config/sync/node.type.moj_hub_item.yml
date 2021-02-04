@@ -1,0 +1,33 @@
+uuid: b77b11a7-fec2-479b-a52b-25224b8ac6fc
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: fieldset
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+_core:
+  default_config_hash: E0gTyl4DlFU-cjcLOsvVZ6Idlj5yJGgTLERL-Ft-gB8
+name: 'Hub Item'
+type: moj_hub_item
+description: '[USE WITH CARE] Use <em>hub items</em> for links within the hub pages. This is used for (e.g.) Sudoku & Chess, but it''s not an available content type for most content authors.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

@@ -1,0 +1,30 @@
+uuid: 017a9167-2cd8-4596-b4a3-7ebaf5a1a5cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.featured_articles.field_location
+    - field.field.node.featured_articles.field_moj_featured_tile_large
+    - field.field.node.featured_articles.field_moj_featured_tile_small
+    - field.field.node.featured_articles.field_moj_prisons
+    - node.type.featured_articles
+  module:
+    - user
+id: node.featured_articles.teaser
+targetEntityType: node
+bundle: featured_articles
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_location: true
+  field_moj_featured_tile_large: true
+  field_moj_featured_tile_small: true
+  field_moj_prisons: true
+  langcode: true
+  search_api_excerpt: true

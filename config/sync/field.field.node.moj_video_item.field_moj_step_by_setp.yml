@@ -1,0 +1,29 @@
+uuid: 5ed135d4-4588-4ee0-a1ff-8dc99ca0dfa6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_step_by_setp
+    - node.type.moj_video_item
+    - taxonomy.vocabulary.step_by_step
+id: node.moj_video_item.field_moj_step_by_setp
+field_name: field_moj_step_by_setp
+entity_type: node
+bundle: moj_video_item
+label: 'Step by Setp'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      step_by_step: step_by_step
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

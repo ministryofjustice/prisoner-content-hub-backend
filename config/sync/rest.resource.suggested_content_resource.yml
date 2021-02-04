@@ -1,0 +1,19 @@
+uuid: 6879aed5-b930-4987-94b8-deedbab2a84c
+langcode: en
+status: true
+dependencies:
+  module:
+    - moj_resources
+    - serialization
+    - user
+_core:
+  default_config_hash: Q7dxoJXon5lnI4Oy6sdQR_J67RBq1Wbcl1_lfPFNnOM
+id: suggested_content_resource
+plugin_id: suggested_content_resource
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - cookie

@@ -1,0 +1,22 @@
+uuid: 3951bedb-81e1-42d0-a312-98ee04694c17
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.promote
+field_name: promote
+entity_type: node
+bundle: moj_radio_item
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

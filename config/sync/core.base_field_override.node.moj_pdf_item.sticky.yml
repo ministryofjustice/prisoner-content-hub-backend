@@ -1,0 +1,22 @@
+uuid: 1bed27bd-9f34-4fe5-b8a5-4fc6a03f93e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.sticky
+field_name: sticky
+entity_type: node
+bundle: moj_pdf_item
+label: 'Sticky at top of lists'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,39 @@
+uuid: ba8ba5a2-e1f8-4726-b9b7-cb58a4200fb4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_featured_tile_small
+    - node.type.article
+    - node.type.featured_articles
+    - node.type.landing_page
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+id: node.featured_articles.field_moj_featured_tile_small
+field_name: field_moj_featured_tile_small
+entity_type: node
+bundle: featured_articles
+label: 'Small featured content'
+description: 'Featured content for the small tiles'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      article: article
+      moj_radio_item: moj_radio_item
+      page: page
+      landing_page: landing_page
+      moj_pdf_item: moj_pdf_item
+      moj_video_item: moj_video_item
+    sort:
+      field: field_moj_weight
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: moj_radio_item
+field_type: entity_reference

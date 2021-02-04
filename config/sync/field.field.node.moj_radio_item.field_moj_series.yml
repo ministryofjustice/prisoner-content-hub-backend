@@ -1,0 +1,29 @@
+uuid: 5d1bb777-7e21-4b07-8218-44b83680b152
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_series
+    - node.type.moj_radio_item
+    - taxonomy.vocabulary.series
+id: node.moj_radio_item.field_moj_series
+field_name: field_moj_series
+entity_type: node
+bundle: moj_radio_item
+label: Series
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      series: series
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

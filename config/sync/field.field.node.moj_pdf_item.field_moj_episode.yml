@@ -1,0 +1,23 @@
+uuid: d5e086b7-2898-43d3-b4a6-cacad69ce4dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_episode
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.field_moj_episode
+field_name: field_moj_episode
+entity_type: node
+bundle: moj_pdf_item
+label: Episode
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

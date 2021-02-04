@@ -1,0 +1,35 @@
+uuid: 792973a0-b235-452a-a211-1705dab79732
+langcode: en
+status: true
+dependencies:
+  enforced:
+    - moj_radio_item
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: fieldset
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+_core:
+  default_config_hash: Vjr0aSl-JsKOCzaSE5gEze0AHBo02LWEsJK2ZsdROkg
+name: 'Audio item'
+type: moj_radio_item
+description: 'Use <em>radio items</em> to represent radio content stored within the content library.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

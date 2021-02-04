@@ -1,0 +1,27 @@
+uuid: 245ec706-ddb5-4736-befd-f4800c7818ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_hub_allowed_prisons
+    - node.type.moj_hub_item
+_core:
+  default_config_hash: kc8AZk-4OEnrT5ekLAE3up9qBCFZaz0uNix58YAjZvY
+id: node.moj_hub_item.field_moj_hub_allowed_prisons
+field_name: field_moj_hub_allowed_prisons
+entity_type: node
+bundle: moj_hub_item
+label: 'Allowed prisons'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:prison'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

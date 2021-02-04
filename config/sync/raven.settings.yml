@@ -1,0 +1,26 @@
+client_key: ''
+environment: ''
+release: ''
+fatal_error_handler: false
+fatal_error_handler_memory: 2560
+log_levels:
+  1: 0
+  2: 0
+  3: 0
+  4: 0
+  5: 0
+  6: 0
+  7: 0
+  8: 0
+drush_error_handler: false
+stack: true
+timeout: 2
+message_limit: 2048
+trace: false
+javascript_error_handler: false
+public_dsn: ''
+ssl: verify_ssl
+ca_cert: ''
+ignored_channels: {  }
+_core:
+  default_config_hash: o1Lgj8FSHbxxBeB7nWl-QtfAb_UCG7wFxLXti23jFkE

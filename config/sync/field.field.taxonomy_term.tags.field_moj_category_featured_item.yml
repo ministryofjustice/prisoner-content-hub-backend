@@ -1,0 +1,23 @@
+uuid: 4c20116f-429e-4956-84ed-4a2bc288980e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_moj_category_featured_item
+    - taxonomy.vocabulary.tags
+id: taxonomy_term.tags.field_moj_category_featured_item
+field_name: field_moj_category_featured_item
+entity_type: taxonomy_term
+bundle: tags
+label: 'Category Featured Item'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

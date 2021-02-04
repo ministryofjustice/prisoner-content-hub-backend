@@ -1,0 +1,10 @@
+uuid: 6f68fc1d-5417-4901-a08b-683871d18513
+langcode: en
+status: true
+dependencies:
+  module:
+    - moj_prisons
+id: prison.token
+label: Token
+targetEntityType: prison
+cache: true

@@ -1,0 +1,20 @@
+uuid: 53fd2cac-23a4-47db-b554-a481a0d4e8da
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_moj_secondary_tags
+field_name: field_moj_secondary_tags
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

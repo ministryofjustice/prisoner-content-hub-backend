@@ -1,0 +1,164 @@
+uuid: 96ed30be-4ab2-4382-ae07-7d5a9ee2ae14
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.moj_radio_item.field_is_global_content
+    - field.field.node.moj_radio_item.field_moj_audio
+    - field.field.node.moj_radio_item.field_moj_categories
+    - field.field.node.moj_radio_item.field_moj_category_featured_item
+    - field.field.node.moj_radio_item.field_moj_date
+    - field.field.node.moj_radio_item.field_moj_description
+    - field.field.node.moj_radio_item.field_moj_duration
+    - field.field.node.moj_radio_item.field_moj_episode
+    - field.field.node.moj_radio_item.field_moj_prisons
+    - field.field.node.moj_radio_item.field_moj_programme_code
+    - field.field.node.moj_radio_item.field_moj_season
+    - field.field.node.moj_radio_item.field_moj_series
+    - field.field.node.moj_radio_item.field_moj_step_by_setp
+    - field.field.node.moj_radio_item.field_moj_tags
+    - field.field.node.moj_radio_item.field_moj_thumbnail_image
+    - field.field.node.moj_radio_item.field_moj_top_level_categories
+    - field.field.node.moj_radio_item.field_moj_weight
+    - field.field.node.moj_radio_item.field_prison_categories
+    - field.field.node.moj_radio_item.field_related_prisons
+    - node.type.moj_radio_item
+  module:
+    - datetime
+    - image
+    - text
+    - user
+_core:
+  default_config_hash: sNg2ZXfAgXABx5xCwLN3xEKbZcFtViYtCkWvlLGUsUk
+id: node.moj_radio_item.default
+targetEntityType: node
+bundle: moj_radio_item
+mode: default
+content:
+  field_moj_category_featured_item:
+    weight: 12
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_moj_date:
+    weight: 7
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_moj_description:
+    type: text_default
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_moj_duration:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_moj_episode:
+    weight: 6
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_moj_prisons:
+    weight: 9
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_programme_code:
+    weight: 13
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_moj_season:
+    weight: 5
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_moj_series:
+    weight: 4
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_step_by_setp:
+    weight: 11
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_thumbnail_image:
+    type: image
+    weight: 0
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: content
+    third_party_settings: {  }
+    region: content
+  field_moj_top_level_categories:
+    weight: 3
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_moj_weight:
+    weight: 8
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_prison_categories:
+    weight: 10
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  field_is_global_content: true
+  field_moj_audio: true
+  field_moj_categories: true
+  field_moj_tags: true
+  field_related_prisons: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

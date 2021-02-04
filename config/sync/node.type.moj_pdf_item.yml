@@ -1,0 +1,33 @@
+uuid: f71b9bf8-c92a-4d35-a93f-bdd27cfc4300
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: fieldset
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+_core:
+  default_config_hash: geREINR7PSsVaMs0PPwd-l3o0rq0b-Ou5GI-sitWDg8
+name: 'PDF  item'
+type: moj_pdf_item
+description: 'Used to create PDF items within the content library. We should avoid PDFs where possible, because they aren''t an accessible format.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

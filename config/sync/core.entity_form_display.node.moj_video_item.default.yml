@@ -1,0 +1,246 @@
+uuid: 986aa6b3-8844-4564-a100-a52cd16f982c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.moj_video_item.field_is_global_content
+    - field.field.node.moj_video_item.field_moj_categories
+    - field.field.node.moj_video_item.field_moj_category_featured_item
+    - field.field.node.moj_video_item.field_moj_date
+    - field.field.node.moj_video_item.field_moj_description
+    - field.field.node.moj_video_item.field_moj_duration
+    - field.field.node.moj_video_item.field_moj_episode
+    - field.field.node.moj_video_item.field_moj_prisons
+    - field.field.node.moj_video_item.field_moj_season
+    - field.field.node.moj_video_item.field_moj_secondary_tags
+    - field.field.node.moj_video_item.field_moj_series
+    - field.field.node.moj_video_item.field_moj_step_by_setp
+    - field.field.node.moj_video_item.field_moj_subtitles
+    - field.field.node.moj_video_item.field_moj_tags
+    - field.field.node.moj_video_item.field_moj_thumbnail_image
+    - field.field.node.moj_video_item.field_moj_top_level_categories
+    - field.field.node.moj_video_item.field_moj_weight
+    - field.field.node.moj_video_item.field_prison_categories
+    - field.field.node.moj_video_item.field_related_prisons
+    - field.field.node.moj_video_item.field_video
+    - image.style.thumbnail
+    - node.type.moj_video_item
+  module:
+    - datetime
+    - file
+    - image
+    - path
+    - scheduler
+    - text
+_core:
+  default_config_hash: B5OiZXT0G73JfRrJJusCp_kfo5rvcSOdsoUw9IGpDSo
+id: node.moj_video_item.default
+targetEntityType: node
+bundle: moj_video_item
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_moj_category_featured_item:
+    weight: 12
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_moj_date:
+    weight: 16
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_moj_description:
+    type: text_textarea_with_summary
+    weight: 6
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+    region: content
+  field_moj_episode:
+    weight: 15
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_moj_prisons:
+    weight: 23
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_moj_season:
+    weight: 14
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_moj_secondary_tags:
+    weight: 17
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_moj_series:
+    weight: 13
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_moj_step_by_setp:
+    weight: 18
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_moj_subtitles:
+    weight: 10
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: file_generic
+    region: content
+  field_moj_thumbnail_image:
+    type: image_image
+    weight: 8
+    settings:
+      preview_image_style: thumbnail
+      progress_indicator: throbber
+    third_party_settings: {  }
+    region: content
+  field_moj_top_level_categories:
+    weight: 11
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    third_party_settings: {  }
+    type: entity_reference_autocomplete_tags
+    region: content
+  field_moj_weight:
+    weight: 22
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_prison_categories:
+    weight: 24
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_video:
+    region: content
+    type: file_generic
+    weight: 7
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+    region: content
+  path:
+    type: path
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 19
+    third_party_settings: {  }
+    region: content
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 26
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 20
+    third_party_settings: {  }
+    region: content
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    third_party_settings: {  }
+    region: content
+  title:
+    type: string_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  translation:
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    third_party_settings: {  }
+    region: content
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 25
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_is_global_content: true
+  field_moj_archived: true
+  field_moj_categories: true
+  field_moj_duration: true
+  field_moj_tags: true
+  field_related_prisons: true

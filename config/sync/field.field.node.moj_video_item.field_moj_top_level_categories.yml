@@ -1,0 +1,29 @@
+uuid: f72015f2-7fe1-402f-b818-5fcd23eb3875
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_top_level_categories
+    - node.type.moj_video_item
+    - taxonomy.vocabulary.moj_categories
+id: node.moj_video_item.field_moj_top_level_categories
+field_name: field_moj_top_level_categories
+entity_type: node
+bundle: moj_video_item
+label: Category
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      moj_categories: moj_categories
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

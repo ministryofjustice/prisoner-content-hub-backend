@@ -1,0 +1,23 @@
+uuid: 727daf2c-3ac8-47f3-8923-57adba951212
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_episode
+    - node.type.moj_radio_item
+id: node.moj_radio_item.field_moj_episode
+field_name: field_moj_episode
+entity_type: node
+bundle: moj_radio_item
+label: Episode
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

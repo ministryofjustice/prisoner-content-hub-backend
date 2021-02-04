@@ -1,0 +1,20 @@
+uuid: 096034c6-d84d-4a63-9d44-eea8a00a90d3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_moj_season
+field_name: field_moj_season
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

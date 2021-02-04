@@ -1,0 +1,16 @@
+uuid: a697e7bf-5a5d-429f-a721-63d8e46f4267
+langcode: en
+status: true
+dependencies: {  }
+name: moj_radio_category_banner
+label: 'Radio Category Banner'
+effects:
+  6febd5a4-e6ad-4e55-9f0f-a25354507df5:
+    uuid: 6febd5a4-e6ad-4e55-9f0f-a25354507df5
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 1366
+      height: 833
+      upscale: true
+      anchor: center-center

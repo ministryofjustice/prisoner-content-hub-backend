@@ -1,0 +1,27 @@
+uuid: 1c8c6896-65a3-48d1-bf01-720de21e2424
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_featured_audio
+    - taxonomy.vocabulary.series
+  module:
+    - file
+id: taxonomy_term.series.field_featured_audio
+field_name: field_featured_audio
+entity_type: taxonomy_term
+bundle: series
+label: 'Featured Audio'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: 'audio/[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'mp3 m4a ogg'
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file
