@@ -19,7 +19,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 
 ###########################################################################################
-# Create runtime image
+# Copy repository files
 ###########################################################################################
 
 WORKDIR /opt/drupal/web
