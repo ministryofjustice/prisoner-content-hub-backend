@@ -30,7 +30,7 @@ COPY composer.json composer.lock ./
 COPY patches/ patches/
 
 # Copy Project
-COPY docroot/modules/custom web/docroot/modules/custom
+COPY docroot/modules/custom docroot/modules/custom
 COPY ./apache/ /etc/apache2/
 COPY docroot/sites/ docroot/sites/
 COPY config/ config/
