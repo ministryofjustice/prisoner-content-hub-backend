@@ -1,4 +1,4 @@
-name: Prisoner Content Hub Profile
+name: 'Prisoner Content Hub Profile'
 type: profile
 description: 'A Drupal installation profile for the prisoner content hub.'
 core: 8.x
