@@ -83,6 +83,7 @@ jobs:
           name: Install Drupal and run tests
           command: |
             set -x
+            sleep 2
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
 
