@@ -75,10 +75,14 @@ jobs:
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - run:
-          name: Build docker images and run tests
+          name: Build docker images with docker compose
           command: |
             set -x
             docker-compose -f docker-compose.phpunit.yml up -d
+      - run:
+          name: Install Drupal and run tests
+          command: |
+            set -x
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
 
