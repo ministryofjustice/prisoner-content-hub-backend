@@ -7,7 +7,7 @@ $databases['default']['default'] = array(
   'password' => getenv('HUB_DB_ENV_MYSQL_PASSWORD', true),
   'prefix' => '',
   'host' => getenv('HUB_DB_PORT_3306_TCP_ADDR', true),
-  'port' => getenv('HUB_DB_PORT_3306_TCP_PORT', true),
+  'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
@@ -117,4 +117,3 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 
 // TODO: Remove, added for long execution time of moj_video_item migration
 ini_set('max_execution_time', 3000);
-
