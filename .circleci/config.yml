@@ -70,9 +70,9 @@ jobs:
       - run:
           name: Build docker images and run tests
           command: |
-          docker-compose -f docker-compose.phpunit.yml up -d
-          docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
-          docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
+            docker-compose -f docker-compose.phpunit.yml up -d
+            docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
+            docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
 
   build_preview:
     <<: *defaults
