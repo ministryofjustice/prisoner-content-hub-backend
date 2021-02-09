@@ -78,7 +78,7 @@ jobs:
           name: Build docker images with docker compose
           command: |
             set -x
-            docker-compose -f docker-compose.phpunit.yml up -d
+            docker-compose -f docker-compose.phpunit.yml up -d --build
       - run:
           name: Install Drupal and run tests
           command: |
