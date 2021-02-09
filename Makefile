@@ -20,6 +20,9 @@ push-preview:
 	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:preview
 	docker push mojdigitalstudio/prisoner-content-hub-backend:preview
 
+install-drupal:
+	vendor/bin/drush site-install prisoner_content_hub --existing-config -y
+
 run-tests: run-unit-tests run-functional-tests
 
 run-unit-tests:

@@ -60,6 +60,20 @@ commands:
               --set application.sentry_release="${CIRCLE_BUILD_NUM}"
 
 jobs:
+  run_tests:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      - run:
+          name: Build docker images and run tests
+          command: |
+          docker-compose -f docker-compose.phpunit.yml up -d
+          docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
+          docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
+
   build_preview:
     <<: *defaults
     steps:
@@ -143,6 +157,9 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
+      - run_tests:
+          <<: *feature_branch
+
       - build_preview:
           <<: *feature_branch
 
