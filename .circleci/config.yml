@@ -95,7 +95,7 @@ jobs:
           command: |
             set -x
             mkdir ~/phpunit
-            docker cp $(docker-compose -f docker-compose.phpunit.yml ps -q circleci-prisoner-content-hub-backend):/var/www/phpunit/junit.xml ~/phpunit/junit.xml
+            docker cp $(docker-compose -f docker-compose.phpunit.yml ps -q circleci-prisoner-content-hub-backend):/var/www/phpunit ~/phpunit
       - store_test_results:
           path: ~/phpunit
       - store_artifacts:
