@@ -27,12 +27,14 @@ run-tests: run-unit-tests run-functional-tests
 
 run-unit-tests:
 	echo "Run rest and jsonapi module unit tests"
+	mkdir -p ~/phpunit
 	vendor/bin/phpunit docroot/ --filter='Drupal\\Tests\\rest\\Unit\\\
-	|Drupal\\Tests\\jsonapi\\Unit' --verbose
+	|Drupal\\Tests\\jsonapi\\Unit' --log-junit ~/phpunit/junit.xml --verbose
 
 run-functional-tests:
 	echo "Run selected core functional tests"
+	mkdir -p ~/phpunit
 	vendor/bin/phpunit docroot/ --filter='Drupal\\Tests\\user\\Functional\\UserLoginTest\
 	|Drupal\\Tests\\node\\Functional\\NodeEditFormTest\
-	|Drupal\\Tests\\taxonomy\\Functional\\TermTest' --verbose
+	|Drupal\\Tests\\taxonomy\\Functional\\TermTest' --log-junit ~/phpunit/junit.xml --verbose
 

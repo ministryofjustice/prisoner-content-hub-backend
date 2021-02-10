@@ -90,6 +90,13 @@ jobs:
             set -x
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
+      - run:
+          name: Copy test results output
+          command: docker cp $(docker-compose -f docker-compose.phpunit.yml ps -q circleci-prisoner-content-hub-backend):~/phpunit/junit.xml ~/phpunit/junit.xml
+      - store_test_results:
+          path: ~/phpunit
+      - store_artifacts:
+          path: ~/phpunit
 
   build_preview:
     <<: *defaults
