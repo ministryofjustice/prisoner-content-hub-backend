@@ -19,30 +19,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 
 ###########################################################################################
-# Run test suite
+# Copy repository files
 ###########################################################################################
-
-FROM base AS test
-
-# Remove the memory limit for the CLI only.
-RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
-
-# Remove the vanilla Drupal ready to install a dev version
-RUN rm -rf ..?* .[!.]* *
-
-# Install Drupal 8.x Dev
-RUN composer create-project drupal-composer/drupal-project:8.x-dev . --stability dev --no-interaction
-
-COPY phpunit.xml web/core/phpunit.xml
-COPY docroot/modules/custom web/docroot/modules/custom
-
-RUN vendor/bin/phpunit -c web/core --testsuite unit --debug --verbose
-
-###########################################################################################
-# Create runtime image
-###########################################################################################
-
-FROM base as build
 
 WORKDIR /opt/drupal/web
 
@@ -51,19 +29,8 @@ COPY composer.json composer.lock ./
 # Copy in patches we want to apply to modules in Drupal using Composer
 COPY patches/ patches/
 
-# Install dependencies
-RUN composer install \
-  --ignore-platform-reqs \
-  --no-ansi \
-  --no-dev \
-  --no-autoloader \
-  --no-interaction \
-  --prefer-dist && \
-  composer dump-autoload --optimize && \
-  composer clear-cache
-
 # Copy Project
-COPY --from=test /opt/drupal/web/docroot/modules/custom docroot/modules/custom
+COPY docroot/modules/custom docroot/modules/custom
 COPY ./apache/ /etc/apache2/
 COPY docroot/sites/ docroot/sites/
 COPY config/ config/
@@ -72,18 +39,49 @@ COPY config/ config/
 RUN chmod u-w docroot/sites/default/settings.php \
   && chmod u-w docroot/sites/default/services.yml
 
+###########################################################################################
+# Create test image
+###########################################################################################
+
+FROM base AS test
+
+# Remove the memory limit for the CLI only.
+RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
+
+# Install dependencies (with dev)
+RUN composer install \
+  --no-ansi \
+  --dev \
+  --no-interaction \
+  --prefer-dist
+
 # Change ownership of files
 RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
 USER www-data
 
-FROM build as local
+FROM test as local
 USER root
 RUN pecl install xdebug-2.9.8 \
   && docker-php-ext-enable xdebug
 USER www-data
 
-# Make build (and not local) the default target.
-# By ensuring this is the last defined target in the file.
-FROM build as production
+###########################################################################################
+# Create optimised build
+###########################################################################################
+FROM base as optimised-build
+
+# Install dependencies
+RUN composer install \
+  --no-ansi \
+  --no-dev \
+  --optimize-autoloader \
+  --no-interaction \
+  --prefer-dist
+
+# Change ownership of files
+RUN chown -R www-data:www-data ./
+RUN chown -R www-data:www-data /var/www
+
+USER www-data

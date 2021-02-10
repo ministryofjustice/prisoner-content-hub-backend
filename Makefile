@@ -19,3 +19,17 @@ push-preview:
 	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
 	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:preview
 	docker push mojdigitalstudio/prisoner-content-hub-backend:preview
+
+run-tests: run-unit-tests run-functional-tests
+
+run-unit-tests:
+	echo "Run rest and jsonapi module unit tests"
+	vendor/bin/phpunit docroot/ --filter='Drupal\\Tests\\rest\\Unit\\\
+	|Drupal\\Tests\\jsonapi\\Unit' --verbose
+
+run-functional-tests:
+	echo "Run selected core functional tests"
+	vendor/bin/phpunit docroot/ --filter='Drupal\\Tests\\user\\Functional\\UserLoginTest\
+	|Drupal\\Tests\\node\\Functional\\NodeEditFormTest\
+	|Drupal\\Tests\\taxonomy\\Functional\\TermTest' --verbose
+
