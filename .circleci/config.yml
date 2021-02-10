@@ -92,7 +92,10 @@ jobs:
             docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
       - run:
           name: Copy test results output
-          command: docker cp $(docker-compose -f docker-compose.phpunit.yml ps -q circleci-prisoner-content-hub-backend):~/phpunit/junit.xml ~/phpunit/junit.xml
+          command: |
+            set -x
+            mkdir ~/phpunit
+            docker cp $(docker-compose -f docker-compose.phpunit.yml ps -q circleci-prisoner-content-hub-backend):/var/www/phpunit/junit.xml ~/phpunit/junit.xml
       - store_test_results:
           path: ~/phpunit
       - store_artifacts:
