@@ -82,8 +82,9 @@ jobs:
       - run:
           name: Wait for mysql service to come up
           command: |
-            while ! mysqladmin ping -h"circleci-prisoner-content-hub-backend-db" --silent; do
-                sleep 1
+            docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend \
+            while ! mysqladmin ping -h"circleci-prisoner-content-hub-backend-db" --silent; do \
+                sleep 1 \
             done
       - run:
           name: Install Drupal and run tests
