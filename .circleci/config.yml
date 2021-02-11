@@ -62,6 +62,13 @@ commands:
 jobs:
   run_tests:
     <<: *defaults
+    parameters:
+      docker-compose-filename:
+        default: docker-compose.circleci.yml
+        type: string
+      docker-image-name-backend:
+        default: circleci-prisoner-content-hub-backend
+        type: string
     steps:
       - checkout
       - setup_remote_docker:
@@ -78,24 +85,24 @@ jobs:
           name: Build docker images with docker compose
           command: |
             set -x
-            docker-compose -f docker-compose.phpunit.yml up -d --build
+            docker-compose -f << parameters.docker-compose-filename >> up -d --build
       - run:
           name: Wait for mysql service to come up
           command: |
-            docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend /bin/bash -c \
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> /bin/bash -c \
             'while ! mysqladmin ping -h"$HUB_DB_PORT_3306_TCP_ADDR" --silent; do sleep 1; done'
       - run:
           name: Install Drupal and run tests
           command: |
             set -x
-            docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make install-drupal
-            docker-compose -f docker-compose.phpunit.yml exec circleci-prisoner-content-hub-backend make run-tests
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make install-drupal
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make run-tests
       - run:
           name: Copy test results output
           command: |
             set -x
             mkdir ~/phpunit
-            docker cp $(docker-compose -f docker-compose.phpunit.yml ps -q circleci-prisoner-content-hub-backend):/var/www/phpunit ~/phpunit
+            docker cp $(docker-compose -f << parameters.docker-compose-filename >> ps -q << parameters.docker-image-name-backend >>):/var/www/phpunit ~/phpunit
       - store_test_results:
           path: ~/phpunit
       - store_artifacts:
