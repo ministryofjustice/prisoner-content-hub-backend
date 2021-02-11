@@ -83,6 +83,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
+# Set no memory limit (for PHP running as cli only).
+RUN echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory_limit.ini
 
 ###########################################################################################
 # Copy repository files

@@ -114,10 +114,3 @@ $settings['config_sync_directory'] = '../config/sync';
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
-
-if (PHP_SAPI === 'cli') {
-  ini_set('memory_limit', '-1');
-}
-else {
-  ini_set('memory_limit', '256M');
-}
