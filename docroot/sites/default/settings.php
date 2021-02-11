@@ -115,5 +115,9 @@ if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
 
-// TODO: Remove, added for long execution time of moj_video_item migration
-ini_set('max_execution_time', 3000);
+if (PHP_SAPI === 'cli') {
+  ini_set('memory_limit', '-1');
+}
+else {
+  ini_set('memory_limit', '256M');
+}
