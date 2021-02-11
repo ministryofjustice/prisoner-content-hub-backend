@@ -25,7 +25,7 @@
     <!-- Env variable located in prisoner-content-hub/drupal.env -->
 
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="~/phpunit/browser_output"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/phpunit/browser_output"/>
     <!-- To have browsertest output use an alternative base URL. For example if
      SIMPLETEST_BASE_URL is an internal DDEV URL, you can set this to the
      external DDev URL so you can follow the links directly.

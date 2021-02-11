@@ -132,6 +132,7 @@ RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
 USER www-data
+RUN mkdir -p ~/phpunit/browser_output
 
 FROM test as local
 USER root
