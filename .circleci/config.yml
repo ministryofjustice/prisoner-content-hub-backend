@@ -60,6 +60,54 @@ commands:
               --set application.sentry_release="${CIRCLE_BUILD_NUM}"
 
 jobs:
+  run_tests:
+    <<: *defaults
+    parameters:
+      docker-compose-filename:
+        default: docker-compose.circleci.yml
+        type: string
+      docker-image-name-backend:
+        default: circleci-prisoner-content-hub-backend
+        type: string
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      - run:
+          name: Install Docker Compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run:
+          name: Build docker images with docker compose
+          command: |
+            set -x
+            docker-compose -f << parameters.docker-compose-filename >> up -d --build
+      - run:
+          name: Wait for mysql service to come up
+          command: |
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> /bin/bash -c \
+            'while ! mysqladmin ping -h"$HUB_DB_PORT_3306_TCP_ADDR" --silent; do sleep 1; done'
+      - run:
+          name: Install Drupal and run tests
+          command: |
+            set -x
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make install-drupal
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make run-tests
+      - run:
+          name: Copy test results output
+          command: |
+            set -x
+            mkdir ~/phpunit
+            docker cp $(docker-compose -f << parameters.docker-compose-filename >> ps -q << parameters.docker-image-name-backend >>):/var/www/phpunit ~/phpunit
+      - store_test_results:
+          path: ~/phpunit
+      - store_artifacts:
+          path: ~/phpunit
+
   build_preview:
     <<: *defaults
     steps:
@@ -143,6 +191,7 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
+      - run_tests
       - build_preview:
           <<: *feature_branch
 

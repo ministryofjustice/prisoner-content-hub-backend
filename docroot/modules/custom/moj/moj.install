@@ -106,3 +106,21 @@ function moj_update_8024() {
 	//Grant permissions to new role
 	user_role_grant_permissions($role->id(), $permissions);
 }
+
+/**
+ * Switch installation profile.
+ */
+function moj_update_8025() {
+  // Monolog module needs to be temporarily disabled due to issue with json
+  // output.  See https://github.com/drush-ops/drush/issues/4281#issuecomment-776828610
+  // (Note the module will be re-enabled on config-import).
+  \Drupal::service('module_installer')->uninstall(['monolog']);
+  // Temporarily enable the profile_switcher module.  This will be disabled
+  // when config-import is run.
+  \Drupal::service('module_installer')->install(['profile_switcher']);
+
+  // Run the profile switch, view the prisoner_content_hub/README.md file for
+  // more details as to why we needed to switch.
+  \Drupal::service('profile_switcher.profile_switcher')->switchProfile('prisoner_content_hub_profile');
+}
+
