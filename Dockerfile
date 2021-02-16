@@ -130,7 +130,6 @@ RUN composer install \
   --prefer-dist
 
 # Change ownership of files
-RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
 USER www-data
