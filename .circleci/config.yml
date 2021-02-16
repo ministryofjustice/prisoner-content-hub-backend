@@ -191,9 +191,7 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - run_tests:
-          <<: *feature_branch
-
+      - run_tests
       - build_preview:
           <<: *feature_branch
 
