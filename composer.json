@@ -32,6 +32,7 @@
         "drupal/video": "^1.4",
         "drupal/videojs": "^1.0",
         "drupal/view_unpublished": "^1.0",
+        "drupal/views_data_export": "^1.0",
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0"
     },

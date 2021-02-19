@@ -12,9 +12,13 @@ dependencies:
     - taxonomy.vocabulary.series
     - taxonomy.vocabulary.tags
   module:
+    - csv_serialization
     - node
+    - rest
+    - serialization
     - taxonomy
     - user
+    - views_data_export
 _core:
   default_config_hash: YIwhIF9MSP1E_HMam6MrYeti_UqMXQiLDMjDsPFKK8s
 id: content
@@ -1401,6 +1405,55 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       max-age: 0
+      tags:
+        - 'config:field.storage.node.field_moj_category_featured_item'
+        - 'config:field.storage.node.field_moj_prisons'
+        - 'config:field.storage.node.field_moj_secondary_tags'
+        - 'config:field.storage.node.field_moj_series'
+        - 'config:field.storage.node.field_moj_top_level_categories'
+  data_export_1:
+    display_plugin: data_export
+    id: data_export_1
+    display_title: 'Data export'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      style:
+        type: data_export
+        options:
+          formats:
+            csv: csv
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+            utf8_bom: '0'
+            use_serializer_encode_only: false
+      path: admin/content/csv
+      filename: 'content-export-[date:html_datetime].csv'
+      automatic_download: true
+      store_in_public_file_directory: null
+      redirect_to_display: none
+      custom_redirect_path: false
+      include_query_params: false
+      displays:
+        page_1: page_1
+        default: '0'
+      export_method: batch
+      export_batch_size: 250
+    cache_metadata:
+      max-age: 0
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - url
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
       tags:
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_prisons'
