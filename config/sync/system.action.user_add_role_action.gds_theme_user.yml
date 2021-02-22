@@ -1,0 +1,14 @@
+uuid: 70f6fe8a-f694-43ea-9b5b-cb4da6b1883d
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.gds_theme_user
+  module:
+    - user
+id: user_add_role_action.gds_theme_user
+label: 'Add the GDS theme user role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: gds_theme_user

@@ -1,0 +1,19 @@
+uuid: 90bcdaa4-7010-4d22-be38-0bb036b8589c
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: gds_theme_switcher_rule
+label: 'GDS theme switcher rule'
+weight: 0
+theme: govuk_design_system
+admin_theme: govuk_design_system
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      gds_theme_user: gds_theme_user
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
