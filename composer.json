@@ -16,6 +16,7 @@
         "drupal/flood_unblock": "^2.0",
         "drupal/flysystem": "~1.0",
         "drupal/flysystem_s3": "^2.0-rc1",
+        "drupal/govuk_design_system": "^1.0@beta",
         "drupal/health_check": "^1.1",
         "drupal/memcache": "^2.0",
         "drupal/migrate_plus": "^4.2",
