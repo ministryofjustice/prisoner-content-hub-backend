@@ -1,0 +1,12 @@
+services:
+  logger.channel.prisoner_hub_entity_access:
+    parent: logger.channel_base
+    arguments: ['prisoner_hub_entity_access']
+  prisoner_hub_entity_access.access_check:
+    class: Drupal\prisoner_hub_entity_access\PrisonerContentHubAccessCheck
+    arguments: ['@entity_type.manager']
+  prisoner_hub_entity_access.query_access_subscriber:
+    class: Drupal\prisoner_hub_entity_access\EventSubscriber\QueryAccessSubscriber
+    arguments: ['@entity_field.manager', '@prisoner_hub_prison_context.prison_context']
+    tags:
+      - { name: event_subscriber, priority: 100 }

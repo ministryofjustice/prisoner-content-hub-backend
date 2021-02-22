@@ -1,0 +1,8 @@
+name: 'Prisoner Hub Entity Access'
+type: module
+description: 'Provides entity access rules for the prisoner content hub.'
+core: 8.x
+package: 'Custom'
+dependencies:
+  - entity:entity
+  - prisoner_hub_prison_context:prisoner_hub_prison_context
