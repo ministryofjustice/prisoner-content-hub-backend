@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8bd6fe383a625e83ecb861df4e35d87d",
+    "content-hash": "de353f2c96aa9551a94de1b66b066058",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2591,6 +2591,54 @@
             }
         },
         {
+            "name": "drupal/govuk_inline_form_errors",
+            "version": "1.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/govuk_inline_form_errors.git",
+                "reference": "8.x-1.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/govuk_inline_form_errors-8.x-1.0-beta1.zip",
+                "reference": "8.x-1.0-beta1",
+                "shasum": "a58302a993875beaca3278e6881155e639fc2572"
+            },
+            "require": {
+                "drupal/core": "^8"
+            },
+            "suggest": {
+                "drupal/govuk_design_system": "govuk_inline_form_errors should be used in conjunction with the govuk_design_system theme."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-beta1",
+                    "datestamp": "1548342780",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Leon Kessler",
+                    "homepage": "https://www.drupal.org/user/595374"
+                }
+            ],
+            "description": "Provides inline form errors that integrate with the GOVUK Design System.",
+            "homepage": "https://www.drupal.org/project/govuk_inline_form_errors",
+            "support": {
+                "source": "http://cgit.drupalcode.org/govuk_inline_form_errors",
+                "issues": "https://www.drupal.org/project/issues/govuk_inline_form_errors"
+            }
+        },
+        {
             "name": "drupal/health_check",
             "version": "1.2.0",
             "source": {
@@ -3346,6 +3394,53 @@
                 "source": "https://git.drupalcode.org/project/search_api",
                 "issues": "https://www.drupal.org/project/issues/search_api",
                 "irc": "irc://irc.freenode.org/drupal-search-api"
+            }
+        },
+        {
+            "name": "drupal/theme_switcher",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/theme_switcher.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/theme_switcher-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "7df0400d6bf0b1f04219e5de1582f91b16b14f05"
+            },
+            "require": {
+                "drupal/core": "^8.5",
+                "php": ">=7.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1568829484",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Adrián Marín",
+                    "homepage": "https://www.drupal.org/user/3529039",
+                    "email": "amarincolas@gmail.com"
+                }
+            ],
+            "description": "Creates Theme Switcher Rules within a Drupal installation.",
+            "homepage": "https://www.drupal.org/project/theme_switcher",
+            "support": {
+                "source": "http://cgit.drupalcode.org/theme_switcher",
+                "issues": "http://drupal.org/project/issues/theme_switcher"
             }
         },
         {
@@ -11447,7 +11542,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/govuk_design_system": 10
+        "drupal/govuk_design_system": 10,
+        "drupal/govuk_inline_form_errors": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
