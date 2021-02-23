@@ -1,0 +1,27 @@
+uuid: a0e47b1a-2390-4699-a209-15c87e39dab0
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer
+  module:
+    - system
+  theme:
+    - govuk_design_system
+_core:
+  default_config_hash: GEUT6_LFdtYJpi_BPM6Rwr1Q7000ef5O9_qkP9dIeq8
+id: govuk_design_system_footer
+theme: govuk_design_system
+region: footer
+weight: 0
+provider: null
+plugin: 'system_menu_block:footer'
+settings:
+  id: 'system_menu_block:footer'
+  label: 'Footer menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

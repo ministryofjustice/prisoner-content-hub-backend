@@ -21,6 +21,7 @@ permissions:
   - 'administer taxonomy_term fields'
   - 'administer taxonomy_term form display'
   - 'administer users'
+  - 'assign gds_theme_user role'
   - 'bypass node access'
   - 'create featured_articles content'
   - 'create landing_page content'
