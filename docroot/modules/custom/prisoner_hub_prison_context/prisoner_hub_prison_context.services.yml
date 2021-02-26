@@ -6,5 +6,6 @@ services:
       - { name: paramconverter }
   prisoner_hub_prison_context.route_subscriber:
     class: Drupal\prisoner_hub_prison_context\Routing\RouteSubscriber
+    arguments: ['%jsonapi.base_path%']
     tags:
       - { name: event_subscriber }

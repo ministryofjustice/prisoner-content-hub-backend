@@ -24,14 +24,11 @@ class PrisonContext implements ParamConverterInterface {
    */
   protected $prisonTaxonomyTerm;
 
-  protected $prisonCategoryFieldName;
-
   /**
    * Constructs a new PrisonContext object.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->prisonCategoryFieldName = 'field_prison_categories';
   }
 
   /**
@@ -51,10 +48,17 @@ class PrisonContext implements ParamConverterInterface {
     return !empty($definition['type']) && $definition['type'] == 'prison_context';
   }
 
-  public function getPrisonTerm($name) {
+  /**
+   * Load the prison term by name.
+   *
+   * @param string $name
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\taxonomy\Entity\Term|null
+   */
+  public function getPrisonTerm(string $name) {
     if (is_null($this->prisonTaxonomyTerm)) {
       $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
-      $query->condition('name', $name);
+      $query->condition('machine_name', $name);
       $tid = $query->execute();
       if ($tid) {
         $this->prisonTaxonomyTerm = $this->entityTypeManager->getStorage('taxonomy_term')->load(reset($tid));
@@ -66,18 +70,11 @@ class PrisonContext implements ParamConverterInterface {
     return $this->prisonTaxonomyTerm;
   }
 
-  public function getPrisonCategoryFieldName() {
-    return $this->prisonCategoryFieldName;
-  }
-
-  public function getPrisonCategories() {
-    $term = $this->getPrisonTerm();
-    if ($term) {
-      return $term->get($this->getPrisonCategoryFieldName())->getValue();
-    }
-    return [];
-  }
-
+  /**
+   * Check whether the current request has a prison context.
+   *
+   * @return bool
+   */
   public function prisonContextExists() {
     return (bool)$this->getPrisonTerm();
   }

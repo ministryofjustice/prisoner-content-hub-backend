@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f338c45e53c5754c7802b6a3b2a11648",
+    "content-hash": "5074c822a01927153fdda7e545480587",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3299,6 +3299,63 @@
                 "issues": "https://www.drupal.org/project/issues/search_api",
                 "irc": "irc://irc.freenode.org/drupal-search-api"
             }
+        },
+        {
+            "name": "drupal/taxonomy_machine_name",
+            "version": "dev-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/taxonomy_machine_name.git",
+                "reference": "3165f5faa95c0fad7829aca30eeefef2eff3ca64"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-beta4+11-dev",
+                    "datestamp": "1604488241",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Sébastien MALOT (Sebastien @Actualys)",
+                    "homepage": "https://www.drupal.org/u/sebastien-actualys",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Sorin Dediu (sdstyles)",
+                    "homepage": "https://www.drupal.org/u/sdstyles",
+                    "role": "Co-Maintainer"
+                },
+                {
+                    "name": "sdstyles",
+                    "homepage": "https://www.drupal.org/user/1420228"
+                }
+            ],
+            "description": "This module create a new property named machine_name.",
+            "homepage": "https://www.drupal.org/project/taxonomy_machine_name",
+            "keywords": [
+                "Drupal",
+                "taxonomy_machine_name"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/taxonomy_machine_name",
+                "issues": "https://drupal.org/project/issues/taxonomy_machine_name"
+            },
+            "time": "2020-11-13T20:29:02+00:00"
         },
         {
             "name": "drupal/token",
@@ -11398,7 +11455,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/taxonomy_machine_name": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],

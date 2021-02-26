@@ -3,3 +3,6 @@ type: module
 description: 'Provides a Drupal service for loading in the current prison context.'
 core: 8.x
 package: 'Custom'
+dependencies:
+  - taxonomy_machine_name:taxonomy_machine_name
+  - drupal:jsonapi
