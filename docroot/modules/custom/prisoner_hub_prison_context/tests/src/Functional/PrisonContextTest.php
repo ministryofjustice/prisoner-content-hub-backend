@@ -4,6 +4,7 @@ namespace Drupal\Tests\prisoner_hub_prison_context\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use GuzzleHttp\RequestOptions;
 
@@ -14,6 +15,7 @@ use GuzzleHttp\RequestOptions;
  */
 class PrisonContextTest extends BrowserTestBase {
 
+  use JsonApiRequestTestTrait;
   use TaxonomyTestTrait;
 
   /**
