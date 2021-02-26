@@ -34,5 +34,6 @@ run-functional-tests:
 	echo "Run selected core functional tests"
 	vendor/bin/phpunit docroot/ --filter='Drupal\\Tests\\user\\Functional\\UserLoginTest\
 	|Drupal\\Tests\\node\\Functional\\NodeEditFormTest\
-	|Drupal\\Tests\\taxonomy\\Functional\\TermTest' --log-junit ~/phpunit/junit-functional.xml --verbose
+	|Drupal\\Tests\\taxonomy\\Functional\\TermTest\
+	|Drupal\\Tests\\prisoner_hub_prison_context' --log-junit ~/phpunit/junit-functional.xml --verbose
 
