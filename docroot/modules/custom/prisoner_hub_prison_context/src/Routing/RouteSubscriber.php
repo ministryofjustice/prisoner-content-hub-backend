@@ -2,9 +2,8 @@
 
 namespace Drupal\prisoner_hub_prison_context\Routing;
 
-use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteSubscriberBase;
-use Drupal\Core\Routing\RoutingEvents;
+use Drupal\jsonapi\Routing\Routes;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -13,38 +12,32 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * {@inheritdoc}
+   * @var string
+   *
+   * The jsonapi base path.
    */
-  protected function alterRoutes(RouteCollection $collection) {
-    // TODO: Work out why this method must be declared.
+  protected $jsonapiBasePath;
+
+  public function __construct(string $jsonapi_base_path) {
+    $this->jsonapiBasePath = $jsonapi_base_path;
   }
 
   /**
-   * {@inheritdoc}
+   * Copy jsonapi routes as new routes with the prison as a parameter.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
    */
-  public static function getSubscribedEvents() {
-
-    $events[RoutingEvents::ALTER] = 'onAlterRoutes';
-    return $events;
-  }
-
-  public function onAlterRoutes(RouteBuildEvent $event) {
-    foreach ($event->getRouteCollection() as $name => $route) {
+  public function alterRoutes(RouteCollection $collection) {
+    foreach ($collection as $name => $route) {
       /* @var \Symfony\Component\Routing\Route $route */
-      // WARNING: This is using an internal jsonapi value, that could change.
-      // TODO: Find a better way to determine jsonapi routes.
-      // TODO: Do we want to modify _all_ jsonapi routes?
-      if ($route->getDefault('_is_jsonapi')) {
+      if (Routes::isJsonApiRequest($route->getDefaults())) {
         $new_route = clone($route);
-
-        // TODO: Is this the best way we can modify the path?
-        $new_route->setPath(str_replace('/jsonapi/', '/jsonapi/prison/{prison}/', $route->getPath()));
+        $new_route->setPath(str_replace($this->jsonapiBasePath, $this->jsonapiBasePath . '/prison/{prison}', $route->getPath()));
         $parameters = $route->getOption('parameters');
         $parameters['prison'] = ['type' => 'prison_context'];
         $new_route->setOption('parameters', $parameters);
-        $event->getRouteCollection()->add('prisoner_hub_prison_context.' . $name, $new_route);
+        $collection->add('prisoner_hub_prison_context.' . $name, $new_route);
       }
     }
   }
-
 }
