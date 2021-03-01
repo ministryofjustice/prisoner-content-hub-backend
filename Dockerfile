@@ -84,7 +84,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 # Set no memory limit (for PHP running as cli only).
-RUN echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory_limit.ini
+RUN echo 'memory_limit = -1' >> /usr/local/etc/php/php-cli.ini
 
 ###########################################################################################
 # Copy repository files
@@ -130,7 +130,6 @@ RUN composer install \
   --prefer-dist
 
 # Change ownership of files
-RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
 USER www-data

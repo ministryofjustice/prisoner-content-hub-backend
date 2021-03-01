@@ -1,0 +1,14 @@
+uuid: 86f122b3-5365-4587-b77d-e05b350f44f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.gds_theme_user
+  module:
+    - user
+id: user_remove_role_action.gds_theme_user
+label: 'Remove the GDS theme user role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: gds_theme_user

@@ -10,6 +10,7 @@ permissions:
   - 'access content overview'
   - 'access toolbar'
   - 'administer nodes'
+  - 'assign gds_theme_user role'
   - 'create moj_news_item content'
   - 'create moj_pdf_item content'
   - 'create moj_radio_item content'

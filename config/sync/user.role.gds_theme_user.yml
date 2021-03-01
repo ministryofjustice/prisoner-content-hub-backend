@@ -1,0 +1,9 @@
+uuid: 630cd2db-35d8-4cb6-b4b1-52ff984e4740
+langcode: en
+status: true
+dependencies: {  }
+id: gds_theme_user
+label: 'GDS theme user'
+weight: -5
+is_admin: null
+permissions: {  }
