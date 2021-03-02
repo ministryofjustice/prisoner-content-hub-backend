@@ -1,12 +1,12 @@
+parameters:
+  prisoner_hub_entity_access.prison_field_name: field_moj_prisons
+  prisoner_hub_entity_access.category_field_name: field_prison_categories
 services:
-  logger.channel.prisoner_hub_entity_access:
-    parent: logger.channel_base
-    arguments: ['prisoner_hub_entity_access']
   prisoner_hub_entity_access.access_check:
     class: Drupal\prisoner_hub_entity_access\PrisonerContentHubAccessCheck
     arguments: ['@entity_type.manager']
   prisoner_hub_entity_access.query_access_subscriber:
     class: Drupal\prisoner_hub_entity_access\EventSubscriber\QueryAccessSubscriber
-    arguments: ['@entity_field.manager', '@prisoner_hub_prison_context.prison_context']
+    arguments: ['@entity_field.manager', '@current_route_match','%prisoner_hub_entity_access.prison_field_name%', '%prisoner_hub_entity_access.category_field_name%']
     tags:
       - { name: event_subscriber, priority: 100 }
