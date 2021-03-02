@@ -18,13 +18,6 @@ class PrisonContext implements ParamConverterInterface {
   protected $entityTypeManager;
 
   /**
-   * The loaded prison taxonomy term.
-   *
-   * @var \Drupal\taxonomy\Entity\Term
-   */
-  protected $prisonTaxonomyTerm;
-
-  /**
    * Constructs a new PrisonContext object.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
@@ -56,27 +49,14 @@ class PrisonContext implements ParamConverterInterface {
    * @return \Drupal\Core\Entity\EntityInterface|\Drupal\taxonomy\Entity\Term|null
    */
   public function getPrisonTerm(string $name) {
-    if (is_null($this->prisonTaxonomyTerm)) {
-      $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
-      $query->condition('machine_name', $name);
-      $tid = $query->execute();
-      if ($tid) {
-        $this->prisonTaxonomyTerm = $this->entityTypeManager->getStorage('taxonomy_term')->load(reset($tid));
-      }
-      else {
-        $this->prisonTaxonomyTerm = NULL;
-      }
+    $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
+    $query->condition('machine_name', $name);
+    $tid = $query->execute();
+    if ($tid) {
+      return $this->entityTypeManager->getStorage('taxonomy_term')->load(reset($tid));
     }
-    return $this->prisonTaxonomyTerm;
+    else {
+      return NULL;
+    }
   }
-
-  /**
-   * Check whether the current request has a prison context.
-   *
-   * @return bool
-   */
-  public function prisonContextExists() {
-    return (bool)$this->getPrisonTerm();
-  }
-
 }
