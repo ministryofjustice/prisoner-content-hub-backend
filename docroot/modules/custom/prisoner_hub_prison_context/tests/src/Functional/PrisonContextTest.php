@@ -2,21 +2,18 @@
 
 namespace Drupal\Tests\prisoner_hub_prison_context\Functional;
 
-use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
-use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
-use GuzzleHttp\RequestOptions;
+use Drupal\taxonomy\Entity\Vocabulary;
+use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
+use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
  * Functional tests to ensure that prison context jsonapi paths work correctly.
  *
  * @group prisoner_hub_prison_context
  */
-class PrisonContextTest extends BrowserTestBase {
+class PrisonContextTest extends ExistingSiteBase {
 
-  use JsonApiRequestTestTrait;
-  use TaxonomyTestTrait;
+  use TaxonomyCreationTrait;
 
   /**
    * Modules to enable.
@@ -37,11 +34,8 @@ class PrisonContextTest extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->drupalCreateContentType([
-      'type' => 'article',
-      'name' => 'Article',
-    ]);
-    $vocab = $this->createVocabulary();
+    $vocab = Vocabulary::load('prisons');
+
     $this->term = $this->createTerm($vocab);
     /* @var \Drupal\Core\Routing\RouteBuilderInterface $route_builder */
     $route_builder = $this->container->get('router.builder');
@@ -57,16 +51,4 @@ class PrisonContextTest extends BrowserTestBase {
     $this->assertGreaterThan(0, $route_provider->getRoutesByPattern('/jsonapi/prison/{prison}/node/article')->count(), 'There is a least one prison context jsonapi route.');
   }
 
-  /**
-   * Tests that prison context jsonapi routes return a valid response.
-   */
-  public function testResponse() {
-    $machine_name = $this->term->get('machine_name')->getValue();
-
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-
-    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/prison/' . $machine_name[0]['value'] . '/node/article'), $request_options);
-    $this->assertSame(200, $response->getStatusCode());
-  }
 }
