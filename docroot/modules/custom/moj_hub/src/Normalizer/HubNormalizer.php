@@ -16,7 +16,7 @@ use Drupal\taxonomy\Entity\Term;
 class HubNormalizer extends NormalizerBase
 {
 
-	protected $supportedInterfaceOrClass = Term:class;
+	protected $supportedInterfaceOrClass = Term::class;
 
 	/**
 	 * Normalizes an object into a set of arrays/scalars.

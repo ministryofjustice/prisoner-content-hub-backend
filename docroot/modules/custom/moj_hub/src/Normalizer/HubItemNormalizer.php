@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
  * Normalizer for the Video container entity type.
  */
 class HubItemNormalizer extends NormalizerBase {
-	protected $supportedInterfaceOrClass = Node:class;
+	protected $supportedInterfaceOrClass = Node::class;
 
 	/**
 	 * Normalizes an object into a set of arrays/scalars.
