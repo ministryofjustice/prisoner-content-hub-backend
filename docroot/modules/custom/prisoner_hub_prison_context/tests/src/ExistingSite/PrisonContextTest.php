@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_prison_context\Functional;
+namespace Drupal\Tests\prisoner_hub_prison_context\ExistingSite;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
@@ -14,13 +14,6 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 class PrisonContextTest extends ExistingSiteBase {
 
   use TaxonomyCreationTrait;
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['jsonapi', 'prisoner_hub_prison_context'];
 
   /**
    * A user with permission to administer site configuration.
