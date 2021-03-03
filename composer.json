@@ -105,6 +105,7 @@
     ],
     "require-dev": {
         "drupal/console": "^1.9",
-        "drupal/core-dev": "^8.9"
+        "drupal/core-dev": "^8.9",
+        "weitzman/drupal-test-traits": "^1.5"
     }
 }
