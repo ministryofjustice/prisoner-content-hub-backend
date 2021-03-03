@@ -121,8 +121,11 @@ function moj_prisons_views_post_execute(ViewExecutable $view) {
  */
 function _moj_prisons_get_user_related_prison_ids(AccountInterface $account) {
   $user = User::load($account->id());
-  $field_related_prisons = $user->field_related_prisons->getValue();
-  $related_prison_ids = array_map(function($related) { return $related['target_id']; }, $field_related_prisons);
+  $related_prison_ids = [];
+  if ($user->hasField('field_related_prisons')) {
+    $field_related_prisons = $user->field_related_prisons->getValue();
+    $related_prison_ids = array_map(function($related) { return $related['target_id']; }, $field_related_prisons);
+  }
 
   return $related_prison_ids;
 }

@@ -15,7 +15,7 @@ use Drupal\node\Entity\Node;
  */
 class ResultsNormalizer extends NormalizerBase
 {
-    protected $supportedInterfaceOrClass = Node;
+    protected $supportedInterfaceOrClass = Node:class;
 
     /**
      * Normalizes an object into a set of arrays/scalars.
