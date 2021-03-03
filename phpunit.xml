@@ -1,90 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
-<!-- PHPUnit expects functional tests to be run with either a privileged user
- or your current system user. See core/tests/README.md and
- https://www.drupal.org/node/2116263 for details.
+<!-- Copy the samples below into your own phpunit.xml file.-->
+
+<!-- Using this project's bootstrap file allows tests in `ExistingSite`,
+    `ExistingSiteSelenium2DriverTest`, and `ExistingSiteWebDriverTest`
+     to run alongside core's test types. -->
+
+<!-- If you use the default `bootstrap-fast.php` and get 'class not
+     found' errors while running tests, head over to
+     https://gitlab.com/weitzman/drupal-test-traits/-/blob/master/src/bootstrap-fast.php
+     for explanation on how to register those classes.
 -->
-<phpunit bootstrap="docroot/core/tests/bootstrap.php" colors="true"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true"
-         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter">
+<phpunit bootstrap="vendor/weitzman/drupal-test-traits/src/bootstrap.php">
   <php>
-    <!-- Set error reporting to E_ALL. -->
-    <ini name="error_reporting" value="32767"/>
-    <!-- Do not limit the amount of memory tests take to run. -->
-    <ini name="memory_limit" value="-1"/>
-
-    <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
-    <!--<env name="SIMPLETEST_BASE_URL" value="http://localhost"/> -->
-    <!-- Env variable located in prisoner-content-hub/drupal.env -->
-
-    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
-    <!--<env name="SIMPLETEST_DB" value=""/> -->
-    <!-- Env variable located in prisoner-content-hub/drupal.env -->
-
-    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
+    <env name="DTT_BASE_URL" value="http://prisoner-content-hub-backend:8080"/>
+    <env name="DTT_API_URL" value="http://prisoner-content-hub-backend:8080"/>
+    <!-- <env name="DTT_MINK_DRIVER_ARGS" value='["chrome", { "chromeOptions" : { "w3c": false } }, "http://localhost:4444/wd/hub"]'/> -->
+    <env name="DTT_MINK_DRIVER_ARGS" value='["firefox", null, "http://localhost:4444/wd/hub"]'/>
+    <env name="DTT_API_OPTIONS" value='{"socketTimeout": 360, "domWaitTimeout": 3600000}' />
+    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /tmp
+         Specify a temporary directory for storing debug images and html documents.
+         These artifacts get copied to /sites/simpletest/browser_output by BrowserTestBase. -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/phpunit/browser_output"/>
-    <!-- To have browsertest output use an alternative base URL. For example if
-     SIMPLETEST_BASE_URL is an internal DDEV URL, you can set this to the
-     external DDev URL so you can follow the links directly.
-    -->
-    <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
     <!-- To disable deprecation testing completely uncomment the next line. -->
-    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
-    <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
-    <env name="MINK_DRIVER_CLASS" value=''/>
-    <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
-    <env name="MINK_DRIVER_ARGS" value=''/>
-    <!-- Example for changing the driver args to phantomjs tests MINK_DRIVER_ARGS_PHANTOMJS value: '["http://127.0.0.1:8510"]' -->
-    <env name="MINK_DRIVER_ARGS_PHANTOMJS" value=''/>
-    <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
-    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=''/>
+    <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>-->
+    <!-- Specify the default directory screenshots should be placed. -->
+    <!--<env name="DTT_SCREENSHOT_REPORT_DIRECTORY" value=""/>-->
+    <!-- Specify the default directory page captures should be placed.
+        When using the \Drupal\Tests\Listeners\HtmlOutputPrinter printerClass this will default to
+        /sites/simpletest/browser_output. If using another printer such as teamcity this must be defined.
+        -->
+    <!--<env name="DTT_HTML_OUTPUT_DIRECTORY" value=""/>-->
   </php>
+
   <testsuites>
     <testsuite name="unit">
-      <file>./tests/TestSuites/UnitTestSuite.php</file>
+      <directory>./docroot/modules/custom/*/tests/src/Unit</directory>
+      <!--<directory>./docroot/profiles/custom/*/tests/src/Unit</directory>-->
     </testsuite>
     <testsuite name="kernel">
-      <file>./tests/TestSuites/KernelTestSuite.php</file>
+      <directory>./docroot/modules/custom/*/tests/src/Kernel</directory>
+      <!--<directory>./docroot/profiles/custom/*/tests/src/Kernel</directory>-->
     </testsuite>
-    <testsuite name="functional">
-      <file>./tests/TestSuites/FunctionalTestSuite.php</file>
+    <testsuite name="existing-site">
+      <!-- Assumes tests are namespaced as \Drupal\Tests\custom_foo\ExistingSite. -->
+      <directory>./docroot/modules/custom/*/tests/src/ExistingSite</directory>
+      <!--<directory>./docroot/profiles/custom/*/tests/src/ExistingSite</directory>-->
     </testsuite>
-    <testsuite name="functional-javascript">
-      <file>./tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
-    </testsuite>
-    <testsuite name="build">
-      <file>./tests/TestSuites/BuildTestSuite.php</file>
+    <testsuite name="existing-site-javascript">
+      <!-- Assumes tests are namespaced as \Drupal\Tests\custom_foo\ExistingSiteJavascript. -->
+      <directory>./docroot/modules/custom/*/tests/src/ExistingSiteJavascript</directory>
+      <!--<directory>./docroot/profiles/custom/*/tests/src/ExistingSiteJavascript</directory>-->
     </testsuite>
   </testsuites>
-  <listeners>
-    <listener class="\Drupal\Tests\Listeners\DrupalListener">
-    </listener>
-    <!-- The Symfony deprecation listener has to come after the Drupal listener -->
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-    </listener>
-  </listeners>
-  <!-- Filter for coverage reports. -->
-  <filter>
-    <whitelist>
-      <directory>./includes</directory>
-      <directory>./lib</directory>
-      <!-- Extensions can have their own test directories, so exclude those. -->
-      <directory>./modules</directory>
-      <exclude>
-        <directory>./modules/*/src/Tests</directory>
-        <directory>./modules/*/tests</directory>
-      </exclude>
-      <directory>../modules</directory>
-      <exclude>
-        <directory>../modules/*/src/Tests</directory>
-        <directory>../modules/*/tests</directory>
-        <directory>../modules/*/*/src/Tests</directory>
-        <directory>../modules/*/*/tests</directory>
-      </exclude>
-      <directory>../sites</directory>
-    </whitelist>
-  </filter>
 </phpunit>
