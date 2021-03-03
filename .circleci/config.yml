@@ -67,7 +67,7 @@ jobs:
         default: docker-compose.circleci.yml
         type: string
       docker-image-name-backend:
-        default: circleci-prisoner-content-hub-backend
+        default: prisoner-content-hub-backend
         type: string
     steps:
       - checkout
