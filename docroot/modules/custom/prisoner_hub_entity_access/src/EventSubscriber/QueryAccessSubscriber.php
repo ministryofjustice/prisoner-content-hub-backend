@@ -129,21 +129,11 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
       return NULL;
     }
 
-    $condition_group_parent = new ConditionGroup('AND');
-    // First check that the prison field is empty.  As if this field has been
-    // set it should override the prison categories field.
-    $check_prison_field_is_empty_condition_group = new ConditionGroup('OR');
-    $check_prison_field_is_empty_condition_group->addCondition($this->prisonFieldName, 'IS NULL');
-    $bundles = $this->getFieldBundles('node', $this->prisonFieldName);
-    $check_prison_field_is_empty_condition_group->addCondition('type', $bundles, 'NOT IN');
-    $condition_group_parent->addCondition($check_prison_field_is_empty_condition_group);
-
+    $condition_group = new ConditionGroup('OR');
     $bundles = $this->getFieldBundles('node', $this->prisonCategoryFieldName);
-    $check_prison_categories_condition_group = new ConditionGroup('OR');
-    $check_prison_categories_condition_group->addCondition($this->prisonCategoryFieldName, $prison_categories);
-    $check_prison_categories_condition_group->addCondition('type', $bundles, 'NOT IN');
-    $condition_group_parent->addCondition($check_prison_categories_condition_group);
-    return $condition_group_parent;
+    $condition_group->addCondition($this->prisonCategoryFieldName, $prison_categories);
+    $condition_group->addCondition('type', $bundles, 'NOT IN');
+    return $condition_group;
   }
 
   /**
