@@ -108,6 +108,10 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   protected function getPrisonConditionGroup(TermInterface $current_prison) {
     $condition_group = new ConditionGroup('OR');
     $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
+
+    // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
+    // field enabled.  To do this we get a list of all bundles the field is
+    // enabled, and add a 'NOT IN' condition.
     $bundles = $this->getFieldBundles('node', $this->prisonFieldName);
     $condition_group->addCondition('type', $bundles, 'NOT IN');
     return $condition_group;
@@ -125,13 +129,20 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    */
   protected function getPrisonCategoriesConditionGroup(TermInterface $current_prison) {
     $prison_categories = $this->getPrisonCategories($current_prison);
+
+    // If a prison has been setup but has not categories, do not add anything
+    // to the query.
     if (empty($prison_categories)) {
       return NULL;
     }
 
     $condition_group = new ConditionGroup('OR');
-    $bundles = $this->getFieldBundles('node', $this->prisonCategoryFieldName);
     $condition_group->addCondition($this->prisonCategoryFieldName, $prison_categories);
+
+    // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
+    // field enabled.  To do this we get a list of all bundles the field is
+    // enabled, and add a 'NOT IN' condition.
+    $bundles = $this->getFieldBundles('node', $this->prisonCategoryFieldName);
     $condition_group->addCondition('type', $bundles, 'NOT IN');
     return $condition_group;
   }
@@ -158,7 +169,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Get the bundles (content types) that have a certain field.
+   * Get the bundles (e.g. content types, vocabs) that have a certain field.
    *
    * @param string $entity_type_id
    *   The entity type id, e.g. "node".
