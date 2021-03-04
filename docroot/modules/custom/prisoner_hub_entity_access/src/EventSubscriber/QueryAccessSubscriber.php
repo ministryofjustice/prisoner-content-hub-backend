@@ -39,7 +39,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   protected $prisonCategoryFieldName;
 
   /**
-   * The prison category field name.
+   * The prison field name.
    *
    * @var String
    */
