@@ -1,0 +1,11 @@
+services:
+  prisoner_hub_prison_context.prison_context:
+    class: Drupal\prisoner_hub_prison_context\PrisonContext
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: paramconverter }
+  prisoner_hub_prison_context.route_subscriber:
+    class: Drupal\prisoner_hub_prison_context\Routing\RouteSubscriber
+    arguments: ['%jsonapi.base_path%']
+    tags:
+      - { name: event_subscriber }

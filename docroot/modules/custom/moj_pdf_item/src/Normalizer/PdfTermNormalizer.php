@@ -16,7 +16,7 @@ use Drupal\taxonomy\Entity\Term;
 class PdfTermNormalizer extends NormalizerBase
 {
 
-	protected $supportedInterfaceOrClass = Term;
+	protected $supportedInterfaceOrClass = Term::class;
 
 	/**
 	 * Normalizes an object into a set of arrays/scalars.

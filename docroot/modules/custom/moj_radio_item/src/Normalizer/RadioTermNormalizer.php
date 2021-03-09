@@ -17,7 +17,7 @@ use Drupal\image\Entity\ImageStyle;
 class RadioTermNormalizer extends NormalizerBase
 {
 
-	protected $supportedInterfaceOrClass = Term;
+	protected $supportedInterfaceOrClass = Term::class;
 
 	/**
 	 * Normalizes an object into a set of arrays/scalars.

@@ -1,0 +1,8 @@
+name: 'Prisoner Hub Prison Context'
+type: module
+description: 'Provides integration with Drupal for loading the current prison via the url.'
+core: 8.x
+package: 'Custom'
+dependencies:
+  - taxonomy_machine_name:taxonomy_machine_name
+  - drupal:jsonapi

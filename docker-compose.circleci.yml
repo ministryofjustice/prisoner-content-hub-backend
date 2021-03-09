@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  circleci-prisoner-content-hub-backend-db:
+  prisoner-content-hub-backend-db:
     image: mariadb
     env_file:
       - prisoner-content-hub-backend-db.circleci.env
@@ -10,13 +10,13 @@ services:
     networks:
       - circleci-prisoner_content_hub
 
-  circleci-prisoner-content-hub-backend:
+  prisoner-content-hub-backend:
     image: mojdigitalstudio/prisoner-content-hub-backend
     build:
       context: .
       target: test
     depends_on:
-      - circleci-prisoner-content-hub-backend-db
+      - prisoner-content-hub-backend-db
     env_file:
       - prisoner-content-hub-backend.circleci.env
     ports:
