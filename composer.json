@@ -38,6 +38,8 @@
         "drupal/video": "^1.4",
         "drupal/videojs": "^1.0",
         "drupal/view_unpublished": "^1.0",
+        "drupal/views_bulk_edit": "^2.5",
+        "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0"
     },
