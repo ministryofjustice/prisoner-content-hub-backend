@@ -224,6 +224,8 @@ display:
               action_id: node_delete_action
             5:
               action_id: node_publish_action
+            9:
+              action_id: node_unpublish_action
             11:
               action_id: views_bulk_edit
               preconfiguration:
