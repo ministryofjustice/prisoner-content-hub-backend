@@ -82,7 +82,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "unlink('composer-setup.php');"
 
 # Install the global drush launcher
-RUN curl -O https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar \
+RUN curl -OL https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar \
   && chmod +x drush.phar \
   && mv drush.phar /usr/local/bin/drush
 
