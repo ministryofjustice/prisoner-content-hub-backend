@@ -81,6 +81,12 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 \
   && php -r "unlink('composer-setup.php');"
 
+# Install the global drush launcher
+RUN curl -O https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar \
+  && chmod +x drush.phar \
+  && mv drush.phar /usr/local/bin/drush
+
+
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 # Set no memory limit (for PHP running as cli only).
