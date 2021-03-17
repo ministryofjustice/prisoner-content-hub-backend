@@ -81,6 +81,9 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 \
   && php -r "unlink('composer-setup.php');"
 
+# Add the composer bin directory to the path.
+ENV PATH="/var/www/html/vendor/bin:${PATH}"
+
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 # Set no memory limit (for PHP running as cli only).
