@@ -6,14 +6,7 @@ dependencies:
     - field.storage.node.field_moj_hub_thumbnail
     - node.type.moj_hub_item
   module:
-    - content_translation
     - image
-third_party_settings:
-  content_translation:
-    translation_sync:
-      alt: alt
-      title: title
-      file: '0'
 _core:
   default_config_hash: PaF0FOE-k7pRZTGl0bl_1Ajq6ZS0t_06ophw3FnHBL8
 id: node.moj_hub_item.field_moj_hub_thumbnail

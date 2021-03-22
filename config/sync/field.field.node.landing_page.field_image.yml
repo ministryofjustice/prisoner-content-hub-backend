@@ -6,14 +6,7 @@ dependencies:
     - field.storage.node.field_image
     - node.type.landing_page
   module:
-    - content_translation
     - image
-third_party_settings:
-  content_translation:
-    translation_sync:
-      alt: alt
-      title: title
-      file: '0'
 id: node.landing_page.field_image
 field_name: field_image
 entity_type: node

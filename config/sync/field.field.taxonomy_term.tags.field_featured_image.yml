@@ -6,14 +6,7 @@ dependencies:
     - field.storage.taxonomy_term.field_featured_image
     - taxonomy.vocabulary.tags
   module:
-    - content_translation
     - image
-third_party_settings:
-  content_translation:
-    translation_sync:
-      alt: alt
-      title: title
-      file: '0'
 id: taxonomy_term.tags.field_featured_image
 field_name: field_featured_image
 entity_type: taxonomy_term
