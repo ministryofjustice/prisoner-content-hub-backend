@@ -1,9 +1,7 @@
 name: MoJ PDF Content Type
 description: Handles the creation of PDF Item content type
 package: MoJ Self Service
-dependencies:  
+dependencies:
   - moj_radio_item
-  - content_translation
-  - language
 type: module
 core: 8.x
