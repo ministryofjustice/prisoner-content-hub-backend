@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Database\Database;
 use Drupal\user\Entity\Role;
 
 /**
@@ -122,5 +123,56 @@ function moj_update_8025() {
   // Run the profile switch, view the prisoner_content_hub/README.md file for
   // more details as to why we needed to switch.
   \Drupal::service('profile_switcher.profile_switcher')->switchProfile('prisoner_content_hub_profile');
+}
+
+
+/**
+ * Add back in field_deleted_data_xxx db tables.
+ *
+ * These missing tables cause an error on every cron run (when it tries to purge
+ * deleted fields).  And also prevents us from deleting anymore fields.
+ * The error is "Base table or view not found".
+ *
+ * Why did this happen? Well at somepoint a while ago, some fields were removed.
+ * And _probably_ what happened was the process for removing them didn't
+ * complete (it got caught on an error).  OR, data relating to these fields in
+ * the db was manually updated/removed.  Either way, Drupal is expecting these
+ * tables to exist, and it can't complete the field purge process without them.
+ * @See https://drupal.stackexchange.com/a/289971
+ */
+function moj_update_8026() {
+  $db_tables_to_create = [
+    "field_deleted_data_1afc889f5b",
+    "field_deleted_data_986c2a0ece",
+    "field_deleted_data_b6b9cbb425",
+    "field_deleted_data_554dd97e83",
+    "field_deleted_data_d1d0ecad23",
+    "field_deleted_data_ae7326cc3a",
+    "field_deleted_data_c0ce426b7",
+    "field_deleted_data_b48587794a",
+    "field_deleted_data_c0ce426b7f",
+    "field_deleted_data_2fb8951c42",
+    "field_deleted_data_9b7647c183",
+    "field_deleted_data_bc93fe8210",
+    "field_deleted_data_75b2d04b0f",
+    "field_deleted_data_a9c3a5d01a",
+    "field_deleted_data_3ac7d63032",
+    "field_deleted_data_2d495a0ab0",
+    "field_deleted_data_1fec91a5b4",
+  ];
+
+  foreach ($db_tables_to_create as $table_name) {
+    Database::getConnection()->query("CREATE TABLE {" . $table_name . "} (
+`bundle` varchar(128) CHARACTER SET ascii NOT NULL DEFAULT '',
+`deleted` tinyint(4) NOT NULL DEFAULT '0',
+`entity_id` int(10) unsigned NOT NULL,
+`revision_id` int(10) unsigned NOT NULL,
+`langcode` varchar(32) CHARACTER SET ascii NOT NULL DEFAULT '',
+`delta` int(10) unsigned NOT NULL,
+`content_translation_source_value` varchar(12) CHARACTER SET ascii NOT NULL,
+PRIMARY KEY (`entity_id`,`deleted`,`delta`,`langcode`),
+KEY `bundle` (`bundle`),
+KEY `revision_id` (`revision_id`) )");
+  }
 }
 
