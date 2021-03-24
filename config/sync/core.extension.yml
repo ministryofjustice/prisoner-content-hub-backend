@@ -5,7 +5,6 @@ module:
   ckeditor: 0
   comment: 0
   config: 0
-  contextual: 0
   datetime: 0
   dynamic_page_cache: 0
   editor: 0
@@ -19,7 +18,6 @@ module:
   flysystem: 0
   flysystem_s3: 0
   help: 0
-  history: 0
   image: 0
   inline_form_errors: 0
   jsonapi: 0
@@ -45,7 +43,6 @@ module:
   path_alias: 0
   prisoner_hub_entity_access: 0
   prisoner_hub_prison_context: 0
-  quickedit: 0
   raven: 0
   rdf: 0
   rest: 0
