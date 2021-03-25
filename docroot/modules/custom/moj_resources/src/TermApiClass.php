@@ -42,13 +42,6 @@ class TermApiClass
   protected $entity_query;
 
   /**
-   * The custom serializer for terms.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $termSerializer;
-
-  /**
    * Class Constructor
    *
    * @param EntityTypeManager $entityTypeManager
@@ -56,12 +49,10 @@ class TermApiClass
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery,
-    Serializer $termSerializer
+    QueryFactory $entityQuery
   ) {
     $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
     $this->entity_query = $entityQuery;
-    $this->termSerializer = $termSerializer;
   }
   /**
    * API resource function
