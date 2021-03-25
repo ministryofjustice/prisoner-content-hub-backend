@@ -33,8 +33,6 @@ module:
   moj_radio_item: 0
   moj_resources: 0
   moj_search: 0
-  moj_video_collection: 0
-  moj_video_item: 0
   monolog: 0
   node: 0
   options: 0
