@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.featured_articles.field_location
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
     - field.field.node.featured_articles.field_moj_prisons
@@ -22,16 +21,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_location:
-    weight: 15
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_moj_featured_tile_large:
     weight: 11
     settings:
@@ -58,13 +47,6 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
-  langcode:
-    type: language_select
-    weight: 1
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   path:
     type: path
     weight: 7
