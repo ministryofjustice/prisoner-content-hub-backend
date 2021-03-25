@@ -8,7 +8,6 @@ dependencies:
     - field.field.node.article.field_image
     - field.field.node.article.field_moj_category_featured_item
     - field.field.node.article.field_moj_prisons
-    - field.field.node.article.field_moj_weight
     - field.field.node.article.field_tags
     - image.style.thumbnail
     - node.type.article
@@ -48,6 +47,5 @@ content:
 hidden:
   field_moj_category_featured_item: true
   field_moj_prisons: true
-  field_moj_weight: true
   field_tags: true
   search_api_excerpt: true

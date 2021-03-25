@@ -15,7 +15,6 @@ dependencies:
     - field.field.node.page.field_moj_step_by_setp
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
-    - field.field.node.page.field_moj_weight
     - field.field.node.page.field_prison_categories
     - image.style.thumbnail
     - node.type.page
@@ -137,25 +136,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_moj_weight:
-    weight: 19
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_prison_categories:
     weight: 21
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
-  langcode:
-    type: language_select
-    weight: 3
-    settings:
-      include_locked: true
-    third_party_settings: {  }
     region: content
   path:
     type: path

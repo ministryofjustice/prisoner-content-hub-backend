@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.landing_page.field_moj_prisons
     - field.field.node.landing_page.field_moj_secondary_tags
     - field.field.node.landing_page.field_moj_step_by_setp
-    - field.field.node.landing_page.field_moj_weight
     - field.field.node.landing_page.field_prison_categories
     - node.type.landing_page
   module:
@@ -78,15 +77,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_moj_weight:
-    weight: 2
-    label: above
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    type: number_integer
-    region: content
   field_prison_categories:
     weight: 7
     label: above
@@ -101,5 +91,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  langcode: true
   search_api_excerpt: true

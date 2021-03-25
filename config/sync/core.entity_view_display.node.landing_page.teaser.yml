@@ -11,7 +11,6 @@ dependencies:
     - field.field.node.landing_page.field_moj_prisons
     - field.field.node.landing_page.field_moj_secondary_tags
     - field.field.node.landing_page.field_moj_step_by_setp
-    - field.field.node.landing_page.field_moj_weight
     - field.field.node.landing_page.field_prison_categories
     - node.type.landing_page
   module:
@@ -34,7 +33,5 @@ hidden:
   field_moj_prisons: true
   field_moj_secondary_tags: true
   field_moj_step_by_setp: true
-  field_moj_weight: true
   field_prison_categories: true
-  langcode: true
   search_api_excerpt: true

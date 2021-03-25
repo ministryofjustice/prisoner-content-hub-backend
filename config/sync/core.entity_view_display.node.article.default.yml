@@ -7,7 +7,6 @@ dependencies:
     - field.field.node.article.field_image
     - field.field.node.article.field_moj_category_featured_item
     - field.field.node.article.field_moj_prisons
-    - field.field.node.article.field_moj_weight
     - field.field.node.article.field_tags
     - image.style.large
     - node.type.article
@@ -55,15 +54,6 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
-    region: content
-  field_moj_weight:
-    weight: 101
-    label: above
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    type: number_integer
     region: content
   field_tags:
     type: entity_reference_label
