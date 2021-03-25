@@ -13,7 +13,6 @@ dependencies:
     - field.field.node.page.field_moj_secondary_tags
     - field.field.node.page.field_moj_series
     - field.field.node.page.field_moj_stand_first
-    - field.field.node.page.field_moj_step_by_setp
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
     - field.field.node.page.field_prison_categories
@@ -37,7 +36,6 @@ hidden:
   field_moj_secondary_tags: true
   field_moj_series: true
   field_moj_stand_first: true
-  field_moj_step_by_setp: true
   field_moj_thumbnail_image: true
   field_moj_top_level_categories: true
   field_prison_categories: true

@@ -12,7 +12,6 @@ dependencies:
     - field.field.node.page.field_moj_secondary_tags
     - field.field.node.page.field_moj_series
     - field.field.node.page.field_moj_stand_first
-    - field.field.node.page.field_moj_step_by_setp
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
     - field.field.node.page.field_prison_categories
@@ -107,16 +106,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
-    region: content
-  field_moj_step_by_setp:
-    weight: 14
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_moj_thumbnail_image:
     weight: 2

@@ -14,7 +14,6 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_season
     - field.field.node.moj_pdf_item.field_moj_secondary_tags
     - field.field.node.moj_pdf_item.field_moj_series
-    - field.field.node.moj_pdf_item.field_moj_step_by_setp
     - field.field.node.moj_pdf_item.field_moj_tags
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
@@ -112,14 +111,6 @@ content:
     region: content
   field_moj_series:
     weight: 8
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_moj_step_by_setp:
-    weight: 14
     label: above
     settings:
       link: true
