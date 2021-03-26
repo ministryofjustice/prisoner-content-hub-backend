@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_video_item.field_is_global_content
-    - field.field.node.moj_video_item.field_moj_categories
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_date
     - field.field.node.moj_video_item.field_moj_description
@@ -214,7 +213,6 @@ content:
 hidden:
   field_is_global_content: true
   field_moj_archived: true
-  field_moj_categories: true
   field_moj_duration: true
   field_moj_tags: true
   field_related_prisons: true

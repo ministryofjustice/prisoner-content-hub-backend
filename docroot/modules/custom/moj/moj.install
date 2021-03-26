@@ -176,3 +176,10 @@ KEY `revision_id` (`revision_id`) )");
   }
 }
 
+/**
+ * Remove table that prevents field_moj_categories from being deleted (as it
+ * tries to recreate this table after it is deleted).
+ */
+function moj_update_8027() {
+  Database::getConnection()->query('DROP TABLE field_deleted_data_ae7326cc3a');
+}

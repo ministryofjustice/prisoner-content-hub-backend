@@ -2,13 +2,7 @@ uuid: 29080dc1-35a3-41aa-a511-79a3a8509bd9
 langcode: en
 status: true
 dependencies:
-  module:
-    - node
-    - user
-    - taxonomy
-    - search_api
   config:
-    - field.storage.node.field_moj_categories
     - field.storage.node.field_moj_top_level_categories
     - field.storage.node.field_moj_date
     - field.storage.node.field_moj_prisons
@@ -18,21 +12,16 @@ dependencies:
     - field.storage.node.field_moj_description
     - field.storage.node.field_moj_tags
     - search_api.server.elasticsearch
+  module:
+    - taxonomy
+    - node
+    - user
+    - search_api
 id: content_index
 name: 'Content Index'
 description: ''
 read_only: false
 field_settings:
-  categories_name:
-    label: Categories
-    datasource_id: 'entity:node'
-    property_path: 'field_moj_categories:entity:name'
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_moj_categories
-      module:
-        - taxonomy
   category_name:
     label: Category
     datasource_id: 'entity:node'

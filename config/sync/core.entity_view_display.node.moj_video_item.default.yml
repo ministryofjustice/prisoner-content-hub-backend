@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_video_item.field_is_global_content
-    - field.field.node.moj_video_item.field_moj_categories
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_date
     - field.field.node.moj_video_item.field_moj_description
@@ -35,14 +34,6 @@ targetEntityType: node
 bundle: moj_video_item
 mode: default
 content:
-  field_moj_categories:
-    type: entity_reference_label
-    weight: 5
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    region: content
   field_moj_category_featured_item:
     weight: 17
     label: above
