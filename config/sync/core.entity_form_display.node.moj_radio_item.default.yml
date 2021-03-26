@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_prisons
     - field.field.node.moj_radio_item.field_moj_programme_code
     - field.field.node.moj_radio_item.field_moj_season
+    - field.field.node.moj_radio_item.field_moj_secondary_tags
     - field.field.node.moj_radio_item.field_moj_series
     - field.field.node.moj_radio_item.field_moj_tags
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
@@ -97,6 +98,16 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: number
+    region: content
+  field_moj_secondary_tags:
+    weight: 27
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_moj_series:
     weight: 12
