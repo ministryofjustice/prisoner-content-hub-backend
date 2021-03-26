@@ -121,7 +121,6 @@ class RelatedContentApiClass
     $response['content_type'] = $relatedContentItem->type->target_id;
     $response['summary'] = $relatedContentItem->field_moj_description->summary;
     $response['image'] = $relatedContentItem->field_moj_thumbnail_image[0] ? $relatedContentItem->field_moj_thumbnail_image[0] : $relatedContentItem->field_image[0];
-    $response['duration'] = $relatedContentItem->field_moj_duration ? $relatedContentItem->field_moj_duration->value : 0;
 
     return $response;
   }

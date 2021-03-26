@@ -110,7 +110,6 @@ class CategoryFeaturedContentApiClass
     $content['content_type'] = $node->type->target_id;
     $content['summary'] = $node->field_moj_description->summary;
     $content['image'] = $node->field_moj_thumbnail_image[0] ? $node->field_moj_thumbnail_image[0] : $node->field_image[0];
-    $content['duration'] = $node->field_moj_duration->value;
 
     return $content;
   }
