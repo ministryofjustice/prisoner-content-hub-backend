@@ -91,7 +91,6 @@ class RelatedContentApiClass
       $categoryCondition = $query
         ->orConditionGroup()
         ->condition('field_moj_top_level_categories', $categoryId)
-        ->condition('field_moj_tags', $categoryId)
         ->condition('field_moj_secondary_tags', $categoryId);
 
       $query->condition($categoryCondition);

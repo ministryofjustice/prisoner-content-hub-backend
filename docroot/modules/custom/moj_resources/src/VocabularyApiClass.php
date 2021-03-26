@@ -112,13 +112,9 @@ class VocabularyApiClass
 
       $query = getPrisonResults($this->prisonId, $query);
 
-      $group = $query
-        ->orConditionGroup()
-        ->condition('field_moj_secondary_tags', $termId)
-        ->condition('field_moj_tags', $termId);
+      $query->condition('field_moj_secondary_tags', $termId);
 
       return $query
-        ->condition($group)
         ->execute();
     }
 
