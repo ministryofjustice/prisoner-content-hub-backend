@@ -197,6 +197,7 @@ function moj_update_8028() {
   Database::getConnection()->query('DROP TABLE field_deleted_data_554dd97e83');
   Database::getConnection()->query('DROP TABLE field_deleted_data_9b7647c183');
   Database::getConnection()->query('DROP TABLE field_deleted_data_c0ce426b7');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_c0ce426b7f');
   Database::getConnection()->query('DROP TABLE field_deleted_data_d1d0ecad23');
 }
 
