@@ -18,7 +18,6 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
     - field.field.node.moj_radio_item.field_prison_categories
-    - field.field.node.moj_radio_item.field_related_prisons
     - node.type.moj_radio_item
   module:
     - datetime
@@ -137,6 +136,5 @@ hidden:
   field_is_global_content: true
   field_moj_audio: true
   field_moj_tags: true
-  field_related_prisons: true
   links: true
   search_api_excerpt: true

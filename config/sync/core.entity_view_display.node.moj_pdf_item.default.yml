@@ -17,7 +17,6 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
     - field.field.node.moj_pdf_item.field_prison_categories
-    - field.field.node.moj_pdf_item.field_related_prisons
     - node.type.moj_pdf_item
   module:
     - datetime
@@ -148,5 +147,4 @@ content:
     third_party_settings: {  }
 hidden:
   field_is_global_content: true
-  field_related_prisons: true
   search_api_excerpt: true

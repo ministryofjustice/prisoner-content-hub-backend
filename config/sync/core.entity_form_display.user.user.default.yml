@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.user.user.field_related_prisons
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -44,6 +43,4 @@ content:
     third_party_settings: {  }
     weight: -1
     region: content
-hidden:
-  field_related_prisons: true
-  langcode: true
+hidden: {  }

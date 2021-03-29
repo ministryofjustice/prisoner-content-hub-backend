@@ -3,9 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.moj_hub_item.field_moj_hub_allowed_prisons
     - field.field.node.moj_hub_item.field_moj_hub_allowed_users
-    - field.field.node.moj_hub_item.field_moj_hub_forbidden_prisons
     - field.field.node.moj_hub_item.field_moj_hub_forbidden_users
     - field.field.node.moj_hub_item.field_moj_hub_hidden
     - field.field.node.moj_hub_item.field_moj_hub_link
@@ -90,9 +88,7 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
-  field_moj_hub_allowed_prisons: true
   field_moj_hub_allowed_users: true
-  field_moj_hub_forbidden_prisons: true
   field_moj_hub_forbidden_users: true
   field_moj_hub_hidden: true
   field_moj_weight: true

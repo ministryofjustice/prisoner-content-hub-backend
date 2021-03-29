@@ -17,7 +17,6 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
     - field.field.node.moj_pdf_item.field_prison_categories
-    - field.field.node.moj_pdf_item.field_related_prisons
     - image.style.thumbnail
     - node.type.moj_pdf_item
   module:
@@ -199,4 +198,3 @@ content:
 hidden:
   field_is_global_content: true
   field_moj_tags: true
-  field_related_prisons: true
