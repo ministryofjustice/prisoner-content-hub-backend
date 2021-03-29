@@ -14,12 +14,10 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_season
     - field.field.node.moj_video_item.field_moj_secondary_tags
     - field.field.node.moj_video_item.field_moj_series
-    - field.field.node.moj_video_item.field_moj_step_by_setp
     - field.field.node.moj_video_item.field_moj_subtitles
     - field.field.node.moj_video_item.field_moj_tags
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
-    - field.field.node.moj_video_item.field_moj_weight
     - field.field.node.moj_video_item.field_prison_categories
     - field.field.node.moj_video_item.field_related_prisons
     - field.field.node.moj_video_item.field_video
@@ -108,16 +106,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_moj_step_by_setp:
-    weight: 18
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_moj_subtitles:
     weight: 10
     settings:
@@ -143,13 +131,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete_tags
     region: content
-  field_moj_weight:
-    weight: 22
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_prison_categories:
     weight: 24
     settings: {  }
@@ -163,13 +144,6 @@ content:
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
-  langcode:
-    type: language_select
-    weight: 2
-    settings:
-      include_locked: true
-    third_party_settings: {  }
-    region: content
   path:
     type: path
     weight: 5

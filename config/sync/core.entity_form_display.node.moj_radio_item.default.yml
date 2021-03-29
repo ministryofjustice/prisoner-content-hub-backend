@@ -15,11 +15,9 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_programme_code
     - field.field.node.moj_radio_item.field_moj_season
     - field.field.node.moj_radio_item.field_moj_series
-    - field.field.node.moj_radio_item.field_moj_step_by_setp
     - field.field.node.moj_radio_item.field_moj_tags
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
-    - field.field.node.moj_radio_item.field_moj_weight
     - field.field.node.moj_radio_item.field_prison_categories
     - field.field.node.moj_radio_item.field_related_prisons
     - image.style.thumbnail
@@ -112,16 +110,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_moj_step_by_setp:
-    weight: 17
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_moj_tags:
     type: entity_reference_autocomplete
     weight: 16
@@ -150,25 +138,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete_tags
     region: content
-  field_moj_weight:
-    weight: 20
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_prison_categories:
     weight: 23
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
-  langcode:
-    type: language_select
-    weight: 2
-    settings:
-      include_locked: true
-    third_party_settings: {  }
     region: content
   path:
     type: path

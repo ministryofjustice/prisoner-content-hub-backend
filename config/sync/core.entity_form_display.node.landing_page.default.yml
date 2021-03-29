@@ -8,9 +8,6 @@ dependencies:
     - field.field.node.landing_page.field_moj_landing_feature_contet
     - field.field.node.landing_page.field_moj_landing_page_term
     - field.field.node.landing_page.field_moj_prisons
-    - field.field.node.landing_page.field_moj_secondary_tags
-    - field.field.node.landing_page.field_moj_step_by_setp
-    - field.field.node.landing_page.field_moj_weight
     - field.field.node.landing_page.field_prison_categories
     - image.style.thumbnail
     - node.type.landing_page
@@ -74,46 +71,12 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_moj_secondary_tags:
-    weight: 11
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_moj_step_by_setp:
-    weight: 12
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_moj_weight:
-    weight: 14
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_prison_categories:
     weight: 16
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
-  langcode:
-    type: language_select
-    weight: 2
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   path:
     type: path
     weight: 8

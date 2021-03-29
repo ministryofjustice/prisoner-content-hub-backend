@@ -12,10 +12,8 @@ dependencies:
     - field.field.node.page.field_moj_secondary_tags
     - field.field.node.page.field_moj_series
     - field.field.node.page.field_moj_stand_first
-    - field.field.node.page.field_moj_step_by_setp
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
-    - field.field.node.page.field_moj_weight
     - field.field.node.page.field_prison_categories
     - node.type.page
   module:
@@ -105,14 +103,6 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_moj_step_by_setp:
-    weight: 12
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_moj_thumbnail_image:
     weight: 7
     label: above
@@ -130,15 +120,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_moj_weight:
-    weight: 9
-    label: above
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    type: number_integer
-    region: content
   field_prison_categories:
     weight: 11
     label: above
@@ -153,5 +134,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  langcode: true
   search_api_excerpt: true

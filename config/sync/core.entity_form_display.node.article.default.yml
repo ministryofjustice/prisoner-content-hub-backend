@@ -4,18 +4,16 @@ status: true
 dependencies:
   config:
     - field.field.node.article.body
-    - field.field.node.article.comment
     - field.field.node.article.field_image
     - field.field.node.article.field_moj_category_featured_item
     - field.field.node.article.field_moj_prisons
-    - field.field.node.article.field_moj_weight
     - field.field.node.article.field_tags
     - image.style.thumbnail
     - node.type.article
   module:
-    - comment
     - image
     - path
+    - scheduler
     - text
 _core:
   default_config_hash: 7CvVDwPYotAZFBa36mcpMKZOfVRRp_iGuPHpHaavI6E
@@ -32,12 +30,6 @@ content:
       summary_rows: 3
       placeholder: ''
       show_summary: false
-    third_party_settings: {  }
-    region: content
-  comment:
-    type: comment_default
-    weight: 10
-    settings: {  }
     third_party_settings: {  }
     region: content
   created:
@@ -67,13 +59,6 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_moj_weight:
-    weight: 13
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_tags:
     type: entity_reference_autocomplete_tags
     weight: 3
@@ -82,13 +67,6 @@ content:
       size: 60
       placeholder: ''
       match_limit: 10
-    third_party_settings: {  }
-    region: content
-  langcode:
-    type: language_select
-    weight: 2
-    settings:
-      include_locked: true
     third_party_settings: {  }
     region: content
   path:
@@ -102,6 +80,17 @@ content:
     settings:
       display_label: true
     weight: 8
+    third_party_settings: {  }
+    region: content
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
     third_party_settings: {  }
     region: content
   status:
@@ -136,4 +125,10 @@ content:
       match_limit: 10
     third_party_settings: {  }
     region: content
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden: {  }

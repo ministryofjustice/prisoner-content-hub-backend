@@ -96,4 +96,4 @@ hidden:
   field_moj_hub_forbidden_users: true
   field_moj_hub_hidden: true
   field_moj_weight: true
-  langcode: true
+  search_api_excerpt: true

@@ -93,13 +93,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     region: content
-  langcode:
-    type: language_select
-    weight: 1
-    settings:
-      include_locked: true
-    third_party_settings: {  }
-    region: content
   path:
     type: path
     weight: 9
@@ -111,6 +104,17 @@ content:
     settings:
       display_label: true
     weight: 7
+    third_party_settings: {  }
+    region: content
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
     third_party_settings: {  }
     region: content
   status:
@@ -150,6 +154,12 @@ content:
       match_limit: 10
     third_party_settings: {  }
     region: content
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_moj_hub_allowed_prisons: true
   field_moj_hub_allowed_users: true

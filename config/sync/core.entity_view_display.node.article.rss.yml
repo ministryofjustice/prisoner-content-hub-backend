@@ -5,10 +5,9 @@ dependencies:
   config:
     - core.entity_view_mode.node.rss
     - field.field.node.article.body
-    - field.field.node.article.comment
     - field.field.node.article.field_image
+    - field.field.node.article.field_moj_category_featured_item
     - field.field.node.article.field_moj_prisons
-    - field.field.node.article.field_moj_weight
     - field.field.node.article.field_tags
     - node.type.article
   module:
@@ -27,9 +26,8 @@ content:
     third_party_settings: {  }
 hidden:
   body: true
-  comment: true
   field_image: true
+  field_moj_category_featured_item: true
   field_moj_prisons: true
-  field_moj_weight: true
   field_tags: true
-  langcode: true
+  search_api_excerpt: true
