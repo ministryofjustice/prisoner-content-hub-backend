@@ -176,3 +176,20 @@ KEY `revision_id` (`revision_id`) )");
   }
 }
 
+/**
+ * Remove all unused field_deleted_data_xxx tables, that were setup in
+ * moj_update_8026.  These tables weren't actually needed, and so end up causing
+ * errors.  (Hopefully this will be the last of this mess!).
+ */
+function moj_update_8028() {
+  Database::getConnection()->query('DROP TABLE field_deleted_data_ae7326cc3a');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_2d495a0ab0');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_2fb8951c42');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_3ac7d63032');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_554dd97e83');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_9b7647c183');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_c0ce426b7');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_c0ce426b7f');
+  Database::getConnection()->query('DROP TABLE field_deleted_data_d1d0ecad23');
+}
+
