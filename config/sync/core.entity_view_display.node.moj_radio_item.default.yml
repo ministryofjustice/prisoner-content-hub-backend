@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.moj_radio_item.field_is_global_content
     - field.field.node.moj_radio_item.field_moj_audio
     - field.field.node.moj_radio_item.field_moj_category_featured_item
     - field.field.node.moj_radio_item.field_moj_date
@@ -133,7 +132,6 @@ content:
     type: entity_reference_label
     region: content
 hidden:
-  field_is_global_content: true
   field_moj_audio: true
   field_moj_tags: true
   links: true

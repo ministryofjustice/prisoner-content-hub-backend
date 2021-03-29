@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.moj_pdf_item.field_is_global_content
     - field.field.node.moj_pdf_item.field_moj_category_featured_item
     - field.field.node.moj_pdf_item.field_moj_date
     - field.field.node.moj_pdf_item.field_moj_description
@@ -196,5 +195,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_is_global_content: true
   field_moj_tags: true
