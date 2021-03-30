@@ -178,19 +178,12 @@ KEY `revision_id` (`revision_id`) )");
 }
 
 /**
- * Remove table that prevents field_moj_categories from being deleted (as it
- * tries to recreate this table after it is deleted).
- */
-function moj_update_8027() {
-  Database::getConnection()->query('DROP TABLE field_deleted_data_ae7326cc3a');
-}
-
-/**
  * Remove all unused field_deleted_data_xxx tables, that were setup in
- * moj_update_8026.  These tables weren't actually needed, and so could at
- * somepoint cause additional errors.
+ * moj_update_8026.  These tables weren't actually needed, and so end up causing
+ * errors.  (Hopefully this will be the last of this mess!).
  */
 function moj_update_8028() {
+  Database::getConnection()->query('DROP TABLE field_deleted_data_ae7326cc3a');
   Database::getConnection()->query('DROP TABLE field_deleted_data_2d495a0ab0');
   Database::getConnection()->query('DROP TABLE field_deleted_data_2fb8951c42');
   Database::getConnection()->query('DROP TABLE field_deleted_data_3ac7d63032');
@@ -213,4 +206,3 @@ function moj_update_8029() {
     $prison->delete();
   }
 }
-
