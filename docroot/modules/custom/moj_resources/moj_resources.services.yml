@@ -26,7 +26,6 @@ services:
       [
         "@entity_type.manager",
         "@entity.query",
-        "@moj_pdf_item.link.serializer.default",
       ]
   moj_resources.term_api_class:
     class: Drupal\moj_resources\TermApiClass
@@ -34,5 +33,4 @@ services:
       [
         "@entity_type.manager",
         "@entity.query",
-        "@moj_pdf_item.link.serializer.default",
       ]
