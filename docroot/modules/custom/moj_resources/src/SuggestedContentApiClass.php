@@ -143,13 +143,9 @@ class SuggestedContentApiClass
   private function getAllSecondaryTagItemsFor($tagIds)
   {
     $query = $this->getInitialQuery();
-    $group = $query
-      ->orConditionGroup()
-      ->condition('field_moj_secondary_tags', $tagIds, 'IN')
-      ->condition('field_moj_tags', $tagIds, 'IN');
 
     return $query
-      ->condition($group)
+      ->condition('field_moj_secondary_tags', $tagIds, 'IN')
       ->sort('nid', 'DESC')
       ->range(0, $this->numberOfResults)
       ->execute();

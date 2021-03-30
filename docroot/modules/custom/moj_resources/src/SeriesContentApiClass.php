@@ -119,11 +119,7 @@ class SeriesContentApiClass
       $result["episode"] = $curr->field_moj_episode->value;
       $result["description"] = $curr->field_moj_description[0];
       $result["categories"] = $curr->field_moj_top_level_categories;
-      if ($curr->field_moj_secondary_tags) {
-        $result["secondary_tags"] = $curr->field_moj_secondary_tags;
-      } else {
-        $result["secondary_tags"] = $curr->field_moj_tags;
-      }
+      $result["secondary_tags"] = $curr->field_moj_secondary_tags;
       $result["prisons"] = $curr->field_moj_prisons;
 
       if ($result["content_type"] === 'moj_radio_item') {

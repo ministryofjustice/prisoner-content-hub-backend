@@ -99,11 +99,7 @@ class CategoryMenuApiClass
       ->accessCheck(false);
 
     if ($this->categoryId !== 0) {
-      $categoryIdCondition = $query
-        ->orConditionGroup()
-        ->condition('field_moj_top_level_categories', $this->categoryId)
-        ->condition('field_moj_tags', $this->categoryId);
-      $query->condition($categoryIdCondition);
+     $query->condition('field_moj_top_level_categories', $this->categoryId);
     }
 
     $query = getPrisonResults($this->prisonId, $query);
