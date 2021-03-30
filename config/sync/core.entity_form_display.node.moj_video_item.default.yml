@@ -7,7 +7,6 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_date
     - field.field.node.moj_video_item.field_moj_description
-    - field.field.node.moj_video_item.field_moj_duration
     - field.field.node.moj_video_item.field_moj_episode
     - field.field.node.moj_video_item.field_moj_prisons
     - field.field.node.moj_video_item.field_moj_season
@@ -213,6 +212,5 @@ content:
 hidden:
   field_is_global_content: true
   field_moj_archived: true
-  field_moj_duration: true
   field_moj_tags: true
   field_related_prisons: true

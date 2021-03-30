@@ -7,7 +7,6 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_date
     - field.field.node.moj_video_item.field_moj_description
-    - field.field.node.moj_video_item.field_moj_duration
     - field.field.node.moj_video_item.field_moj_episode
     - field.field.node.moj_video_item.field_moj_prisons
     - field.field.node.moj_video_item.field_moj_season
@@ -59,14 +58,6 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    region: content
-  field_moj_duration:
-    weight: 2
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
     region: content
   field_moj_episode:
     weight: 11

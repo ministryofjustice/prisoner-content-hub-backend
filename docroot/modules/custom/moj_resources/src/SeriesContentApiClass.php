@@ -117,7 +117,6 @@ class SeriesContentApiClass
       $result["image"] = $curr->field_moj_thumbnail_image[0];
       $result["season"] = $curr->field_moj_season->value;
       $result["episode"] = $curr->field_moj_episode->value;
-      $result["duration"] = $curr->field_moj_duration ? $curr->field_moj_duration->value : 0;
       $result["description"] = $curr->field_moj_description[0];
       $result["categories"] = $curr->field_moj_top_level_categories;
       if ($curr->field_moj_secondary_tags) {

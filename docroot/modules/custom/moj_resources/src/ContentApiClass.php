@@ -176,7 +176,6 @@ class ContentApiClass
     $result["series_id"] = $node->field_moj_series[0]->target_id;
     $result["season"] = $node->field_moj_season->value;
     $result["episode"] = $node->field_moj_episode->value;
-    $result["duration"] = $node->field_moj_duration->value;
     $result["programme_code"] = $node->field_moj_programme_code->value;
 
     return $result;
@@ -190,7 +189,6 @@ class ContentApiClass
     $result["series_id"] = $node->field_moj_series[0]->target_id;
     $result["season"] = $node->field_moj_season->value;
     $result["episode"] = $node->field_moj_episode->value;
-    $result["duration"] = $node->field_moj_duration->value;
 
     return $result;
   }
