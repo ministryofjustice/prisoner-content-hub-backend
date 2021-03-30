@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Database\Database;
-use Drupal\moj_prisons\Entity\Prison;
 use Drupal\user\Entity\Role;
 
 /**
@@ -201,7 +200,8 @@ function moj_update_8028() {
 function moj_update_8029() {
   $query = \Drupal::entityQuery('prison');
   $results = $query->execute();
-  $prisons = Prison::loadMultiple($results);
+  // Use inline namespace as this module will later be disabled/removed.
+  $prisons = Drupal\moj_prisons\Entity\Prison::loadMultiple($results);
   foreach ($prisons as $prison) {
     $prison->delete();
   }
