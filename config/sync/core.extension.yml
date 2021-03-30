@@ -26,7 +26,6 @@ module:
   moj: 0
   moj_healthcheck: 0
   moj_hub: 0
-  moj_lang_welsh: 0
   moj_resources: 0
   moj_search: 0
   monolog: 0
