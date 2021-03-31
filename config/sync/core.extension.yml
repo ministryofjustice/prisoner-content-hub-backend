@@ -6,6 +6,7 @@ module:
   ckeditor: 0
   config: 0
   datetime: 0
+  diff: 0
   dynamic_page_cache: 0
   editor: 0
   elasticsearch_connector: 0
