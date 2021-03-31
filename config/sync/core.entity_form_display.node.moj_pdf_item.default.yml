@@ -12,7 +12,6 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_season
     - field.field.node.moj_pdf_item.field_moj_secondary_tags
     - field.field.node.moj_pdf_item.field_moj_series
-    - field.field.node.moj_pdf_item.field_moj_tags
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
     - field.field.node.moj_pdf_item.field_prison_categories
@@ -194,5 +193,4 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_moj_tags: true
+hidden: {  }
