@@ -10,7 +10,6 @@ dependencies:
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_stand_first
     - field.storage.node.field_moj_description
-    - field.storage.node.field_moj_tags
     - search_api.server.elasticsearch
   module:
     - taxonomy
@@ -120,16 +119,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_moj_description
-  tags_name:
-    label: Tags
-    datasource_id: 'entity:node'
-    property_path: 'field_moj_tags:entity:name'
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_moj_tags
-      module:
-        - taxonomy
   title:
     label: Title
     datasource_id: 'entity:node'
