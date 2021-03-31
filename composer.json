@@ -33,6 +33,7 @@
         "drupal/role_delegation": "^1.1",
         "drupal/scheduler": "^1.3",
         "drupal/search_api": "^1.17",
+        "drupal/select2": "^1.13",
         "drupal/taxonomy_machine_name": "1.x-dev",
         "drupal/theme_switcher": "^1.1",
         "drupal/token": "^1.5",
@@ -42,7 +43,9 @@
         "drupal/views_bulk_edit": "^2.5",
         "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^10.3",
-        "mhor/php-mediainfo": "^5.1.0"
+        "mhor/php-mediainfo": "^5.1.0",
+        "npm-asset/select2": "^4.0",
+        "oomphinc/composer-installers-extender": "^2.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -70,7 +73,9 @@
                 "type:drupal-core"
             ],
             "docroot/libraries/{$name}": [
-                "type:drupal-library"
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
             ],
             "docroot/modules/contrib/{$name}": [
                 "type:drupal-module"
@@ -94,6 +99,7 @@
                 "type:drupal-custom-theme"
             ]
         },
+        "installer-types": ["bower-asset", "npm-asset"],
         "patches": {
             "drupal/flysystem_s3": {
                 "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
@@ -104,6 +110,10 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
     "require-dev": {

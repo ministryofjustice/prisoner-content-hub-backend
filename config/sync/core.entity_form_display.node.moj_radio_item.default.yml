@@ -25,6 +25,7 @@ dependencies:
     - image
     - path
     - scheduler
+    - select2
     - text
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
@@ -102,20 +103,20 @@ content:
     settings:
       match_operator: CONTAINS
       match_limit: 10
-      size: 60
-      placeholder: ''
+      autocomplete: false
+      width: 100%
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: select2_entity_reference
     region: content
   field_moj_series:
     weight: 10
     settings:
+      autocomplete: false
       match_operator: CONTAINS
-      size: 60
-      placeholder: ''
       match_limit: 10
+      width: 100%
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: select2_entity_reference
     region: content
   field_moj_thumbnail_image:
     weight: 6
@@ -128,12 +129,12 @@ content:
   field_moj_top_level_categories:
     weight: 8
     settings:
+      autocomplete: false
       match_operator: CONTAINS
-      size: 60
-      placeholder: ''
       match_limit: 10
+      width: 100%
     third_party_settings: {  }
-    type: entity_reference_autocomplete_tags
+    type: select2_entity_reference
     region: content
   field_prison_categories:
     weight: 18

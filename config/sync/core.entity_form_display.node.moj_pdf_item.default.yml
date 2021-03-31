@@ -24,6 +24,7 @@ dependencies:
     - image
     - path
     - scheduler
+    - select2
     - text
 _core:
   default_config_hash: Oo1-wQanlhvJ6-TSJzG1NYGLiNQTTRYKYbcOAPOE09g
@@ -34,12 +35,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 10
+    weight: 9
     settings:
       display_label: true
     third_party_settings: {  }
@@ -52,7 +53,7 @@ content:
     type: datetime_default
     region: content
   field_moj_description:
-    weight: 7
+    weight: 6
     settings:
       rows: 9
       summary_rows: 3
@@ -62,54 +63,54 @@ content:
     type: text_textarea_with_summary
     region: content
   field_moj_episode:
-    weight: 13
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
-  field_moj_pdf:
-    weight: 6
-    settings:
-      progress_indicator: throbber
-    third_party_settings: {  }
-    type: file_generic
-    region: content
-  field_moj_prisons:
-    weight: 20
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
-    region: content
-  field_moj_season:
     weight: 12
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
-  field_moj_secondary_tags:
-    weight: 15
+  field_moj_pdf:
+    weight: 5
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
+      progress_indicator: throbber
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: file_generic
     region: content
-  field_moj_series:
+  field_moj_prisons:
+    weight: 17
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_moj_season:
     weight: 11
     settings:
-      match_operator: CONTAINS
-      size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: number
+    region: content
+  field_moj_secondary_tags:
+    weight: 13
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      autocomplete: false
+      width: 100%
+    third_party_settings: {  }
+    type: select2_entity_reference
+    region: content
+  field_moj_series:
+    weight: 10
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      autocomplete: false
+      width: 100%
+    third_party_settings: {  }
+    type: select2_entity_reference
     region: content
   field_moj_thumbnail_image:
-    weight: 8
+    weight: 7
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -117,24 +118,24 @@ content:
     type: image_image
     region: content
   field_moj_top_level_categories:
-    weight: 9
+    weight: 8
     settings:
       match_operator: CONTAINS
-      size: 60
-      placeholder: ''
       match_limit: 10
+      autocomplete: false
+      width: 100%
     third_party_settings: {  }
-    type: entity_reference_autocomplete_tags
+    type: select2_entity_reference
     region: content
   field_prison_categories:
-    weight: 21
+    weight: 18
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   path:
     type: path
-    weight: 5
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     region: content
@@ -142,17 +143,17 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 15
     third_party_settings: {  }
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 24
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 22
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -160,14 +161,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 16
     third_party_settings: {  }
     region: content
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 3
     third_party_settings: {  }
     region: content
   title:
@@ -180,7 +181,7 @@ content:
     region: content
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60
@@ -190,7 +191,7 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 23
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
