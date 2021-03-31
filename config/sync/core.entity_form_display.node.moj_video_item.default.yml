@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.moj_video_item.field_is_global_content
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_date
     - field.field.node.moj_video_item.field_moj_description
@@ -13,11 +12,9 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_secondary_tags
     - field.field.node.moj_video_item.field_moj_series
     - field.field.node.moj_video_item.field_moj_subtitles
-    - field.field.node.moj_video_item.field_moj_tags
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
     - field.field.node.moj_video_item.field_prison_categories
-    - field.field.node.moj_video_item.field_related_prisons
     - field.field.node.moj_video_item.field_video
     - image.style.thumbnail
     - node.type.moj_video_item
@@ -210,7 +207,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_is_global_content: true
   field_moj_archived: true
-  field_moj_tags: true
-  field_related_prisons: true
