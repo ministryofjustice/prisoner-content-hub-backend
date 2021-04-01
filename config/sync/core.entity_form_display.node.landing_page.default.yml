@@ -15,6 +15,7 @@ dependencies:
     - image
     - path
     - scheduler
+    - select2
     - text
 id: node.landing_page.default
 targetEntityType: node
@@ -59,11 +60,11 @@ content:
     weight: 10
     settings:
       match_operator: CONTAINS
-      size: 60
-      placeholder: ''
       match_limit: 10
+      autocomplete: false
+      width: 100%
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: select2_entity_reference
     region: content
   field_moj_prisons:
     weight: 15
