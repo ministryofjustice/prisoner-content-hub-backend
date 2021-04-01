@@ -13,6 +13,7 @@
         "drupal/core-recommended": "^8.9",
         "drupal/core-vendor-hardening": "^8.9",
         "drupal/devel": "^2.1",
+        "drupal/diff": "^1.0",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
         "drupal/flood_unblock": "^2.0",
