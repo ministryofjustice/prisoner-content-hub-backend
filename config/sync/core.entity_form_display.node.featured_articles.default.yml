@@ -8,7 +8,6 @@ dependencies:
     - field.field.node.featured_articles.field_moj_prisons
     - node.type.featured_articles
   module:
-    - autocomplete_id
     - path
     - scheduler
 id: node.featured_articles.default
@@ -26,21 +25,21 @@ content:
     weight: 11
     settings:
       match_operator: CONTAINS
-      match_limit: '20'
-      size: '60'
+      match_limit: 20
+      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete_id
+    type: entity_reference_autocomplete
     region: content
   field_moj_featured_tile_small:
     weight: 12
     settings:
       match_operator: CONTAINS
-      match_limit: '20'
-      size: '60'
+      match_limit: 20
+      size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete_id
+    type: entity_reference_autocomplete
     region: content
   field_moj_prisons:
     weight: 13
