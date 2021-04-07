@@ -16,7 +16,7 @@ field_name: field_moj_featured_tile_large
 entity_type: node
 bundle: featured_articles
 label: 'Large featured content'
-description: 'Featured content for the large tiles'
+description: 'Featured content for the large tiles.  <em>Search by content title or ID.</em>'
 required: true
 translatable: false
 default_value: {  }
@@ -32,8 +32,7 @@ settings:
       moj_pdf_item: moj_pdf_item
       moj_video_item: moj_video_item
     sort:
-      field: field_moj_weight
-      direction: ASC
+      field: _none
     auto_create: false
     auto_create_bundle: article
 field_type: entity_reference

@@ -13,7 +13,7 @@ field_name: field_moj_landing_feature_contet
 entity_type: node
 bundle: landing_page
 label: 'Featured content'
-description: ''
+description: '<em>Search by title or ID.</em>'
 required: false
 translatable: false
 default_value: {  }
@@ -22,8 +22,8 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
-      page: page
       moj_radio_item: moj_radio_item
+      page: page
       moj_video_item: moj_video_item
     sort:
       field: _none

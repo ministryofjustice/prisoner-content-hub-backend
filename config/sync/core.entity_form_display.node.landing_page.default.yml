@@ -12,6 +12,7 @@ dependencies:
     - image.style.thumbnail
     - node.type.landing_page
   module:
+    - autocomplete_id
     - image
     - path
     - scheduler
@@ -50,11 +51,11 @@ content:
     weight: 13
     settings:
       match_operator: CONTAINS
-      size: 60
+      match_limit: '20'
+      size: '60'
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_reference_autocomplete_id
     region: content
   field_moj_landing_page_term:
     weight: 10
