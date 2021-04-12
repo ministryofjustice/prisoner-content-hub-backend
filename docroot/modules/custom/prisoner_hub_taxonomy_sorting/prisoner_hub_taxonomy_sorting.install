@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ *
+ * Update existing Taxonomy terms with default values.
+ */
+function prisoner_hub_taxonomy_sorting_install() {
+  $query = \Drupal::entityQuery('taxonomy_term');
+  $query->condition('bundle', 'series');
+  $result = $query->execute();
+  $taxonomy_terms = Term::loadMultiple($result);
+  foreach ($taxonomy_terms as $term) {
+    /* @var \Drupal\Taxonomy\TermInterface $term */
+    if (empty($term->get('field_sort_by')->getValue())) {
+      $term->set('field_sort_by', 'season_and_episode_desc');
+      $term->save();
+    }
+  }
+}

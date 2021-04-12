@@ -1,0 +1,13 @@
+prisoner_hub_taxonomy_sorting.content_sort:
+  path: '/taxonomy/term/{taxonomy_term}/content-sort'
+  defaults:
+    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\ContentSortPageController::renderPage'
+    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\ContentSortPageController::titleCallback'
+  options:
+    parameters:
+      taxonomy_term:
+        type: entity:taxonomy_term
+  requirements:
+    _entity_access: 'taxonomy_term.update'
+    taxonomy_term: \d+
+    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\ContentSortPageController::access'
