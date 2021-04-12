@@ -1,8 +1,11 @@
 <?php
 
 /**
- * @file
- * Install, update and uninstall functions for the module.
+ * This is a NAME.deploy.php file. It contains "deploy" functions. These are
+ * one-time functions that run *after* config is imported during a deployment.
+ * These are a higher level alternative to hook_update_n and hook_post_update_NAME
+ * functions. See https://www.drush.org/latest/deploycommand/#authoring-update-functions
+ * for a detailed comparison.
  */
 
 use Drupal\taxonomy\Entity\Term;
@@ -12,9 +15,9 @@ use Drupal\taxonomy\Entity\Term;
  *
  * Update existing Taxonomy terms with default values.
  */
-function prisoner_hub_taxonomy_sorting_install() {
+function prisoner_hub_taxonomy_sorting_deploy_set_field_default_values() {
   $query = \Drupal::entityQuery('taxonomy_term');
-  $query->condition('bundle', 'series');
+  $query->condition('vid', 'series');
   $result = $query->execute();
   $taxonomy_terms = Term::loadMultiple($result);
   foreach ($taxonomy_terms as $term) {
