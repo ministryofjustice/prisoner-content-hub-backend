@@ -44,6 +44,7 @@
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
         "drupal/views_bulk_operations": "^3.10",
+        "drupal/views_entity_form_field": "^1.0@beta",
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
