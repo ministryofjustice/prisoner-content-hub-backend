@@ -13,6 +13,7 @@ dependencies:
     - field.field.taxonomy_term.series.field_prison_categories
     - field.field.taxonomy_term.series.field_promoted_feature
     - field.field.taxonomy_term.series.field_promoted_to_prison
+    - field.field.taxonomy_term.series.field_sort_by
     - image.style.thumbnail
     - taxonomy.vocabulary.series
   module:
@@ -42,7 +43,7 @@ content:
     type: string_textarea
     region: content
   field_feature_programme_code:
-    weight: 12
+    weight: 13
     settings:
       size: 60
       placeholder: ''
@@ -50,14 +51,14 @@ content:
     type: string_textfield
     region: content
   field_featured_audio:
-    weight: 11
+    weight: 12
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
     region: content
   field_featured_image:
-    weight: 4
+    weight: 6
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -65,7 +66,7 @@ content:
     type: image_image
     region: content
   field_featured_video:
-    weight: 5
+    weight: 7
     settings:
       file_directory: 'video-thumbnails/[date:custom:Y]-[date:custom:m]'
       uri_scheme: public
@@ -76,34 +77,34 @@ content:
     type: video_upload
     region: content
   field_moj_category_featured_item:
-    weight: 3
+    weight: 5
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_moj_promoted:
-    weight: 6
+    weight: 8
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_prison_categories:
-    weight: 9
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_promoted_feature:
-    weight: 7
+    weight: 9
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_promoted_to_prison:
-    weight: 8
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -112,13 +113,12 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  langcode:
-    type: language_select
-    weight: 10
-    region: content
-    settings:
-      include_locked: true
+  field_sort_by:
+    weight: 3
+    settings: {  }
     third_party_settings: {  }
+    type: options_select
+    region: content
   name:
     type: string_textfield
     weight: 0
@@ -131,7 +131,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 14
     region: content
     third_party_settings: {  }
 hidden:

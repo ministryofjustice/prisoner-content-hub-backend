@@ -1,0 +1,23 @@
+uuid: 71fc12f8-7034-4331-b74f-deb64f1518f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_sort_by
+    - taxonomy.vocabulary.series
+  module:
+    - options
+id: taxonomy_term.series.field_sort_by
+field_name: field_sort_by
+entity_type: taxonomy_term
+bundle: series
+label: 'Sort Direction'
+description: "Set the direction that content should be sorted in. <br/>\r\nSorting is based on <em>Season</em> and <em>Episode</em> number.  These can be bulk-edited on the <a href=\"content-sort\">content sorting</a> page.\r\n<ul>\r\n<li><em>Newest first</em> will display the highest (newest) seasons and episodes first.</li>\r\n<li><em>Oldest first</em> will display the lowest (oldest) seasons and episodes first.</li>\r\n</ul>\r\n\r\n"
+required: true
+translatable: false
+default_value:
+  -
+    value: season_and_episode_desc
+default_value_callback: ''
+settings: {  }
+field_type: list_string

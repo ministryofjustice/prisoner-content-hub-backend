@@ -13,10 +13,12 @@ dependencies:
     - field.field.taxonomy_term.series.field_prison_categories
     - field.field.taxonomy_term.series.field_promoted_feature
     - field.field.taxonomy_term.series.field_promoted_to_prison
+    - field.field.taxonomy_term.series.field_sort_by
     - taxonomy.vocabulary.series
   module:
     - file
     - image
+    - options
     - text
     - video
 id: taxonomy_term.series.default
@@ -116,6 +118,12 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_sort_by:
+    weight: 13
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
 hidden:
-  langcode: true
   search_api_excerpt: true

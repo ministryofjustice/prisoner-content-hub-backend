@@ -1,0 +1,27 @@
+uuid: 379ac13a-2a3e-444e-be46-a6d38fc115cc
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+id: taxonomy_term.field_sort_by
+field_name: field_sort_by
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: season_and_episode_desc
+      label: 'Newest first'
+    -
+      value: season_and_episode_asc
+      label: 'Oldest first'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
