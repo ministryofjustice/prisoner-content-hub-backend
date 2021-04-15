@@ -11,7 +11,7 @@ field_name: field_prison_categories
 entity_type: node
 bundle: moj_radio_item
 label: 'Prison Categories'
-description: ''
+description: "Please note that the prison category functionality is currently still being developed, so in the meantime only the <strong>Prisons</strong> field is used to determine where the content will be shown. <br/>\r\nHowever please ensure that the correct prison categories are added, so that this content will continue to appear in the correct prisons when the work is completed."
 required: false
 translatable: false
 default_value: {  }

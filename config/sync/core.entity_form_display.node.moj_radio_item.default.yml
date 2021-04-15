@@ -20,12 +20,30 @@ dependencies:
     - node.type.moj_radio_item
   module:
     - datetime
+    - field_group
     - file
     - image
     - path
     - scheduler
     - select2
     - text
+third_party_settings:
+  field_group:
+    group_prison_categories:
+      children:
+        - field_moj_prisons
+        - field_prison_categories
+      parent_name: ''
+      weight: 14
+      format_type: details
+      region: content
+      format_settings:
+        description: "<p>Use these fields to associate this content with prisons and prison categories.  This will determine where the content can be viewed.</p>\r\nPlease fill in <em>both</em> fields.<br/>\r\ne.g. <ul>\r\n<li>If your content should appear in all adult male prisons, then select <em>Berwyn</em>, <em>Wayland</em> from <strong>Prisons</strong>, and <em>Adult (Male)</em> from <strong>Prison Categories</strong>.</li>\r\n<li>If your content should appear in <em>all</em> prisons, then select <em>all</em> options from both fields below.</li>\r\n<li>If your content should only appear in <em>Berwyn</em>, then select this prison and leave the <strong>Prison Categories</strong> empty.\r\n</ul>"
+        open: true
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Prisons and Prison Categories'
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
 id: node.moj_radio_item.default
@@ -77,13 +95,13 @@ content:
     type: number
     region: content
   field_moj_prisons:
-    weight: 17
+    weight: 18
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_moj_programme_code:
-    weight: 19
+    weight: 18
     settings:
       size: 60
       placeholder: ''
@@ -98,7 +116,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 22
+    weight: 21
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -136,7 +154,7 @@ content:
     type: select2_entity_reference
     region: content
   field_prison_categories:
-    weight: 18
+    weight: 19
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -149,19 +167,19 @@ content:
     region: content
   promote:
     type: boolean_checkbox
-    weight: 15
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 20
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -169,7 +187,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 15
     third_party_settings: {  }
     region: content
   sticky:
@@ -204,7 +222,7 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 21
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -11,10 +11,26 @@ dependencies:
     - image.style.thumbnail
     - node.type.article
   module:
+    - field_group
     - image
     - path
     - scheduler
     - text
+third_party_settings:
+  field_group:
+    group_prison_categories:
+      children: {  }
+      parent_name: ''
+      weight: 20
+      format_type: details
+      region: hidden
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Use these fields to control the prisons where this content should appear.'
+        open: false
+        required_fields: true
+      label: 'Prison categories'
 _core:
   default_config_hash: 7CvVDwPYotAZFBa36mcpMKZOfVRRp_iGuPHpHaavI6E
 id: node.article.default
