@@ -1,8 +1,8 @@
-prisoner_hub_taxonomy_sorting.content_sort:
-  path: '/taxonomy/term/{taxonomy_term}/content-sort'
+prisoner_hub_taxonomy_sorting.sort_episode_order:
+  path: '/taxonomy/term/{taxonomy_term}/sort-episode-order'
   defaults:
-    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\ContentSortPageController::renderPage'
-    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\ContentSortPageController::titleCallback'
+    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::renderPage'
+    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::titleCallback'
   options:
     parameters:
       taxonomy_term:
@@ -10,4 +10,4 @@ prisoner_hub_taxonomy_sorting.content_sort:
   requirements:
     _entity_access: 'taxonomy_term.update'
     taxonomy_term: \d+
-    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\ContentSortPageController::access'
+    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::access'

@@ -9,7 +9,7 @@ use Drupal\views\Views;
 /**
  * Provides route responses for the Example module.
  */
-class ContentSortPageController extends ControllerBase {
+class PageController extends ControllerBase {
 
   /**
    * Returns a simple page.
@@ -39,7 +39,7 @@ class ContentSortPageController extends ControllerBase {
    * {@inheritdoc}
    */
   public function titleCallback(TermInterface $taxonomy_term) {
-    return $this->t('%label: Content sorting', ['%label' => $taxonomy_term->label()]);
+    return $this->t('%label: Sort Episode Order', ['%label' => $taxonomy_term->label()]);
   }
 
   /**
