@@ -11,8 +11,6 @@
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Implements hook_install().
- *
  * Update existing Taxonomy terms with default values.
  */
 function prisoner_hub_taxonomy_sorting_deploy_set_field_default_values() {
