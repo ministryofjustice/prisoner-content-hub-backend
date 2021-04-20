@@ -11,8 +11,8 @@ id: taxonomy_term.series.field_sort_by
 field_name: field_sort_by
 entity_type: taxonomy_term
 bundle: series
-label: 'Sort Direction'
-description: "Set the direction that content should be sorted in. <br/>\r\nSorting is based on <em>Season</em> and <em>Episode</em> number.  These can be bulk-edited on the <a href=\"content-sort\">content sorting</a> page.\r\n<ul>\r\n<li><em>Newest first</em> will display the highest (newest) seasons and episodes first.</li>\r\n<li><em>Oldest first</em> will display the lowest (oldest) seasons and episodes first.</li>\r\n</ul>\r\n\r\n"
+label: 'Sort By'
+description: "<p>Select how you'd like to order your episodes within a series.</p>\r\n\r\n<p>You can choose to show users the:</p>\r\n<ul>\r\n<li>newest episode first (the highest episode number first, for example episode 45)</li>\r\n<li>oldest episode first (the lowest episode number first, for example episode 1)</li>\r\n</ul>\r\nTo edit season and episode numbers within a series, go to <a href=\"change-episode-order\">Change episode order</a>."
 required: true
 translatable: false
 default_value:

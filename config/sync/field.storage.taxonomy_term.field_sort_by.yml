@@ -13,10 +13,10 @@ settings:
   allowed_values:
     -
       value: season_and_episode_desc
-      label: 'Newest first'
+      label: 'Newest episode first'
     -
       value: season_and_episode_asc
-      label: 'Oldest first'
+      label: 'Oldest episode first'
   allowed_values_function: ''
 module: options
 locked: false
