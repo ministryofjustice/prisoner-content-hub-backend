@@ -245,20 +245,7 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-      header:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          content:
-            value: "<div class=\"govuk-inset-text\">\r\n<p>View the order of content, as displayed on the frontend.</p>\r\n\r\n<p>Sorting is determined by Season and Episode number.  To change the <em>direction</em> of sorting (i.e. <em>Newest</em> or <em>Oldest</em> first), change the <strong>Sort By</strong> field value on the <a href=\"edit\">Edit</a> page.</p>\r\n</div>"
-            format: basic_html
-          plugin_id: text
+      header: {  }
       footer: {  }
       empty: {  }
       relationships:
