@@ -7,7 +7,7 @@ use Drupal\taxonomy\TermInterface;
 use Drupal\views\Views;
 
 /**
- * Provides route responses for the Example module.
+ * Provides route responses for the prisoner_hub_taxonomy_sorting module.
  */
 class PageController extends ControllerBase {
 
