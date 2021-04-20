@@ -1,0 +1,23 @@
+uuid: 71fc12f8-7034-4331-b74f-deb64f1518f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_sort_by
+    - taxonomy.vocabulary.series
+  module:
+    - options
+id: taxonomy_term.series.field_sort_by
+field_name: field_sort_by
+entity_type: taxonomy_term
+bundle: series
+label: 'Sort By'
+description: "<p>Select how you'd like to order your episodes within a series.</p>\r\n\r\n<p>You can choose to show users the:</p>\r\n<ul>\r\n<li>newest episode first (the highest episode number first, for example episode 45)</li>\r\n<li>oldest episode first (the lowest episode number first, for example episode 1)</li>\r\n</ul>\r\nTo edit season and episode numbers within a series, go to <a href=\"change-episode-order\">Change episode order</a>."
+required: true
+translatable: false
+default_value:
+  -
+    value: season_and_episode_desc
+default_value_callback: ''
+settings: {  }
+field_type: list_string
