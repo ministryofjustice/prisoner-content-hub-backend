@@ -1,4 +1,4 @@
-prisoner_hub_taxonomy_sorting.sort_episode_order:
-  route_name: prisoner_hub_taxonomy_sorting.sort_episode_order
-  title: 'Sort Episode Order'
+prisoner_hub_taxonomy_sorting.change_episode_order:
+  route_name: prisoner_hub_taxonomy_sorting.change_episode_order
+  title: 'Change episode order'
   base_route: entity.taxonomy_term.canonical

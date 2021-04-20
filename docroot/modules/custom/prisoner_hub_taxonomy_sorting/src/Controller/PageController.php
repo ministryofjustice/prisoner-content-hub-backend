@@ -39,7 +39,7 @@ class PageController extends ControllerBase {
    * {@inheritdoc}
    */
   public function titleCallback(TermInterface $taxonomy_term) {
-    return $this->t('%label: Sort Episode Order', ['%label' => $taxonomy_term->label()]);
+    return $this->t('%label: Chabge episode order', ['%label' => $taxonomy_term->label()]);
   }
 
   /**

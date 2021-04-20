@@ -1,5 +1,5 @@
-prisoner_hub_taxonomy_sorting.sort_episode_order:
-  path: '/taxonomy/term/{taxonomy_term}/sort-episode-order'
+prisoner_hub_taxonomy_sorting.change_episode_order:
+  path: '/taxonomy/term/{taxonomy_term}/change-episode-order'
   defaults:
     _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::renderPage'
     _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::titleCallback'
