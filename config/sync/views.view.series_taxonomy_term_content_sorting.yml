@@ -6,11 +6,12 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_season
-    - field.field.taxonomy_term.series.field_sort_by
+    - field.field.node.moj_radio_item.field_release_date
     - field.storage.node.field_moj_category_featured_item
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_top_level_categories
   module:
+    - datetime
     - node
     - taxonomy
     - user
@@ -123,7 +124,52 @@ display:
           entity_type: taxonomy_term
           entity_field: tid
           plugin_id: taxonomy
-      filters: {  }
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Published
+            description: ''
+            use_operator: false
+            operator: status_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: status
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+              gds_theme_user: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
       style:
         type: table
         options:
@@ -959,6 +1005,62 @@ display:
             third_party_settings: {  }
           entity_type: node
           plugin_id: entity_form_field
+        form_field_field_release_date:
+          id: form_field_field_release_date
+          table: node_field_data
+          field: form_field_field_release_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin:
+            hide_title: 1
+            hide_description: 1
+            type: datetime_default
+            settings: {  }
+            third_party_settings: {  }
+          entity_type: node
+          plugin_id: entity_form_field
         operations:
           id: operations
           table: node
@@ -1028,120 +1130,17 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
+        - 'config:field.field.node.moj_radio_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_top_level_categories'
-  attachment_1:
-    display_plugin: attachment
-    id: attachment_1
-    display_title: Attachment
-    position: 3
-    display_options:
-      display_extenders: {  }
-      displays:
-        default: default
-        embed_1: embed_1
-        embed_2: embed_2
-      fields:
-        form_field_field_sort_by:
-          id: form_field_field_sort_by
-          table: taxonomy_term_field_data
-          field: form_field_field_sort_by
-          relationship: field_moj_series
-          group_type: group
-          admin_label: ''
-          label: 'Sort by'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin:
-            hide_title: 1
-            hide_description: 1
-            type: options_select
-            settings: {  }
-            third_party_settings: {  }
-          entity_type: taxonomy_term
-          plugin_id: entity_form_field
-      defaults:
-        fields: false
-        style: false
-        row: false
-        header: false
-      pager:
-        type: some
-        options:
-          items_per_page: 1
-          offset: 0
-      style:
-        type: default
-        options:
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
-      row:
-        type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
-      header: {  }
-      enabled: false
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - user
-        - 'user.node_grants:view'
-        - user.permissions
-      tags:
-        - 'config:field.field.taxonomy_term.series.field_sort_by'
-        - 'config:field.storage.taxonomy_term.field_sort_by'
+        - 'config:field.storage.node.field_release_date'
   embed_1:
     display_plugin: embed
     id: embed_1
-    display_title: 'Series DESC'
+    display_title: 'Episode number DESC'
     position: 2
     display_options:
       display_extenders: {  }
@@ -1158,15 +1157,17 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
+        - 'config:field.field.node.moj_radio_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_top_level_categories'
+        - 'config:field.storage.node.field_release_date'
   embed_2:
     display_plugin: embed
     id: embed_2
-    display_title: 'Series ASC'
+    display_title: 'Episode. number ASC'
     position: 2
     display_options:
       display_extenders: {  }
@@ -1210,8 +1211,96 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
+        - 'config:field.field.node.moj_radio_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_top_level_categories'
+        - 'config:field.storage.node.field_release_date'
+  embed_3:
+    display_plugin: embed
+    id: embed_3
+    display_title: 'Release date DESC'
+    position: 4
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      sorts:
+        field_release_date_value:
+          id: field_release_date_value
+          table: node__field_release_date
+          field: field_release_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
+      defaults:
+        sorts: false
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.field.node.moj_pdf_item.field_moj_episode'
+        - 'config:field.field.node.moj_pdf_item.field_moj_season'
+        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.storage.node.field_moj_category_featured_item'
+        - 'config:field.storage.node.field_moj_episode'
+        - 'config:field.storage.node.field_moj_season'
+        - 'config:field.storage.node.field_moj_secondary_tags'
+        - 'config:field.storage.node.field_moj_top_level_categories'
+        - 'config:field.storage.node.field_release_date'
+  embed_4:
+    display_plugin: embed
+    id: embed_4
+    display_title: 'Release date ASC'
+    position: 5
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      sorts:
+        field_release_date_value:
+          id: field_release_date_value
+          table: node__field_release_date
+          field: field_release_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
+      defaults:
+        sorts: false
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.field.node.moj_pdf_item.field_moj_episode'
+        - 'config:field.field.node.moj_pdf_item.field_moj_season'
+        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.storage.node.field_moj_category_featured_item'
+        - 'config:field.storage.node.field_moj_episode'
+        - 'config:field.storage.node.field_moj_season'
+        - 'config:field.storage.node.field_moj_secondary_tags'
+        - 'config:field.storage.node.field_moj_top_level_categories'
+        - 'config:field.storage.node.field_release_date'
