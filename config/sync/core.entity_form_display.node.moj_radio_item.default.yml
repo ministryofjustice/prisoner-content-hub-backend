@@ -16,16 +16,63 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
     - field.field.node.moj_radio_item.field_prison_categories
+    - field.field.node.moj_radio_item.field_release_date
     - image.style.thumbnail
     - node.type.moj_radio_item
   module:
     - datetime
+    - field_group
     - file
     - image
     - path
     - scheduler
     - select2
     - text
+third_party_settings:
+  field_group:
+    group_series:
+      children:
+        - field_moj_series
+        - group_season_and_episode_number
+        - group_release_date
+      parent_name: ''
+      weight: 10
+      format_type: details
+      region: content
+      format_settings:
+        description: 'First select a Series for this content, then select either a <strong>season and episode</strong> number, <em>or</em> a <strong>release date</strong> (which one of these will be determined by the <strong>sort by</strong> value selected for the Series).'
+        open: true
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'How does this content fit into a Series?'
+    group_season_and_episode_number:
+      children:
+        - field_moj_season
+        - field_moj_episode
+      parent_name: group_series
+      weight: 12
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'What is the season and episode number?'
+    group_release_date:
+      children:
+        - field_release_date
+      parent_name: group_series
+      weight: 13
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'When was the content released?'
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
 id: node.moj_radio_item.default
@@ -53,12 +100,6 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_moj_date:
-    weight: 13
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_moj_description:
     type: text_textarea_with_summary
     weight: 7
@@ -70,20 +111,20 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_episode:
-    weight: 12
+    weight: 14
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_moj_prisons:
-    weight: 17
+    weight: 14
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_moj_programme_code:
-    weight: 19
+    weight: 16
     settings:
       size: 60
       placeholder: ''
@@ -91,14 +132,14 @@ content:
     type: string_textfield
     region: content
   field_moj_season:
-    weight: 11
+    weight: 13
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 22
+    weight: 19
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -108,7 +149,7 @@ content:
     type: select2_entity_reference
     region: content
   field_moj_series:
-    weight: 10
+    weight: 11
     settings:
       autocomplete: false
       match_operator: CONTAINS
@@ -136,10 +177,16 @@ content:
     type: select2_entity_reference
     region: content
   field_prison_categories:
-    weight: 18
+    weight: 15
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_release_date:
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
     region: content
   path:
     type: path
@@ -149,19 +196,19 @@ content:
     region: content
   promote:
     type: boolean_checkbox
-    weight: 15
+    weight: 12
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 20
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 16
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -169,7 +216,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 11
     third_party_settings: {  }
     region: content
   sticky:
@@ -204,9 +251,10 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 21
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
+  field_moj_date: true
