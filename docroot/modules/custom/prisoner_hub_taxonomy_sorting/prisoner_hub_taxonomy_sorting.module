@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Primary hook implementations for Prisoner hub taxonomy sorting module.
+ */
+
+use Drupal\node\NodeForm;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Add disabled/enabled states to episode number and release date fields.
+ * Dependent on what sorting has been applied to the Series selected.
+ */
+function prisoner_hub_taxonomy_sorting_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_state->getFormObject() instanceof NodeForm) {
+    if (isset($form['field_moj_episode'])) {
+
+      $terms_with_episode_sorting = [];
+      $terms_with_release_date_sorting = [];
+
+      $query = \Drupal::entityQuery('taxonomy_term');
+      $query->exists('field_sort_by');
+      $result = $query->execute();
+      $terms = Term::loadMultiple($result);
+      foreach ($terms as $term) {
+        /* @var \Drupal\taxonomy\TermInterface $term */
+        $sort_by_value = $term->get('field_sort_by')->getValue();
+        if (in_array($sort_by_value[0]['value'], ['season_and_episode_desc', 'season_and_episode_asc'])) {
+          $terms_with_episode_sorting[] = ['value' => [$term->id()]];
+        }
+        elseif (in_array($sort_by_value[0]['value'], ['release_date_desc', 'release_date_asc'])) {
+          $terms_with_release_date_sorting[] = ['value' => [$term->id()]];
+        }
+      }
+
+      $form['field_moj_season']['#states'] = [
+        'enabled' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_episode_sorting,
+            ],
+        ]
+      ];
+      $form['field_moj_episode']['#states'] = [
+        'enabled' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_episode_sorting,
+            ],
+        ]
+      ];
+
+      $form['field_release_date']['#states'] = [
+        'enabled' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_release_date_sorting,
+            ],
+        ]
+      ];
+    }
+  }
+}
