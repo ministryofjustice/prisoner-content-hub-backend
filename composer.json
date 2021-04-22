@@ -124,6 +124,7 @@
         }
     ],
     "require-dev": {
+        "dmore/chrome-mink-driver": "^2.7",
         "drupal/console": "^1.9",
         "drupal/core-dev": "^8.9",
         "weitzman/drupal-test-traits": "^1.5"
