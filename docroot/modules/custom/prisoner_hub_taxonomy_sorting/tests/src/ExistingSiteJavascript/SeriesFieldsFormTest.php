@@ -11,7 +11,7 @@ use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
  *
  * @group prisoner_hub_prison_context
  */
-class PrisonContextTest extends ExistingSiteWebDriverTestBase {
+class SeriesFieldsFormTest extends ExistingSiteWebDriverTestBase {
 
   /**
    * The Studio Administrator user.
