@@ -37,15 +37,14 @@ third_party_settings:
         - group_release_date
       parent_name: ''
       weight: 10
-      format_type: details
+      format_type: fieldset
       region: content
       format_settings:
-        description: 'First select a Series for this content, then select either a <strong>season and episode</strong> number, <em>or</em> a <strong>release date</strong> (which one of these will be determined by the <strong>sort by</strong> value selected for the Series).'
-        open: true
+        description: 'First select a <strong>Series</strong> for this content, then select either a <strong>Season and Episode</strong> number, <em>or</em> a <strong>Release date</strong>.'
         required_fields: true
         id: ''
         classes: ''
-      label: 'How does this content fit into a Series?'
+      label: 'How does this episode fit into a Series?'
     group_season_and_episode_number:
       children:
         - field_moj_season
@@ -55,7 +54,7 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: ''
+        description: 'Enter a season and episode number.'
         required_fields: true
         id: ''
         classes: ''
@@ -68,11 +67,11 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: ''
+        description: 'Select which series this episode belongs to. Then, select either a season and episode number <strong>or</strong> a date.'
         required_fields: true
         id: ''
         classes: ''
-      label: 'When was the content released?'
+      label: 'Which date would you like to assign to this content?'
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
 id: node.moj_radio_item.default

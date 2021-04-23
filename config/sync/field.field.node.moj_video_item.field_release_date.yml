@@ -1,20 +1,20 @@
-uuid: 6b83d39e-9d03-4c34-b659-3d04c491fc33
+uuid: 37a85123-4965-474d-ab29-fe9afd466118
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_release_date
-    - node.type.moj_radio_item
+    - node.type.moj_video_item
   module:
     - datetime
-id: node.moj_radio_item.field_release_date
+id: node.moj_video_item.field_release_date
 field_name: field_release_date
 entity_type: node
-bundle: moj_radio_item
+bundle: moj_video_item
 label: Date
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
