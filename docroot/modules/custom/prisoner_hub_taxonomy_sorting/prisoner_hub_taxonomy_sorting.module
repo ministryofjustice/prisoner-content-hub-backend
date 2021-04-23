@@ -37,23 +37,33 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
       }
     }
 
-    $element['group_season_and_episode_number']['#states'] = [
-      'visible' => [
-        ':input[name="field_moj_series[]"]' =>
-          [
-            $terms_with_episode_sorting,
-          ],
-      ]
-    ];
+    if (empty($terms_with_episode_sorting)) {
+      hide($element['group_season_and_episode_number']);
+    }
+    else {
+      $element['group_season_and_episode_number']['#states'] = [
+        'visible' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_episode_sorting,
+            ],
+        ]
+      ];
+    }
 
-    $element['group_release_date']['#states'] = [
-      'visible' => [
-        ':input[name="field_moj_series[]"]' =>
-          [
-            $terms_with_release_date_sorting,
-          ],
-      ]
-    ];
+    if (empty($terms_with_release_date_sorting)) {
+      hide($element['group_release_date']);
+    }
+    else {
+      $element['group_release_date']['#states'] = [
+        'visible' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_release_date_sorting,
+            ],
+        ]
+      ];
+    }
   }
 }
 
