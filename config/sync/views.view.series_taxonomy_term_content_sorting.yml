@@ -6,7 +6,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_season
-    - field.field.node.moj_radio_item.field_release_date
+    - field.field.node.moj_pdf_item.field_release_date
     - field.storage.node.field_moj_category_featured_item
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_top_level_categories
@@ -1012,7 +1012,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: ''
+          label: 'Release date'
           exclude: false
           alter:
             alter_text: false
@@ -1130,7 +1130,7 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
-        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.field.node.moj_pdf_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
@@ -1157,7 +1157,7 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
-        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.field.node.moj_pdf_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
@@ -1211,7 +1211,7 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
-        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.field.node.moj_pdf_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
@@ -1254,7 +1254,7 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
-        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.field.node.moj_pdf_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'
@@ -1297,7 +1297,7 @@ display:
       tags:
         - 'config:field.field.node.moj_pdf_item.field_moj_episode'
         - 'config:field.field.node.moj_pdf_item.field_moj_season'
-        - 'config:field.field.node.moj_radio_item.field_release_date'
+        - 'config:field.field.node.moj_pdf_item.field_release_date'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_episode'
         - 'config:field.storage.node.field_moj_season'

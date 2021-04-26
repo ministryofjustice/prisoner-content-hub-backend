@@ -40,7 +40,7 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: 'First select a <strong>Series</strong> for this content, then select either a <strong>Season and Episode</strong> number, <em>or</em> a <strong>Release date</strong>.'
+        description: 'Select which series this episode belongs to. Then, select either a season and episode number <strong>or</strong> a date.'
         required_fields: true
         id: ''
         classes: ''
@@ -67,7 +67,7 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: 'Select which series this episode belongs to. Then, select either a season and episode number <strong>or</strong> a date.'
+        description: "<p>Enter the date of the original service or show, or when the content was first aired.</p>\r\n<p>This date will affect the order of the content displayed within the series.</p>"
         required_fields: true
         id: ''
         classes: ''
