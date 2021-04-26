@@ -5,6 +5,7 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\taxonomy\Entity\Term;
 
 require_once('Utils.php');
 
@@ -71,9 +72,7 @@ class SeriesContentApiClass
     $this->lang = $lang;
     $this->nids = $this->getSeriesContentNodeIds($seriesId, $number, $offset, $prison);
     $this->nodes = $this->loadNodesDetails($this->nids);
-
     $series = $this->decorateSeries($this->nodes);
-    $series = $this->sortSeries($series, $sortOrder, $number);
 
     return $series;
   }
@@ -83,13 +82,12 @@ class SeriesContentApiClass
    * @param [string] $lang
    * @return array
    */
-  public function SeriesNextEpisodeApiEndpoint($lang, $seriesId, $number, $episodeId, $prison, $sortOrder)
+  public function SeriesNextEpisodeApiEndpoint($lang, $seriesId, $number, $episodeId, $prison)
   {
     $this->lang = $lang;
     $this->nids = $this->getSeriesContentNodeIds($seriesId, null, null, $prison);
     $this->nodes = $this->loadNodesDetails($this->nids);
     $series = $this->decorateSeries($this->nodes);
-    $series = $this->sortSeries($series, $sortOrder);
     $series = $this->getNextEpisodes($episodeId, $series, $number);
 
     return $series;
@@ -134,44 +132,6 @@ class SeriesContentApiClass
     }, []);
 
     return $results;
-  }
-  /**
-   * sortSeries
-   *
-   */
-
-
-  private function sortSeries($series, $sortOrder, $number)
-  {
-    $noEpisode = array_filter($series, function($node) {
-      return $node["episode_id"] === 0;
-    });
-
-    $hasEpisode = array_filter($series, function($node) {
-      return $node["episode_id"] !== 0;
-    });
-
-    usort($hasEpisode, function ($a, $b) use ($sortOrder) {
-      if ($a['episode_id'] == $b['episode_id']) {
-        return 0;
-      }
-
-      if ($sortOrder == 'ASC') {
-        return ($a['episode_id'] < $b['episode_id']) ? -1 : 1;
-      }
-
-      return ($a['episode_id'] < $b['episode_id']) ? 1 : -1;
-    });
-
-    usort($noEpisode, function ($a, $b) use ($sortOrder) {
-      if ($sortOrder == 'ASC') {
-        return ($a['date'] < $b['date']) ? -1 : 1;
-      }
-
-      return ($a['date'] < $b['date']) ? 1 : -1;
-    });
-
-    return array_slice(array_merge($noEpisode, $hasEpisode), 0, $number);
   }
 
   /**
@@ -225,8 +185,40 @@ class SeriesContentApiClass
     $results = $this->entity_query->get('node')
       ->condition('status', 1)
       ->accessCheck(false);
-
     $results->condition('field_moj_series', $seriesId);
+
+    $seriesTerm = Term::load($seriesId);
+    $sortByFieldValue = $seriesTerm->get('field_sort_by')->getValue();
+    $sortByFieldValue = empty($sortByFieldValue) ? NULL : $sortByFieldValue[0]['value'];
+
+    $sortFields = [];
+    $sortDirection = '';
+
+    switch ($sortByFieldValue) {
+      case 'season_and_episode_asc':
+        $sortFields = ['field_moj_season', 'field_moj_episode'];
+        $sortDirection = 'ASC';
+        break;
+
+      case 'release_date_desc':
+        $sortFields = ['field_release_date'];
+        $sortDirection = 'DESC';
+        break;
+
+      case 'release_date_asc':
+        $sortFields = ['field_release_date'];
+        $sortDirection = 'ASC';
+        break;
+
+      case 'season_and_episode_desc':
+      default:
+        $sortFields = ['field_moj_season', 'field_moj_episode'];
+        $sortDirection = 'DESC';
+    }
+
+    foreach ($sortFields as $sortField) {
+      $results->sort($sortField, $sortDirection);
+    }
 
     $results = getPrisonResults($prison, $results);
 
