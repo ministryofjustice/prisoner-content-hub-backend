@@ -25,6 +25,6 @@ install-drupal:
 
 run-tests:
 	echo "Running tests on existing site"
-	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-unit.xml --verbose
+	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose
 	echo "Running Javascript tests on existing site"
-	vendor/bin/phpunit --testsuite=existing-site-javascript --log-junit ~/phpunit/junit-unit.xml --verbose
+	vendor/bin/phpunit --testsuite=existing-site-javascript --log-junit ~/phpunit/junit-existing-site-javascript.xml --verbose
