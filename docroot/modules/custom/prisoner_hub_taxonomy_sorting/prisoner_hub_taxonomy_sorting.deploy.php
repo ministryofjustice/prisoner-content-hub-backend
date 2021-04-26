@@ -8,6 +8,7 @@
  * for a detailed comparison.
  */
 
+use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -26,3 +27,14 @@ function prisoner_hub_taxonomy_sorting_deploy_set_field_default_values() {
     }
   }
 }
+
+
+/**
+ * Copy values from field_moj_date to field_release_date.
+ */
+function prisoner_hub_taxonomy_sorting_deploy_copy_moj_date_2() {
+  // @See https://drupal.stackexchange.com/a/250937/4831
+  Drupal::database()->query("INSERT INTO node__field_release_date SELECT * FROM node__field_moj_date;");
+  Drupal::database()->query("INSERT INTO node_revision__field_release_date SELECT * FROM node_revision__field_moj_date;");
+}
+

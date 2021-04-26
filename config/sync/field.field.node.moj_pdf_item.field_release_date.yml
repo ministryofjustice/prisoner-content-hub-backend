@@ -1,0 +1,21 @@
+uuid: bef9439a-43ec-4722-8768-b9f465842dca
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_date
+    - node.type.moj_pdf_item
+  module:
+    - datetime
+id: node.moj_pdf_item.field_release_date
+field_name: field_release_date
+entity_type: node
+bundle: moj_pdf_item
+label: Date
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

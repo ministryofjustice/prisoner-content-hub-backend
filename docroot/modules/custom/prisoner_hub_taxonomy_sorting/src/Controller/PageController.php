@@ -21,13 +21,24 @@ class PageController extends ControllerBase {
     if (in_array($taxonomy_term->bundle(), $this->getBundles())) {
       $view_name = 'series_taxonomy_term_content_sorting';
       $sort_by_field_value = $taxonomy_term->get('field_sort_by')->getValue();
-      if (!empty($sort_by_field_value) && $sort_by_field_value[0]['value'] == 'season_and_episode_asc') {
-        $view_display_id = 'embed_2';
+      switch ($sort_by_field_value[0]['value']) {
+        case 'season_and_episode_asc':
+          $view_display_id = 'embed_2';
+          break;
+
+        case 'release_date_desc':
+          $view_display_id = 'embed_3';
+          break;
+
+        case 'release_date_asc':
+          $view_display_id = 'embed_4';
+          break;
+
+        case 'season_and_episode_desc':
+        default:
+          $view_display_id = 'embed_1';
       }
-      else {
-        // Default sorting is 'season_and_episode_desc'.
-        $view_display_id = 'embed_1';
-      }
+
       $view = Views::getView($view_name);
 
       return $view->buildRenderable($view_display_id, [$taxonomy_term->id()]);
@@ -39,7 +50,7 @@ class PageController extends ControllerBase {
    * {@inheritdoc}
    */
   public function titleCallback(TermInterface $taxonomy_term) {
-    return $this->t('%label: Chabge episode order', ['%label' => $taxonomy_term->label()]);
+    return $this->t('%label: Change episode order', ['%label' => $taxonomy_term->label()]);
   }
 
   /**

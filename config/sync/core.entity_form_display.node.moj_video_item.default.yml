@@ -15,17 +15,64 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
     - field.field.node.moj_video_item.field_prison_categories
+    - field.field.node.moj_video_item.field_release_date
     - field.field.node.moj_video_item.field_video
     - image.style.thumbnail
     - node.type.moj_video_item
   module:
     - datetime
+    - field_group
     - file
     - image
     - path
     - scheduler
     - select2
     - text
+third_party_settings:
+  field_group:
+    group_series:
+      children:
+        - field_moj_series
+        - group_season_and_episode_number
+        - group_release_date
+      parent_name: ''
+      weight: 11
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'Select which series this episode belongs to. Then, select either a season and episode number <strong>or</strong> a date.'
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'How does this episode fit into a Series?'
+    group_season_and_episode_number:
+      children:
+        - field_moj_season
+        - field_moj_episode
+      parent_name: group_series
+      weight: 13
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'Enter a season and episode number.'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'What is the season and episode number?'
+    group_release_date:
+      children:
+        - field_release_date
+      parent_name: group_series
+      weight: 14
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: "<p>Enter the date of the original service or show, or when the content was first aired.</p>\r\n<p>This date will affect the order of the content displayed within the series.</p>"
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Which date would you like to assign to this content?'
 _core:
   default_config_hash: B5OiZXT0G73JfRrJJusCp_kfo5rvcSOdsoUw9IGpDSo
 id: node.moj_video_item.default
@@ -35,26 +82,20 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 2
     settings: {  }
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 12
+    weight: 10
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_moj_date:
-    weight: 16
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_moj_description:
     type: text_textarea_with_summary
-    weight: 6
+    weight: 5
     settings:
       rows: 9
       summary_rows: 3
@@ -70,7 +111,7 @@ content:
     type: number
     region: content
   field_moj_prisons:
-    weight: 23
+    weight: 16
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -83,7 +124,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 17
+    weight: 12
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -93,7 +134,7 @@ content:
     type: select2_entity_reference
     region: content
   field_moj_series:
-    weight: 13
+    weight: 12
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -103,7 +144,7 @@ content:
     type: select2_entity_reference
     region: content
   field_moj_subtitles:
-    weight: 10
+    weight: 8
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
@@ -111,14 +152,14 @@ content:
     region: content
   field_moj_thumbnail_image:
     type: image_image
-    weight: 8
+    weight: 7
     settings:
       preview_image_style: thumbnail
       progress_indicator: throbber
     third_party_settings: {  }
     region: content
   field_moj_top_level_categories:
-    weight: 11
+    weight: 9
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -128,21 +169,27 @@ content:
     type: select2_entity_reference
     region: content
   field_prison_categories:
-    weight: 24
+    weight: 17
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
+  field_release_date:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_video:
     region: content
     type: file_generic
-    weight: 7
+    weight: 6
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     region: content
@@ -150,17 +197,17 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 19
+    weight: 13
     third_party_settings: {  }
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 26
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 21
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -168,14 +215,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 20
+    weight: 14
     third_party_settings: {  }
     region: content
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 3
     third_party_settings: {  }
     region: content
   title:
@@ -203,9 +250,10 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 25
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
+  field_moj_date: true

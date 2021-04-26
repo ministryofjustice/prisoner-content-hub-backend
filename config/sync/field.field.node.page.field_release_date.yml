@@ -1,0 +1,21 @@
+uuid: d8f042d5-cbef-4d4c-8d02-00bfbfd260ec
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_date
+    - node.type.page
+  module:
+    - datetime
+id: node.page.field_release_date
+field_name: field_release_date
+entity_type: node
+bundle: page
+label: Date
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime
