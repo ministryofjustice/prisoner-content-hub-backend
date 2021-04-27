@@ -108,7 +108,7 @@ class SeriesContentApiClass
       $result = [];
       $result["episode_id"] = $episodeId;
       $result["last_updated"] = $curr->changed->value;
-      $result["date"] = $curr->field_moj_date->value;
+      $result["date"] = $curr->field_release_date->value;
       $result["content_type"] = $curr->type->target_id;
       $result["title"] = $curr->title->value;
       $result["id"] = $curr->nid->value;
