@@ -129,9 +129,7 @@ class OpenIDConnectHMPPSAuthClient extends OpenIDConnectClientBase {
     // duplicate query params.  And there is no way (I can see) to do this with
     // either Drupals url builder, or with guzzle.
     // @see https://mojdt.slack.com/archives/CCMFYP4KG/p1619538462101900
-    $authorization_endpoint .= '&scope=email';
-
-    $response = new TrustedRedirectResponse($authorization_endpoint->getGeneratedUrl());
+    $response = new TrustedRedirectResponse($authorization_endpoint->getGeneratedUrl() . '&scope=email');
     // We can't cache the response, since this will prevent the state to be
     // added to the session. The kill switch will prevent the page getting
     // cached for anonymous users when page cache is active.
@@ -141,61 +139,19 @@ class OpenIDConnectHMPPSAuthClient extends OpenIDConnectClientBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Override getRequestOptions so that we can set the Authorization header.
    */
-  public function retrieveTokens(string $authorization_code): ?array {
-    // Exchange `code` for access token and ID token.
-    $redirect_uri = $this->getRedirectUrl()->toString();
-    $endpoints = $this->getEndpoints();
-    $request_options = $this->getRequestOptions($authorization_code, $redirect_uri);
-
-    $request_options['headers']['Authorization'] = 'Basic ' . base64_encode($request_options['form_params']['client_id'] . ':' . $request_options['form_params']['client_secret']);
-    unset($request_options['form_params']['client_id']);
-    unset($request_options['form_params']['client_secret']);
-    $query = http_build_query($request_options['form_params']);
-    unset($request_options['form_params']);
-
-    $client = $this->httpClient;
-    try {
-      // Another hacky workaround.
-      // HMPPS auth only accepts POST, but the options needs to be passed as
-      // query params (when trying as post params it was rejected, but worth
-      // double checking).
-      $response = $client->post($endpoints['token'] . '?' . $query, $request_options);
-      $response_data = Json::decode((string) $response->getBody());
-
-      // Expected result.
-      if (is_array($response_data)) {
-        $tokens = [];
-        if (isset($response_data['id_token'])) {
-          $tokens['id_token'] = $this->parseToken($response_data['id_token']);
-        }
-        if (isset($response_data['access_token'])) {
-          $tokens['access_token'] = $this->parseToken($response_data['access_token']);
-        }
-        if (array_key_exists('expires_in', $response_data)) {
-          $tokens['expire'] = $this->dateTime->getRequestTime() + $response_data['expires_in'];
-        }
-        if (array_key_exists('refresh_token', $response_data)) {
-          $tokens['refresh_token'] = $response_data['refresh_token'];
-        }
-        return $tokens;
-      }
-    }
-    catch (\Exception $e) {
-      $variables = [
-        '@message' => 'Could not retrieve tokens',
-        '@error_message' => $e->getMessage(),
-      ];
-
-      if ($e instanceof RequestException && $e->hasResponse()) {
-        $response_body = $e->getResponse()->getBody()->getContents();
-        $variables['@error_message'] .= ' Response: ' . $response_body;
-      }
-
-      $this->loggerFactory->get('openid_connect_' . $this->pluginId)
-        ->error('@message. Details: @error_message', $variables);
-    }
-    return NULL;
+  protected function getRequestOptions(string $authorization_code, string $redirect_uri): array {
+    return [
+      'form_params' => [
+        'code' => $authorization_code,
+        'redirect_uri' => $redirect_uri,
+        'grant_type' => 'authorization_code',
+      ],
+      'headers' => [
+        'Accept' => 'application/json',
+        'Authorization' => 'Basic ' . base64_encode($this->configuration['client_id'] . ':' . $this->configuration['client_secret']),
+      ],
+    ];
   }
 }
