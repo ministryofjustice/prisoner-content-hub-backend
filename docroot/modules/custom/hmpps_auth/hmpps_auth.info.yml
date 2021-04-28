@@ -1,0 +1,7 @@
+name: 'HMPPS Authentication'
+type: module
+description: 'Proides support for users to login to Drupal using their HMPPS accounts.'
+core: 8.x
+package: 'Custom'
+dependencies:
+  - openid_connect

@@ -1,0 +1,18 @@
+uuid: 52862caa-0bc0-496b-b22b-380be431a999
+langcode: en
+status: true
+dependencies:
+  module:
+    - hmpps_auth
+id: hub_cms
+label: 'Hub CMS'
+plugin: hmpps_auth
+settings:
+  authorization_endpoint: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth/oauth/authorize'
+  token_endpoint: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth/oauth/token'
+  userinfo_endpoint: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth/oauth/userinfo'
+  end_session_endpoint: ''
+  scopes:
+    - openid
+  client_id: hub-cms
+  client_secret: '62Ru5B7;VMg8wQi31H+R8N2$M2-R4626fzu3;,C''#853JVcXTLYU$xr1GcJ7'

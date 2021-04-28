@@ -22,6 +22,7 @@ module:
   flysystem: 0
   flysystem_s3: 0
   help: 0
+  hmpps_auth: 0
   image: 0
   inline_form_errors: 0
   jsonapi: 0
@@ -33,6 +34,7 @@ module:
   moj_resources: 0
   monolog: 0
   node: 0
+  openid_connect: 0
   options: 0
   path: 0
   path_alias: 0
@@ -69,6 +71,7 @@ module:
   views_ui: 0
   govuk_inline_form_errors: 1
   menu_link_content: 1
+  externalauth: 10
   views: 10
   prisoner_content_hub_profile: 1000
 theme:
