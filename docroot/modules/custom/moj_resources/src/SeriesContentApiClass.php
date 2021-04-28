@@ -191,9 +191,6 @@ class SeriesContentApiClass
     $sortByFieldValue = $seriesTerm->get('field_sort_by')->getValue();
     $sortByFieldValue = empty($sortByFieldValue) ? NULL : $sortByFieldValue[0]['value'];
 
-    $sortFields = [];
-    $sortDirection = '';
-
     switch ($sortByFieldValue) {
       case 'season_and_episode_asc':
         $sortFields = ['field_moj_season', 'field_moj_episode'];
