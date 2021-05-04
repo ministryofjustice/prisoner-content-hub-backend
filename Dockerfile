@@ -78,7 +78,7 @@ RUN pecl install uploadprogress \
     && docker-php-ext-enable uploadprogress
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.16 \
+  && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.22 \
   && php -r "unlink('composer-setup.php');"
 
 # Add the composer bin directory to the path.
