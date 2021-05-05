@@ -23,6 +23,12 @@ services:
       - 11001:8080
     networks:
       - circleci-prisoner_content_hub
+  chrome:
+    image: previousnext/chrome-headless:65
+    ports:
+      - "${CHROMEDRIVER_PORT-9222}:9222"
+    networks:
+      - circleci-prisoner_content_hub
 
 networks:
   circleci-prisoner_content_hub:

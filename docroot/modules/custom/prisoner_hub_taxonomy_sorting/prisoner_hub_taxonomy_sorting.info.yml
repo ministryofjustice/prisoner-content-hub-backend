@@ -1,0 +1,5 @@
+name: 'Prisoner Hub Taxonomy Sorting'
+type: module
+description: 'Provides CMS functionality for sorting of Taxonomy content.'
+core: 8.x
+package: 'Custom'

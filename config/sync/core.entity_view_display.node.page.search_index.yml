@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
     - field.field.node.page.field_prison_categories
+    - field.field.node.page.field_release_date
     - node.type.page
   module:
     - user
@@ -39,5 +40,6 @@ hidden:
   field_moj_thumbnail_image: true
   field_moj_top_level_categories: true
   field_prison_categories: true
+  field_release_date: true
   links: true
   search_api_excerpt: true

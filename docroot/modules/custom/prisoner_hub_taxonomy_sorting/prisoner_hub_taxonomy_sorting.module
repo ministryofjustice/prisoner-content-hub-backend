@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Primary hook implementations for Prisoner hub taxonomy sorting module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_field_group_form_process_build_alter().
+ *
+ * Add visible states to episode number and release date fields.
+ * Dependent on what sorting has been applied to the Series selected.
+ */
+function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
+  if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
+
+    _prisoner_hub_taxonomy_sorting_fix_field_group_descriptions($element);
+
+    $terms_with_episode_sorting = [];
+    $terms_with_release_date_sorting = [];
+
+    $query = \Drupal::entityQuery('taxonomy_term');
+    $query->exists('field_sort_by');
+    $result = $query->execute();
+    $terms = Term::loadMultiple($result);
+    foreach ($terms as $term) {
+      /* @var \Drupal\taxonomy\TermInterface $term */
+      $sort_by_value = $term->get('field_sort_by')->getValue();
+      if (in_array($sort_by_value[0]['value'], ['season_and_episode_desc', 'season_and_episode_asc'])) {
+        $terms_with_episode_sorting[] = ['value' => [$term->id()]];
+      }
+      elseif (in_array($sort_by_value[0]['value'], ['release_date_desc', 'release_date_asc'])) {
+        $terms_with_release_date_sorting[] = ['value' => [$term->id()]];
+      }
+    }
+
+    if (empty($terms_with_episode_sorting)) {
+      hide($element['group_season_and_episode_number']);
+    }
+    else {
+      $element['group_season_and_episode_number']['#states'] = [
+        'visible' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_episode_sorting,
+            ],
+        ]
+      ];
+    }
+
+    if (empty($terms_with_release_date_sorting)) {
+      hide($element['group_release_date']);
+    }
+    else {
+      $element['group_release_date']['#states'] = [
+        'visible' => [
+          ':input[name="field_moj_series[]"]' =>
+            [
+              $terms_with_release_date_sorting,
+            ],
+        ]
+      ];
+    }
+  }
+}
+
+/**
+ * Fix the placement of field group descriptions.
+ *
+ * Fieldsets in Drupal place the "description" at the bottom, below the content.
+ * This is decided by Drupal core, and not field_group module.
+ * To move the descriptions to be _before_ the content, we move them to the
+ * ['#field_prefix'] property (which cannot be edited directly via config).
+ *
+ * TODO:
+ * This should ideally be implemented from a theme, rather than here in a module.
+ * But currently we are not using our own custom theme (so there's no where to
+ * modify the output).
+ *
+ * @param $element
+ *   The element to be modified.
+ */
+function _prisoner_hub_taxonomy_sorting_fix_field_group_descriptions(&$element) {
+  $element['group_series']['#attached']['html_head'][] = [
+    [
+      '#tag' => 'style',
+      '#value' => 'fieldset.field-group-fieldset div.fieldset-wrapper { margin-top: 0.5em }',
+    ],
+    'prisoner_hub_taxonomy_sorting_field_group_css'
+  ];
+
+  $element['group_series']['#field_prefix'] = $element['group_series']['#description'];
+  $element['group_series']['#description'] = '';
+
+  $element['group_season_and_episode_number']['#field_prefix'] = $element['group_season_and_episode_number']['#description'];
+  $element['group_season_and_episode_number']['#description'] = '';
+
+  $element['group_release_date']['#field_prefix'] = $element['group_release_date']['#description'];
+  $element['group_release_date']['#description'] = '';
+}

@@ -1,0 +1,21 @@
+uuid: 6b83d39e-9d03-4c34-b659-3d04c491fc33
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_date
+    - node.type.moj_radio_item
+  module:
+    - datetime
+id: node.moj_radio_item.field_release_date
+field_name: field_release_date
+entity_type: node
+bundle: moj_radio_item
+label: Date
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

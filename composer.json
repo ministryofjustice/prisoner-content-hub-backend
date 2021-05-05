@@ -45,6 +45,7 @@
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
         "drupal/views_bulk_operations": "^3.10",
+        "drupal/views_entity_form_field": "^1.0@beta",
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
@@ -106,6 +107,9 @@
         "patches": {
             "drupal/flysystem_s3": {
                 "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
+            },
+            "drupal/core": {
+                "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch"
             }
         }
     },
@@ -120,6 +124,7 @@
         }
     ],
     "require-dev": {
+        "dmore/chrome-mink-driver": "^2.7",
         "drupal/console": "^1.9",
         "drupal/core-dev": "^8.9",
         "weitzman/drupal-test-traits": "^1.5"

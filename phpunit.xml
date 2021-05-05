@@ -14,9 +14,9 @@
 <phpunit bootstrap="vendor/weitzman/drupal-test-traits/src/bootstrap.php">
   <php>
     <env name="DTT_BASE_URL" value="http://prisoner-content-hub-backend:8080"/>
-    <env name="DTT_API_URL" value="http://prisoner-content-hub-backend:8080"/>
+    <env name="DTT_API_URL" value="http://chrome:9222"/>
     <!-- <env name="DTT_MINK_DRIVER_ARGS" value='["chrome", { "chromeOptions" : { "w3c": false } }, "http://localhost:4444/wd/hub"]'/> -->
-    <env name="DTT_MINK_DRIVER_ARGS" value='["firefox", null, "http://localhost:4444/wd/hub"]'/>
+    <env name="DTT_MINK_DRIVER_ARGS" value='["firefox", null, "http://selenium:9222/wd/hub"]'/>
     <env name="DTT_API_OPTIONS" value='{"socketTimeout": 360, "domWaitTimeout": 3600000}' />
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /tmp
          Specify a temporary directory for storing debug images and html documents.
@@ -25,12 +25,12 @@
     <!-- To disable deprecation testing completely uncomment the next line. -->
     <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>-->
     <!-- Specify the default directory screenshots should be placed. -->
-    <!--<env name="DTT_SCREENSHOT_REPORT_DIRECTORY" value=""/>-->
+    <env name="DTT_SCREENSHOT_REPORT_DIRECTORY" value="/var/www/phpunit/screenshots"/>
     <!-- Specify the default directory page captures should be placed.
         When using the \Drupal\Tests\Listeners\HtmlOutputPrinter printerClass this will default to
         /sites/simpletest/browser_output. If using another printer such as teamcity this must be defined.
         -->
-    <!--<env name="DTT_HTML_OUTPUT_DIRECTORY" value=""/>-->
+    <env name="DTT_HTML_OUTPUT_DIRECTORY" value="/var/www/phpunit/html_output"/>
   </php>
 
   <testsuites>

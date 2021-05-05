@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
     - field.field.node.moj_pdf_item.field_prison_categories
+    - field.field.node.moj_pdf_item.field_release_date
     - node.type.moj_pdf_item
   module:
     - datetime
@@ -129,6 +130,15 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_release_date:
+    weight: 17
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
     region: content
   links:
     weight: 0
