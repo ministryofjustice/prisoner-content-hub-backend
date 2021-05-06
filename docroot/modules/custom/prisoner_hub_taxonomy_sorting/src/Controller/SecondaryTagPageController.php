@@ -18,7 +18,7 @@ class SecondaryTagPageController extends ControllerBase {
    *   A simple renderable array.
    */
   public function renderPage(TermInterface $taxonomy_term) {
-    $view_name = 'seconday_tag_term_content_sorting';
+    $view_name = 'secondary_tag_term_content_sorting';
     $view_display_id = 'embed_1';
     $view = Views::getView($view_name);
     return $view->buildRenderable($view_display_id, [$taxonomy_term->id()]);
