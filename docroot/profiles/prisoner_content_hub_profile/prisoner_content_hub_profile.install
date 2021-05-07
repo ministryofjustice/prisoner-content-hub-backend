@@ -1,0 +1,17 @@
+<?php
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Remove all moj_hub_item content, so that the content type can be removed.
+ */
+function prisoner_content_hub_profile_update_8001() {
+  $query = \Drupal::entityQuery('node');
+  $query->condition('type', 'moj_hub_item');
+  $query->accessCheck(FALSE);
+  $result = $query->execute();
+  $nodes = Node::loadMultiple($result);
+  foreach ($nodes as $node) {
+    $node->delete();
+  }
+}
