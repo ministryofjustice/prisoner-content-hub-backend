@@ -65,10 +65,23 @@ class PrisonerHubQueryAccessTest extends ExistingSiteBase {
   protected $prisonCategoryFieldName;
 
   /**
+   * An array of content types to check for.
+   *
+   * @var array
+   */
+  protected $contentTypes;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    // Get the list of content types with the prison field enabled.
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
+    $entityFieldManager = $this->container->get('entity_field.manager');
+    $entityFieldManager->getFieldMap();
+    $this->contentTypes = $entityFieldManager->getFieldMap()['node']['field_moj_prisons']['bundles'];
 
     $this->prisonFieldName = $this->container->getParameter('prisoner_hub_entity_access.prison_field_name');
     $this->prisonCategoryFieldName = $this->container->getParameter('prisoner_hub_entity_access.category_field_name');
@@ -101,107 +114,115 @@ class PrisonerHubQueryAccessTest extends ExistingSiteBase {
    * category.
    */
   public function testNoContentTaggedWithPrisonOrCategory() {
-    // Create some nodes that have no values.
-    for ($i = 0; $i < 5; $i++) {
-      $values = [
-        'type' => 'page',
-      ];
-      $this->createNode($values)->uuid();
+    foreach ($this->contentTypes as $contentType) {
+      // Create some nodes that have no values.
+      for ($i = 0; $i < 5; $i++) {
+        $values = [
+          'type' => $contentType,
+        ];
+        $this->createNode($values)->uuid();
+      }
+      $this->assertJsonResponseNodes([], $contentType);
     }
-    $this->assertJsonResponseNodes([]);
   }
 
   /**
    * Test that content appears when tagged with a prison (but no category).
    */
   public function testContentTaggedWithPrisonButNoCategory() {
-    $nodes_to_check = [];
-    for ($i = 0; $i < 5; $i++) {
+    foreach ($this->contentTypes as $contentType) {
+      $nodes_to_check = [];
+      for ($i = 0; $i < 5; $i++) {
         $values = [
-          'type' => 'page',
+          'type' => $contentType,
           $this->prisonFieldName => [
             ['target_id' => $this->prisonTerm->id()]
           ],
         ];
-      $nodes_to_check[] = $this->createNode($values)->uuid();
-    }
+        $nodes_to_check[] = $this->createNode($values)->uuid();
+      }
 
-    // Also create some content tagged with a different prison.
-    for ($i = 0; $i < 5; $i++) {
-      $values = [
-        'type' => 'page',
-        $this->prisonFieldName => [
-          ['target_id' => $this->anotherPrisonTerm->id()],
-        ],
-      ];
-      $this->createNode($values);
-    }
+      // Also create some content tagged with a different prison.
+      for ($i = 0; $i < 5; $i++) {
+        $values = [
+          'type' => $contentType,
+          $this->prisonFieldName => [
+            ['target_id' => $this->anotherPrisonTerm->id()],
+          ],
+        ];
+        $this->createNode($values);
+      }
 
-    $this->assertJsonResponseNodes($nodes_to_check);
+      $this->assertJsonResponseNodes($nodes_to_check, $contentType);
+    }
   }
 
   /**
    * Test that content appears when tagged with a category (but no prison).
    */
   public function testContentTaggedWithCategoryButNoPrison() {
-    $nodes_to_check = [];
-    for ($i = 0; $i < 5; $i++) {
-      $values = [
-        'type' => 'page',
-        $this->prisonCategoryFieldName => [
-          ['target_id' => $this->prisonCategoryTerm->id()],
-        ],
-      ];
-      $nodes_to_check[] = $this->createNode($values)->uuid();
-    }
+    foreach ($this->contentTypes as $contentType) {
+      $nodes_to_check = [];
+      for ($i = 0; $i < 5; $i++) {
+        $values = [
+          'type' => $contentType,
+          $this->prisonCategoryFieldName => [
+            ['target_id' => $this->prisonCategoryTerm->id()],
+          ],
+        ];
+        $nodes_to_check[] = $this->createNode($values)->uuid();
+      }
 
-    // Also create some content tagged with a different prison category.
-    for ($i = 0; $i < 5; $i++) {
-      $values = [
-        'type' => 'page',
-        $this->prisonCategoryFieldName => [
-          ['target_id' => $this->anotherPrisonCategoryTerm->id()],
-        ],
-      ];
-      $this->createNode($values)->uuid();
-    }
+      // Also create some content tagged with a different prison category.
+      for ($i = 0; $i < 5; $i++) {
+        $values = [
+          'type' => $contentType,
+          $this->prisonCategoryFieldName => [
+            ['target_id' => $this->anotherPrisonCategoryTerm->id()],
+          ],
+        ];
+        $this->createNode($values)->uuid();
+      }
 
-    $this->assertJsonResponseNodes($nodes_to_check);
+      $this->assertJsonResponseNodes($nodes_to_check, $contentType);
+    }
   }
 
   /**
    * Test that content appears when tagged with a category and a prison.
    */
   public function testContentTaggedWithPrisonAndCategory() {
-    $nodes_to_check = [];
-    for ($i = 0; $i < 5; $i++) {
-      $values = [
-        'type' => 'page',
-        $this->prisonFieldName => [
-          ['target_id' => $this->prisonTerm->id()],
-        ],
-        $this->prisonCategoryFieldName => [
-          ['target_id' => $this->prisonTerm->id()],
-        ],
-      ];
-      $nodes_to_check[] = $this->createNode($values)->uuid();
-    }
+    foreach ($this->contentTypes as $contentType) {
+      $nodes_to_check = [];
+      for ($i = 0; $i < 5; $i++) {
+        $values = [
+          'type' => $contentType,
+          $this->prisonFieldName => [
+            ['target_id' => $this->prisonTerm->id()],
+          ],
+          $this->prisonCategoryFieldName => [
+            ['target_id' => $this->prisonTerm->id()],
+          ],
+        ];
+        $nodes_to_check[] = $this->createNode($values)->uuid();
+      }
 
-    // Also create some content tagged with a different category and prison.
-    for ($i = 0; $i < 5; $i++) {
-      $values = [
-        'type' => 'page',
-        $this->prisonFieldName => [
-          ['target_id' => $this->anotherPrisonTerm->id()]
-        ],
-        $this->prisonCategoryFieldName => [
-          ['target_id' => $this->anotherPrisonCategoryTerm->id()],
-        ],
-      ];
-      $this->createNode($values)->uuid();
-    }
+      // Also create some content tagged with a different category and prison.
+      for ($i = 0; $i < 5; $i++) {
+        $values = [
+          'type' => $contentType,
+          $this->prisonFieldName => [
+            ['target_id' => $this->anotherPrisonTerm->id()]
+          ],
+          $this->prisonCategoryFieldName => [
+            ['target_id' => $this->anotherPrisonCategoryTerm->id()],
+          ],
+        ];
+        $this->createNode($values)->uuid();
+      }
 
-    $this->assertJsonResponseNodes($nodes_to_check);
+      $this->assertJsonResponseNodes($nodes_to_check, $contentType);
+    }
   }
 
   /**
@@ -209,12 +230,12 @@ class PrisonerHubQueryAccessTest extends ExistingSiteBase {
    *
    * @param $nodes
    */
-  protected function assertJsonResponseNodes($nodes) {
+  protected function assertJsonResponseNodes($nodes, $contentType) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prisonTermMachineName . '/node/page');
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prisonTermMachineName . '/node/' . $contentType);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertSame(200, $response->getStatusCode(), var_export(Json::decode((string) $response->getBody()), TRUE));
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());
     if (empty($nodes)) {
       $this->assertEmpty($response_document['data']);
