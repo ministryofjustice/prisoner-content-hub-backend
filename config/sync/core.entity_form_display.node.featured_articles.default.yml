@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
     - field.field.node.featured_articles.field_moj_prisons
+    - field.field.node.featured_articles.field_prison_categories
     - node.type.featured_articles
   module:
     - path
@@ -43,6 +44,12 @@ content:
     region: content
   field_moj_prisons:
     weight: 13
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_prison_categories:
+    weight: 26
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
