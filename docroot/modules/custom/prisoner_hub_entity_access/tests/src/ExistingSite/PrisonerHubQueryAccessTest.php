@@ -228,7 +228,10 @@ class PrisonerHubQueryAccessTest extends ExistingSiteBase {
   /**
    * Helper function to assert that a jsonapi response returns the expected nodes.
    *
-   * @param $nodes
+   * @param array $nodes
+   *   A list of node uuids to check for in the JSON response.
+   * @param string $contentType
+   *   The contentType machine name to check for.
    */
   protected function assertJsonResponseNodes($nodes, $contentType) {
     $request_options = [];
