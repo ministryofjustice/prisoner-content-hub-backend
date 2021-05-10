@@ -1,16 +1,16 @@
-uuid: 9578b1e8-67ba-48a7-8333-7468153ddb57
+uuid: c95696d0-a7b2-4d7d-9e8e-c8f5a1aa0aa8
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_series
-    - node.type.moj_hub_item
-    - taxonomy.vocabulary.series
-id: node.moj_hub_item.field_moj_series
-field_name: field_moj_series
+    - field.storage.node.field_prison_categories
+    - node.type.featured_articles
+    - taxonomy.vocabulary.prison_category
+id: node.featured_articles.field_prison_categories
+field_name: field_prison_categories
 entity_type: node
-bundle: moj_hub_item
-label: Series
+bundle: featured_articles
+label: 'Prison Categories'
 description: ''
 required: false
 translatable: true
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      series: series
+      prison_category: prison_category
     sort:
       field: name
       direction: asc

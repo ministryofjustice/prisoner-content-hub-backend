@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_moj_featured_tile_small
-    - node.type.article
     - node.type.featured_articles
     - node.type.landing_page
     - node.type.moj_pdf_item
@@ -25,7 +24,6 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
-      article: article
       moj_radio_item: moj_radio_item
       page: page
       landing_page: landing_page
