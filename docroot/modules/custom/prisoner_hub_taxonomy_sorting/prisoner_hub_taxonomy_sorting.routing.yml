@@ -1,8 +1,8 @@
 prisoner_hub_taxonomy_sorting.change_episode_order:
   path: '/taxonomy/term/{taxonomy_term}/change-episode-order'
   defaults:
-    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::renderPage'
-    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::titleCallback'
+    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SeriesPageController::renderPage'
+    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SeriesPageController::titleCallback'
   options:
     parameters:
       taxonomy_term:
@@ -10,4 +10,17 @@ prisoner_hub_taxonomy_sorting.change_episode_order:
   requirements:
     _entity_access: 'taxonomy_term.update'
     taxonomy_term: \d+
-    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\PageController::access'
+    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SeriesPageController::access'
+prisoner_hub_taxonomy_sorting.change_content_order:
+  path: '/taxonomy/term/{taxonomy_term}/change-content-order'
+  defaults:
+    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SecondaryTagPageController::renderPage'
+    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SecondaryTagPageController::titleCallback'
+  options:
+    parameters:
+      taxonomy_term:
+        type: entity:taxonomy_term
+  requirements:
+    _entity_access: 'taxonomy_term.update'
+    taxonomy_term: \d+
+    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SecondaryTagPageController::access'

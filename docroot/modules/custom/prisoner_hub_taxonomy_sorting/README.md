@@ -1,9 +1,9 @@
 # Prisoner Hub Taxonomy Sorting
 
-The purpose of this module is to provide an admin page that allows content editors to
-fix sorting issues on Taxonomy pages.
+This module provides functionality related to sorting content on Taxonomy pages.
+Currently this includes the following features:
+* Adds a tab to Series and Secondary tags taxonomy pages that displays a list
+  of content in the same order as it would on the frontend.
+* Shows/hides season/episode number and release date fields depending on what
+  sorting has been selected for the associated Series.
 
-These pages are only supposed to be temporary, until the content sorting issues have
-been fixed.  But there is also a chance the page could become a permanent feature.
-
-See: https://trello.com/c/hRFu6ke3/49-add-ability-to-cms-to-display-and-edit-content-in-a-series
