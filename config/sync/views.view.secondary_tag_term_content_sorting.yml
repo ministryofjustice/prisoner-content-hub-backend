@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.base_field_override.node.article.created
     - core.entity_view_mode.node.teaser
     - field.storage.node.field_moj_category_featured_item
     - field.storage.node.field_moj_top_level_categories
@@ -938,7 +937,6 @@ display:
         - user.permissions
       max-age: -1
       tags:
-        - 'config:core.base_field_override.node.article.created'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_top_level_categories'
   embed_1:
@@ -959,6 +957,5 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:core.base_field_override.node.article.created'
         - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_top_level_categories'
