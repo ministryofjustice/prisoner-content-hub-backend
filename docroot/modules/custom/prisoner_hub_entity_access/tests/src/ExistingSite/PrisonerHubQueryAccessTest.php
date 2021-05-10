@@ -246,7 +246,7 @@ class PrisonerHubQueryAccessTest extends ExistingSiteBase {
     else {
       $this->assertSame($nodes, array_map(static function (array $data) {
         return $data['id'];
-      }, $response_document['data']));
+      }, $response_document['data']), 'JSON response returns the correct content for ' . $contentType);
     }
   }
 }
