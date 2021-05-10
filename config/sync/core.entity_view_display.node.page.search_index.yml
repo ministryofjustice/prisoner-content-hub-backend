@@ -5,7 +5,6 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_index
     - field.field.node.page.field_moj_category_featured_item
-    - field.field.node.page.field_moj_date
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_prisons
@@ -29,7 +28,6 @@ mode: search_index
 content: {  }
 hidden:
   field_moj_category_featured_item: true
-  field_moj_date: true
   field_moj_description: true
   field_moj_episode: true
   field_moj_prisons: true

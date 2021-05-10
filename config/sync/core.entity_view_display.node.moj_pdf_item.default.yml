@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_pdf_item.field_moj_category_featured_item
-    - field.field.node.moj_pdf_item.field_moj_date
     - field.field.node.moj_pdf_item.field_moj_description
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
@@ -39,15 +38,6 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     type: boolean
-    region: content
-  field_moj_date:
-    weight: 16
-    label: above
-    settings:
-      format_type: medium
-      timezone_override: ''
-    third_party_settings: {  }
-    type: datetime_default
     region: content
   field_moj_description:
     weight: 2
