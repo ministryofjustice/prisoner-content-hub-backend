@@ -145,7 +145,7 @@ jobs:
           command: make push
       - add_ssh_keys:
           fingerprints:
-            - "43:37:0b:4a:c0:7a:20:72:bb:a4:92:c1:2f:9e:27:e7"
+            - "14:dd:6a:48:e3:f8:88:ea:37:1a:19:0b:c3:90:06:6b"
       - run:
           name: Create Git Tag
           command: |
