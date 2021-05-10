@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_moj_top_level_categories
-    - field.storage.node.field_moj_date
     - field.storage.node.field_moj_prisons
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_series
@@ -39,14 +38,6 @@ field_settings:
     dependencies:
       module:
         - node
-  field_moj_date:
-    label: Date
-    datasource_id: 'entity:node'
-    property_path: field_moj_date
-    type: date
-    dependencies:
-      config:
-        - field.storage.node.field_moj_date
   name:
     label: 'Authored by » User » Name'
     datasource_id: 'entity:node'

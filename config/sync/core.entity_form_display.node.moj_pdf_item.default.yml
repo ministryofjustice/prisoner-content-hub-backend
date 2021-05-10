@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_pdf_item.field_moj_category_featured_item
-    - field.field.node.moj_pdf_item.field_moj_date
     - field.field.node.moj_pdf_item.field_moj_description
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
@@ -240,5 +239,4 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_moj_date: true
+hidden: {  }

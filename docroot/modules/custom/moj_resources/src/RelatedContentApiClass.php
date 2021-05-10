@@ -78,7 +78,7 @@ class RelatedContentApiClass
    *
    * @return void
    */
-  private function getRelatedContentIds($categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder = 'ASC')
+  private function getRelatedContentIds($categoryId, $numberOfResults, $offsetIntoNumberOfResults, $prisonId, $sortOrder = 'DESC')
   {
     $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item');
 
@@ -99,7 +99,7 @@ class RelatedContentApiClass
     $query = getPrisonResults($prisonId, $query);
 
     $relatedContent = $query
-      ->sort('nid', $sortOrder)
+      ->sort('created', $sortOrder)
       ->range($offsetIntoNumberOfResults, $numberOfResults)
       ->execute();
 
