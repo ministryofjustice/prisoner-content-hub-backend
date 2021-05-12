@@ -1,0 +1,14 @@
+uuid: e0098c5f-e632-4b4f-a276-0725c28b1815
+langcode: en
+status: true
+dependencies: {  }
+id: landing_page_back_reference
+label: 'Landing page back reference'
+enabled: true
+first_field: field_legacy_landing_page
+second_field: field_moj_landing_page_term
+bundles:
+  node:
+    - '*'
+  taxonomy_term:
+    - '*'
