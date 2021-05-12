@@ -1,0 +1,7 @@
+name: 'Prisoner Hub JSON:API Resources'
+type: module
+description: 'Provides custom jsonapi resources for the prisoner content hub.'
+core: 8.x
+package: 'Custom'
+dependencies:
+  - jsonapi_resources:jsonapi_resources
