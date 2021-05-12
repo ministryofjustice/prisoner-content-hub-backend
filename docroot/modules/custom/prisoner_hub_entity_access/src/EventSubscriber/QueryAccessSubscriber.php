@@ -3,6 +3,8 @@
 namespace Drupal\prisoner_hub_entity_access\EventSubscriber;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\QueryAccess\ConditionGroup;
 use Drupal\entity\QueryAccess\QueryAccessEvent;
@@ -25,6 +27,13 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   protected $entityFieldManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The route match service.
    *
    * @var RouteMatchInterface
@@ -45,20 +54,27 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    */
   protected $prisonFieldName;
 
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, RouteMatchInterface $route_match, string $prison_field_name, string $prison_category_field_name) {
+  /**
+   * @var array
+   *
+   * List of entity type ids to apply the query access to.
+   */
+  protected $entityTypeIds;
+
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, string $prison_field_name, string $prison_category_field_name, array $entity_type_ids) {
     $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->prisonFieldName = $prison_field_name;
     $this->prisonCategoryFieldName = $prison_category_field_name;
+    $this->entityTypeIds = $entity_type_ids;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    // TODO: Do we want to run this for Taxonomy Terms?  Or other entity types?
-    $events['entity.query_access.node'] = ['entityQueryAccessPrisonCategories'];
-
+    $events['entity.query_access'] = ['entityQueryAccessPrisonCategories'];
     return $events;
   }
 
@@ -73,15 +89,16 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
 
     /* @var \Drupal\taxonomy\TermInterface $current_prison */
     $current_prison = $this->routeMatch->getParameter('prison');
-    if (!in_array($event->getOperation(), $operations) || !$current_prison) {
+    if (!in_array($event->getOperation(), $operations) || !$current_prison || !in_array($event->getEntityTypeId(), $this->entityTypeIds)) {
       return;
     }
 
     $conditions = $event->getConditions();
     $conditions->alwaysFalse(FALSE);
 
-    $current_prison_condition_group = $this->getPrisonConditionGroup($current_prison);
-    $prison_categories_condition_group = $this->getPrisonCategoriesConditionGroup($current_prison);
+    $entity_type = $this->entityTypeManager->getDefinition($event->getEntityTypeId());
+    $current_prison_condition_group = $this->getPrisonConditionGroup($current_prison, $entity_type);
+    $prison_categories_condition_group = $this->getPrisonCategoriesConditionGroup($current_prison, $entity_type);
 
     // Only create an OR condition group if a prison categories condition is to
     // be added.
@@ -105,15 +122,15 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    * @return \Drupal\entity\QueryAccess\ConditionGroup
    *   The condition group, to be added to the entity query.
    */
-  protected function getPrisonConditionGroup(TermInterface $current_prison) {
+  protected function getPrisonConditionGroup(TermInterface $current_prison, EntityTypeInterface $entity_type) {
     $condition_group = new ConditionGroup('OR');
     $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
 
     // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
     // field enabled.  To do this we get a list of all bundles the field is
     // enabled, and add a 'NOT IN' condition.
-    $bundles = $this->getFieldBundles('node', $this->prisonFieldName);
-    $condition_group->addCondition('type', $bundles, 'NOT IN');
+    $bundles = $this->getFieldBundles($entity_type->id(), $this->prisonFieldName);
+    $condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
     return $condition_group;
   }
 
@@ -127,7 +144,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    *   The condition group, to be added to the entity query.  Or NULL if no
    *   condition should be added.
    */
-  protected function getPrisonCategoriesConditionGroup(TermInterface $current_prison) {
+  protected function getPrisonCategoriesConditionGroup(TermInterface $current_prison, EntityTypeInterface $entity_type) {
     $prison_categories = $this->getPrisonCategories($current_prison);
 
     // If a prison has been setup but has not categories, do not add anything
@@ -142,8 +159,8 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
     // field enabled.  To do this we get a list of all bundles the field is
     // enabled, and add a 'NOT IN' condition.
-    $bundles = $this->getFieldBundles('node', $this->prisonCategoryFieldName);
-    $condition_group->addCondition('type', $bundles, 'NOT IN');
+    $bundles = $this->getFieldBundles($entity_type->id(), $this->prisonCategoryFieldName);
+    $condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
     return $condition_group;
   }
 
