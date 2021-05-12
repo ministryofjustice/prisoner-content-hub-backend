@@ -1,0 +1,28 @@
+uuid: 274f0087-7490-44dd-bcc1-629c0195e292
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_legacy_landing_page
+    - node.type.landing_page
+    - taxonomy.vocabulary.moj_categories
+id: taxonomy_term.moj_categories.field_legacy_landing_page
+field_name: field_legacy_landing_page
+entity_type: taxonomy_term
+bundle: moj_categories
+label: 'Landing page'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      landing_page: landing_page
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

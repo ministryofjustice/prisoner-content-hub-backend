@@ -1,22 +1,18 @@
-uuid: f0d8ab9c-88cd-4a12-a3a7-115391bf5f05
+uuid: 5f5583ce-5d33-41e8-b5f1-b1b4dbfc5dcb
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.tags.field_featured_image
-    - field.field.taxonomy_term.tags.field_moj_category_featured_item
-    - field.field.taxonomy_term.tags.field_moj_prisons
-    - field.field.taxonomy_term.tags.field_moj_promoted
-    - field.field.taxonomy_term.tags.field_prison_categories
-    - image.style.thumbnail
-    - taxonomy.vocabulary.tags
+    - field.field.taxonomy_term.moj_categories.field_legacy_landing_page
+    - field.field.taxonomy_term.moj_categories.field_moj_prisons
+    - field.field.taxonomy_term.moj_categories.field_prison_categories
+    - taxonomy.vocabulary.moj_categories
   module:
-    - image
     - path
     - text
-id: taxonomy_term.tags.default
+id: taxonomy_term.moj_categories.default
 targetEntityType: taxonomy_term
-bundle: tags
+bundle: moj_categories
 mode: default
 content:
   description:
@@ -27,36 +23,24 @@ content:
       placeholder: ''
       rows: 5
     third_party_settings: {  }
-  field_featured_image:
-    weight: 4
+  field_legacy_landing_page:
+    weight: 3
     settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: image_image
-    region: content
-  field_moj_category_featured_item:
-    weight: 5
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
+    type: entity_reference_autocomplete
     region: content
   field_moj_prisons:
-    weight: 6
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_moj_promoted:
-    weight: 3
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_prison_categories:
-    weight: 7
+    weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -79,7 +63,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 6
     region: content
     third_party_settings: {  }
 hidden: {  }
