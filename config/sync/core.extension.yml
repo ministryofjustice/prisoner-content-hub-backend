@@ -5,6 +5,7 @@ module:
   autocomplete_id: 0
   block: 0
   breakpoint: 0
+  cer: 0
   ckeditor: 0
   config: 0
   datetime: 0
@@ -25,6 +26,7 @@ module:
   image: 0
   inline_form_errors: 0
   jsonapi: 0
+  jsonapi_resources: 0
   link: 0
   menu_ui: 0
   moj: 0
@@ -36,6 +38,7 @@ module:
   path: 0
   path_alias: 0
   prisoner_hub_entity_access: 0
+  prisoner_hub_jsonapi_resources: 0
   prisoner_hub_prison_context: 0
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
