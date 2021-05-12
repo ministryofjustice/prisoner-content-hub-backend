@@ -10,6 +10,7 @@
 
 
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Copy over values from landing page content types to categories.
@@ -32,4 +33,22 @@ function prisoner_content_hub_profile_deploy_copy_landing_page_values() {
       $referenced_entity->save();
     }
   }
+}
+
+/**
+ * Set all Secondary tags to have every prison category.
+ */
+function prisoner_content_hub_profile_deploy_set_tag_prisons() {
+  $query = \Drupal::entityQuery('taxonomy_term');
+  $query->condition('vid', 'tags');
+  $query->accessCheck(FALSE);
+  $result = $query->execute();
+  $terms = Term::loadMultiple($result);
+  foreach ($terms as $term) {
+    /** @var \Drupal\taxonomy\TermInterface $term */
+    // Set all four prison category term ids.
+    $term->set('field_prison_categories', [1011 => 1011, 1012 => 1012, 1013 => 1013, 1014 => 1014]);
+    $term->save();
+  }
+
 }
