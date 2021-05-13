@@ -26,6 +26,7 @@
         "drupal/govuk_inline_form_errors": "^1.0@beta",
         "drupal/health_check": "^1.1",
         "drupal/jsonapi_cross_bundles": "^1.0@alpha",
+        "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/memcache": "^2.0",
         "drupal/migrate_plus": "^4.2",
         "drupal/migrate_source_csv": "^2.2",
@@ -113,6 +114,9 @@
             "drupal/core": {
                 "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch",
                 "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "https://www.drupal.org/files/issues/2021-02-20/3036593-118.patch"
+            },
+            "drupal/jsonapi_page_limit": {
+                "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/dd22406df90d355cbf4e1a6e0b649826/1-add-option-to-set-global-limit.patch"
             }
         }
     },
