@@ -24,6 +24,8 @@
         "drupal/govuk_design_system": "^1.0@beta",
         "drupal/govuk_inline_form_errors": "^1.0@beta",
         "drupal/health_check": "^1.1",
+        "drupal/jsonapi_cross_bundles": "^1.0@alpha",
+        "drupal/jsonapi_extras": "^3.17",
         "drupal/memcache": "^2.0",
         "drupal/migrate_plus": "^4.2",
         "drupal/migrate_source_csv": "^2.2",
@@ -110,6 +112,9 @@
             },
             "drupal/core": {
                 "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch"
+            },
+            "drupal/jsonapi_cross_bundles": {
+                "Issue #3070430 - Incompatible with JSON:API Extras": "https://www.drupal.org/files/issues/2020-09-23/3070430-15.patch"
             }
         }
     },
