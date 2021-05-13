@@ -1,6 +1,6 @@
 prisoner_hub_jsonapi_resources.topics:
-  path: '/%jsonapi%/topics'
+  path: '/%jsonapi%/taxonomy_term'
   defaults:
-    _jsonapi_resource: Drupal\prisoner_hub_jsonapi_resources\Resource\Topics
+    _jsonapi_resource: Drupal\prisoner_hub_jsonapi_resources\Resource\TaxonomyTerm
   requirements:
     _permission: 'access content'

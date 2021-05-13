@@ -4,6 +4,7 @@ namespace Drupal\prisoner_hub_jsonapi_resources\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\ResourceResponse;
+use Drupal\jsonapi_resources\Entity\Query\PaginatorMetadata;
 use Drupal\jsonapi_resources\Resource\EntityQueryResourceBase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @internal
  */
-class Topics extends EntityQueryResourceBase {
+class TaxonomyTerm extends EntityQueryResourceBase {
 
   /**
    * Process the resource request.
@@ -27,9 +28,7 @@ class Topics extends EntityQueryResourceBase {
    */
   public function process(Request $request): ResourceResponse {
     $cacheability = new CacheableMetadata();
-    $entity_query = $this->getEntityQuery('taxonomy_term')
-      ->condition('vid', ['moj_categories', 'tags'], 'IN');
-    $cacheability->addCacheContexts(['url.path']);
+    $entity_query = $this->getEntityQuery('taxonomy_term');
     $cacheability->addCacheTags(['taxonomy_term_list']);
 
     $data = $this->loadResourceObjectDataFromEntityQuery($entity_query, $cacheability);
