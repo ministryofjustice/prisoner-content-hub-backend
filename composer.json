@@ -9,6 +9,7 @@
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
         "drupal/backup_migrate": "^4.0",
+        "drupal/cer": "^4.0@alpha",
         "drupal/core-composer-scaffold": "^8.9",
         "drupal/core-project-message": "^8.9",
         "drupal/core-recommended": "^8.9",
@@ -25,7 +26,6 @@
         "drupal/govuk_inline_form_errors": "^1.0@beta",
         "drupal/health_check": "^1.1",
         "drupal/jsonapi_cross_bundles": "^1.0@alpha",
-        "drupal/jsonapi_extras": "^3.17",
         "drupal/memcache": "^2.0",
         "drupal/migrate_plus": "^4.2",
         "drupal/migrate_source_csv": "^2.2",
@@ -111,10 +111,8 @@
                 "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
             },
             "drupal/core": {
-                "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch"
-            },
-            "drupal/jsonapi_cross_bundles": {
-                "Issue #3070430 - Incompatible with JSON:API Extras": "https://www.drupal.org/files/issues/2020-09-23/3070430-15.patch"
+                "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch",
+                "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "https://www.drupal.org/files/issues/2021-02-20/3036593-118.patch"
             }
         }
     },
