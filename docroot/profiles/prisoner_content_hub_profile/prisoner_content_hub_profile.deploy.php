@@ -29,6 +29,7 @@ function prisoner_content_hub_profile_deploy_copy_landing_page_values() {
       $referenced_entity->set('field_legacy_landing_page', $node->id());
       $referenced_entity->set('field_moj_prisons', $node->get('field_moj_prisons')->getValue());
       $referenced_entity->set('field_prison_categories', $node->get('field_prison_categories')->getValue());
+      $referenced_entity->set('description', $node->get('field_moj_description')->getValue());
 
       $referenced_entity->save();
     }
