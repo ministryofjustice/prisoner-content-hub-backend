@@ -3,6 +3,8 @@
 namespace Drupal\prisoner_hub_entity_access\EventSubscriber;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\QueryAccess\ConditionGroup;
 use Drupal\entity\QueryAccess\QueryAccessEvent;
@@ -25,6 +27,13 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   protected $entityFieldManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The route match service.
    *
    * @var RouteMatchInterface
@@ -45,8 +54,9 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    */
   protected $prisonFieldName;
 
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, RouteMatchInterface $route_match, string $prison_field_name, string $prison_category_field_name) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, string $prison_field_name, string $prison_category_field_name) {
     $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->prisonFieldName = $prison_field_name;
     $this->prisonCategoryFieldName = $prison_category_field_name;
@@ -79,8 +89,9 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     $conditions = $event->getConditions();
     $conditions->alwaysFalse(FALSE);
 
-    $current_prison_condition_group = $this->getPrisonConditionGroup($current_prison);
-    $prison_categories_condition_group = $this->getPrisonCategoriesConditionGroup($current_prison);
+    $entity_type = $this->entityTypeManager->getDefinition($event->getEntityTypeId());
+    $current_prison_condition_group = $this->getPrisonConditionGroup($current_prison, $entity_type);
+    $prison_categories_condition_group = $this->getPrisonCategoriesConditionGroup($current_prison, $entity_type);
 
     // Only create an OR condition group if a prison categories condition is to
     // be added.
@@ -104,15 +115,15 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    * @return \Drupal\entity\QueryAccess\ConditionGroup
    *   The condition group, to be added to the entity query.
    */
-  protected function getPrisonConditionGroup(TermInterface $current_prison) {
+  protected function getPrisonConditionGroup(TermInterface $current_prison, EntityTypeInterface $entity_type) {
     $condition_group = new ConditionGroup('OR');
     $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
 
     // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
     // field enabled.  To do this we get a list of all bundles the field is
     // enabled, and add a 'NOT IN' condition.
-    $bundles = $this->getFieldBundles('node', $this->prisonFieldName);
-    $condition_group->addCondition('type', $bundles, 'NOT IN');
+    $bundles = $this->getFieldBundles($entity_type->id(), $this->prisonFieldName);
+    $condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
     return $condition_group;
   }
 
@@ -121,12 +132,14 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\taxonomy\TermInterface $current_prison
    *   The current prison taxonomy term (loaded via the url).
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type being used for the query.
    *
    * @return \Drupal\entity\QueryAccess\ConditionGroup|NULL
    *   The condition group, to be added to the entity query.  Or NULL if no
    *   condition should be added.
    */
-  protected function getPrisonCategoriesConditionGroup(TermInterface $current_prison) {
+  protected function getPrisonCategoriesConditionGroup(TermInterface $current_prison, EntityTypeInterface $entity_type) {
     $prison_categories = $this->getPrisonCategories($current_prison);
 
     // If a prison has been setup but has not categories, do not add anything
@@ -141,8 +154,8 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
     // field enabled.  To do this we get a list of all bundles the field is
     // enabled, and add a 'NOT IN' condition.
-    $bundles = $this->getFieldBundles('node', $this->prisonCategoryFieldName);
-    $condition_group->addCondition('type', $bundles, 'NOT IN');
+    $bundles = $this->getFieldBundles($entity_type->id(), $this->prisonCategoryFieldName);
+    $condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
     return $condition_group;
   }
 
@@ -151,6 +164,8 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\taxonomy\TermInterface $term
    *   The taxonomy term to check for categories.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type being used for the query.
    *
    * @return array
    *   A flat array with category term ids.  This can be empty if the $term has
