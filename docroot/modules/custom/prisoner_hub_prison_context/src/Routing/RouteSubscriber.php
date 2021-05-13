@@ -30,7 +30,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   public function alterRoutes(RouteCollection $collection) {
     foreach ($collection as $name => $route) {
       /* @var \Symfony\Component\Routing\Route $route */
-      if (Routes::isJsonApiRequest($route->getDefaults())) {
+      if ($route->getDefault(Routes::JSON_API_ROUTE_FLAG_KEY)) {
         $new_route = clone($route);
         $new_route->setPath(str_replace($this->jsonapiBasePath, $this->jsonapiBasePath . '/prison/{prison}', $route->getPath()));
         $parameters = $route->getOption('parameters');
