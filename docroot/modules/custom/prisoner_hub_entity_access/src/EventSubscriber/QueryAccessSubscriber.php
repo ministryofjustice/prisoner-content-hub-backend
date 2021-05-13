@@ -56,8 +56,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    // TODO: Do we want to run this for Taxonomy Terms?  Or other entity types?
-    $events['entity.query_access.node'] = ['entityQueryAccessPrisonCategories'];
+    $events['entity.query_access'] = ['entityQueryAccessPrisonCategories'];
 
     return $events;
   }
