@@ -142,7 +142,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
       for ($i = 0; $i < 5; $i++) {
         $this->createEntity($bundle, []);
       }
-      $this->assertJsonResponseNodes([], $bundle);
+      $this->assertJsonResponse([], $bundle);
     }
   }
 
@@ -172,7 +172,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         $this->createEntity($bundle, $values);
       }
 
-      $this->assertJsonResponseNodes($entities_to_check, $bundle);
+      $this->assertJsonResponse($entities_to_check, $bundle);
     }
   }
 
@@ -202,7 +202,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         $this->createEntity($bundle, $values)->uuid();
       }
 
-      $this->assertJsonResponseNodes($entities_to_check, $bundle);
+      $this->assertJsonResponse($entities_to_check, $bundle);
     }
   }
 
@@ -238,7 +238,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         $this->createEntity($bundle, $values)->uuid();
       }
 
-      $this->assertJsonResponseNodes($entities_to_check, $bundle);
+      $this->assertJsonResponse($entities_to_check, $bundle);
     }
   }
 
@@ -250,7 +250,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @param string $bundle
    *   The bundle machine name to check for.
    */
-  protected function assertJsonResponseNodes($entities_to_check, $bundle) {
+  protected function assertJsonResponse(array $entities_to_check, string $bundle) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prisonTermMachineName . '/' . $this->getEntityTypeId() . '/' . $bundle);
