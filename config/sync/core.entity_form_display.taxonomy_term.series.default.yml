@@ -9,6 +9,7 @@ dependencies:
     - field.field.taxonomy_term.series.field_featured_image
     - field.field.taxonomy_term.series.field_featured_video
     - field.field.taxonomy_term.series.field_moj_category_featured_item
+    - field.field.taxonomy_term.series.field_moj_prisons
     - field.field.taxonomy_term.series.field_moj_promoted
     - field.field.taxonomy_term.series.field_prison_categories
     - field.field.taxonomy_term.series.field_promoted_feature
@@ -43,7 +44,7 @@ content:
     type: string_textarea
     region: content
   field_feature_programme_code:
-    weight: 13
+    weight: 11
     settings:
       size: 60
       placeholder: ''
@@ -51,14 +52,14 @@ content:
     type: string_textfield
     region: content
   field_featured_audio:
-    weight: 12
+    weight: 10
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
     region: content
   field_featured_image:
-    weight: 6
+    weight: 5
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -66,7 +67,7 @@ content:
     type: image_image
     region: content
   field_featured_video:
-    weight: 7
+    weight: 6
     settings:
       file_directory: 'video-thumbnails/[date:custom:Y]-[date:custom:m]'
       uri_scheme: public
@@ -77,34 +78,44 @@ content:
     type: video_upload
     region: content
   field_moj_category_featured_item:
-    weight: 5
+    weight: 4
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
+  field_moj_prisons:
+    weight: 12
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_moj_promoted:
-    weight: 8
+    weight: 7
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_prison_categories:
-    weight: 11
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_promoted_feature:
-    weight: 9
+    weight: 8
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_promoted_to_prison:
-    weight: 10
+    weight: 9
     settings:
       match_operator: CONTAINS
       size: 60
