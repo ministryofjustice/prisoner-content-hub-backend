@@ -7,8 +7,6 @@ use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use GuzzleHttp\RequestOptions;
-use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
-use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -18,8 +16,6 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  */
 abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
-  use TaxonomyCreationTrait;
-  use NodeCreationTrait;
   use JsonApiRequestTestTrait;
 
   /**
@@ -138,7 +134,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    */
   public function testNoEntitiesTaggedWithPrisonOrCategory() {
     foreach ($this->bundles as $bundle) {
-      // Create some nodes that have no values.
+      // Create some entities that have no values.
       for ($i = 0; $i < 5; $i++) {
         $this->createEntity($bundle, []);
       }
@@ -257,7 +253,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     $response = $this->request('GET', $url, $request_options);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());
-    $message = 'JSON response returns the correct results for entity type: ' . $this->getEntityTypeId() . ', bundle: ' . $bundle;
+    $message = 'JSON response returns the correct results on url: ' . $url->toString();
     if (empty($entities_to_check)) {
       $this->assertEmpty($response_document['data'], $message);
     }

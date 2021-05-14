@@ -3,6 +3,7 @@
 namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
 
 use Drupal\taxonomy\Entity\Vocabulary;
+use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 
 /**
  * Test that the jsonapi responses for taxonomy terms tagged with prisons and
@@ -12,7 +13,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  */
 class PrisonerHubQueryAccessTermTest extends PrisonerHubQueryAccessTestBase {
 
-  protected $entityTypeId = 'taxonomy_term';
+  use TaxonomyCreationTrait;
 
   /**
    * {@inheritdoc}
