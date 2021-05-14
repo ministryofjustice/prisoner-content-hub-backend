@@ -116,7 +116,7 @@
                 "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "https://www.drupal.org/files/issues/2021-02-20/3036593-118.patch"
             },
             "drupal/jsonapi_page_limit": {
-                "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/dd22406df90d355cbf4e1a6e0b649826/1-add-option-to-set-global-limit.patch"
+                "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/9567e0aeedbf9b44713d9740ab30ccec/1-add-option-to-set-global-limit-2.patch"
             }
         }
     },

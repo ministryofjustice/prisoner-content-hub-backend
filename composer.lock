@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ba406cca469b7a6ec0c38bf0faccdf0",
+    "content-hash": "ceb1094e962d6ab9975445d15b265163",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3243,7 +3243,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/dd22406df90d355cbf4e1a6e0b649826/1-add-option-to-set-global-limit.patch"
+                    "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/9567e0aeedbf9b44713d9740ab30ccec/1-add-option-to-set-global-limit-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
