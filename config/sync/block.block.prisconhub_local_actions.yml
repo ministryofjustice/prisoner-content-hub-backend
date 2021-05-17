@@ -1,0 +1,20 @@
+uuid: a07ecb94-c870-42ff-a559-5d0427556fa9
+langcode: en
+status: true
+dependencies:
+  theme:
+    - prisconhub
+_core:
+  default_config_hash: HHryZVJbeKi9WnuBGC8FOhBZmBnk2G1H6KxFuy-rC9A
+id: prisconhub_local_actions
+theme: prisconhub
+region: content
+weight: -10
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,22 @@
+uuid: 51202492-c0fc-4ac1-a257-d88d4e3e8fd0
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+  theme:
+    - prisconhub
+_core:
+  default_config_hash: IItlF4SKHgxduIysVQdvirDJ_v3HGuAviOkidAOJYRE
+id: prisconhub_login
+theme: prisconhub
+region: content
+weight: 10
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: 'User login'
+  provider: user
+  label_display: visible
+visibility: {  }
