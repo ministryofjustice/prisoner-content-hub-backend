@@ -11,8 +11,8 @@ field_name: field_moj_prisons
 entity_type: node
 bundle: moj_pdf_item
 label: Prisons
-description: 'All content is whitelisted by default if you wish to target specific prison(s) you can tag them using this field. Once tagged, the content will be distributed only to that prison.'
-required: false
+description: 'Select every prison you''d like to be able to view your content.'
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''

@@ -12,11 +12,29 @@ dependencies:
     - image.style.thumbnail
     - node.type.landing_page
   module:
+    - field_group
     - image
     - path
     - scheduler
     - select2
     - text
+third_party_settings:
+  field_group:
+    group_prison_categories:
+      children:
+        - field_moj_prisons
+        - field_prison_categories
+      parent_name: ''
+      weight: 8
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.'
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page
@@ -24,12 +42,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   field_image:
-    weight: 18
+    weight: 7
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -47,7 +65,7 @@ content:
     type: text_textarea_with_summary
     region: content
   field_moj_landing_feature_contet:
-    weight: 13
+    weight: 6
     settings:
       match_operator: CONTAINS
       match_limit: 20
@@ -57,7 +75,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_moj_landing_page_term:
-    weight: 10
+    weight: 5
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -80,25 +98,18 @@ content:
     region: content
   path:
     type: path
-    weight: 8
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 6
-    region: content
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 20
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 17
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -106,14 +117,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
-    region: content
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 7
+    weight: 12
     region: content
     third_party_settings: {  }
   title:
@@ -131,7 +135,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 2
     settings:
       match_operator: CONTAINS
       size: 60
@@ -141,8 +145,10 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 19
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  promote: true
+  sticky: true

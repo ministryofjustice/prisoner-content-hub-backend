@@ -27,13 +27,28 @@ dependencies:
     - text
 third_party_settings:
   field_group:
+    group_prison_categories:
+      children:
+        - field_moj_prisons
+        - field_prison_categories
+      parent_name: ''
+      weight: 11
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
     group_series:
       children:
         - field_moj_series
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 13
+      weight: 10
       format_type: fieldset
       region: content
       format_settings:
@@ -83,7 +98,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 11
+    weight: 8
     settings:
       display_label: true
     third_party_settings: {  }
@@ -120,7 +135,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 12
+    weight: 9
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -140,7 +155,7 @@ content:
     type: select2_entity_reference
     region: content
   field_moj_stand_first:
-    weight: 8
+    weight: 6
     settings:
       rows: 5
       placeholder: ''
@@ -156,7 +171,7 @@ content:
     type: image_image
     region: content
   field_moj_top_level_categories:
-    weight: 10
+    weight: 7
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -179,25 +194,18 @@ content:
     region: content
   path:
     type: path
-    weight: 7
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 5
+    settings: {  }
     third_party_settings: {  }
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 22
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 20
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -205,14 +213,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
-    third_party_settings: {  }
-    region: content
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 6
+    weight: 15
     third_party_settings: {  }
     region: content
   title:
@@ -235,8 +236,10 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 21
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  promote: true
+  sticky: true

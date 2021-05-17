@@ -1,19 +1,19 @@
-uuid: 3f61ffcb-cc19-435a-93ae-e7a88db2b6bf
+uuid: 500940e0-1d80-431d-951f-c428a9868328
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_prisons
-    - node.type.moj_video_item
+    - field.storage.taxonomy_term.field_moj_prisons
     - taxonomy.vocabulary.prisons
-id: node.moj_video_item.field_moj_prisons
+    - taxonomy.vocabulary.series
+id: taxonomy_term.series.field_moj_prisons
 field_name: field_moj_prisons
-entity_type: node
-bundle: moj_video_item
+entity_type: taxonomy_term
+bundle: series
 label: Prisons
 description: 'Select every prison you''d like to be able to view your content.'
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
