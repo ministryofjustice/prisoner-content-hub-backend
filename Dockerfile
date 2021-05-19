@@ -101,6 +101,7 @@ COPY patches/ patches/
 
 # Copy Project
 COPY docroot/modules/custom docroot/modules/custom
+COPY docroot/themes/custom docroot/themes/custom
 COPY docroot/profiles docroot/profiles
 COPY ./apache/ /etc/apache2/
 COPY docroot/sites/ docroot/sites/

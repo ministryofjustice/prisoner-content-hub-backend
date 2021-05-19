@@ -1,0 +1,22 @@
+uuid: ba378d4a-8bc5-4b13-8439-f3081c7d7164
+langcode: en
+status: true
+dependencies:
+  theme:
+    - prisconhub
+_core:
+  default_config_hash: QeZBeCilQfeET3GeW6ZtJkEiwROADTZktFgKWwPieD4
+id: prisconhub_secondary_local_tasks
+theme: prisconhub
+region: sidebar_first
+weight: 0
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Secondary tabs'
+  provider: core
+  label_display: '0'
+  primary: false
+  secondary: true
+visibility: {  }

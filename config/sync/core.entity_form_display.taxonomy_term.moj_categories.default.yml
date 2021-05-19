@@ -8,8 +8,26 @@ dependencies:
     - field.field.taxonomy_term.moj_categories.field_prison_categories
     - taxonomy.vocabulary.moj_categories
   module:
+    - field_group
     - path
     - text
+third_party_settings:
+  field_group:
+    group_prison_categories:
+      children:
+        - field_prison_categories
+        - field_moj_prisons
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.'
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
 id: taxonomy_term.moj_categories.default
 targetEntityType: taxonomy_term
 bundle: moj_categories
@@ -63,7 +81,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 6
+    weight: 5
     region: content
     third_party_settings: {  }
 hidden: {  }

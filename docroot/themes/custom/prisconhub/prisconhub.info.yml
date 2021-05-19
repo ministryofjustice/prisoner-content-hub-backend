@@ -1,0 +1,9 @@
+name: Prisconhub
+type: theme
+description: 'Admin theme for the Prisoner content hub'
+package: Other
+core: 8.x
+libraries:
+  - prisconhub/global-styling
+
+base theme: seven

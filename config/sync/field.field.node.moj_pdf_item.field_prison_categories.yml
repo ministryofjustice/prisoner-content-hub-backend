@@ -10,8 +10,8 @@ id: node.moj_pdf_item.field_prison_categories
 field_name: field_prison_categories
 entity_type: node
 bundle: moj_pdf_item
-label: 'Prison Categories'
-description: ''
+label: 'Prison categories'
+description: 'If your content is appropriate for a specific prison type, you should also select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male.'
 required: false
 translatable: true
 default_value: {  }

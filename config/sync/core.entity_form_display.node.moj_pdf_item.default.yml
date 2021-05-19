@@ -28,6 +28,21 @@ dependencies:
     - text
 third_party_settings:
   field_group:
+    group_prison_categories:
+      children:
+        - field_moj_prisons
+        - field_prison_categories
+      parent_name: ''
+      weight: 11
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
     group_series:
       children:
         - field_moj_series
@@ -91,7 +106,7 @@ content:
     type: boolean_checkbox
     region: content
   field_moj_description:
-    weight: 6
+    weight: 5
     settings:
       rows: 9
       summary_rows: 3
@@ -108,7 +123,7 @@ content:
     type: number
     region: content
   field_moj_pdf:
-    weight: 5
+    weight: 4
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
@@ -128,7 +143,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 12
+    weight: 7
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -148,7 +163,7 @@ content:
     type: select2_entity_reference
     region: content
   field_moj_thumbnail_image:
-    weight: 7
+    weight: 6
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -179,25 +194,18 @@ content:
     region: content
   path:
     type: path
-    weight: 4
+    weight: 3
     settings: {  }
-    third_party_settings: {  }
-    region: content
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 13
     third_party_settings: {  }
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 19
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 17
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -205,14 +213,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
-    third_party_settings: {  }
-    region: content
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 3
+    weight: 15
     third_party_settings: {  }
     region: content
   title:
@@ -235,8 +236,10 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 18
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  promote: true
+  sticky: true

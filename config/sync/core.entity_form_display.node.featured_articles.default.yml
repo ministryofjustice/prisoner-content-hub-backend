@@ -9,8 +9,26 @@ dependencies:
     - field.field.node.featured_articles.field_prison_categories
     - node.type.featured_articles
   module:
+    - field_group
     - path
     - scheduler
+third_party_settings:
+  field_group:
+    group_prison_categories:
+      children:
+        - field_moj_prisons
+        - field_prison_categories
+      parent_name: ''
+      weight: 6
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.'
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
 id: node.featured_articles.default
 targetEntityType: node
 bundle: featured_articles
@@ -18,12 +36,12 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   field_moj_featured_tile_large:
-    weight: 11
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 20
@@ -33,7 +51,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_moj_featured_tile_small:
-    weight: 12
+    weight: 5
     settings:
       match_operator: CONTAINS
       match_limit: 20
@@ -49,48 +67,34 @@ content:
     type: options_buttons
     region: content
   field_prison_categories:
-    weight: 26
+    weight: 14
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   path:
     type: path
-    weight: 7
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 4
-    region: content
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 10
     region: content
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
     settings:
       display_label: true
-    weight: 5
-    region: content
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -102,7 +106,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60
@@ -112,8 +116,10 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 9
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  promote: true
+  sticky: true

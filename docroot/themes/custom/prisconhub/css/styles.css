@@ -1,0 +1,8 @@
+/**
+This file contains small CSS fixes and overrides.
+There should hopefully not be too many of these rules,
+but should the file grow in size we should look at splitting
+this out into several smaller files.
+ */
+
+fieldset.field-group-fieldset div.fieldset-wrapper { margin-top: 0.5em }

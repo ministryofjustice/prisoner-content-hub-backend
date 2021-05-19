@@ -1,0 +1,22 @@
+uuid: 8761b53c-4e81-4569-8107-0877ce29ae10
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - prisconhub
+_core:
+  default_config_hash: XJqWwLt1LDCnazcEN6QkJmCLjk4R0__-8s0OO9xeNjg
+id: prisconhub_messages
+theme: prisconhub
+region: highlighted
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

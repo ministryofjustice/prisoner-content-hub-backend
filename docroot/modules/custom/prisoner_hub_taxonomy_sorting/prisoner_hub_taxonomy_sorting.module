@@ -17,8 +17,6 @@ use Drupal\taxonomy\Entity\Term;
 function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
   if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
 
-    _prisoner_hub_taxonomy_sorting_fix_field_group_descriptions($element);
-
     $terms_with_episode_sorting = [];
     $terms_with_release_date_sorting = [];
 
@@ -65,39 +63,4 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
       ];
     }
   }
-}
-
-/**
- * Fix the placement of field group descriptions.
- *
- * Fieldsets in Drupal place the "description" at the bottom, below the content.
- * This is decided by Drupal core, and not field_group module.
- * To move the descriptions to be _before_ the content, we move them to the
- * ['#field_prefix'] property (which cannot be edited directly via config).
- *
- * TODO:
- * This should ideally be implemented from a theme, rather than here in a module.
- * But currently we are not using our own custom theme (so there's no where to
- * modify the output).
- *
- * @param $element
- *   The element to be modified.
- */
-function _prisoner_hub_taxonomy_sorting_fix_field_group_descriptions(&$element) {
-  $element['group_series']['#attached']['html_head'][] = [
-    [
-      '#tag' => 'style',
-      '#value' => 'fieldset.field-group-fieldset div.fieldset-wrapper { margin-top: 0.5em }',
-    ],
-    'prisoner_hub_taxonomy_sorting_field_group_css'
-  ];
-
-  $element['group_series']['#field_prefix'] = $element['group_series']['#description'];
-  $element['group_series']['#description'] = '';
-
-  $element['group_season_and_episode_number']['#field_prefix'] = $element['group_season_and_episode_number']['#description'];
-  $element['group_season_and_episode_number']['#description'] = '';
-
-  $element['group_release_date']['#field_prefix'] = $element['group_release_date']['#description'];
-  $element['group_release_date']['#description'] = '';
 }
