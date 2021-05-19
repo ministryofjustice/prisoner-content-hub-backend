@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Remove all moj_hub_item content, so that the content type can be removed.
@@ -14,4 +15,88 @@ function prisoner_content_hub_profile_update_8001() {
   foreach ($nodes as $node) {
     $node->delete();
   }
+}
+
+/**
+ * Update content assigned to youth female.
+ */
+function prisoner_content_hub_profile_update_8010(&$sandbox) {
+
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $query = \Drupal::entityQuery('node');
+    // Get all nodes tagged with "Youth female".
+    $query->condition('field_prison_categories', 1013);
+    $query->accessCheck(FALSE);
+    $sandbox['result'] = $query->execute();
+  }
+
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
+
+  foreach ($nodes as $node) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $current_prison_categories = $node->get('field_prison_categories')->getValue();
+    $new_prison_categories = [];
+    $has_adult_female = FALSE;
+    foreach ($current_prison_categories as $key => $value) {
+      if ($value['target_id'] != 1013) {
+        $new_prison_categories[] = $value;
+      }
+      if ($value['target_id'] == 1012) {
+        $has_adult_female = TRUE;
+      }
+    }
+    // Ensure that Adult female is tagged.
+    if (!$has_adult_female) {
+      $new_prison_categories[] = ['target_id' => 1012];
+    }
+
+    $node->set('field_prison_categories', $new_prison_categories);
+    $node->save();
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  return 'Processed nodes: ' . $sandbox['progress'];
+}
+
+/**
+ * Update terms assigned to youth female.
+ */
+function prisoner_content_hub_profile_update_8011(&$sandbox) {
+
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $query = \Drupal::entityQuery('taxonomy_term');
+    // Get all nodes tagged with "Youth female".
+    $query->condition('field_prison_categories', 1013);
+    $query->accessCheck(FALSE);
+    $sandbox['result'] = $query->execute();
+  }
+
+  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
+
+  foreach ($terms as $term) {
+    /** @var \Drupal\taxonomy\TermInterface $term */
+    $current_prison_categories = $term->get('field_prison_categories')->getValue();
+    $new_prison_categories = [];
+    $has_adult_female = FALSE;
+    foreach ($current_prison_categories as $key => $value) {
+      if ($value['target_id'] != 1013) {
+        $new_prison_categories[] = $value;
+      }
+      if ($value['target_id'] == 1012) {
+        $has_adult_female = TRUE;
+      }
+    }
+    // Ensure that Adult female is tagged.
+    if (!$has_adult_female) {
+      $new_prison_categories[] = ['target_id' => 1012];
+    }
+
+    $term->set('field_prison_categories', $new_prison_categories);
+    $term->save();
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  return 'Processed terms: ' . $sandbox['progress'];
 }
