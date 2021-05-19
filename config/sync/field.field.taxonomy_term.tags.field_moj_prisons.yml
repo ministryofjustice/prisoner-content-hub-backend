@@ -11,8 +11,8 @@ field_name: field_moj_prisons
 entity_type: taxonomy_term
 bundle: tags
 label: Prisons
-description: ''
-required: false
+description: 'Select every prison you''d like to be able to view your content.'
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

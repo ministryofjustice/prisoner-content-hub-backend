@@ -1,0 +1,22 @@
+uuid: 435c09f1-139a-4687-89c7-1767820d0f7d
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - prisconhub
+_core:
+  default_config_hash: WWu2OQswgCztl9OeXjD1stexIEMZsSgPMYIdC-JHx9c
+id: prisconhub_breadcrumbs
+theme: prisconhub
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

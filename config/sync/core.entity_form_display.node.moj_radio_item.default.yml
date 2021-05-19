@@ -29,13 +29,28 @@ dependencies:
     - text
 third_party_settings:
   field_group:
+    group_prison_categories:
+      children:
+        - field_prison_categories
+        - field_moj_prisons
+      parent_name: ''
+      weight: 12
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
     group_series:
       children:
         - field_moj_series
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 10
+      weight: 11
       format_type: fieldset
       region: content
       format_settings:
@@ -86,13 +101,13 @@ content:
     region: content
   field_moj_audio:
     type: file_generic
-    weight: 5
+    weight: 4
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 9
+    weight: 10
     settings:
       display_label: true
     third_party_settings: {  }
@@ -116,13 +131,13 @@ content:
     type: number
     region: content
   field_moj_prisons:
-    weight: 14
+    weight: 16
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_moj_programme_code:
-    weight: 16
+    weight: 6
     settings:
       size: 60
       placeholder: ''
@@ -130,14 +145,14 @@ content:
     type: string_textfield
     region: content
   field_moj_season:
-    weight: 13
+    weight: 11
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 19
+    weight: 8
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -157,7 +172,7 @@ content:
     type: select2_entity_reference
     region: content
   field_moj_thumbnail_image:
-    weight: 6
+    weight: 5
     settings:
       preview_image_style: thumbnail
       progress_indicator: throbber
@@ -165,7 +180,7 @@ content:
     type: image_image
     region: content
   field_moj_top_level_categories:
-    weight: 8
+    weight: 9
     settings:
       autocomplete: false
       match_operator: CONTAINS
@@ -188,20 +203,13 @@ content:
     region: content
   path:
     type: path
-    weight: 4
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     region: content
-  promote:
-    type: boolean_checkbox
-    weight: 12
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -214,14 +222,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
-    third_party_settings: {  }
-    region: content
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 3
+    weight: 16
     third_party_settings: {  }
     region: content
   title:
@@ -249,9 +250,11 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 18
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
+  promote: true
+  sticky: true

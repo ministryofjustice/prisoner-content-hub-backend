@@ -1,4 +1,4 @@
-uuid: ec10e36e-7e02-4d6d-b757-ace372ff7317
+uuid: 500940e0-1d80-431d-951f-c428a9868328
 langcode: en
 status: true
 dependencies:
@@ -11,8 +11,8 @@ field_name: field_moj_prisons
 entity_type: taxonomy_term
 bundle: series
 label: Prisons
-description: ''
-required: false
+description: 'Select every prison you''d like to be able to view your content.'
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''

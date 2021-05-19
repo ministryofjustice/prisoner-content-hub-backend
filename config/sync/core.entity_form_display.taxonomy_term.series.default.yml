@@ -18,10 +18,28 @@ dependencies:
     - image.style.thumbnail
     - taxonomy.vocabulary.series
   module:
+    - field_group
     - file
     - image
     - text
     - video
+third_party_settings:
+  field_group:
+    group_prison_categories:
+      children:
+        - field_prison_categories
+        - field_moj_prisons
+      parent_name: ''
+      weight: 12
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
+        open: '1'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Where would you like this content to appear?'
 id: taxonomy_term.series.default
 targetEntityType: taxonomy_term
 bundle: series
@@ -85,14 +103,10 @@ content:
     type: boolean_checkbox
     region: content
   field_moj_prisons:
-    weight: 12
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    weight: 15
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: options_buttons
     region: content
   field_moj_promoted:
     weight: 7
@@ -102,7 +116,7 @@ content:
     type: boolean_checkbox
     region: content
   field_prison_categories:
-    weight: 13
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -142,7 +156,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 13
     region: content
     third_party_settings: {  }
 hidden:

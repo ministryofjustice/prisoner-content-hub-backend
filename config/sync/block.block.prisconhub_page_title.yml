@@ -1,0 +1,20 @@
+uuid: 7b24dab0-b737-405a-b01e-4464fa501a27
+langcode: en
+status: true
+dependencies:
+  theme:
+    - prisconhub
+_core:
+  default_config_hash: ZSpc3IoSaLd0PkB02nxjVPBMztIdsTdHek9SiGaqZ_c
+id: prisconhub_page_title
+theme: prisconhub
+region: header
+weight: -30
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility: {  }
