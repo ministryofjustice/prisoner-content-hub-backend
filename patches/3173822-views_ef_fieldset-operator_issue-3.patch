@@ -1,0 +1,70 @@
+diff --git a/src/ViewsEFFieldsetData.php b/src/ViewsEFFieldsetData.php
+index 47e73cff0632256e3e24227ade4ce331c55d4724..4b92344de5d9de7d1314090e6f0055529d9604ab 100644
+--- a/src/ViewsEFFieldsetData.php
++++ b/src/ViewsEFFieldsetData.php
+@@ -126,6 +126,36 @@ class ViewsEFFieldsetData {
+     return empty($branch) ? [] : $branch;
+   }
+ 
++  /**
++   * Helper function that moves a form element.
++   *
++   * @param string $field_name
++   *   The field name.
++   * @param array $item
++   *   The item.
++   * @param array $form_info
++   *   The form info.
++   * @param array $form
++   *   The form.
++   * @param bool $operator_element
++   *   Are we moving an operator element?
++   *
++   * @return array
++   *   The converted element.
++   */
++  private function moveFormElement($field_name, array $item, array $form_info, array &$form, $operator_element = FALSE) {
++    $element = $form[$field_name] +
++      [
++        '#weight' => $operator_element ? $item['item']['weight'] - 1 : $item['item']['weight'],
++        '#title' => $form_info['label'] ?? '',
++        '#description' => $form_info['description'] ?? '',
++      ];
++    unset($form['#info']['filter-' . $item['item']['id']]);
++    unset($form[$field_name]);
++
++    return $element;
++  }
++
+   /**
+    * Tree to FAPI recursive.
+    *
+@@ -141,20 +171,16 @@ class ViewsEFFieldsetData {
+ 
+       // If it's a filter field.
+       if ($item['item']['type'] === 'filter') {
+-        $form_info = isset($form['#info']['filter-' . $item['item']['id']])
+-          ? $form['#info']['filter-' . $item['item']['id']]
+-          : NULL;
++        $form_info = $form['#info']['filter-' . $item['item']['id']] ?? [];
+ 
+-        $field_name = $form_info['value'] ?: $item['item']['id'];
++        $field_name = $form_info['value'] ?? $item['item']['id'];
+         if (isset($form[$field_name]) && is_array($form[$field_name])) {
+-          $element[$field_name] = $form[$field_name] +
+-            [
+-              '#weight' => $item['item']['weight'],
+-              '#title' => $form_info['label'] ?: '',
+-              '#description' => $form_info['description'] ?: '',
+-            ];
+-          unset($form['#info']['filter-' . $item['item']['id']]);
+-          unset($form[$field_name]);
++          $element[$field_name] = $this->moveFormElement($field_name, $item, $form_info, $form);
++          // Check if there's an operator exposed and handle it as well.
++          $field_name .= '_op';
++          if (isset($form[$field_name]) && is_array($form[$field_name])) {
++            $element[$field_name] = $this->moveFormElement($field_name, $item, $form_info, $form, TRUE);
++          }
+         }
+       }
+ 

@@ -120,7 +120,7 @@
                 "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/9567e0aeedbf9b44713d9740ab30ccec/1-add-option-to-set-global-limit-2.patch"
             },
             "drupal/views_ef_fieldset": {
-                "Issue #3173822: Exposed operators are not included in fieldsets": "https://www.drupal.org/files/issues/2020-09-29/3173822-views_ef_fieldset-operator_issue-2.patch"
+                "Issue #3173822: Exposed operators are not included in fieldsets": "patches/3173822-views_ef_fieldset-operator_issue-3.patch"
             }
         }
     },

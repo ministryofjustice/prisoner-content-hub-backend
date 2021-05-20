@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30fe40cce5eb820fb8d31a41e5abbfdc",
+    "content-hash": "533b4fa746985fb6041043adb4ce0b97",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4594,7 +4594,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Issue #3173822: Exposed operators are not included in fieldsets": "https://www.drupal.org/files/issues/2020-09-29/3173822-views_ef_fieldset-operator_issue-2.patch"
+                    "Issue #3173822: Exposed operators are not included in fieldsets": "patches/3173822-views_ef_fieldset-operator_issue-3.patch"
                 }
             },
             "autoload-dev": {
