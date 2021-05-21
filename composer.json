@@ -112,11 +112,11 @@
                 "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
             },
             "drupal/core": {
-                "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch",
-                "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "https://www.drupal.org/files/issues/2021-02-20/3036593-118.patch"
+                "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal-1149078-drupal-states_multiselect-104-drupal86.patch",
+                "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-118.patch"
             },
             "drupal/jsonapi_page_limit": {
-                "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/9567e0aeedbf9b44713d9740ab30ccec/1-add-option-to-set-global-limit-2.patch"
+                "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch"
             }
         }
     },

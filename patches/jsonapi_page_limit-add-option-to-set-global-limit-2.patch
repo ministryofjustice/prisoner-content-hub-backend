@@ -1,0 +1,44 @@
+diff --git a/jsonapi_page_limit.services.yml b/jsonapi_page_limit.services.yml
+index 614d05b..305ea5f 100644
+--- a/jsonapi_page_limit.services.yml
++++ b/jsonapi_page_limit.services.yml
+@@ -8,6 +8,9 @@ parameters:
+   jsonapi_page_limit.size_max:
+     # path: value
+     # e.g. /jsonapi/node/alert: 250
++  # Optionally set a global limit, this will apply to all paths
++  # (that are not specified in jsonapi_page_limit.size_max).
++  jsonapi_page_limit.global_size_max: 50
+ 
+ services:
+   # Controller.
+@@ -28,3 +31,4 @@ services:
+       # Add our custom service and param
+       - '@router.request_context'
+       - '%jsonapi_page_limit.size_max%'
++      - '%jsonapi_page_limit.global_size_max%'
+diff --git a/src/Controller/EntityResource.php b/src/Controller/EntityResource.php
+index d88bff3..a3e07ca 100644
+--- a/src/Controller/EntityResource.php
++++ b/src/Controller/EntityResource.php
+@@ -34,9 +34,10 @@ class EntityResource extends \Drupal\jsonapi\Controller\EntityResource {
+    */
+   private $requestContext;
+ 
+-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, RequestContext $requestContext, array $size_max) {
++  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, RequestContext $requestContext, array $size_max, int $global_size_max) {
+     parent::__construct($entity_type_manager, $field_manager, $resource_type_repository, $renderer, $entity_repository, $include_resolver, $entity_access_checker, $field_resolver, $serializer, $time, $user);
+     $this->sizeMax = $size_max;
++    $this->globalSizeMax = $global_size_max;
+     $this->requestContext = $requestContext;
+   }
+ 
+@@ -59,6 +60,7 @@ class EntityResource extends \Drupal\jsonapi\Controller\EntityResource {
+    */
+   private function getMax($page) {
+     $path = $this->requestContext->getPathInfo();
+-    return isset($this->sizeMax[$path]) ? min($page['limit'], $this->sizeMax[$path]) : OffsetPage::SIZE_MAX;
++    $sizeMax = isset($this->sizeMax[$path]) ? $this->sizeMax[$path] : $this->globalSizeMax;
++    return min($page['limit'], $sizeMax);
+   }
+ }
