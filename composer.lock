@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ceb1094e962d6ab9975445d15b265163",
+    "content-hash": "ffecab68fe4d2d4fe57a972dc217ddbc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2239,8 +2239,8 @@
                     }
                 },
                 "patches_applied": {
-                    "Issue #1149078 - States API doesn't work with multiple select fields": "https://www.drupal.org/files/issues/2018-12-05/1149078-drupal-states_multiselect-104-drupal86.patch",
-                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "https://www.drupal.org/files/issues/2021-02-20/3036593-118.patch"
+                    "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal-1149078-drupal-states_multiselect-104-drupal86.patch",
+                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-118.patch"
                 }
             },
             "autoload": {
@@ -3243,7 +3243,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Add option to set a global limit": "https://gitlab.com/drupalspoons/jsonapi_page_limit/uploads/9567e0aeedbf9b44713d9740ab30ccec/1-add-option-to-set-global-limit-2.patch"
+                    "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

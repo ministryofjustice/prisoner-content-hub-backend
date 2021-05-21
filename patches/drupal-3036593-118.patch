@@ -1,0 +1,893 @@
+diff --git a/core/modules/jsonapi/src/Context/FieldResolver.php b/core/modules/jsonapi/src/Context/FieldResolver.php
+index 9790d4804b..a7a54e5096 100644
+--- a/core/modules/jsonapi/src/Context/FieldResolver.php
++++ b/core/modules/jsonapi/src/Context/FieldResolver.php
+@@ -337,13 +337,13 @@ public function resolveInternalEntityQueryPath(ResourceType $resource_type, $ext
+           $is_data_reference_definition = $property_definition instanceof DataReferenceTargetDefinition;
+           if (!$property_definition->isInternal()) {
+             // Entity reference fields are special: their reference property
+-            // (usually `target_id`) is never exposed in the JSON:API
+-            // representation. Hence it must also not be exposed in 400
+-            // responses' error messages.
++            // (usually `target_id`) is exposed in the JSON:API representation
++            // with a prefix.
+             $property_names[] = $is_data_reference_definition ? 'id' : $property_name;
+           }
+           if ($is_data_reference_definition) {
+             $at_least_one_entity_reference_field = TRUE;
++            $property_names[] = "drupal_internal__$property_name";
+           }
+           return $property_names;
+         }, []);
+@@ -447,7 +447,9 @@ public function resolveInternalEntityQueryPath(ResourceType $resource_type, $ext
+    */
+   protected function constructInternalPath(array $references, array $property_path = []) {
+     // Reconstruct the path parts that are referencing sub-properties.
+-    $field_path = implode('.', $property_path);
++    $field_path = implode('.', array_map(function ($part) {
++      return str_replace('drupal_internal__', '', $part);
++    }, $property_path));
+ 
+     // This rebuilds the path from the real, internal field names that have
+     // been traversed so far. It joins them with the "entity" keyword as
+@@ -670,8 +672,15 @@ protected static function isDelta($part) {
+   protected static function isCandidateDefinitionProperty($part, array $candidate_definitions) {
+     $part = static::getPathPartPropertyName($part);
+     foreach ($candidate_definitions as $definition) {
+-      if ($definition->getPropertyDefinition($part)) {
+-        return TRUE;
++      $property_definitions = $definition->getPropertyDefinitions();
++
++      foreach ($property_definitions as $property_name => $property_definition) {
++        $property_name = $property_definition instanceof DataReferenceTargetDefinition
++          ? "drupal_internal__$property_name"
++          : $property_name;
++        if ($part === $property_name) {
++          return TRUE;
++        }
+       }
+     }
+     return FALSE;
+diff --git a/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php b/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
+index 20ca39a856..67b0d9a670 100644
+--- a/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
++++ b/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
+@@ -292,10 +292,12 @@ public static function toResourceIdentifier(EntityReferenceItem $item, $arity =
+     // Remove unwanted properties from the meta value, usually 'entity'
+     // and 'target_id'.
+     $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
+-    $meta = array_diff_key($properties, array_flip([$property_name, $item->getDataDefinition()->getMainPropertyName()]));
++    $main_property_name = $item->getDataDefinition()->getMainPropertyName();
++    $meta = array_diff_key($properties, array_flip([$property_name, $main_property_name]));
+     if (!is_null($arity)) {
+       $meta[static::ARITY_KEY] = $arity;
+     }
++    $meta["drupal_internal__$main_property_name"] = $properties[$main_property_name];
+     return new static($resource_type, $target->uuid(), $meta);
+   }
+ 
+diff --git a/core/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php b/core/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php
+index ae5cbe0dc3..010645d7e6 100644
+--- a/core/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php
++++ b/core/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php
+@@ -150,7 +150,9 @@ public function denormalize($data, $class, $format = NULL, array $context = [])
+           if (isset($relationship['data'][$delta]['meta'])) {
+             $reference_item += $relationship['data'][$delta]['meta'];
+           }
+-          $canonical_ids[] = $reference_item;
++          $canonical_ids[] = array_filter($reference_item, function ($key) {
++            return substr($key, 0, strlen('drupal_internal__')) !== 'drupal_internal__';
++          }, ARRAY_FILTER_USE_KEY);
+         }
+ 
+         return array_filter($canonical_ids);
+diff --git a/core/modules/jsonapi/tests/src/Functional/BlockContentTest.php b/core/modules/jsonapi/tests/src/Functional/BlockContentTest.php
+index b20e1b844e..efddac01d4 100644
+--- a/core/modules/jsonapi/tests/src/Functional/BlockContentTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/BlockContentTest.php
+@@ -132,6 +132,9 @@ protected function getExpectedDocument() {
+           'block_content_type' => [
+             'data' => [
+               'id' => BlockContentType::load('basic')->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 'basic',
++              ],
+               'type' => 'block_content_type--block_content_type',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/CommentTest.php b/core/modules/jsonapi/tests/src/Functional/CommentTest.php
+index b293e91b3d..e01b257d10 100644
+--- a/core/modules/jsonapi/tests/src/Functional/CommentTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/CommentTest.php
+@@ -71,6 +71,11 @@ class CommentTest extends ResourceTestBase {
+    */
+   protected $entity;
+ 
++  /**
++   * @var \Drupal\entity_test\Entity\EntityTest
++   */
++  private $commented_entity;
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -106,11 +111,11 @@ protected function createEntity() {
+     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
+ 
+     // Create a "Camelids" test entity that the comment will be assigned to.
+-    $commented_entity = EntityTest::create([
++    $this->commented_entity = EntityTest::create([
+       'name' => 'Camelids',
+       'type' => 'bar',
+     ]);
+-    $commented_entity->save();
++    $this->commented_entity->save();
+ 
+     // Create a "Llama" comment.
+     $comment = Comment::create([
+@@ -118,7 +123,7 @@ protected function createEntity() {
+         'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
+         'format' => 'plain_text',
+       ],
+-      'entity_id' => $commented_entity->id(),
++      'entity_id' => $this->commented_entity->id(),
+       'entity_type' => 'entity_test',
+       'field_name' => 'comment',
+     ]);
+@@ -173,12 +178,15 @@ protected function getExpectedDocument() {
+           'status' => TRUE,
+           'subject' => 'Llama',
+           'thread' => '01/',
+-          'drupal_internal__cid' => 1,
++          'drupal_internal__cid' => (int) $this->entity->id(),
+         ],
+         'relationships' => [
+           'uid' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+@@ -189,6 +197,9 @@ protected function getExpectedDocument() {
+           'comment_type' => [
+             'data' => [
+               'id' => CommentType::load('comment')->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 'comment',
++              ],
+               'type' => 'comment_type--comment_type',
+             ],
+             'links' => [
+@@ -198,7 +209,10 @@ protected function getExpectedDocument() {
+           ],
+           'entity_id' => [
+             'data' => [
+-              'id' => EntityTest::load(1)->uuid(),
++              'id' => $this->commented_entity->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $this->commented_entity->id(),
++              ],
+               'type' => 'entity_test--bar',
+             ],
+             'links' => [
+@@ -238,6 +252,9 @@ protected function getPostDocument() {
+           'entity_id' => [
+             'data' => [
+               'type' => 'entity_test--bar',
++              'meta' => [
++                'drupal_internal__target_id' => 1,
++              ],
+               'id' => EntityTest::load(1)->uuid(),
+             ],
+           ],
+diff --git a/core/modules/jsonapi/tests/src/Functional/EntityTestMapFieldTest.php b/core/modules/jsonapi/tests/src/Functional/EntityTestMapFieldTest.php
+index 703cc82794..acb1e7f122 100644
+--- a/core/modules/jsonapi/tests/src/Functional/EntityTestMapFieldTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/EntityTestMapFieldTest.php
+@@ -119,6 +119,9 @@ protected function getExpectedDocument() {
+           'user_id' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/EntityTestTest.php b/core/modules/jsonapi/tests/src/Functional/EntityTestTest.php
+index da91b19811..09d798f843 100644
+--- a/core/modules/jsonapi/tests/src/Functional/EntityTestTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/EntityTestTest.php
+@@ -131,6 +131,9 @@ protected function getExpectedDocument() {
+           'user_id' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/FileTest.php b/core/modules/jsonapi/tests/src/Functional/FileTest.php
+index aba9131455..92ca089907 100644
+--- a/core/modules/jsonapi/tests/src/Functional/FileTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/FileTest.php
+@@ -165,6 +165,9 @@ protected function getExpectedDocument() {
+           'uid' => [
+             'data' => [
+               'id' => $this->author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $this->author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php b/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php
+index 39299b4a54..b8777f43eb 100644
+--- a/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php
+@@ -819,6 +819,9 @@ protected function getExpectedDocument($fid = 1, $expected_filename = 'example.t
+           'uid' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/JsonApiRegressionTest.php b/core/modules/jsonapi/tests/src/Functional/JsonApiRegressionTest.php
+index c6f9c1b3b2..613d56012a 100644
+--- a/core/modules/jsonapi/tests/src/Functional/JsonApiRegressionTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/JsonApiRegressionTest.php
+@@ -25,6 +25,8 @@
+ use Drupal\user\RoleInterface;
+ use GuzzleHttp\RequestOptions;
+ 
++// cspell:ignore llamalovers catcuddlers Cuddlers
++
+ /**
+  * JSON:API regression tests.
+  *
+@@ -460,6 +462,9 @@ public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2984647()
+       [
+         'type' => 'node--journal_conference',
+         'id' => $conference_node->uuid(),
++        'meta' => [
++          'drupal_internal__target_id' => (int) $conference_node->id(),
++        ],
+       ],
+     ], Json::decode((string) $response->getBody())['data']['relationships']['field_mentioned_in']['data']);
+   }
+@@ -1362,4 +1367,67 @@ public function testNonCacheableMethods() {
+     $this->assertSame(201, $response->getStatusCode());
+   }
+ 
++  /**
++   * Tests that collections can be filtered by an entity reference target_id.
++   *
++   * @see https://www.drupal.org/project/drupal/issues/3036593
++   */
++  public function testFilteringEntitiesByEntityReferenceTargetId() {
++    // Create two config entities to be the config targets of an entity
++    // reference. In this case, the `roles` field.
++    $role_llamalovers = $this->drupalCreateRole([], 'llamalovers', 'Llama Lovers');
++    $role_catcuddlers = $this->drupalCreateRole([], 'catcuddlers', 'Cat Cuddlers');
++
++    /* @var \Drupal\user\UserInterface[] $users */
++    for ($i = 0; $i < 3; $i++) {
++      // Create 3 users, one with the first role and two with the second role.
++      $users[$i] = $this->drupalCreateUser();
++      $users[$i]->addRole($i === 0 ? $role_llamalovers : $role_catcuddlers);
++      $users[$i]->save();
++      // For each user, create a node that is owned by that user. The node's
++      // `uid` field will be used to test filtering by a content entity ID.
++      Node::create([
++        'type' => 'article',
++        'uid' => $users[$i]->id(),
++        'title' => 'Article created by ' . $users[$i]->uuid(),
++      ])->save();
++    }
++
++    // Create a user that will be used to execute the test HTTP requests.
++    $account = $this->drupalCreateUser([
++      'administer users',
++      'bypass node access',
++    ]);
++    $request_options = [
++      RequestOptions::AUTH => [
++        $account->getAccountName(),
++        $account->pass_raw,
++      ],
++    ];
++
++    // Ensure that an entity can be filtered by a target machine name.
++    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/user/user?filter[roles.meta.drupal_internal__target_id]=llamalovers'), $request_options);
++    $document = Json::decode((string) $response->getBody());
++    $this->assertSame(200, $response->getStatusCode(), var_export($document, TRUE));
++    // Only one user should have the first role.
++    $this->assertCount(1, $document['data']);
++    $this->assertSame($users[0]->uuid(), $document['data'][0]['id']);
++    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/user/user?sort=drupal_internal__uid&filter[roles.meta.drupal_internal__target_id]=catcuddlers'), $request_options);
++    $document = Json::decode((string) $response->getBody());
++    $this->assertSame(200, $response->getStatusCode(), var_export($document, TRUE));
++    // Two users should have the second role. A sort is used on this request to
++    // ensure a consistent ordering with different databases.
++    $this->assertCount(2, $document['data']);
++    $this->assertSame($users[1]->uuid(), $document['data'][0]['id']);
++    $this->assertSame($users[2]->uuid(), $document['data'][1]['id']);
++
++    // Ensure that an entity can be filtered by an target entity integer ID.
++    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/article?filter[uid.meta.drupal_internal__target_id]=' . $users[1]->id()), $request_options);
++    $document = Json::decode((string) $response->getBody());
++    $this->assertSame(200, $response->getStatusCode(), var_export($document, TRUE));
++    // Only the node authored by the filtered user should be returned.
++    $this->assertCount(1, $document['data']);
++    $this->assertSame('Article created by ' . $users[1]->uuid(), $document['data'][0]['attributes']['title']);
++  }
++
+ }
+diff --git a/core/modules/jsonapi/tests/src/Functional/MediaTest.php b/core/modules/jsonapi/tests/src/Functional/MediaTest.php
+index b630dcc6fb..c4c702fd78 100644
+--- a/core/modules/jsonapi/tests/src/Functional/MediaTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/MediaTest.php
+@@ -198,6 +198,7 @@ protected function getExpectedDocument() {
+               'meta' => [
+                 'description' => NULL,
+                 'display' => NULL,
++                'drupal_internal__target_id' => (int) $file->id(),
+               ],
+               'type' => 'file--file',
+             ],
+@@ -215,6 +216,7 @@ protected function getExpectedDocument() {
+               'id' => $thumbnail->uuid(),
+               'meta' => [
+                 'alt' => '',
++                'drupal_internal__target_id' => (int) $thumbnail->id(),
+                 'width' => 180,
+                 'height' => 180,
+                 'title' => NULL,
+@@ -233,6 +235,9 @@ protected function getExpectedDocument() {
+           'bundle' => [
+             'data' => [
+               'id' => MediaType::load('camelids')->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 'camelids',
++              ],
+               'type' => 'media_type--media_type',
+             ],
+             'links' => [
+@@ -248,6 +253,9 @@ protected function getExpectedDocument() {
+             'data' => [
+               'id' => $author->uuid(),
+               'type' => 'user--user',
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+             ],
+             'links' => [
+               'related' => [
+@@ -261,6 +269,9 @@ protected function getExpectedDocument() {
+           'revision_user' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+@@ -295,6 +306,7 @@ protected function getPostDocument() {
+               'meta' => [
+                 'description' => 'This file is better!',
+                 'display' => NULL,
++                'drupal_internal__target_id' => (int) $file->id(),
+               ],
+               'type' => 'file--file',
+             ],
+@@ -365,14 +377,14 @@ protected function getExpectedGetRelationshipDocumentData($relationship_field_na
+           'width' => 180,
+           'height' => 180,
+           'title' => NULL,
+-        ];
++        ] + $data['meta'];
+         return $data;
+ 
+       case 'field_media_file':
+         $data['meta'] = [
+           'description' => NULL,
+           'display' => NULL,
+-        ];
++        ] + $data['meta'];
+         return $data;
+ 
+       default:
+diff --git a/core/modules/jsonapi/tests/src/Functional/NodeTest.php b/core/modules/jsonapi/tests/src/Functional/NodeTest.php
+index 6800460182..bd35e3577a 100644
+--- a/core/modules/jsonapi/tests/src/Functional/NodeTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/NodeTest.php
+@@ -187,6 +187,9 @@ protected function getExpectedDocument() {
+           'node_type' => [
+             'data' => [
+               'id' => NodeType::load('camelids')->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 'camelids',
++              ],
+               'type' => 'node_type--node_type',
+             ],
+             'links' => [
+@@ -201,6 +204,9 @@ protected function getExpectedDocument() {
+           'uid' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+@@ -215,6 +221,9 @@ protected function getExpectedDocument() {
+           'revision_uid' => [
+             'data' => [
+               'id' => $author->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => (int) $author->id(),
++              ],
+               'type' => 'user--user',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php b/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php
+index 7d29c2057e..41233426e5 100644
+--- a/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php
++++ b/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php
+@@ -1755,14 +1755,91 @@ protected function getExpectedGetRelationshipDocumentData($relationship_field_na
+     }
+     if (!$is_multiple) {
+       $target_entity = $field->entity;
+-      return is_null($target_entity) ? NULL : static::toResourceIdentifier($target_entity);
++      if (is_null($target_entity)) {
++        return NULL;
++      }
++
++      $resource_identifier = static::toResourceIdentifier($target_entity);
++      $resource_identifier = static::decorateResourceIdentifierWithDrupalInternalTargetId($field, $resource_identifier);
++      return $resource_identifier;
+     }
+     else {
+-      return array_filter(array_map(function ($item) {
++      $arity_counter = [];
++      $relation_list = array_filter(array_map(function ($item) use (&$arity_counter) {
+         $target_entity = $item->entity;
+-        return is_null($target_entity) ? NULL : static::toResourceIdentifier($target_entity);
++
++        if (is_null($target_entity)) {
++          return NULL;
++        }
++
++        $resource_identifier = static::toResourceIdentifier($target_entity);
++        $resource_identifier = static::decorateResourceIdentifierWithDrupalInternalTargetId($item, $resource_identifier);
++        $type = $resource_identifier['type'];
++        $id = $resource_identifier['id'];
++        // Start the count of identifiers sharing a single type and ID at 1.
++        if (!isset($arity_counter[$type][$id])) {
++          $arity_counter[$type][$id] = 1;
++        }
++        else {
++          $arity_counter[$type][$id] += 1;
++        }
++        return $resource_identifier;
+       }, iterator_to_array($field)));
++
++      $arity_map = [];
++      $relation_list = array_map(function ($identifier) use ($arity_counter, &$arity_map) {
++        $type = $identifier['type'];
++        $id = $identifier['id'];
++        // Only add an arity value if there are two or more resource identifiers
++        // with the same type and ID.
++        if (($arity_counter[$type][$id] ?? 0) > 1) {
++          // Arity is indexed from 0. If the array key isn't set, 1 + (-1) = 0.
++          if (!isset($arity_map[$type][$id])) {
++            $arity_map[$type][$id] = 0;
++          }
++          else {
++            $arity_map[$type][$id] += 1;
++          }
++          $identifier['meta']['arity'] = $arity_map[$type][$id];
++        }
++        return $identifier;
++      }, $relation_list);
++
++      return $relation_list;
++    }
++  }
++
++  /**
++   * Adds drupal_internal__target_id to the meta of a resource identifier.
++   *
++   * @param \Drupal\Core\Field\FieldItemInterface|\Drupal\Core\Field\FieldItemListInterface $field
++   *   The field containing the entity that is described by the
++   *   resource_identifier.
++   *
++   * @param array $resource_identifier
++   *   A resource identifier for an entity.
++   *
++   * @return array
++   *   A resource identifier for an entity with drupal_internal__target_id set
++   *   if appropriate.
++   */
++  protected static function decorateResourceIdentifierWithDrupalInternalTargetId($field, array $resource_identifier): array {
++    $property_definitions = $field->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinitions();
++
++    if (!isset($property_definitions['target_id'])) {
++      return $resource_identifier;
++    }
++
++    $is_data_reference_definition = $property_definitions['target_id'] instanceof DataReferenceTargetDefinition;
++    if ($is_data_reference_definition) {
++      // Numeric target IDs usually reference content entities, which use an
++      // auto-incrementing integer ID. Non-numeric target IDs usually reference
++      // config entities, which use a machine-name as an ID.
++      $resource_identifier['meta']['drupal_internal__target_id'] = is_numeric($field->target_id)
++        ? (int) $field->target_id
++        : $field->target_id;
+     }
++    return $resource_identifier;
+   }
+ 
+   /**
+diff --git a/core/modules/jsonapi/tests/src/Functional/ShortcutTest.php b/core/modules/jsonapi/tests/src/Functional/ShortcutTest.php
+index 582a123890..6267a48336 100644
+--- a/core/modules/jsonapi/tests/src/Functional/ShortcutTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/ShortcutTest.php
+@@ -115,6 +115,9 @@ protected function getExpectedDocument() {
+           'shortcut_set' => [
+             'data' => [
+               'type' => 'shortcut_set--shortcut_set',
++              'meta' => [
++                'drupal_internal__target_id' => 'default',
++              ],
+               'id' => ShortcutSet::load('default')->uuid(),
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Functional/TermTest.php b/core/modules/jsonapi/tests/src/Functional/TermTest.php
+index d0f722df19..72cbe6e84a 100644
+--- a/core/modules/jsonapi/tests/src/Functional/TermTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/TermTest.php
+@@ -155,6 +155,9 @@ protected function getExpectedDocument() {
+           'data' => [
+             [
+               'id' => Term::load(2)->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 2,
++              ],
+               'type' => 'taxonomy_term--camelids',
+             ],
+           ],
+@@ -184,6 +187,9 @@ protected function getExpectedDocument() {
+             ],
+             [
+               'id' => Term::load(2)->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 2,
++              ],
+               'type' => 'taxonomy_term--camelids',
+             ],
+           ],
+@@ -199,10 +205,16 @@ protected function getExpectedDocument() {
+           'data' => [
+             [
+               'id' => Term::load(3)->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 3,
++              ],
+               'type' => 'taxonomy_term--camelids',
+             ],
+             [
+               'id' => Term::load(2)->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 2,
++              ],
+               'type' => 'taxonomy_term--camelids',
+             ],
+           ],
+@@ -261,6 +273,9 @@ protected function getExpectedDocument() {
+           'vid' => [
+             'data' => [
+               'id' => Vocabulary::load('camelids')->uuid(),
++              'meta' => [
++                'drupal_internal__target_id' => 'camelids',
++              ],
+               'type' => 'taxonomy_vocabulary--taxonomy_vocabulary',
+             ],
+             'links' => [
+diff --git a/core/modules/jsonapi/tests/src/Kernel/Context/FieldResolverTest.php b/core/modules/jsonapi/tests/src/Kernel/Context/FieldResolverTest.php
+index 3c6350b2ae..fc274647fa 100644
+--- a/core/modules/jsonapi/tests/src/Kernel/Context/FieldResolverTest.php
++++ b/core/modules/jsonapi/tests/src/Kernel/Context/FieldResolverTest.php
+@@ -308,17 +308,17 @@ public function resolveInternalEntityQueryPathErrorProvider() {
+       'entity reference then no delta with property specifier `target_id`' => [
+         'entity_test_with_bundle', 'bundle1',
+         'field_test_ref1.target_id',
+-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.target_id`, does not exist. Filter by `field_test_ref1`, not `field_test_ref1.target_id` (the JSON:API module elides property names from single-property fields).',
++        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.target_id`, does not exist.',
+       ],
+       'entity reference then delta 0 with property specifier `target_id`' => [
+         'entity_test_with_bundle', 'bundle1',
+         'field_test_ref1.0.target_id',
+-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.0.target_id`, does not exist. Filter by `field_test_ref1.0`, not `field_test_ref1.0.target_id` (the JSON:API module elides property names from single-property fields).',
++        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.0.target_id`, does not exist.',
+       ],
+       'entity reference then delta 1 with property specifier `target_id`' => [
+         'entity_test_with_bundle', 'bundle1',
+         'field_test_ref1.1.target_id',
+-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.1.target_id`, does not exist. Filter by `field_test_ref1.1`, not `field_test_ref1.1.target_id` (the JSON:API module elides property names from single-property fields).',
++        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.1.target_id`, does not exist.',
+       ],
+ 
+       'entity reference then no reference property then a complex field' => [
+diff --git a/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php b/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
+index 6fa0ff0bb2..0ae3918c01 100644
+--- a/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
++++ b/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
+@@ -77,6 +77,11 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
+    */
+   protected $includeResolver;
+ 
++  /**
++   * @var \Drupal\file\Entity\File
++   */
++  private $file;
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -252,6 +257,9 @@ public function testNormalize() {
+       'data' => [
+         'type' => 'node_type--node_type',
+         'id' => NodeType::load('article')->uuid(),
++        'meta' => [
++          'drupal_internal__target_id' => 'article',
++        ],
+       ],
+       'links' => [
+         'related' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/node_type', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
+@@ -264,12 +272,16 @@ public function testNormalize() {
+       'title' => 'test title',
+       'width' => 10,
+       'height' => 11,
++      'drupal_internal__target_id' => $this->file->id(),
+     ], $normalized['data']['relationships']['field_image']['data']['meta']);
+     $this->assertSame('node--article', $normalized['data']['type']);
+     $this->assertEquals([
+       'data' => [
+         'type' => 'user--user',
+         'id' => $this->user->uuid(),
++        'meta' => [
++          'drupal_internal__target_id' => $this->user->id(),
++        ],
+       ],
+       'links' => [
+         'self' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/relationships/uid', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
+diff --git a/core/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php b/core/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
+index 17d7ad3f9e..d7787aca4d 100644
+--- a/core/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
++++ b/core/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
+@@ -58,6 +58,16 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
+     '67e4063f-ac74-46ac-ac5f-07efda9fd551',
+   ];
+ 
++  /**
++   * Static UIDs for use in tests.
++   *
++   * @var string[]
++   */
++  protected static $userUids = [
++    10,
++    11,
++  ];
++
+   /**
+    * Static UUIDs for use in tests.
+    *
+@@ -67,6 +77,15 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
+     '71e67249-df4a-4616-9065-4cc2e812235b',
+     'ce5093fc-417f-477d-932d-888407d5cbd5',
+   ];
++  /**
++   * Static UUIDs for use in tests.
++   *
++   * @var string[]
++   */
++  protected static $imageUids = [
++    1,
++    2,
++  ];
+ 
+   /**
+    * {@inheritdoc}
+@@ -108,23 +127,27 @@ protected function setUp(): void {
+       'name' => $this->randomMachineName(),
+       'mail' => $this->randomMachineName() . '@example.com',
+       'uuid' => static::$userIds[0],
++      'uid'  => static::$userUids[0],
+     ]);
+     $this->user1->save();
+     $this->user2 = User::create([
+       'name' => $this->randomMachineName(),
+       'mail' => $this->randomMachineName() . '@example.com',
+       'uuid' => static::$userIds[1],
++      'uid'  => static::$userUids[1],
+     ]);
+     $this->user2->save();
+ 
+     $this->image1 = File::create([
+       'uri' => 'public:/image1.png',
+       'uuid' => static::$imageIds[0],
++      'uid'  => static::$imageUids[0],
+     ]);
+     $this->image1->save();
+     $this->image2 = File::create([
+       'uri' => 'public:/image2.png',
+       'uuid' => static::$imageIds[1],
++      'uid'  => static::$imageUids[1],
+     ]);
+     $this->image2->save();
+ 
+@@ -194,14 +217,32 @@ public function normalizeProvider() {
+         ['user1'],
+         'field_user',
+         [
+-          'data' => ['type' => 'user--user', 'id' => static::$userIds[0]],
++          'data' => [
++            'type' => 'user--user',
++            'id' => static::$userIds[0],
++            'meta' => [
++              'drupal_internal__target_id' => static::$userUids[0],
++            ],
++          ],
+         ],
+       ],
+       'multiple cardinality' => [
+         ['user1', 'user2'], 'field_users', [
+           'data' => [
+-            ['type' => 'user--user', 'id' => static::$userIds[0]],
+-            ['type' => 'user--user', 'id' => static::$userIds[1]],
++            [
++              'type' => 'user--user',
++              'id' => static::$userIds[0],
++              'meta' => [
++                'drupal_internal__target_id' => static::$userUids[0],
++              ],
++            ],
++            [
++              'type' => 'user--user',
++              'id' => static::$userIds[1],
++              'meta' => [
++                'drupal_internal__target_id' => static::$userUids[1],
++              ],
++            ],
+           ],
+         ],
+       ],
+@@ -211,12 +252,18 @@ public function normalizeProvider() {
+             [
+               'type' => 'user--user',
+               'id' => static::$userIds[0],
+-              'meta' => ['arity' => 0],
++              'meta' => [
++                'arity' => 0,
++                'drupal_internal__target_id' => static::$userUids[0],
++              ],
+             ],
+             [
+               'type' => 'user--user',
+               'id' => static::$userIds[0],
+-              'meta' => ['arity' => 1],
++              'meta' => [
++                'arity' => 1,
++                'drupal_internal__target_id' => static::$userUids[0],
++              ],
+             ],
+           ],
+         ],
+@@ -227,16 +274,25 @@ public function normalizeProvider() {
+             [
+               'type' => 'user--user',
+               'id' => static::$userIds[0],
+-              'meta' => ['arity' => 0],
++              'meta' => [
++                'arity' => 0,
++                'drupal_internal__target_id' => static::$userUids[0],
++              ],
+             ],
+             [
+               'type' => 'user--user',
+               'id' => static::$userIds[1],
++              'meta' => [
++                'drupal_internal__target_id' => static::$userUids[1],
++              ],
+             ],
+             [
+               'type' => 'user--user',
+               'id' => static::$userIds[0],
+-              'meta' => ['arity' => 1],
++              'meta' => [
++                'arity' => 1,
++                'drupal_internal__target_id' => static::$userUids[0],
++              ],
+             ],
+           ],
+         ],
+@@ -251,6 +307,7 @@ public function normalizeProvider() {
+               'title' => 'My spirit animal',
+               'width' => NULL,
+               'height' => NULL,
++              'drupal_internal__target_id' => static::$imageUids[0],
+             ],
+           ],
+         ],
+@@ -267,6 +324,7 @@ public function normalizeProvider() {
+                 'width' => NULL,
+                 'height' => NULL,
+                 'arity' => 0,
++                'drupal_internal__target_id' => static::$imageUids[0],
+               ],
+             ],
+             [
+@@ -278,6 +336,7 @@ public function normalizeProvider() {
+                 'width' => NULL,
+                 'height' => NULL,
+                 'arity' => 1,
++                'drupal_internal__target_id' => static::$imageUids[0],
+               ],
+             ],
+           ],
+@@ -295,6 +354,7 @@ public function normalizeProvider() {
+                 'width' => NULL,
+                 'height' => NULL,
+                 'arity' => 0,
++                'drupal_internal__target_id' => static::$imageUids[0],
+               ],
+             ],
+             [
+@@ -306,6 +366,7 @@ public function normalizeProvider() {
+                 'width' => NULL,
+                 'height' => NULL,
+                 'arity' => 1,
++                'drupal_internal__target_id' => static::$imageUids[0],
+               ],
+             ],
+             [
+@@ -317,6 +378,7 @@ public function normalizeProvider() {
+                 'width' => NULL,
+                 'height' => NULL,
+                 'arity' => 2,
++                'drupal_internal__target_id' => static::$imageUids[0],
+               ],
+             ],
+           ],
+diff --git a/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php b/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php
+index 4adb923590..f618c27329 100644
+--- a/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php
++++ b/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php
+@@ -93,7 +93,7 @@ public function testInvalidFilterPathDueToMissingPropertyName() {
+    */
+   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithMetaProperties() {
+     $this->expectException(CacheableBadRequestHttpException::class);
+-    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
++    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
+     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
+     Filter::createFromQueryParameter(['photo' => ''], $resource_type, $this->fieldResolver);
+   }
+@@ -113,7 +113,7 @@ public function testInvalidFilterPathDueMissingMetaPrefixReferenceFieldWithMetaP
+    */
+   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithoutMetaProperties() {
+     $this->expectException(CacheableBadRequestHttpException::class);
+-    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`.');
++    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`.');
+     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
+     Filter::createFromQueryParameter(['uid' => ''], $resource_type, $this->fieldResolver);
+   }
