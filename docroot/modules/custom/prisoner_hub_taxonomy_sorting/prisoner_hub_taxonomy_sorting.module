@@ -64,3 +64,18 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
     }
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Remove "operator" on all views exposed forms, as it's confusing terminology.
+ * This is a temporary workaround before we upgrade to Drupal 9.
+ * See https://www.drupal.org/project/drupal/issues/2625136
+ */
+function prisoner_hub_taxonomy_sorting_form_views_exposed_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  foreach ($form as &$field) {
+    if (isset($field['#title']) && $field['#title'] == 'Operator') {
+      unset($field['#title']);
+    }
+  }
+}
