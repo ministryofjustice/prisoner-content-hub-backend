@@ -1395,7 +1395,7 @@ display:
             operator_id: field_prison_categories_target_id_op
             label: 'Prison categories'
             description: ''
-            use_operator: false
+            use_operator: true
             operator: field_prison_categories_target_id_op
             operator_limit_selection: false
             operator_list: {  }
@@ -1583,7 +1583,7 @@ display:
                   type: filter
                 container-0:
                   container_type: details
-                  title: 'Prison and prison categories'
+                  title: Prisons
                   description: ''
                   open: '1'
                   weight: '-27'
@@ -1603,10 +1603,26 @@ display:
                   pid: container-0
                   depth: '2'
                   type: filter
+                container-5:
+                  container_type: details
+                  title: 'Prison categories'
+                  description: ''
+                  open: '1'
+                  weight: '-26'
+                  id: container-5
+                  pid: root
+                  depth: '1'
+                  type: container
+                field_prison_categories_target_id_op:
+                  weight: '-29'
+                  id: field_prison_categories_target_id_op
+                  pid: container-5
+                  depth: '2'
+                  type: filter
                 field_prison_categories_target_id:
-                  weight: '-27'
+                  weight: '-28'
                   id: field_prison_categories_target_id
-                  pid: container-0
+                  pid: container-5
                   depth: '2'
                   type: filter
                 container-3:
@@ -1614,7 +1630,7 @@ display:
                   title: ''
                   description: ''
                   open: '1'
-                  weight: '-26'
+                  weight: '-24'
                   id: container-3
                   pid: root
                   depth: '1'
@@ -1625,27 +1641,11 @@ display:
                   pid: container-3
                   depth: '2'
                   type: buttons
-                reset:
-                  weight: '-28'
-                  id: reset
-                  pid: container-3
-                  depth: '2'
-                  type: buttons
-                container-5:
-                  container_type: details
-                  title: ''
-                  description: ''
-                  weight: '-25'
-                  open: 0
-                  id: container-5
-                  pid: root
-                  depth: '1'
-                  type: container
                 container-6:
                   container_type: details
-                  title: 'Container 6'
+                  title: 'Container 5'
                   description: ''
-                  weight: '-24'
+                  weight: '-23'
                   open: 0
                   id: container-6
                   pid: root
@@ -1653,9 +1653,9 @@ display:
                   type: container
                 container-4:
                   container_type: details
-                  title: ''
+                  title: 'Container 6'
                   description: ''
-                  weight: '-23'
+                  weight: '-22'
                   open: 0
                   id: container-4
                   pid: root
@@ -1665,7 +1665,7 @@ display:
                   container_type: details
                   title: 'Container 7'
                   description: ''
-                  weight: '-22'
+                  weight: '-21'
                   open: 0
                   id: container-7
                   pid: root
@@ -1675,7 +1675,7 @@ display:
                   container_type: details
                   title: 'Container 8'
                   description: ''
-                  weight: '-21'
+                  weight: '-20'
                   open: 0
                   id: container-8
                   pid: root
@@ -1685,7 +1685,7 @@ display:
                   container_type: details
                   title: 'Container 9'
                   description: ''
-                  weight: '-20'
+                  weight: '-19'
                   open: 0
                   id: container-9
                   pid: root
@@ -1695,7 +1695,7 @@ display:
                   container_type: details
                   title: 'Container 10'
                   description: ''
-                  weight: '-19'
+                  weight: '-18'
                   open: 0
                   id: container-10
                   pid: root
@@ -1705,7 +1705,7 @@ display:
                   container_type: details
                   title: 'Container 11'
                   description: ''
-                  weight: '-18'
+                  weight: '-17'
                   open: 0
                   id: container-11
                   pid: root
@@ -1715,7 +1715,7 @@ display:
                   container_type: details
                   title: 'Container 12'
                   description: ''
-                  weight: '-17'
+                  weight: '-16'
                   open: 0
                   id: container-12
                   pid: root
@@ -1725,7 +1725,7 @@ display:
                   container_type: details
                   title: 'Container 13'
                   description: ''
-                  weight: '-16'
+                  weight: '-15'
                   open: 0
                   id: container-13
                   pid: root
