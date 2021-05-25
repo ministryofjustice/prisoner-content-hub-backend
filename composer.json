@@ -48,6 +48,7 @@
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
         "drupal/views_bulk_operations": "^3.10",
+        "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0",
@@ -117,6 +118,9 @@
             },
             "drupal/jsonapi_page_limit": {
                 "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch"
+            },
+            "drupal/views_ef_fieldset": {
+                "Issue #3173822: Exposed operators are not included in fieldsets": "patches/3173822-views_ef_fieldset-operator_issue-3.patch"
             }
         }
     },

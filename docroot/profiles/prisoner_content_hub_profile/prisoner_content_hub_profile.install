@@ -3,6 +3,8 @@
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
+const PRISONER_CONTENT_HUB_PROFILE_BATCH_LIMIT = 20;
+
 /**
  * Remove all moj_hub_item content, so that the content type can be removed.
  */
@@ -62,7 +64,7 @@ function prisoner_content_hub_profile_update_8010(&$sandbox) {
 /**
  * Update terms assigned to youth female.
  */
-function prisoner_content_hub_profile_update_8011(&$sandbox) {
+function prisoner_content_hub_profile_update_8012(&$sandbox) {
 
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
@@ -73,7 +75,7 @@ function prisoner_content_hub_profile_update_8011(&$sandbox) {
     $sandbox['result'] = $query->execute();
   }
 
-  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
+  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], PRISONER_CONTENT_HUB_PROFILE_BATCH_LIMIT, TRUE));
 
   foreach ($terms as $term) {
     /** @var \Drupal\taxonomy\TermInterface $term */

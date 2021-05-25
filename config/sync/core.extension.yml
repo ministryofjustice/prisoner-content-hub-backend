@@ -67,6 +67,7 @@ module:
   view_unpublished: 0
   views_bulk_edit: 0
   views_bulk_operations: 0
+  views_ef_fieldset: 0
   views_entity_form_field: 0
   views_ui: 0
   govuk_inline_form_errors: 1

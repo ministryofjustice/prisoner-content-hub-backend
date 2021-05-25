@@ -9,6 +9,8 @@ dependencies:
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_top_level_categories
     - taxonomy.vocabulary.moj_categories
+    - taxonomy.vocabulary.prison_category
+    - taxonomy.vocabulary.prisons
     - taxonomy.vocabulary.series
     - taxonomy.vocabulary.tags
   module:
@@ -59,10 +61,10 @@ display:
             first: '« First'
             last: 'Last »'
           expose:
-            items_per_page: true
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: true
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
@@ -1024,49 +1026,6 @@ display:
           plugin_id: string
           entity_type: node
           entity_field: title
-        langcode:
-          id: langcode
-          table: node_field_data
-          field: langcode
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: in
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: langcode_op
-            label: Language
-            description: ''
-            use_operator: false
-            operator: langcode_op
-            identifier: langcode
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: language
-          entity_type: node
-          entity_field: langcode
         field_moj_top_level_categories_target_id:
           id: field_moj_top_level_categories_target_id
           table: node__field_moj_top_level_categories
@@ -1271,55 +1230,6 @@ display:
           hierarchy: false
           error_message: true
           plugin_id: taxonomy_index_tid
-        promote:
-          id: promote
-          table: node_field_data
-          field: promote
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: All
-          group: 1
-          exposed: true
-          expose:
-            operator_id: ''
-            label: Promoted
-            description: ''
-            use_operator: false
-            operator: promote_op
-            identifier: promote
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: promote
-          plugin_id: boolean
         nid:
           id: nid
           table: node_field_data
@@ -1384,7 +1294,7 @@ display:
           expose:
             operator_id: uid_op
             label: 'Authored by'
-            description: ''
+            description: ' '
             use_operator: false
             operator: uid_op
             operator_limit_selection: false
@@ -1399,6 +1309,7 @@ display:
               moj_local_content_manager: '0'
               local_administrator: '0'
               administrator: '0'
+              gds_theme_user: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1415,6 +1326,110 @@ display:
           entity_type: node
           entity_field: uid
           plugin_id: user_name
+        field_moj_prisons_target_id:
+          id: field_moj_prisons_target_id
+          table: node__field_moj_prisons
+          field: field_moj_prisons_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_moj_prisons_target_id_op
+            label: Prisons
+            description: ''
+            use_operator: true
+            operator: field_moj_prisons_target_id_op
+            operator_limit_selection: false
+            operator_list:
+              and: and
+            identifier: field_moj_prisons_target_id
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+              gds_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: 'Prisons (field_moj_prisons)'
+            description: null
+            identifier: field_moj_prisons_target_id
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1: {  }
+              2: {  }
+              3: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: prisons
+          hierarchy: true
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_prison_categories_target_id:
+          id: field_prison_categories_target_id
+          table: node__field_prison_categories
+          field: field_prison_categories_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_prison_categories_target_id_op
+            label: 'Prison categories'
+            description: ''
+            use_operator: true
+            operator: field_prison_categories_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_prison_categories_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+              gds_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: prison_category
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
       sorts: {  }
       title: Content
       empty:
@@ -1476,7 +1491,246 @@ display:
         description: 'Find and manage content'
         menu_name: admin
         weight: -10
-      display_extenders: {  }
+      display_extenders:
+        views_ef_fieldset:
+          views_ef_fieldset:
+            enabled: 1
+            options:
+              sort:
+                root:
+                  container_type: details
+                  title: Filter
+                  description: ''
+                  open: '1'
+                  weight: '0'
+                  id: root
+                  pid: ''
+                  depth: '0'
+                  type: container
+                container-2:
+                  container_type: details
+                  title: General
+                  description: ''
+                  open: '1'
+                  weight: '-29'
+                  id: container-2
+                  pid: root
+                  depth: '1'
+                  type: container
+                title:
+                  weight: '-27'
+                  id: title
+                  pid: container-2
+                  depth: '2'
+                  type: filter
+                nid:
+                  weight: '-26'
+                  id: nid
+                  pid: container-2
+                  depth: '2'
+                  type: filter
+                type:
+                  weight: '-25'
+                  id: type
+                  pid: container-2
+                  depth: '2'
+                  type: filter
+                status:
+                  weight: '-24'
+                  id: status
+                  pid: container-2
+                  depth: '2'
+                  type: filter
+                field_moj_category_featured_item_value:
+                  weight: '-23'
+                  id: field_moj_category_featured_item_value
+                  pid: container-2
+                  depth: '2'
+                  type: filter
+                uid:
+                  weight: '-22'
+                  id: uid
+                  pid: container-2
+                  depth: '2'
+                  type: filter
+                container-1:
+                  container_type: details
+                  title: Taxonomy
+                  description: ''
+                  open: '1'
+                  weight: '-28'
+                  id: container-1
+                  pid: root
+                  depth: '1'
+                  type: container
+                field_moj_top_level_categories_target_id:
+                  weight: '-31'
+                  id: field_moj_top_level_categories_target_id
+                  pid: container-1
+                  depth: '2'
+                  type: filter
+                field_moj_secondary_tags_target_id:
+                  weight: '-30'
+                  id: field_moj_secondary_tags_target_id
+                  pid: container-1
+                  depth: '2'
+                  type: filter
+                field_moj_series_target_id:
+                  weight: '-29'
+                  id: field_moj_series_target_id
+                  pid: container-1
+                  depth: '2'
+                  type: filter
+                container-0:
+                  container_type: details
+                  title: Prisons
+                  description: ''
+                  open: '1'
+                  weight: '-27'
+                  id: container-0
+                  pid: root
+                  depth: '1'
+                  type: container
+                field_moj_prisons_target_id_op:
+                  weight: '-29'
+                  id: field_moj_prisons_target_id_op
+                  pid: container-0
+                  depth: '2'
+                  type: filter
+                field_moj_prisons_target_id:
+                  weight: '-28'
+                  id: field_moj_prisons_target_id
+                  pid: container-0
+                  depth: '2'
+                  type: filter
+                container-5:
+                  container_type: details
+                  title: 'Prison categories'
+                  description: ''
+                  open: '1'
+                  weight: '-26'
+                  id: container-5
+                  pid: root
+                  depth: '1'
+                  type: container
+                field_prison_categories_target_id_op:
+                  weight: '-29'
+                  id: field_prison_categories_target_id_op
+                  pid: container-5
+                  depth: '2'
+                  type: filter
+                field_prison_categories_target_id:
+                  weight: '-28'
+                  id: field_prison_categories_target_id
+                  pid: container-5
+                  depth: '2'
+                  type: filter
+                container-3:
+                  container_type: details
+                  title: ''
+                  description: ''
+                  open: '1'
+                  weight: '-24'
+                  id: container-3
+                  pid: root
+                  depth: '1'
+                  type: container
+                submit:
+                  weight: '-29'
+                  id: submit
+                  pid: container-3
+                  depth: '2'
+                  type: buttons
+                container-6:
+                  container_type: details
+                  title: 'Container 5'
+                  description: ''
+                  weight: '-23'
+                  open: 0
+                  id: container-6
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-4:
+                  container_type: details
+                  title: 'Container 6'
+                  description: ''
+                  weight: '-22'
+                  open: 0
+                  id: container-4
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-7:
+                  container_type: details
+                  title: 'Container 7'
+                  description: ''
+                  weight: '-21'
+                  open: 0
+                  id: container-7
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-8:
+                  container_type: details
+                  title: 'Container 8'
+                  description: ''
+                  weight: '-20'
+                  open: 0
+                  id: container-8
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-9:
+                  container_type: details
+                  title: 'Container 9'
+                  description: ''
+                  weight: '-19'
+                  open: 0
+                  id: container-9
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-10:
+                  container_type: details
+                  title: 'Container 10'
+                  description: ''
+                  weight: '-18'
+                  open: 0
+                  id: container-10
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-11:
+                  container_type: details
+                  title: 'Container 11'
+                  description: ''
+                  weight: '-17'
+                  open: 0
+                  id: container-11
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-12:
+                  container_type: details
+                  title: 'Container 12'
+                  description: ''
+                  weight: '-16'
+                  open: 0
+                  id: container-12
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-13:
+                  container_type: details
+                  title: 'Container 13'
+                  description: ''
+                  weight: '-15'
+                  open: 0
+                  id: container-13
+                  pid: root
+                  depth: '1'
+                  type: container
     display_plugin: page
     display_title: Page
     id: page_1
