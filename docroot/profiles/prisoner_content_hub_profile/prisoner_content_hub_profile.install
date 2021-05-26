@@ -114,8 +114,8 @@ function prisoner_content_hub_profile_update_8013() {
 
   // Find all field_video entries that do not have an entry in the file_usage table.
   //
-  // We can't use an entity query here, as we need to a specific join to bring
-  // in the missing entries.
+  // We can't use an entity query here, as we need to use a specific
+  // LEFT join to bring in the missing entries.
   $query = Drupal::database()->select('node__field_video', 'nfu');
   $query->addField('nfu', 'entity_id');
   $query->addField('nfu', 'field_video_target_id');
