@@ -102,3 +102,28 @@ function prisoner_content_hub_profile_update_8012(&$sandbox) {
   $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
   return 'Processed terms: ' . $sandbox['progress'];
 }
+
+/**
+ * Update missing file usage db records.
+ *
+ * See https://trello.com/c/TQHhdb4i/151-unable-to-edit-certain-videos-in-drupal
+ */
+function prisoner_content_hub_profile_update_8013() {
+  /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
+  $file_usage = Drupal::service('file.usage');
+
+  // Find all field_video entries that do not have an entry in the file_usage table.
+  //
+  // We can't use an entity query here, as we need to a specific join to bring
+  // in the missing entries.
+  $query = Drupal::database()->select('node__field_video', 'nfu');
+  $query->addField('nfu', 'entity_id');
+  $query->addField('nfu', 'field_video_target_id');
+  $query->addJoin('LEFT OUTER', 'file_usage', 'fu', 'nfu.field_video_target_id = fu.fid');
+  $query->where('fu.fid IS NULL');
+  $result = $query->execute()->fetchAll();
+  foreach ($result as $row) {
+    $file = \Drupal\file\Entity\File::load($row->field_video_target_id);
+    $file_usage->add($file, 'file', 'node', $row->entity_id);
+  }
+}
