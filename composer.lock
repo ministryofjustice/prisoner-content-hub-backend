@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "836b8b4f5016ca4219c387eabe87ccbe",
+    "content-hash": "ea141ef7a6f30f54bfdf0af13257a0ba",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2240,8 +2240,7 @@
                 },
                 "patches_applied": {
                     "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal-1149078-drupal-states_multiselect-104-drupal86.patch",
-                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-118.patch",
-                    "https://www.drupal.org/project/drupal/issues/2943172": "https://www.drupal.org/files/issues/2018-07-05/2943172-kernel-test-base-3.patch"
+                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-118.patch"
                 }
             },
             "autoload": {
