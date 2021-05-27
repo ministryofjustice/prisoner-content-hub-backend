@@ -66,7 +66,7 @@ $flysystem_schemes = [
       'public' => TRUE,
 
       // Set to TRUE if CORS upload support is enabled for the bucket
-      // 'cors' => TRUE,
+       'cors' => TRUE,
     ],
 
     'cache' => TRUE, // Creates a metadata cache to speed up lookups
