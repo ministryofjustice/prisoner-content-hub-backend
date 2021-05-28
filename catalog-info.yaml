@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: prisoner-content-hub-backend
+  namespace: hmpps-supporting-prisoner-wellbeing
+  description: The Drupal Content Management System providing content for in-cell devices.
+  tags:
+    - php
+    - drupal
+    - cms
+  links:
+    - url: https://manage.content-hub.prisoner.service.justice.gov.uk
+      title: Content Management UI
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:prisoner-content-hub
+  #  providesApis:
+    #    - prisoner-content-api
+
