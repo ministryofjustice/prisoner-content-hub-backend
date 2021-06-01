@@ -123,6 +123,13 @@
             "drupal/views_ef_fieldset": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/3173822-views_ef_fieldset-operator_issue-3.patch"
             }
+        },
+        "patches-ignore": {
+            "drupal/views_ef_fieldset": {
+                "drupal/core": {
+                    "Remove patch that uses externally hosted file, and adds no functionality (only used internally on drupal.org for running autoamted tests).": "https://www.drupal.org/files/issues/2018-07-05/2943172-kernel-test-base-3.patch"
+                }
+            }
         }
     },
     "repositories": [
