@@ -110,7 +110,8 @@
         "installer-types": ["bower-asset", "npm-asset"],
         "patches": {
             "drupal/flysystem_s3": {
-                "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
+                "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
+                "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch"
             },
             "drupal/core": {
                 "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal-1149078-drupal-states_multiselect-104-drupal86.patch",

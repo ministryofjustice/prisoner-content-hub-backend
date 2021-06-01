@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea141ef7a6f30f54bfdf0af13257a0ba",
+    "content-hash": "8641b4a20faf7fea6bc20ce89231cfbb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2240,7 +2240,8 @@
                 },
                 "patches_applied": {
                     "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal-1149078-drupal-states_multiselect-104-drupal86.patch",
-                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-118.patch"
+                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-118.patch",
+                    "https://www.drupal.org/project/drupal/issues/2943172": "https://www.drupal.org/files/issues/2018-07-05/2943172-kernel-test-base-3.patch"
                 }
             },
             "autoload": {
@@ -2984,7 +2985,8 @@
                     }
                 },
                 "patches_applied": {
-                    "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch"
+                    "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
+                    "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
