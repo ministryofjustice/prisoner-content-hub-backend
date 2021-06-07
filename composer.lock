@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5c52aae65c8b34f47b3c098a5e5ab15",
+    "content-hash": "b429443b92a81b02d04b349dcddd00a7",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3539,7 +3539,7 @@
             "version": "1.x-dev",
             "source": {
                 "type": "git",
-                "url": "git@git.drupal.org:issue/theme_switcher-3154752.git",
+                "url": "https://git.drupalcode.org/issue/theme_switcher-3154752.git",
                 "reference": "06bf0a03a8cd6932d4ee8369973128c4915e9eef"
             },
             "type": "drupal-module",

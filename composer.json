@@ -142,7 +142,7 @@
                 "version": "1.x-dev",
                 "type":"drupal-module",
                 "source": {
-                    "url": "git@git.drupal.org:issue/jsonapi_cross_bundles-3172761.git",
+                    "url": "https://git.drupalcode.org/issue/jsonapi_cross_bundles-3172761.git",
                     "type": "git",
                     "reference": "c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28"
                 }
@@ -155,7 +155,7 @@
                 "version": "1.x-dev",
                 "type":"drupal-module",
                 "source": {
-                    "url": "git@git.drupal.org:issue/theme_switcher-3154752.git",
+                    "url": "https://git.drupalcode.org/issue/theme_switcher-3154752.git",
                     "type": "git",
                     "reference": "06bf0a03a8cd6932d4ee8369973128c4915e9eef"
                 }
