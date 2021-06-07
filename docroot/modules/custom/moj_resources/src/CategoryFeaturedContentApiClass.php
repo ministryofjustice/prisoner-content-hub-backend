@@ -3,7 +3,6 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 
@@ -27,14 +26,7 @@ class CategoryFeaturedContentApiClass
    * @var EntityManagerInterface
    */
   protected $nodeStorage;
-  /**
-   * Entity Query object
-   *
-   * @var QueryFactory
-   *
-   * Instance of QueryFactory
-   */
-  protected $entityQuery;
+
   /**
    * Node_storage object
    *
@@ -46,15 +38,12 @@ class CategoryFeaturedContentApiClass
    * Class Constructor
    *
    * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
     $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
-    $this->entityQuery = $entityQuery;
   }
   /**
    * API resource function
@@ -176,7 +165,7 @@ class CategoryFeaturedContentApiClass
   */
   private function promotedNodes($categoryId, $numberOfResults, $prisonId)
   {
-    $query = $this->entityQuery->get('node')
+    $query = $this->nodeStorage->getQuery()
       ->condition('status', 1)
       ->condition('field_moj_category_featured_item', 1)
       ->accessCheck(false);
@@ -199,7 +188,7 @@ class CategoryFeaturedContentApiClass
   */
   private function allContentFor($categoryId)
   {
-    $query = $this->entityQuery->get('node')
+    $query = $this->nodeStorage->getQuery()
       ->condition('status', 1)
       ->accessCheck(false);
       $query->condition('field_moj_top_level_categories', $categoryId);

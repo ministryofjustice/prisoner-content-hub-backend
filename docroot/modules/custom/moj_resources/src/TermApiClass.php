@@ -4,7 +4,6 @@ namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\Serializer\Serializer;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
@@ -32,27 +31,16 @@ class TermApiClass
    * @var Drupal\Core\Entity\EntityTypeManager
    */
   protected $node_storage;
-  /**
-   * Entitity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entity_query;
 
   /**
    * Class Constructor
    *
    * @param EntityTypeManager $entityTypeManager
-   * @param QueryFactory $entityQuery
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->term_storage = $entityTypeManager->getStorage('taxonomy_term');
-    $this->entity_query = $entityQuery;
   }
   /**
    * API resource function

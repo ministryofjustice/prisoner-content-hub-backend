@@ -3,7 +3,6 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 require_once('Utils.php');
@@ -26,14 +25,6 @@ class SuggestedContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
-  /**
-   * Entitity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entityQuery;
 
   protected $categoryId;
   protected $numberOfResults;
@@ -43,14 +34,11 @@ class SuggestedContentApiClass
    * Class Constructor
    *
    * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
-    $this->entityQuery = $entityQuery;
   }
 
   /**
@@ -180,7 +168,7 @@ class SuggestedContentApiClass
   private function getInitialQuery()
   {
     $types = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item',);
-    $query = $this->entityQuery->get('node')
+    $query = $this->nodeStorage->getQuery()
       ->condition('status', 1)
       ->condition('type', $types, 'IN')
       ->accessCheck(false);

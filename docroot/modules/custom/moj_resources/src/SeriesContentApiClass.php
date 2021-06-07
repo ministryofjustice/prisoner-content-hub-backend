@@ -3,7 +3,6 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\Entity\Term;
 
@@ -39,27 +38,16 @@ class SeriesContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $node_storage;
-  /**
-   * Entity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of queryfactory
-   */
-  protected $entity_query;
 
   /**
    * Class Constructor
    *
    * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->entity_query = $entityQuery;
   }
   /**
    * API resource function
@@ -182,7 +170,7 @@ class SeriesContentApiClass
    */
   private function getSeriesContentNodeIds($seriesId, $number, $offset, $prison)
   {
-    $results = $this->entity_query->get('node')
+    $results = $this->node_storage->getQuery()
       ->condition('status', 1)
       ->accessCheck(false);
     $results->condition('field_moj_series', $seriesId);
