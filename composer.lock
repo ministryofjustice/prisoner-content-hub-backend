@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c42513dddd9d496929e6e4f8388a7f6f",
+    "content-hash": "8b8822f88811eeaa6fa7df4aa430fe5f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2560,11 +2560,17 @@
         },
         {
             "name": "drupal/govuk_inline_form_errors",
-            "version": "dev-2.0.x",
+            "version": "2.0.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/govuk_inline_form_errors.git",
-                "reference": "ae8e8cc554af3482a5c55573458234c80d0712f7"
+                "reference": "2.0.0-beta2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/govuk_inline_form_errors-2.0.0-beta2.zip",
+                "reference": "2.0.0-beta2",
+                "shasum": "0aaa8212cda3b1fc50bc24fd2bb46388a62dcbf0"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -2574,15 +2580,12 @@
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-2.0.x": "2.0.x-dev"
-                },
                 "drupal": {
-                    "version": "2.0.x-dev",
-                    "datestamp": "1623061485",
+                    "version": "2.0.0-beta2",
+                    "datestamp": "1623159550",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
+                        "message": "Beta releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -2601,8 +2604,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/govuk_inline_form_errors",
                 "issues": "https://www.drupal.org/project/issues/govuk_inline_form_errors"
-            },
-            "time": "2021-06-08T08:17:30+00:00"
+            }
         },
         {
             "name": "drupal/health_check",
@@ -14092,7 +14094,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/cer": 15,
-        "drupal/govuk_inline_form_errors": 20,
         "drupal/jsonapi_cross_bundles": 20,
         "drupal/jsonapi_page_limit": 10,
         "drupal/taxonomy_machine_name": 20,
