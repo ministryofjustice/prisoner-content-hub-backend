@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42ef37b497eb9eb6b88537e6c52e557f",
+    "content-hash": "c42513dddd9d496929e6e4f8388a7f6f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2654,13 +2654,22 @@
         },
         {
             "name": "drupal/jsonapi_cross_bundles",
-            "version": "1.x-dev",
+            "version": "dev-3172761-unable-to-install",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/project/jsonapi_cross_bundles.git",
+                "url": "https://git.drupalcode.org/issue/jsonapi_cross_bundles-3172761",
                 "reference": "c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28"
             },
             "type": "drupal-module",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Experimental code for adding cross-bundle resource collections for Drupal's JSON API module",
+            "homepage": "https://www.drupal.org/project/jsonapi_cross_bundles",
+            "keywords": [
+                "Drupal",
+                "JSON API"
+            ],
             "time": "2021-04-20T22:14:51+00:00"
         },
         {
@@ -3534,13 +3543,31 @@
         },
         {
             "name": "drupal/theme_switcher",
-            "version": "1.x-dev",
+            "version": "dev-8.x-1.x",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/issue/theme_switcher-3154752.git",
+                "url": "https://git.drupalcode.org/issue/theme_switcher-3154752",
                 "reference": "06bf0a03a8cd6932d4ee8369973128c4915e9eef"
             },
+            "require": {
+                "drupal/core": "^8.5 || ^9",
+                "php": ">=7.1"
+            },
             "type": "drupal-module",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Adrián Marín",
+                    "email": "amarincolas@gmail.com"
+                }
+            ],
+            "description": "Creates Theme Switcher Rules within a Drupal installation.",
+            "support": {
+                "issues": "http://drupal.org/project/issues/theme_switcher",
+                "source": "http://cgit.drupalcode.org/theme_switcher"
+            },
             "time": "2020-12-29T15:38:09+00:00"
         },
         {
@@ -9764,9 +9791,6 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
-            "bin": [
-                "bin/composer"
-            ],
             "type": "library",
             "extra": {
                 "branch-alias": {

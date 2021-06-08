@@ -23,7 +23,7 @@
         "drupal/govuk_design_system": "^2.0",
         "drupal/govuk_inline_form_errors": "2.0.x-dev",
         "drupal/health_check": "^1.1",
-        "drupal/jsonapi_cross_bundles": "1.x-dev",
+        "drupal/jsonapi_cross_bundles": "dev-3172761-unable-to-install#c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^4.1",
@@ -37,7 +37,7 @@
         "drupal/search_api": "^1.17",
         "drupal/select2": "^1.13",
         "drupal/taxonomy_machine_name": "1.x-dev",
-        "drupal/theme_switcher": "1.x-dev",
+        "drupal/theme_switcher": "dev-8.x-1.x#06bf0a03a8cd6932d4ee8369973128c4915e9eef",
         "drupal/token": "^1.5",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
@@ -136,30 +136,12 @@
             "url": "https://asset-packagist.org"
         },
         {
-            "type": "package",
-            "package": {
-                "name": "drupal/jsonapi_cross_bundles",
-                "version": "1.x-dev",
-                "type":"drupal-module",
-                "source": {
-                    "url": "https://git.drupalcode.org/issue/jsonapi_cross_bundles-3172761.git",
-                    "type": "git",
-                    "reference": "c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28"
-                }
-            }
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/jsonapi_cross_bundles-3172761"
         },
         {
-            "type": "package",
-            "package": {
-                "name": "drupal/theme_switcher",
-                "version": "1.x-dev",
-                "type":"drupal-module",
-                "source": {
-                    "url": "https://git.drupalcode.org/issue/theme_switcher-3154752.git",
-                    "type": "git",
-                    "reference": "06bf0a03a8cd6932d4ee8369973128c4915e9eef"
-                }
-            }
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/theme_switcher-3154752"
         }
     ],
     "require-dev": {
