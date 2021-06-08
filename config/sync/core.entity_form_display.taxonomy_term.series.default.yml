@@ -7,7 +7,6 @@ dependencies:
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_audio
     - field.field.taxonomy_term.series.field_featured_image
-    - field.field.taxonomy_term.series.field_featured_video
     - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_moj_prisons
     - field.field.taxonomy_term.series.field_moj_promoted
@@ -22,7 +21,6 @@ dependencies:
     - file
     - image
     - text
-    - video
 third_party_settings:
   field_group:
     group_prison_categories:
@@ -83,17 +81,6 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
     type: image_image
-    region: content
-  field_featured_video:
-    weight: 6
-    settings:
-      file_directory: 'video-thumbnails/[date:custom:Y]-[date:custom:m]'
-      uri_scheme: public
-      file_extensions: 'mp4 ogv webm'
-      max_filesize: ''
-      progress_indicator: throbber
-    third_party_settings: {  }
-    type: video_upload
     region: content
   field_moj_category_featured_item:
     weight: 4

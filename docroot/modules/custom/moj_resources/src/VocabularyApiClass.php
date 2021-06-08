@@ -5,7 +5,6 @@ namespace Drupal\moj_resources;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\Serializer\Serializer;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
@@ -41,28 +40,26 @@ class VocabularyApiClass
      * @var EntityTypeManager
      */
     protected $termStorage;
-    /**
-     * Entity Query object
-     *
-     * @var QueryFactory
-     *
-     * Instance of QueryFactory
-     */
-    protected $entityQuery;
+
+  /**
+   * Node_storage object
+   *
+   * @var Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $nodeStorage;
+
     protected $prisonId;
 
     /**
      * Class Constructor
      *
      * @param EntityTypeManager $entityTypeManager
-     * @param QueryFactory $entityQuery
      */
     public function __construct(
-        EntityTypeManagerInterface $entityTypeManager,
-        QueryFactory $entityQuery
+        EntityTypeManagerInterface $entityTypeManager
     ) {
+        $this->nodeStorage = $entityTypeManager->getStorage('node');
         $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
-        $this->entityQuery = $entityQuery;
     }
     /**
      * API resource function
@@ -105,7 +102,7 @@ class VocabularyApiClass
     {
       $types = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item');
 
-      $query = $this->entityQuery->get('node')
+      $query = $this->nodeStorage->getQuery()
         ->condition('status', 1)
         ->condition('type', $types, 'IN')
         ->accessCheck(false);
@@ -138,7 +135,7 @@ class VocabularyApiClass
      */
     protected function getVocabularyTermIds($taxonomyName)
     {
-        return $this->entityQuery->get('taxonomy_term')
+        return $this->termStorage->getQuery()
             ->condition('vid', $taxonomyName)
             ->execute();
     }

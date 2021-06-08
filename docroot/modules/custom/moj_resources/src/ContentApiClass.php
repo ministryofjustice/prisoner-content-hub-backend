@@ -3,7 +3,6 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
@@ -43,26 +42,16 @@ class ContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $node_storage;
-  /**
-   * Entitity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entity_query;
+
   /**
    * Class Constructor
    *
    * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->node_storage = $entityTypeManager->getStorage('node');
-    $this->entity_query = $entityQuery;
   }
   /**
    * API resource function

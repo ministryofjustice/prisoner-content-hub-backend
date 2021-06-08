@@ -3,7 +3,6 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 require_once('Utils.php');
@@ -20,27 +19,16 @@ class NewFeaturedContentApiClass
    * @var Drupal\Core\Entity\EntityManagerInterface
    */
   protected $nodeStorage;
-  /**
-   * Entitity Query object
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   *
-   * Instance of querfactory
-   */
-  protected $entityQuery;
 
   /**
    * Class Constructor
    *
    * @param EntityTypeManagerInterface $entityTypeManager
-   * @param QueryFactory $entityQuery
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
-    $this->entityQuery = $entityQuery;
   }
   /**
    * API resource function
@@ -93,7 +81,7 @@ class NewFeaturedContentApiClass
 
   private function getFeaturedContent($prisonId)
   {
-    $query = $this->entityQuery->get('node')
+    $query = $this->nodeStorage->getQuery()
       ->condition('type', 'featured_articles')
       ->condition('status', 1)
       ->accessCheck(false);

@@ -3,3 +3,4 @@ type: module
 description: 'Provides CMS functionality for sorting of Taxonomy content.'
 core: 8.x
 package: 'Custom'
+core_version_requirement: ^8 || ^9

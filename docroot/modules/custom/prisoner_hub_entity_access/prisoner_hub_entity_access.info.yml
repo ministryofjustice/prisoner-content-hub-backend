@@ -2,6 +2,7 @@ name: 'Prisoner Hub Entity Access'
 type: module
 description: 'Provides entity access rules for the prisoner content hub.'
 core: 8.x
+core_version_requirement: ^8 || ^9
 package: 'Custom'
 dependencies:
   - entity:entity

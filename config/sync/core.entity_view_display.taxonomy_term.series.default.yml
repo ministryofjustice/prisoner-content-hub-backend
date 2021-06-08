@@ -7,7 +7,6 @@ dependencies:
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_audio
     - field.field.taxonomy_term.series.field_featured_image
-    - field.field.taxonomy_term.series.field_featured_video
     - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_moj_prisons
     - field.field.taxonomy_term.series.field_moj_promoted
@@ -21,7 +20,6 @@ dependencies:
     - image
     - options
     - text
-    - video
 id: taxonomy_term.series.default
 targetEntityType: taxonomy_term
 bundle: series
@@ -65,13 +63,6 @@ content:
       image_link: ''
     third_party_settings: {  }
     type: image
-    region: content
-  field_featured_video:
-    weight: 7
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: video_url
     region: content
   field_moj_category_featured_item:
     weight: 9

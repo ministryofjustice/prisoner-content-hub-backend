@@ -3,7 +3,6 @@
 namespace Drupal\moj_resources;
 
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 require_once('Utils.php');
@@ -32,14 +31,6 @@ class CategoryMenuApiClass
      * @var Drupal\Core\Entity\EntityManagerInterface
      */
   protected $termStorage;
-  /**
-     * Entitity Query object
-     *
-     * @var Drupal\Core\Entity\Query\QueryFactory
-     *
-     * Instance of querfactory
-     */
-  protected $entityQuery;
 
   protected $categoryId;
 
@@ -49,15 +40,12 @@ class CategoryMenuApiClass
      * Class Constructor
      *
      * @param EntityTypeManagerInterface $entityTypeManager
-     * @param QueryFactory $entityQuery
      */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    QueryFactory $entityQuery
+    EntityTypeManagerInterface $entityTypeManager
   ) {
     $this->nodeStorage = $entityTypeManager->getStorage('node');
     $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
-    $this->entityQuery = $entityQuery;
   }
   /**
      * API resource function
@@ -93,7 +81,7 @@ class CategoryMenuApiClass
   {
     $contentTypes = array('page', 'moj_pdf_item', 'moj_radio_item', 'moj_video_item', );
 
-    $query = $this->entityQuery->get('node')
+    $query = $this->nodeStorage->getQuery()
       ->condition('status', 1)
       ->condition('type', $contentTypes, 'IN')
       ->accessCheck(false);
