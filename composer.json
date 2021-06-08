@@ -21,7 +21,7 @@
         "drupal/flysystem": "^2.0",
         "drupal/flysystem_s3": "^2.0-rc1",
         "drupal/govuk_design_system": "^2.0",
-        "drupal/govuk_inline_form_errors": "^2.0",
+        "drupal/govuk_inline_form_errors": "2.0.x-dev",
         "drupal/health_check": "^1.1",
         "drupal/jsonapi_cross_bundles": "1.x-dev",
         "drupal/jsonapi_page_limit": "^1.0@beta",
