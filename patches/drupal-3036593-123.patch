@@ -1,5 +1,5 @@
 diff --git a/core/modules/jsonapi/src/Context/FieldResolver.php b/core/modules/jsonapi/src/Context/FieldResolver.php
-index 9790d4804b..a7a54e5096 100644
+index 0cae107132..030ee51389 100644
 --- a/core/modules/jsonapi/src/Context/FieldResolver.php
 +++ b/core/modules/jsonapi/src/Context/FieldResolver.php
 @@ -337,13 +337,13 @@ public function resolveInternalEntityQueryPath(ResourceType $resource_type, $ext
@@ -49,7 +49,7 @@ index 9790d4804b..a7a54e5096 100644
      }
      return FALSE;
 diff --git a/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php b/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
-index 20ca39a856..67b0d9a670 100644
+index c722723e8f..ca8b6e4427 100644
 --- a/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
 +++ b/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
 @@ -292,10 +292,12 @@ public static function toResourceIdentifier(EntityReferenceItem $item, $arity =
@@ -212,7 +212,7 @@ index da91b19811..09d798f843 100644
              ],
              'links' => [
 diff --git a/core/modules/jsonapi/tests/src/Functional/FileTest.php b/core/modules/jsonapi/tests/src/Functional/FileTest.php
-index aba9131455..92ca089907 100644
+index 1f5075352b..719bae7608 100644
 --- a/core/modules/jsonapi/tests/src/Functional/FileTest.php
 +++ b/core/modules/jsonapi/tests/src/Functional/FileTest.php
 @@ -165,6 +165,9 @@ protected function getExpectedDocument() {
@@ -226,7 +226,7 @@ index aba9131455..92ca089907 100644
              ],
              'links' => [
 diff --git a/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php b/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php
-index 39299b4a54..b8777f43eb 100644
+index e0c2408017..0631eb45b9 100644
 --- a/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php
 +++ b/core/modules/jsonapi/tests/src/Functional/FileUploadTest.php
 @@ -819,6 +819,9 @@ protected function getExpectedDocument($fid = 1, $expected_filename = 'example.t
@@ -331,7 +331,7 @@ index c6f9c1b3b2..613d56012a 100644
 +
  }
 diff --git a/core/modules/jsonapi/tests/src/Functional/MediaTest.php b/core/modules/jsonapi/tests/src/Functional/MediaTest.php
-index b630dcc6fb..c4c702fd78 100644
+index 0ca90296c1..c9812983ce 100644
 --- a/core/modules/jsonapi/tests/src/Functional/MediaTest.php
 +++ b/core/modules/jsonapi/tests/src/Functional/MediaTest.php
 @@ -198,6 +198,7 @@ protected function getExpectedDocument() {
@@ -388,7 +388,7 @@ index b630dcc6fb..c4c702fd78 100644
                ],
                'type' => 'file--file',
              ],
-@@ -365,14 +377,14 @@ protected function getExpectedGetRelationshipDocumentData($relationship_field_na
+@@ -363,14 +375,14 @@ protected function getExpectedGetRelationshipDocumentData($relationship_field_na
            'width' => 180,
            'height' => 180,
            'title' => NULL,
@@ -440,10 +440,10 @@ index 6800460182..bd35e3577a 100644
              ],
              'links' => [
 diff --git a/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php b/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-index 7d29c2057e..41233426e5 100644
+index b808211a06..e5c16a175f 100644
 --- a/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php
 +++ b/core/modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-@@ -1755,14 +1755,91 @@ protected function getExpectedGetRelationshipDocumentData($relationship_field_na
+@@ -1758,14 +1758,91 @@ protected function getExpectedGetRelationshipDocumentData($relationship_field_na
      }
      if (!$is_multiple) {
        $target_entity = $field->entity;
@@ -629,12 +629,12 @@ index 3c6350b2ae..fc274647fa 100644
  
        'entity reference then no reference property then a complex field' => [
 diff --git a/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php b/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
-index 6fa0ff0bb2..0ae3918c01 100644
+index 5e20e4b14a..30efee9f19 100644
 --- a/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
 +++ b/core/modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
-@@ -77,6 +77,11 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
+@@ -86,6 +86,11 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     */
-   protected $includeResolver;
+   protected $resourceTypeRepository;
  
 +  /**
 +   * @var \Drupal\file\Entity\File
@@ -644,7 +644,7 @@ index 6fa0ff0bb2..0ae3918c01 100644
    /**
     * {@inheritdoc}
     */
-@@ -252,6 +257,9 @@ public function testNormalize() {
+@@ -262,6 +267,9 @@ public function testNormalize() {
        'data' => [
          'type' => 'node_type--node_type',
          'id' => NodeType::load('article')->uuid(),
@@ -654,7 +654,7 @@ index 6fa0ff0bb2..0ae3918c01 100644
        ],
        'links' => [
          'related' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/node_type', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
-@@ -264,12 +272,16 @@ public function testNormalize() {
+@@ -274,12 +282,16 @@ public function testNormalize() {
        'title' => 'test title',
        'width' => 10,
        'height' => 11,
@@ -870,7 +870,7 @@ index 17d7ad3f9e..d7787aca4d 100644
              ],
            ],
 diff --git a/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php b/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php
-index 4adb923590..f618c27329 100644
+index 2cc221c0db..f2e51ff7d4 100644
 --- a/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php
 +++ b/core/modules/jsonapi/tests/src/Kernel/Query/FilterTest.php
 @@ -93,7 +93,7 @@ public function testInvalidFilterPathDueToMissingPropertyName() {
