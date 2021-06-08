@@ -1,0 +1,47 @@
+diff --git a/src/Controller/S3CorsUploadAjaxController.php b/src/Controller/S3CorsUploadAjaxController.php
+index cd838be..fc8896a 100644
+--- a/src/Controller/S3CorsUploadAjaxController.php
++++ b/src/Controller/S3CorsUploadAjaxController.php
+@@ -67,7 +67,7 @@ class S3CorsUploadAjaxController extends ControllerBase {
+     $post = $request->request->all();
+ 
+     /** @var \Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter $adapter */
+-    $scheme = \Drupal::service('file_system')->uriScheme($post['destination']);
++    $scheme = StreamWrapperManager::getScheme($post['destination']);
+     $adapter = $this->flysystemFactory->getPlugin($scheme)->getAdapter();
+ 
+     $client = $adapter->getClient();
+diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
+index 201f40c..6c0dc7d 100644
+--- a/src/File/FlysystemS3FileSystem.php
++++ b/src/File/FlysystemS3FileSystem.php
+@@ -60,7 +60,7 @@ class FlysystemS3FileSystem extends FileSystem {
+    * @see \Twistor\FlysystemStreamWrapper::stream_metadata
+    */
+   public function chmod($uri, $mode = NULL) {
+-    $scheme = parent::uriScheme($uri);
++    $scheme = $this->streamWrapperManager::getScheme($uri);
+ 
+     if ($this->isPrivateS3Scheme($scheme)) {
+       is_dir($uri) ? $mode = 0700 : $mode = 0600;
+diff --git a/src/S3CorsManagedFileHelper.php b/src/S3CorsManagedFileHelper.php
+index 59fdfdd..920057c 100644
+--- a/src/S3CorsManagedFileHelper.php
++++ b/src/S3CorsManagedFileHelper.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\flysystem_s3;
+ 
+ use Drupal\Core\Session\AccountInterface;
++use Drupal\Core\StreamWrapper\StreamWrapperManager;
+ 
+ /**
+  * Helper for altering and processing a managed_file element for CORS upload.
+@@ -31,7 +32,7 @@ class S3CorsManagedFileHelper {
+     // has permission to upload files using CORS.
+     $element['#s3_cors'] = FALSE;
+ 
+-    if (!empty($element['#upload_location']) && $scheme = \Drupal::service('file_system')->uriScheme($element['#upload_location'])) {
++    if (!empty($element['#upload_location']) && $scheme = StreamWrapperManager::getScheme($element['#upload_location'])) {
+       if (static::isCorsAvailable($scheme)) {
+         // @todo Verify account permission/role respected with cache tags.
+         // Disable the default progress indicator.

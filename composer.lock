@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b8822f88811eeaa6fa7df4aa430fe5f",
+    "content-hash": "30e0dd38b1edc77f4beb709c77addf6f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2479,7 +2479,8 @@
                 },
                 "patches_applied": {
                     "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
-                    "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch"
+                    "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
+                    "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-4.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
