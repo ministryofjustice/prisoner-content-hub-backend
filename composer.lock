@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba4de3a659a8aa216ac7a2af2cfd4d1c",
+    "content-hash": "713806bbc9136a1eadf1f237320dd9c3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3863,7 +3863,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Issue #3173822: Exposed operators are not included in fieldsets": "patches/3173822-views_ef_fieldset-operator_issue-3.patch"
+                    "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
                 }
             },
             "autoload-dev": {
