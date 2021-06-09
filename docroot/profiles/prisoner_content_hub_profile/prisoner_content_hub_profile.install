@@ -127,3 +127,23 @@ function prisoner_content_hub_profile_update_8013() {
     $file_usage->add($file, 'file', 'node', $row->entity_id);
   }
 }
+
+/**
+ * Hot Fix old D8 uid callback in field overrides.
+ *
+ * @See https://www.drupal.org/project/drupal/issues/3153455#comment-14120086
+ */
+function prisoner_content_hub_profile_update_9000() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('core.base_field_override.') as $config_name) {
+    $base_field_override = $config_factory->getEditable($config_name);
+    if ($base_field_override->get('field_name') !== 'uid') {
+      continue;
+    }
+    $callback = $base_field_override->get('default_value_callback');
+    if (preg_match('~(.*::)getCurrentUserId~', $callback, $matches)) {
+      $base_field_override->set('default_value_callback', $matches[1] . 'getDefaultEntityOwner');
+      $base_field_override->save(TRUE);
+    }
+  }
+}
