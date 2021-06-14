@@ -6,4 +6,5 @@ core_version_requirement: ^8 || ^9
 package: 'Custom'
 dependencies:
   - entity:entity
+  - search_api:search_api
   - prisoner_hub_prison_context:prisoner_hub_prison_context
