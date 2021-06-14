@@ -4,6 +4,7 @@
 namespace Drupal\prisoner_hub_entity_access;
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Abstract base class for implementing prison category filtering.
