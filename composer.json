@@ -15,6 +15,7 @@
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/diff": "^1.0",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
+        "drupal/elasticsearch_connector_autocomp": "^1.2",
         "drupal/entity": "^1.2",
         "drupal/field_group": "^3.1",
         "drupal/flood_unblock": "^2.0",
@@ -25,6 +26,7 @@
         "drupal/health_check": "^1.1",
         "drupal/jsonapi_cross_bundles": "dev-3172761-unable-to-install#c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28",
         "drupal/jsonapi_page_limit": "^1.0@beta",
+        "drupal/jsonapi_search_api": "^1.0@RC",
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^4.1",
         "drupal/monolog": "^2.0",
@@ -35,6 +37,7 @@
         "drupal/role_delegation": "^1.1",
         "drupal/scheduler": "^1.3",
         "drupal/search_api": "^1.17",
+        "drupal/search_api_autocomplete": "^1.4",
         "drupal/select2": "^1.13",
         "drupal/taxonomy_machine_name": "1.x-dev",
         "drupal/theme_switcher": "dev-8.x-1.x#06bf0a03a8cd6932d4ee8369973128c4915e9eef",
@@ -118,6 +121,9 @@
             },
             "drupal/views_ef_fieldset": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
+            },
+            "drupal/elasticsearch_connector_autocomp": {
+                "Issue #3072676: Compatibility with elasticsearchconnector 8.x-7.x": "https://www.drupal.org/files/issues/2020-07-29/3072676-9.patch"
             }
         },
         "patches-ignore": {
