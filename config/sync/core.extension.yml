@@ -79,6 +79,7 @@ theme:
   seven: 0
   govuk_design_system: 0
   prisconhub: 0
+  claro: 0
 _core:
   default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 profile: prisoner_content_hub_profile

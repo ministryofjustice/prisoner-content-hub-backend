@@ -6,3 +6,27 @@ this out into several smaller files.
  */
 
 fieldset.field-group-fieldset div.fieldset-wrapper { margin-top: 0.5em }
+
+.views-exposed-form > .views-ef-fieldset-container > .claro-details__wrapper {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+details.views-ef-fieldset-container:not(.views-ef-fieldset-root) {
+  flex-basis: 49%;
+}
+div.views-ef-fieldset-container {
+  flex-basis: 100%;
+}
+.views-exposed-form .views-ef-fieldset-container .form-item--no-label {
+  margin-top: 0;
+}
+
+.views-exposed-form .views-ef-fieldset-container fieldset.form-wrapper {
+  border: 0;
+}
+.views-exposed-form .views-ef-fieldset-container legend {
+  display: none;
+}
