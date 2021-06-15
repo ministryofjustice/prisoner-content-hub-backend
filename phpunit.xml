@@ -22,8 +22,8 @@
          Specify a temporary directory for storing debug images and html documents.
          These artifacts get copied to /sites/simpletest/browser_output by BrowserTestBase. -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/phpunit/browser_output"/>
-    <!-- To disable deprecation testing completely uncomment the next line. -->
-    <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>-->
+    <!-- Disable deprecation notices.  This can possibly be re-enabled once https://www.drupal.org/project/entity/issues/3217876 is fixed. -->
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
     <!-- Specify the default directory screenshots should be placed. -->
     <env name="DTT_SCREENSHOT_REPORT_DIRECTORY" value="/var/www/phpunit/screenshots"/>
     <!-- Specify the default directory page captures should be placed.

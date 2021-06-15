@@ -118,7 +118,7 @@ class CategoryFeaturedContentApiClass
     $content['summary'] = $term->field_content_summary->value;
     $content['image'] = $term->field_featured_image[0];
     $content['audio'] = $term->field_featured_audio[0];
-    $content['video'] = $term->field_featured_video[0];
+    $content['video'] = ''; // Field removed, return empty string.
 
     return $content;
   }

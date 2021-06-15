@@ -70,7 +70,7 @@ class TermApiClass
     $result['description'] = $term->description[0];
     $result['summary'] = $term->field_content_summary ? $term->field_content_summary->value : '';
     $result['image'] = $term->field_featured_image[0];
-    $result['video'] = $term->field_featured_video[0];
+    $result['video'] = ''; // Field removed, return empty string.
     $result['audio'] = $term->field_featured_audio[0];
     $result['programme_code'] = $term->field_feature_programme_code ? $term->field_feature_programme_code->value : '';
 

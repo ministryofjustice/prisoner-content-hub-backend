@@ -1,5 +1,5 @@
 diff --git a/core/misc/states.es6.js b/core/misc/states.es6.js
-index 811a5112d1..184fa9b03e 100644
+index ccf9993718..3cc88900ac 100644
 --- a/core/misc/states.es6.js
 +++ b/core/misc/states.es6.js
 @@ -159,6 +159,24 @@
@@ -17,7 +17,7 @@ index 811a5112d1..184fa9b03e 100644
 +      value = value.map(String);
 +      // We iterate through each value provided in the reference. If all of them
 +      // exist in value array, we return true. Otherwise return false.
-+      for (let [key] of Object.entries(reference)) {
++      for (var [key, referenceValue] of Object.entries(reference)) {
 +        if (value.indexOf(reference[key]) === -1) {
 +          return false;
 +        }
@@ -27,19 +27,8 @@ index 811a5112d1..184fa9b03e 100644
      Number(reference, value) {
        // If "reference" is a number and "value" is a string, then cast
        // reference as a string before applying the strict comparison in
-@@ -207,6 +225,10 @@
- 
-         // Make sure the event we just bound ourselves to is actually fired.
-         new states.Trigger({ selector, state });
-+
-+        // Reevaluate conditions and trigger to be sure default value like
-+        // null is handled.
-+        this.reevaluate();
-       });
-     },
- 
 diff --git a/core/misc/states.js b/core/misc/states.js
-index 7b451b07de..8968462e10 100644
+index 1da26592bc..3374810801 100644
 --- a/core/misc/states.js
 +++ b/core/misc/states.js
 @@ -4,6 +4,7 @@
@@ -50,7 +39,7 @@ index 7b451b07de..8968462e10 100644
  
  (function ($, Drupal) {
    var states = {
-@@ -79,6 +80,56 @@
+@@ -79,6 +80,57 @@
      Function: function Function(reference, value) {
        return reference(value);
      },
@@ -79,9 +68,10 @@ index 7b451b07de..8968462e10 100644
 +        for (var _iterator = Object.entries(reference)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 +          var _ref = _step.value;
 +
-+          var _ref2 = _slicedToArray(_ref, 1);
++          var _ref2 = _slicedToArray(_ref, 2);
 +
 +          var key = _ref2[0];
++          var referenceValue = _ref2[1];
 +
 +          if (value.indexOf(reference[key]) === -1) {
 +            return false;
@@ -107,12 +97,3 @@ index 7b451b07de..8968462e10 100644
      Number: function Number(reference, value) {
        return typeof value === 'string' ? _compare2(reference.toString(), value) : _compare2(reference, value);
      }
-@@ -106,6 +157,8 @@
-         });
- 
-         new states.Trigger({ selector: selector, state: state });
-+
-+        _this2.reevaluate();
-       });
-     },
-     compare: function compare(reference, selector, state) {
