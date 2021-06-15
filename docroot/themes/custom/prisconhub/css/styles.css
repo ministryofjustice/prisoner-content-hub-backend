@@ -5,15 +5,16 @@ but should the file grow in size we should look at splitting
 this out into several smaller files.
  */
 
-fieldset.field-group-fieldset div.fieldset-wrapper { margin-top: 0.5em }
-
+/**
+  Fixes for views exposed filter fieldsets.
+  This is used on the /admin/content page.
+ */
 .views-exposed-form > .views-ef-fieldset-container > .claro-details__wrapper {
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
   justify-content: space-around;
 }
-
 details.views-ef-fieldset-container:not(.views-ef-fieldset-root) {
   flex-basis: 49%;
 }
@@ -23,7 +24,6 @@ div.views-ef-fieldset-container {
 .views-exposed-form .views-ef-fieldset-container .form-item--no-label {
   margin-top: 0;
 }
-
 .views-exposed-form .views-ef-fieldset-container fieldset.form-wrapper {
   border: 0;
 }
