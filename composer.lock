@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb7569afc341ea05e616630424aad29f",
+    "content-hash": "fac3237fe6a48865b7099cca45a312ed",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2222,6 +2222,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Issue #3072676: Compatibility with elasticsearchconnector 8.x-7.x": "patches/elasticsearch_connector_autocomp-3072676-9.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

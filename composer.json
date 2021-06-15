@@ -123,7 +123,7 @@
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
             },
             "drupal/elasticsearch_connector_autocomp": {
-                "Issue #3072676: Compatibility with elasticsearchconnector 8.x-7.x": "https://www.drupal.org/files/issues/2020-07-29/3072676-9.patch"
+                "Issue #3072676: Compatibility with elasticsearchconnector 8.x-7.x": "patches/elasticsearch_connector_autocomp-3072676-9.patch"
             }
         },
         "patches-ignore": {
