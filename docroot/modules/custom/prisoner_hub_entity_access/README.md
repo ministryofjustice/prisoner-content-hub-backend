@@ -9,6 +9,8 @@ which are checked to see if they match  the current prison (which is set from th
   Provides the current prison as a url paramater.
 - entity:
   A contrib module that provides the entity query access api, see https://www.drupal.org/node/3002038
+- search_api:
+  A contrib module that helps us integrate with elasticsearch.
 
 ## Why the entity access API?
 There are several APIs in Drupal for implementing entity access, the others were dismissed for
@@ -25,3 +27,6 @@ the following reasons:
 ## Relevant Trello card
 https://trello.com/c/JxFpJDkr/1944-determine-and-implement-method-for-passing-the-current-prison-to-drupal
 
+## A note on Search API
+Search API queries are altered in a _very_ similar way to entity access API, although it should be noted that the two
+are entirely separate API's and manage content stored in separate places.

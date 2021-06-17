@@ -1,0 +1,40 @@
+diff --git a/src/EventSubscriber/DefaultSubscriber.php b/src/EventSubscriber/DefaultSubscriber.php
+index 4dba019..97f6fbb 100644
+--- a/src/EventSubscriber/DefaultSubscriber.php
++++ b/src/EventSubscriber/DefaultSubscriber.php
+@@ -64,16 +64,16 @@ class DefaultSubscriber implements EventSubscriberInterface {
+     if ($ngram_index_analyzer_enabled) {
+       foreach ($index->getFields() as $field_id => $field_data) {
+         if ($field_data->getType() == 'text_ngram') {
+-          $params['body'][$params['type']]['properties'][$field_id]['type'] = 'text';
+-          $params['body'][$params['type']]['properties'][$field_id]['boost'] = $field_data->getBoost();
+-          $params['body'][$params['type']]['properties'][$field_id]['fields'] = [
++          $params['body']['properties'][$field_id]['type'] = 'text';
++          $params['body']['properties'][$field_id]['boost'] = $field_data->getBoost();
++          $params['body']['properties'][$field_id]['fields'] = [
+             "keyword" => [
+               "type" => 'keyword',
+               'ignore_above' => 256,
+             ],
+           ];
+-          $params['body'][$params['type']]['properties'][$field_id]['analyzer'] = 'ngram_analyzer';
+-          $params['body'][$params['type']]['properties'][$field_id]['search_analyzer'] = 'standard';
++          $params['body']['properties'][$field_id]['analyzer'] = 'ngram_analyzer';
++          $params['body']['properties'][$field_id]['search_analyzer'] = 'standard';
+         }
+       }
+     }
+diff --git a/src/Plugin/search_api/data_type/TextNgramDataType.php b/src/Plugin/search_api/data_type/TextNgramDataType.php
+index 311a448..857a1b5 100644
+--- a/src/Plugin/search_api/data_type/TextNgramDataType.php
++++ b/src/Plugin/search_api/data_type/TextNgramDataType.php
+@@ -11,7 +11,8 @@ use Drupal\search_api\DataType\DataTypePluginBase;
+  *   id = "text_ngram",
+  *   label = @Translation("Fulltext (ngram)"),
+  *   description = @Translation("Indexes field using the index's ngram analyzer (only useful if ngram analysis is enabled.)"),
+- *   fallback_type = "text"
++ *   fallback_type = "text",
++ *   default = false
+  * )
+  */
+ class TextNgramDataType extends DataTypePluginBase {
