@@ -21,7 +21,6 @@ permissions:
   - 'administer taxonomy_term fields'
   - 'administer taxonomy_term form display'
   - 'administer users'
-  - 'assign gds_theme_user role'
   - 'assign local_administrator role'
   - 'assign moj_local_content_manager role'
   - 'bypass node access'

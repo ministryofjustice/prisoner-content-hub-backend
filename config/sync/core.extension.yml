@@ -56,7 +56,6 @@ module:
   taxonomy: 0
   taxonomy_machine_name: 0
   text: 0
-  theme_switcher: 0
   token: 0
   toolbar: 0
   tour: 0
@@ -68,7 +67,6 @@ module:
   views_ef_fieldset: 0
   views_entity_form_field: 0
   views_ui: 0
-  govuk_inline_form_errors: 1
   menu_link_content: 1
   views: 10
   prisoner_content_hub_profile: 1000
@@ -77,8 +75,8 @@ theme:
   classy: 0
   bartik: 0
   seven: 0
-  govuk_design_system: 0
   prisconhub: 0
+  claro: 0
 _core:
   default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 profile: prisoner_content_hub_profile
