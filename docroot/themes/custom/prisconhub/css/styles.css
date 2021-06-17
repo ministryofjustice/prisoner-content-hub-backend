@@ -13,10 +13,10 @@ this out into several smaller files.
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: left;
 }
 details.views-ef-fieldset-container:not(.views-ef-fieldset-root) {
-  flex-basis: 49%;
+  margin: 10px;
 }
 div.views-ef-fieldset-container {
   flex-basis: 100%;
