@@ -30,3 +30,13 @@ div.views-ef-fieldset-container {
 .views-exposed-form .views-ef-fieldset-container legend {
   display: none;
 }
+
+a[href="/admin/help"].toolbar-icon:active:before,
+a[href="/admin/help"].toolbar-icon.is-active:before {
+  background-image: url(../../../../core/misc/icons/000000/questionmark-disc.svg);
+}
+
+
+a[href="/admin/help"].toolbar-icon:before {
+  background-image: url(../../../../core/misc/icons/787878/questionmark-disc.svg);
+}
