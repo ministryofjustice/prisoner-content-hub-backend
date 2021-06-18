@@ -16,6 +16,5 @@ permissions:
   - 'post comments'
   - 'search content'
   - 'skip comment approval'
-  - 'use S3 CORS upload'
   - 'use text format basic_html'
   - 'view entity autocomplete id results'
