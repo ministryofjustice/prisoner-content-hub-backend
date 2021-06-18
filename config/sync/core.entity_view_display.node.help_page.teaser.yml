@@ -1,0 +1,31 @@
+uuid: 6906ec0c-1189-4740-a484-333c0ce3a064
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.help_page.body
+    - node.type.help_page
+  module:
+    - text
+    - user
+id: node.help_page.teaser
+targetEntityType: node
+bundle: help_page
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,23 @@
+uuid: 6d1170a8-fe7a-42c9-aeb5-e2f0dd47d0f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.help_page
+  module:
+    - text
+id: node.help_page.body
+field_name: body
+entity_type: node
+bundle: help_page
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary
