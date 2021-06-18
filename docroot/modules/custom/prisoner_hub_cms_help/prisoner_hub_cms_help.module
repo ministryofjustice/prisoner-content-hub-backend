@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_cms_help.module.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function prisoner_hub_cms_help_preprocess_page_title(&$variables) {
+  $current_bid = 0;
+
+  /** @var \Drupal\node\NodeInterface $node */
+  if ($node = \Drupal::request()->attributes->get('node')) {
+    $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
+  }
+
+  if ($current_bid) {
+    /** @var \Drupal\book\BookManagerInterface $book_manager */
+    $book_manager = \Drupal::service('book.manager');
+    $all = $book_manager->getAllBooks();
+    $data = $book_manager->bookTreeAllData($current_bid);
+    $top_parent = reset($data);
+    if (isset($top_parent['link']['title'])) {
+      //$variables['title'] = $top_parent['link']['title'];
+      hide($variables);
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function prisoner_hub_cms_help_theme() {
+  return [
+    'author_information_block' => [
+      'variables' => [
+        'author_name' => NULL,
+        'date' => NULL,
+      ],
+      'render element' => 'children',
+    ],
+  ];
+}
+
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function prisoner_hub_cms_help_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  $stop = 1;
+  if (isset($build['book_navigation'])) {
+    hide($build['book_navigation']);
+  }
+}
+
