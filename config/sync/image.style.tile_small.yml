@@ -1,0 +1,15 @@
+uuid: d49dd89f-09ae-44ec-9307-53929ca62fbf
+langcode: en
+status: true
+dependencies: {  }
+name: tile_small
+label: 'Tile small'
+effects:
+  662281b9-a55a-496d-b514-781031c171e0:
+    uuid: 662281b9-a55a-496d-b514-781031c171e0
+    id: image_scale
+    weight: 1
+    data:
+      width: 296
+      height: 176
+      upscale: false

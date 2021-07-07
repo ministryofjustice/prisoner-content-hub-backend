@@ -29,6 +29,7 @@ module:
   inline_form_errors: 0
   jsonapi: 0
   jsonapi_cross_bundles: 0
+  jsonapi_image_styles: 0
   jsonapi_page_limit: 0
   layout_builder: 0
   layout_discovery: 0
