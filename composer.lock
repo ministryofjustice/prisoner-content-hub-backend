@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab0580464779f227f05c12137a22c90b",
+    "content-hash": "f9662b886aa30db756de55c186e6bd32",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2522,9 +2522,9 @@
                     }
                 },
                 "patches_applied": {
-                    "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
+                    "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-54-private-files-image-styles.patch",
                     "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
-                    "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-4.patch"
+                    "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2718,6 +2718,54 @@
                 "JSON API"
             ],
             "time": "2021-04-20T22:14:51+00:00"
+        },
+        {
+            "name": "drupal/jsonapi_image_styles",
+            "version": "2.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jsonapi_image_styles.git",
+                "reference": "2.0.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_image_styles-2.0.0-beta1.zip",
+                "reference": "2.0.0-beta1",
+                "shasum": "d7a362ade6beeb2cdc378106dfe986f0ab464a0f"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-beta1",
+                    "datestamp": "1603349829",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "jefuri",
+                    "homepage": "https://www.drupal.org/user/2733365"
+                },
+                {
+                    "name": "kirkkala",
+                    "homepage": "https://www.drupal.org/user/390806"
+                }
+            ],
+            "description": "Expose image styles to JSON:API",
+            "homepage": "https://www.drupal.org/project/jsonapi_image_styles",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jsonapi_image_styles"
+            }
         },
         {
             "name": "drupal/jsonapi_page_limit",
@@ -9260,6 +9308,11 @@
                 "phpunit/phpunit": "~4.1"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Twistor\\": "src/"
@@ -9881,9 +9934,6 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
-            "bin": [
-                "bin/composer"
-            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -14186,6 +14236,7 @@
     "stability-flags": {
         "drupal/cer": 15,
         "drupal/jsonapi_cross_bundles": 20,
+        "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_page_limit": 10,
         "drupal/taxonomy_machine_name": 20,
         "drupal/theme_switcher": 20,
