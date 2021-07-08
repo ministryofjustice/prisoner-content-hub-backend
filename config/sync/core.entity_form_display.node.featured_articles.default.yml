@@ -16,8 +16,8 @@ third_party_settings:
   field_group:
     group_prison_categories:
       children:
-        - field_moj_prisons
         - field_prison_categories
+        - field_moj_prisons
       parent_name: ''
       weight: 6
       format_type: fieldset
@@ -61,7 +61,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_moj_prisons:
-    weight: 13
+    weight: 15
     settings: {  }
     third_party_settings: {  }
     type: options_buttons

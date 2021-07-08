@@ -4,10 +4,13 @@ module:
   admin_toolbar_links_access_filter: 0
   autocomplete_id: 0
   block: 0
+  book: 0
+  book_blocks: 0
   breakpoint: 0
   cer: 0
   ckeditor: 0
   config: 0
+  contextual: 0
   datetime: 0
   diff: 0
   dynamic_page_cache: 0
@@ -22,12 +25,13 @@ module:
   flood_unblock: 0
   flysystem: 0
   flysystem_s3: 0
-  help: 0
   image: 0
   inline_form_errors: 0
   jsonapi: 0
   jsonapi_cross_bundles: 0
   jsonapi_page_limit: 0
+  layout_builder: 0
+  layout_discovery: 0
   link: 0
   menu_ui: 0
   moj: 0
@@ -38,6 +42,7 @@ module:
   options: 0
   path: 0
   path_alias: 0
+  prisoner_hub_cms_help: 0
   prisoner_hub_entity_access: 0
   prisoner_hub_prison_context: 0
   prisoner_hub_taxonomy_sorting: 0
@@ -52,11 +57,11 @@ module:
   select2: 0
   serialization: 0
   shortcut: 0
+  string_field_formatter: 0
   system: 0
   taxonomy: 0
   taxonomy_machine_name: 0
   text: 0
-  theme_switcher: 0
   token: 0
   toolbar: 0
   tour: 0
@@ -68,7 +73,6 @@ module:
   views_ef_fieldset: 0
   views_entity_form_field: 0
   views_ui: 0
-  govuk_inline_form_errors: 1
   menu_link_content: 1
   views: 10
   prisoner_content_hub_profile: 1000
@@ -77,8 +81,8 @@ theme:
   classy: 0
   bartik: 0
   seven: 0
-  govuk_design_system: 0
   prisconhub: 0
+  claro: 0
 _core:
   default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 profile: prisoner_content_hub_profile

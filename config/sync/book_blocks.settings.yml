@@ -1,0 +1,22 @@
+block:
+  settings:
+    book_block_edit:
+      add_sibling: 'Add sibling page'
+      css: book_blocks_edit_normal
+      toc: true
+      nav: true
+      icons: true
+      left_link:
+        name: Book
+        url: /books
+        hint: 'Show list of all books'
+      middle_link:
+        name: ''
+        url: ''
+        hint: ''
+      right_link:
+        name: ''
+        url: ''
+        hint: ''
+_core:
+  default_config_hash: hguuanPxS79Inv6MlCJRgDkgNRQyx2h7Gn639xQOK9Q

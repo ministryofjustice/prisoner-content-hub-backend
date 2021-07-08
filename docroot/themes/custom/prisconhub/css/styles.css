@@ -5,4 +5,38 @@ but should the file grow in size we should look at splitting
 this out into several smaller files.
  */
 
-fieldset.field-group-fieldset div.fieldset-wrapper { margin-top: 0.5em }
+/**
+  Fixes for views exposed filter fieldsets.
+  This is used on the /admin/content page.
+ */
+.views-exposed-form > .views-ef-fieldset-container > .claro-details__wrapper {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+details.views-ef-fieldset-container:not(.views-ef-fieldset-root) {
+  margin: 10px;
+}
+div.views-ef-fieldset-container {
+  flex-basis: 100%;
+}
+.views-exposed-form .views-ef-fieldset-container .form-item--no-label {
+  margin-top: 0;
+}
+.views-exposed-form .views-ef-fieldset-container fieldset.form-wrapper {
+  border: 0;
+}
+.views-exposed-form .views-ef-fieldset-container legend {
+  display: none;
+}
+
+a[href="/admin/help"].toolbar-icon:active:before,
+a[href="/admin/help"].toolbar-icon.is-active:before {
+  background-image: url(../../../../core/misc/icons/000000/questionmark-disc.svg);
+}
+
+
+a[href="/admin/help"].toolbar-icon:before {
+  background-image: url(../../../../core/misc/icons/787878/questionmark-disc.svg);
+}
