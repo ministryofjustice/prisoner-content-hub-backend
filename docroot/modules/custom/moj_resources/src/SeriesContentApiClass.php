@@ -2,6 +2,7 @@
 
 namespace Drupal\moj_resources;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\Entity\Term;
@@ -100,7 +101,12 @@ class SeriesContentApiClass
       $result["content_type"] = $curr->type->target_id;
       $result["title"] = $curr->title->value;
       $result["id"] = $curr->nid->value;
-      $result["image"] = $curr->field_moj_thumbnail_image[0];
+      $file = $curr->get('field_moj_thumbnail_image')->referencedEntities()[0];
+      $result["image"] = [];
+      $result["image"]['url'] =  file_create_url(ImageStyle::load('tile_small')->buildUri($file->getFileUri()));
+      $result["image"]['alt'] =  $curr->field_moj_thumbnail_image->alt;
+      $result["image"]['title'] =  $curr->field_moj_thumbnail_image->title;
+
       $result["season"] = $curr->field_moj_season->value;
       $result["episode"] = $curr->field_moj_episode->value;
       $result["description"] = $curr->field_moj_description[0];
