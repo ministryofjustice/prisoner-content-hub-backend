@@ -1,0 +1,4 @@
+initial_image_styles:
+  tile_large: tile_large
+  tile_small: tile_small
+queue_image_styles: {  }

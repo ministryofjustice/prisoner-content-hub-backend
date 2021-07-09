@@ -1,0 +1,43 @@
+From 133d35e9cfc125335656ab8afe89b1a7daf6d5c1 Mon Sep 17 00:00:00 2001
+From: Benji Fisher <benji@FisherFam.org>
+Date: Wed, 10 Feb 2021 11:17:40 -0500
+Subject: [PATCH] More robust version of getSize()
+
+---
+ src/StreamUtil.php | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/src/StreamUtil.php b/src/StreamUtil.php
+index 09907ef..428bf4b 100644
+--- a/src/StreamUtil.php
++++ b/src/StreamUtil.php
+@@ -84,13 +84,26 @@ public static function getUsableUri($stream)
+      *
+      * @param resource $stream The stream.
+      *
+-     * @return int The size of the stream.
++     * @return int|false The size of the stream, or false if it cannot be retrieved.
+      */
+     public static function getSize($stream)
+     {
+-        $stat = fstat($stream);
++        $stat = stream_get_meta_data($stream);
+ 
+-        return $stat['size'];
++        switch ($stat['wrapper_type']) {
++            case 'plainfile':
++                $stats = fstat($stream);
++                return is_array($stats) && isset($stats['size']) ? $stats['size'] : false;
++                break;
++            case 'http':
++                stream_context_set_default(['http' => ['method' => 'HEAD']]);
++                $head = array_change_key_case(get_headers($stat['uri'], 1));
++                return $head['content-length'] ?? false;
++                break;
++            //@todo:  Add logic for other wrapper types
++            default:
++                return false;
++        }
+     }
+ 
+     /**
