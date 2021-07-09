@@ -2,6 +2,7 @@
 
 namespace Drupal\moj_resources;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
@@ -108,8 +109,17 @@ class RelatedContentApiClass
     $response['title'] = $relatedContentItem->title->value;
     $response['content_type'] = $relatedContentItem->type->target_id;
     $response['summary'] = $relatedContentItem->field_moj_description->summary;
-    $response['image'] = $relatedContentItem->field_moj_thumbnail_image[0] ? $relatedContentItem->field_moj_thumbnail_image[0] : $relatedContentItem->field_image[0];
-
+    $referenced_entites =  $relatedContentItem->get('field_moj_thumbnail_image')->referencedEntities();
+    if (!empty($referenced_entites)) {
+      $file = $referenced_entites[0];
+      $response["image"] = [];
+      $response["image"]['url'] =  file_create_url(ImageStyle::load('tile_small')->buildUri($file->getFileUri()));
+      $response["image"]['alt'] =  $relatedContentItem->field_moj_thumbnail_image->alt;
+      $response["image"]['title'] =  $relatedContentItem->field_moj_thumbnail_image->title;
+    }
+    else {
+      $response['image'] = [];
+    }
     return $response;
   }
 
