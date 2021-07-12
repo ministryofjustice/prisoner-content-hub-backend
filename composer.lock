@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74ff4189bac4416d29ec80c1f2d62769",
+    "content-hash": "80f6e75c1dc6ebde476f15e35ecd5fb4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -9261,6 +9261,11 @@
                 "phpunit/phpunit": "~4.1"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Twistor\\": "src/"

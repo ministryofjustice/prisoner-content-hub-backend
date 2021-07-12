@@ -116,6 +116,9 @@
                 "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
                 "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch"
             },
+            "twistor/stream-util": {
+                "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
+            },
             "drupal/jsonapi_page_limit": {
                 "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch"
             },
