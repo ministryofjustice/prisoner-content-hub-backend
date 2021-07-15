@@ -75,6 +75,9 @@ $flysystem_schemes = [
 
 $settings['flysystem'] = $flysystem_schemes;
 
+$settings['file_chmod_directory'] = 0700;
+$settings['file_chmod_file'] = 0600;
+
 // Remove the ?itok parameter from image style urls, these interfere with the
 // aws signature.  The DDOS protection that the itok parameter brings is not
 // required (as the assets are hosted on s3).
