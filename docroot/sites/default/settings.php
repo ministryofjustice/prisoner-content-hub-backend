@@ -75,6 +75,8 @@ $flysystem_schemes = [
 
 $settings['flysystem'] = $flysystem_schemes;
 
+// Prevent file permission errors when image styles are generated.
+// @See https://www.drupal.org/project/flysystem_s3/issues/3058063#comment-14164774
 $settings['file_chmod_directory'] = 0700;
 $settings['file_chmod_file'] = 0600;
 
