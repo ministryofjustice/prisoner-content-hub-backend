@@ -114,3 +114,22 @@ $settings['config_sync_directory'] = '../config/sync';
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
+
+/**
+ * Reverse proxy settings.
+ *
+ * For more information, see default.settings.php
+ */
+if (PHP_SAPI !== 'cli') {
+  // Tell Drupal we are running behind a reverse proxy.
+  // This allows the real client IP to be used for logging.
+  $settings['reverse_proxy'] = TRUE;
+
+  // Drupal asks for the IP addresses that the proxy requests will come in from,
+  // for additional security, to prevent IP spoofing.
+  // As these addresses can change, we will just dynamically set the value.
+  $settings['reverse_proxy_addresses'] = [$_SERVER['REMOTE_ADDR']];
+
+  // Setting the trusted reverse proxy header, to further prevent IP spoofing.
+  $settings['reverse_proxy_trusted_headers'] = \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_ALL;
+}

@@ -1,0 +1,82 @@
+uuid: 2877d9ce-b222-4167-add1-b1dc440f52e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.help_page.body
+    - node.type.help_page
+  module:
+    - book
+    - layout_builder
+    - prisoner_hub_cms_help
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_twocol_section
+        layout_settings:
+          label: ''
+          column_widths: 25-75
+        components:
+          0010f3f2-9d6f-421c-9cc4-adca4aa046f3:
+            uuid: 0010f3f2-9d6f-421c-9cc4-adca4aa046f3
+            region: second
+            configuration:
+              id: 'field_block:node:help_page:body'
+              label: Body
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 4
+          6a143e49-8f2f-49f3-a5eb-cf92cbb495c6:
+            uuid: 6a143e49-8f2f-49f3-a5eb-cf92cbb495c6
+            region: second
+            configuration:
+              id: author_information_block
+              label: 'Author information block'
+              provider: prisoner_hub_cms_help
+              label_display: '0'
+              context_mapping:
+                node: layout_builder.entity
+            additional: {  }
+            weight: 5
+          69e20ee4-7b97-4596-9ed9-05a41b3b169e:
+            uuid: 69e20ee4-7b97-4596-9ed9-05a41b3b169e
+            region: first
+            configuration:
+              id: book_navigation
+              label: 'Book navigation'
+              provider: book
+              label_display: '0'
+              block_mode: 'all pages'
+              context_mapping: {  }
+            additional: {  }
+            weight: 2
+        third_party_settings: {  }
+id: node.help_page.default
+targetEntityType: node
+bundle: help_page
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  links: true
+  search_api_excerpt: true

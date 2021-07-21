@@ -1,15 +1,15 @@
-uuid: 341dc103-4893-42fe-839f-90b1e500a90a
+uuid: 425df256-98cb-43a6-9b60-6a3a4ef35e07
 langcode: en
 status: true
 dependencies:
   module:
     - system
   theme:
-    - govuk_design_system
+    - claro
 _core:
-  default_config_hash: xiy8BMYOtPX0H5DzaNI_sEajAzj9BN0iEuooK-HrET8
-id: govuk_design_system_content
-theme: govuk_design_system
+  default_config_hash: QTwkfDaGeBUk6aerktJBDXso4fCsqLTQOuWKXE1xMPU
+id: claro_content
+theme: claro
 region: content
 weight: 0
 provider: null

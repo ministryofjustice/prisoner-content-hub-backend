@@ -8,6 +8,7 @@
         "cweagans/composer-patches": "~1.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
+        "drupal/book_blocks": "^1.6",
         "drupal/cer": "^4.0@alpha",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
@@ -39,6 +40,7 @@
         "drupal/search_api": "^1.17",
         "drupal/search_api_autocomplete": "^1.4",
         "drupal/select2": "^1.13",
+        "drupal/string_field_formatter": "^2.0",
         "drupal/taxonomy_machine_name": "1.x-dev",
         "drupal/theme_switcher": "dev-8.x-1.x#06bf0a03a8cd6932d4ee8369973128c4915e9eef",
         "drupal/token": "^1.5",
@@ -110,6 +112,7 @@
             "drupal/flysystem_s3": {
                 "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
                 "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
+                "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
                 "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-4.patch"
             },
             "drupal/core": {

@@ -7,4 +7,4 @@ core_version_requirement: ^8 || ^9
 libraries:
   - prisconhub/global-styling
 
-base theme: seven
+base theme: claro
