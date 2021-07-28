@@ -38,6 +38,41 @@ index 13811fc..e1b7781 100644
 +```
 +As the itok parameter will interfere with the signature in the url.
 \ No newline at end of file
+diff --git a/flysystem_s3.module b/flysystem_s3.module
+index 6db5014..6a29daf 100644
+--- a/flysystem_s3.module
++++ b/flysystem_s3.module
+@@ -5,6 +5,10 @@
+  * Contains flysystem_s3.module.
+  */
+ 
++use Drupal\Core\Cache\CacheableMetadata;
++use Drupal\Core\Site\Settings;
++use Drupal\Core\StreamWrapper\StreamWrapperManager;
++use Drupal\file\FileInterface;
+ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
+ 
+ /**
+@@ -13,3 +17,19 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
+ function flysystem_s3_element_info_alter(array &$types) {
+   S3CorsManagedFileHelper::alterInfo($types);
+ }
++
++/**
++ * Implements hook_ENTITY_TYPE_load().
++ */
++function flysystem_s3_file_load(array $entities) {
++  foreach ($entities as $entity) {
++    assert($entity instanceof FileInterface);
++    $settings = Settings::get('flysystem');
++    $scheme = StreamWrapperManager::getScheme($entity->get('uri')->value);
++    if (isset($settings[$scheme]) && isset($settings[$scheme]['config']['expires'])) {
++      $entity->addCacheableDependency(
++        (new CacheableMetadata())->setCacheMaxAge((int)$settings[$scheme]['config']['expires'])
++      );
++    }
++  }
++}
 diff --git a/flysystem_s3.services.yml b/flysystem_s3.services.yml
 index e36dc60..beb7a9d 100644
 --- a/flysystem_s3.services.yml

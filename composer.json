@@ -109,7 +109,7 @@
         "installer-types": ["bower-asset", "npm-asset"],
         "patches": {
             "drupal/flysystem_s3": {
-                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-54-private-files-image-styles.patch",
+                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-55-private-files-image-styles.patch",
                 "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
                 "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
                 "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch"
