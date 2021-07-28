@@ -16,7 +16,6 @@
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/diff": "^1.0",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
-        "drupal/elasticsearch_connector_autocomp": "^1.2",
         "drupal/entity": "^1.2",
         "drupal/field_group": "^3.1",
         "drupal/flood_unblock": "^2.0",
@@ -129,9 +128,6 @@
             },
             "drupal/views_ef_fieldset": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
-            },
-            "drupal/elasticsearch_connector_autocomp": {
-                "Issue #3072676: Compatibility with elasticsearchconnector 8.x-7.x": "patches/elasticsearch_connector_autocomp-3072676-9.patch"
             }
         },
         "patches-ignore": {

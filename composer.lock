@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4ed6afd2f762ceaf0af864de0afdb40",
+    "content-hash": "a38b7d47963a875a16482ad333bda784",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2236,63 +2236,6 @@
             "support": {
                 "source": "https://github.com/nodespark/elasticsearch_connector",
                 "issues": "https://www.drupal.org/project/issues/elasticsearch_connector"
-            }
-        },
-        {
-            "name": "drupal/elasticsearch_connector_autocomp",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/elasticsearch_connector_autocomp.git",
-                "reference": "8.x-1.2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/elasticsearch_connector_autocomp-8.x-1.2.zip",
-                "reference": "8.x-1.2",
-                "shasum": "507f841f7635a10f1b30b183c6fe3ed4ace538ba"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9",
-                "drupal/elasticsearch_connector": "*",
-                "drupal/search_api": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.2",
-                    "datestamp": "1591701781",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                },
-                "patches_applied": {
-                    "Issue #3072676: Compatibility with elasticsearchconnector 8.x-7.x": "patches/elasticsearch_connector_autocomp-3072676-9.patch"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "oknate",
-                    "homepage": "https://www.drupal.org/user/471638"
-                },
-                {
-                    "name": "thursday_bw",
-                    "homepage": "https://www.drupal.org/user/1049434"
-                }
-            ],
-            "description": "This module ads the ability to configure the index and fields to index ngrams, which improves autcompletion results.",
-            "homepage": "https://www.drupal.org/project/elasticsearch_connector_autocomp",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "http://cgit.drupalcode.org/elasticsearch_connector_autocomp",
-                "issues": "https://www.drupal.org/project/issues/elasticsearch_connector_autocomp"
             }
         },
         {
