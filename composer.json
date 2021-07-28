@@ -25,7 +25,9 @@
         "drupal/govuk_design_system": "^2.0",
         "drupal/govuk_inline_form_errors": "2.0.0-beta2",
         "drupal/health_check": "^1.1",
+        "drupal/image_style_warmer": "^1.1",
         "drupal/jsonapi_cross_bundles": "dev-3172761-unable-to-install#c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28",
+        "drupal/jsonapi_image_styles": "^2.0@beta",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
         "drupal/memcache": "^2.0",
@@ -110,10 +112,13 @@
         "installer-types": ["bower-asset", "npm-asset"],
         "patches": {
             "drupal/flysystem_s3": {
-                "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
+                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-55-private-files-image-styles.patch",
                 "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
                 "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
-                "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-4.patch"
+                "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch"
+            },
+            "twistor/stream-util": {
+                "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
             },
             "drupal/core": {
                 "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",

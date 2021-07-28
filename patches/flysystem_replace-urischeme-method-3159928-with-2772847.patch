@@ -12,14 +12,14 @@ index cd838be..fc8896a 100644
  
      $client = $adapter->getClient();
 diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
-index 201f40c..6c0dc7d 100644
+index ed74c9b..4107eb3 100644
 --- a/src/File/FlysystemS3FileSystem.php
 +++ b/src/File/FlysystemS3FileSystem.php
-@@ -60,7 +60,7 @@ class FlysystemS3FileSystem extends FileSystem {
+@@ -95,7 +95,7 @@ class FlysystemS3FileSystem extends FileSystem {
     * @see \Twistor\FlysystemStreamWrapper::stream_metadata
     */
    public function chmod($uri, $mode = NULL) {
--    $scheme = parent::uriScheme($uri);
+-    $scheme = $this->fileSystem->uriScheme($uri);
 +    $scheme = $this->streamWrapperManager::getScheme($uri);
  
      if ($this->isPrivateS3Scheme($scheme)) {

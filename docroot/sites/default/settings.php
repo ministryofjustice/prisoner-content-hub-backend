@@ -65,6 +65,8 @@ $flysystem_schemes = [
       // Set to TRUE to link to files using direct links
       'public' => TRUE,
 
+      'expires' => '+3600 seconds',
+
       // Set to TRUE if CORS upload support is enabled for the bucket
        'cors' => TRUE,
     ],
@@ -74,6 +76,17 @@ $flysystem_schemes = [
 ];
 
 $settings['flysystem'] = $flysystem_schemes;
+
+// Prevent file permission errors when image styles are generated.
+// @See https://www.drupal.org/project/flysystem_s3/issues/3058063#comment-14164774
+$settings['file_chmod_directory'] = 0700;
+$settings['file_chmod_file'] = 0600;
+
+// Remove the ?itok parameter from image style urls, these interfere with the
+// aws signature.  The DDOS protection that the itok parameter brings is not
+// required (as the assets are hosted on s3).
+// See https://www.drupal.org/project/flysystem_s3/issues/2772847#comment-14156598
+$config['image.settings']['suppress_itok_output'] = TRUE;
 
 $settings['hash_salt'] = getenv('HASH_SALT', true);
 $settings['update_free_access'] = FALSE;

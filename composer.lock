@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd1a76c5b36611b75172379a732ddd78",
+    "content-hash": "c4ed6afd2f762ceaf0af864de0afdb40",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2579,10 +2579,10 @@
                     }
                 },
                 "patches_applied": {
-                    "[FEATURE] Enable pre-signed links": "patches/flysystem_s3_2.0.0-rc1_enable_pre-signed_downloads.patch",
+                    "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-55-private-files-image-styles.patch",
                     "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
                     "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
-                    "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-4.patch"
+                    "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2758,6 +2758,60 @@
             }
         },
         {
+            "name": "drupal/image_style_warmer",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/image_style_warmer.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/image_style_warmer-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "b05b911281e6d45df0a7735cfa9f8816f9d6233a"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "require-dev": {
+                "drush/drush": "^9.0 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1616082948",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Steffen Schlaer (IT-Cru)",
+                    "homepage": "https://www.drupal.org/u/IT-Cru",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Create image styles of an image on upload or via queue worker.",
+            "homepage": "https://drupal.org/project/image_style_warmer",
+            "support": {
+                "source": "https://cgit.drupalcode.org/image_style_warmer",
+                "issues": "https://drupal.org/project/issues/image_style_warmer"
+            }
+        },
+        {
             "name": "drupal/jsonapi_cross_bundles",
             "version": "dev-3172761-unable-to-install",
             "source": {
@@ -2776,6 +2830,54 @@
                 "JSON API"
             ],
             "time": "2021-04-20T22:14:51+00:00"
+        },
+        {
+            "name": "drupal/jsonapi_image_styles",
+            "version": "2.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jsonapi_image_styles.git",
+                "reference": "2.0.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_image_styles-2.0.0-beta1.zip",
+                "reference": "2.0.0-beta1",
+                "shasum": "d7a362ade6beeb2cdc378106dfe986f0ab464a0f"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-beta1",
+                    "datestamp": "1603349829",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "jefuri",
+                    "homepage": "https://www.drupal.org/user/2733365"
+                },
+                {
+                    "name": "kirkkala",
+                    "homepage": "https://www.drupal.org/user/390806"
+                }
+            ],
+            "description": "Expose image styles to JSON:API",
+            "homepage": "https://www.drupal.org/project/jsonapi_image_styles",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jsonapi_image_styles"
+            }
         },
         {
             "name": "drupal/jsonapi_page_limit",
@@ -9481,6 +9583,11 @@
                 "phpunit/phpunit": "~4.1"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Twistor\\": "src/"
@@ -13384,6 +13491,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -14404,6 +14512,7 @@
     "stability-flags": {
         "drupal/cer": 15,
         "drupal/jsonapi_cross_bundles": 20,
+        "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_page_limit": 10,
         "drupal/jsonapi_search_api": 5,
         "drupal/taxonomy_machine_name": 20,
