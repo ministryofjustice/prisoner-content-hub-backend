@@ -3,8 +3,6 @@
 namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
 
 use Drupal\Core\Url;
-use Drupal\taxonomy\Entity\Vocabulary;
-use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 
 /**
  * Test that the jsonapi responses for taxonomy terms tagged with prisons and
