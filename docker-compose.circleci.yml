@@ -23,6 +23,21 @@ services:
       - 11001:8080
     networks:
       - circleci-prisoner_content_hub
+
+  prisoner-content-hub-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    networks:
+      - prisoner_content_hub
   chrome:
     image: previousnext/chrome-headless:65
     ports:
