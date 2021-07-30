@@ -9,16 +9,7 @@ name: Elasticsearch
 description: 'Elasticsearch server for Hub Content'
 backend: elasticsearch
 backend_config:
+  server_description: ''
   cluster_settings:
     cluster: elasticsearch
-  fuzziness: auto
-  scheme: http
-  host: localhost
-  port: '9200'
-  path: ''
-  excerpt: false
-  retrieve_data: false
-  highlight_data: false
-  http_method: AUTO
-  autocorrect_spell: true
-  autocorrect_suggest_words: true
+  fuzziness: '0'
