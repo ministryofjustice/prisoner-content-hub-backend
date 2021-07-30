@@ -37,7 +37,7 @@ services:
     ports:
       - 9200:9200
     networks:
-      - prisoner_content_hub
+      - circleci-prisoner_content_hub
   chrome:
     image: previousnext/chrome-headless:65
     ports:
