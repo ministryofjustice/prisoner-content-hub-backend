@@ -6,7 +6,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use GuzzleHttp\RequestOptions;
+use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -17,28 +19,8 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
-
-  /**
-   * Return the entity type id.
-   *
-   * @return string
-   */
-  abstract protected function getEntityTypeId();
-
-  /**
-   * Create an entity.
-   *
-   * As each entity type has slightly different ways that they are created,
-   * this method must be implemented by an extending class.
-   *
-   * @param string $bundle
-   *   The bundle (i.e. content type, vocabulary etc) id.
-   * @param $values
-   *   An array of field values.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   */
-  abstract protected function createEntity(string $bundle, array $values);
+  use NodeCreationTrait;
+  use TaxonomyCreationTrait;
 
   /**
    * The "current" prison taxonomy term.
@@ -62,6 +44,13 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected $prisonCategoryTerm;
 
   /**
+   * The prison category term machine name.
+   *
+   * @var String
+   */
+  protected $prisonTermMachineName;
+
+  /**
    * Another prison category term, that is _not_ associated with the "current" prison.
    *
    * @var \Drupal\taxonomy\Entity\Term
@@ -83,27 +72,13 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected $prisonCategoryFieldName;
 
   /**
-   * An array of bundles to check for, automatically generated in setUp().
-   *
-   * @var array
-   */
-  protected $bundles;
-
-  /**
    * Sets up prison and prison category terms, to be used later when testing.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->prisonFieldName = $this->container->getParameter('prisoner_hub_entity_access.prison_field_name');
     $this->prisonCategoryFieldName = $this->container->getParameter('prisoner_hub_entity_access.category_field_name');
-
-    // Get the list of content types with the prison field enabled.
-    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
-    $entityFieldManager = $this->container->get('entity_field.manager');
-    $entityFieldManager->getFieldMap();
-    $this->bundles = $entityFieldManager->getFieldMap()[$this->getEntityTypeId()][$this->prisonFieldName]['bundles'];
-
 
     $vocab_prison_categories = Vocabulary::load('prison_category');
     $this->prisonCategoryTerm = $this->createTerm($vocab_prison_categories);
@@ -128,114 +103,139 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     $this->anotherPrisonTerm = $this->createTerm($vocab_prisons, $values);
   }
 
+
   /**
-   * Test that no entities are returned in the JSON response, when nothing is
-   * tagged with a prison or a prison category.
+   * Create an entity.
+   *
+   * @param string $entity_type_id
+   *   The entity type id, e.g. "node".
+   * @param string $bundle
+   *   The bundle (i.e. content type, vocabulary etc) id.
+   * @param $values
+   *   An array of field values.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
    */
-  public function testNoEntitiesTaggedWithPrisonOrCategory() {
-    foreach ($this->bundles as $bundle) {
-      // Create some entities that have no values.
-      for ($i = 0; $i < 5; $i++) {
-        $this->createEntity($bundle, []);
-      }
-      $this->assertJsonResponse([], $bundle);
+  protected function createEntity(string $entity_type_id, string $bundle, array $values) {
+    switch ($entity_type_id) {
+      case 'node':
+        $values['type'] = $bundle;
+        return $this->createNode($values);
+
+      case 'taxonomy_term':
+        $vocabulary = Vocabulary::load($bundle);
+        return $this->createTerm($vocabulary, $values);
     }
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * prison (but no category).
+   * Create entities that are _not_ tagged with eith a prison or a category.
+   *
+   * @return array
+   *   An array of entities to check for.
    */
-  public function testEntitiesTaggedWithPrisonButNoCategory() {
-    foreach ($this->bundles as $bundle) {
-      $entities_to_check = [];
-      for ($i = 0; $i < 5; $i++) {
-        $values = [
-          $this->prisonFieldName => [
-            ['target_id' => $this->prisonTerm->id()]
-          ],
-        ];
-        $entities_to_check[] = $this->createEntity($bundle, $values)->uuid();
-      }
-
-      // Also create some content tagged with a different prison.
-      for ($i = 0; $i < 5; $i++) {
-        $values = [
-          $this->prisonFieldName => [
-            ['target_id' => $this->anotherPrisonTerm->id()],
-          ],
-        ];
-        $this->createEntity($bundle, $values);
-      }
-
-      $this->assertJsonResponse($entities_to_check, $bundle);
+  protected function setupEntitiesTaggedWithoutPrisonOrCategory(string $entity_type_id, string $bundle, int $amount = 5) {
+    // Create some entities that have no values.
+    for ($i = 0; $i < $amount; $i++) {
+      $this->createEntity($entity_type_id, $bundle, []);
     }
+    return [];
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * category (but no prison).
+   * Create entities that are tagged with a prison but _no_ category.
+   *
+   * @return array
+   *   An array of entities to check for.
    */
-  public function testContentTaggedWithCategoryButNoPrison() {
-    foreach ($this->bundles as $bundle) {
-      $entities_to_check = [];
-      for ($i = 0; $i < 5; $i++) {
-        $values = [
-          $this->prisonCategoryFieldName => [
-            ['target_id' => $this->prisonCategoryTerm->id()],
-          ],
-        ];
-        $entities_to_check[] = $this->createEntity($bundle, $values)->uuid();
-      }
-
-      // Also create some content tagged with a different prison category.
-      for ($i = 0; $i < 5; $i++) {
-        $values = [
-          $this->prisonCategoryFieldName => [
-            ['target_id' => $this->anotherPrisonCategoryTerm->id()],
-          ],
-        ];
-        $this->createEntity($bundle, $values)->uuid();
-      }
-
-      $this->assertJsonResponse($entities_to_check, $bundle);
+  protected function setupEntitiesTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $values = [
+        $this->prisonFieldName => [
+          ['target_id' => $this->prisonTerm->id()]
+        ],
+      ];
+      $entities_to_check[] = $this->createEntity($entity_type_id, $bundle, $values)->uuid();
     }
+
+    // Also create some content tagged with a different prison.
+    for ($i = 0; $i < $amount; $i++) {
+      $values = [
+        $this->prisonFieldName => [
+          ['target_id' => $this->anotherPrisonTerm->id()],
+        ],
+      ];
+      $this->createEntity($entity_type_id, $bundle, $values);
+    }
+
+   return $entities_to_check;
   }
 
   /**
-   * Test that  entities are returned in the JSON response, when tagged with a
-   * category and a prison.
+   * Create entities that are tagged with a category but _no_ prison.
+   *
+   * @return array
+   *   An array of entities to check for.
    */
-  public function testContentTaggedWithPrisonAndCategory() {
-    foreach ($this->bundles as $bundle) {
-      $entities_to_check = [];
-      for ($i = 0; $i < 5; $i++) {
-        $values = [
-          $this->prisonFieldName => [
-            ['target_id' => $this->prisonTerm->id()],
-          ],
-          $this->prisonCategoryFieldName => [
-            ['target_id' => $this->prisonTerm->id()],
-          ],
-        ];
-        $entities_to_check[] = $this->createEntity($bundle, $values)->uuid();
-      }
-
-      // Also create some content tagged with a different category and prison.
-      for ($i = 0; $i < 5; $i++) {
-        $values = [
-          $this->prisonFieldName => [
-            ['target_id' => $this->anotherPrisonTerm->id()]
-          ],
-          $this->prisonCategoryFieldName => [
-            ['target_id' => $this->anotherPrisonCategoryTerm->id()],
-          ],
-        ];
-        $this->createEntity($bundle, $values)->uuid();
-      }
-
-      $this->assertJsonResponse($entities_to_check, $bundle);
+  protected function setupEntitiesTaggedWithCategoryButNoPrison(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $values = [
+        $this->prisonCategoryFieldName => [
+          ['target_id' => $this->prisonCategoryTerm->id()],
+        ],
+      ];
+      $entities_to_check[] = $this->createEntity($entity_type_id, $bundle, $values)->uuid();
     }
+
+    // Also create some content tagged with a different prison category.
+    for ($i = 0; $i < $amount; $i++) {
+      $values = [
+        $this->prisonCategoryFieldName => [
+          ['target_id' => $this->anotherPrisonCategoryTerm->id()],
+        ],
+      ];
+      $this->createEntity($entity_type_id, $bundle, $values)->uuid();
+    }
+
+    return $entities_to_check;
+  }
+
+  /**
+   * Create entities that are tagged with a prison _and_ a category.
+   *
+   * @return array
+   *   An array of entities to check for.
+   */
+  protected function setupContentTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $values = [
+        $this->prisonFieldName => [
+          ['target_id' => $this->prisonTerm->id()],
+        ],
+        $this->prisonCategoryFieldName => [
+          ['target_id' => $this->prisonTerm->id()],
+        ],
+      ];
+      $entities_to_check[] = $this->createEntity($entity_type_id, $bundle, $values)->uuid();
+    }
+
+    // Also create some content tagged with a different category and prison.
+    for ($i = 0; $i < $amount; $i++) {
+      $values = [
+        $this->prisonFieldName => [
+          ['target_id' => $this->anotherPrisonTerm->id()]
+        ],
+        $this->prisonCategoryFieldName => [
+          ['target_id' => $this->anotherPrisonCategoryTerm->id()],
+        ],
+      ];
+      $this->createEntity($entity_type_id, $bundle, $values)->uuid();
+    }
+
+    return $entities_to_check;
   }
 
   /**
@@ -246,10 +246,9 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @param string $bundle
    *   The bundle machine name to check for.
    */
-  protected function assertJsonResponse(array $entities_to_check, string $bundle) {
+  protected function assertJsonApiResponse(array $entities_to_check, Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prisonTermMachineName . '/' . $this->getEntityTypeId() . '/' . $bundle);
     $response = $this->request('GET', $url, $request_options);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());
@@ -258,9 +257,10 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
       $this->assertEmpty($response_document['data'], $message);
     }
     else {
-      $this->assertSame($entities_to_check, array_map(static function (array $data) {
+      $this->assertEqualsCanonicalizing($entities_to_check, array_map(static function (array $data) {
         return $data['id'];
       }, $response_document['data']), $message);
     }
   }
+
 }
