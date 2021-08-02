@@ -12,7 +12,7 @@ use Drupal\search_api\Query\QueryInterface;
 class SearchApiQueryAlter extends QueryAlterBase {
 
   /**
-   * This method is called when the entity.query_access.prison_categories is dispatched.
+   * This method is to be used in conjunction with hook_search_api_query_alter().
    *
    * @param \Symfony\Component\EventDispatcher\Event $event
    *   The dispatched event.
