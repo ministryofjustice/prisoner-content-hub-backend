@@ -32,6 +32,8 @@ module:
   jsonapi_cross_bundles: 0
   jsonapi_image_styles: 0
   jsonapi_page_limit: 0
+  jsonapi_resources: 0
+  jsonapi_search_api: 0
   layout_builder: 0
   layout_discovery: 0
   link: 0

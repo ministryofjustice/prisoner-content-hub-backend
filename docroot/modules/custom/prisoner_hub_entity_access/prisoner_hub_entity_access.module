@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_search_api_query_alter().
+ */
+function prisoner_hub_entity_access_search_api_query_alter(\Drupal\search_api\Query\QueryInterface $query) {
+ \Drupal::service('prisoner_hub_entity_access.search_api_query_alter')->searchApiQueryAlter($query);
+}
