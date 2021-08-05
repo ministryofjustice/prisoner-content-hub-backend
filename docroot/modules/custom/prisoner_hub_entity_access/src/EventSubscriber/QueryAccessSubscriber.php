@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\QueryAccess\ConditionGroup;
 use Drupal\entity\QueryAccess\QueryAccessEvent;
-use Drupal\prisoner_hub_entity_access\QueryAlterBase;
+use Drupal\prisoner_hub_entity_access\PrisonCategoryLoader;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,7 +18,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Uses the entity query access API (from the entity module).  To show/hide
  * content based on prison and prison category fields.
  */
-class QueryAccessSubscriber extends QueryAlterBase implements EventSubscriberInterface {
+class QueryAccessSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The prison category loader service.
+   *
+   * @var \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader
+   */
+  protected $prisonCategoryLoader;
+
+  /**
+   * SearchApiQueryAlter constructor.
+   *
+   * @param \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader $prison_category_loader
+   */
+  public function __construct(PrisonCategoryLoader $prison_category_loader) {
+    $this->prisonCategoryLoader = $prison_category_loader;
+  }
 
   /**
    * {@inheritdoc}
@@ -39,8 +55,8 @@ class QueryAccessSubscriber extends QueryAlterBase implements EventSubscriberInt
     $operations = ['view', 'view label'];
 
     /* @var \Drupal\taxonomy\TermInterface $current_prison */
-    $current_prison = $this->getCurrentPrison();
-    if (!in_array($event->getOperation(), $operations) || !$current_prison) {
+    $current_prison_id = $this->prisonCategoryLoader->getPrisonIdFromCurrentRoute();
+    if (!in_array($event->getOperation(), $operations) || !$current_prison_id) {
       return;
     }
 
@@ -48,10 +64,10 @@ class QueryAccessSubscriber extends QueryAlterBase implements EventSubscriberInt
     $conditions->alwaysFalse(FALSE);
 
     $condition_group = new ConditionGroup('OR');
-    $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
+    $condition_group->addCondition($this->prisonCategoryLoader->getPrisonFieldName(), $current_prison_id);
 
-    $prison_category = $this->getPrisonCategory($current_prison);
-    $condition_group->addCondition($this->prisonCategoryFieldName, $prison_category);
+    $current_prison_category_id = $this->prisonCategoryLoader->getPrisonCategoryIdFromCurrentRoute();
+    $condition_group->addCondition($this->prisonCategoryLoader->getPrisonCategoryFieldName(), $current_prison_category_id);
     $conditions->addCondition($condition_group);
 
   }

@@ -2,11 +2,17 @@ parameters:
   prisoner_hub_entity_access.prison_field_name: field_moj_prisons
   prisoner_hub_entity_access.category_field_name: field_prison_categories
 services:
+  prisoner_hub_entity_access.prison_category_loader:
+    class: Drupal\prisoner_hub_entity_access\PrisonCategoryLoader
+    arguments: ['@current_route_match','%prisoner_hub_entity_access.prison_field_name%', '%prisoner_hub_entity_access.category_field_name%']
   prisoner_hub_entity_access.query_access_subscriber:
     class: Drupal\prisoner_hub_entity_access\EventSubscriber\QueryAccessSubscriber
-    arguments: ['@current_route_match','%prisoner_hub_entity_access.prison_field_name%', '%prisoner_hub_entity_access.category_field_name%']
+    arguments: ['@prisoner_hub_entity_access.prison_category_loader']
     tags:
       - { name: event_subscriber, priority: 100 }
   prisoner_hub_entity_access.search_api_query_alter:
     class: Drupal\prisoner_hub_entity_access\SearchApiQueryAlter
-    arguments: ['@current_route_match','%prisoner_hub_entity_access.prison_field_name%', '%prisoner_hub_entity_access.category_field_name%']
+    arguments: ['@prisoner_hub_entity_access.prison_category_loader']
+  prisoner_hub_entity_access.entity_access_check:
+    class: Drupal\prisoner_hub_entity_access\EntityAccessCheck
+    arguments: ['@entity_type.manager']

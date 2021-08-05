@@ -1,8 +1,24 @@
 <?php
 
+use Drupal\prisoner_hub_entity_access\EntityAccessCheck;
+
 /**
  * Implements hook_search_api_query_alter().
  */
 function prisoner_hub_entity_access_search_api_query_alter(\Drupal\search_api\Query\QueryInterface $query) {
  \Drupal::service('prisoner_hub_entity_access.search_api_query_alter')->searchApiQueryAlter($query);
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function _prisoner_hub_entity_access_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  return \Drupal::service('prisoner_hub_entity_access.entity_access_check')->getAccessBasedOnPrisonCategory($entity);
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function prisoner_hub_entity_access_entity_type_alter(array &$entity_types) {
+  $entity_types['node']->setHandlerClass('access', EntityAccessCheck::class);
 }
