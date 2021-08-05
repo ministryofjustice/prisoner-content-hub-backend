@@ -14,6 +14,7 @@
         "drupal/core-project-message": "^9.0.0",
         "drupal/core-recommended": "~9.1.11",
         "drupal/core-vendor-hardening": "^9.0.0",
+        "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",

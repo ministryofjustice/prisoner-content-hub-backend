@@ -12,6 +12,7 @@ module:
   config: 0
   contextual: 0
   datetime: 0
+  decoupled_router: 0
   diff: 0
   dynamic_page_cache: 0
   editor: 0
