@@ -11,6 +11,7 @@ module:
   ckeditor: 0
   config: 0
   contextual: 0
+  ctools: 0
   datetime: 0
   decoupled_router: 0
   diff: 0
@@ -79,6 +80,7 @@ module:
   views_entity_form_field: 0
   views_ui: 0
   menu_link_content: 1
+  pathauto: 1
   views: 10
   prisoner_content_hub_profile: 1000
 theme:

@@ -33,6 +33,7 @@
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^4.1",
         "drupal/monolog": "^2.0",
+        "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
         "drupal/raven": "^2.27",
         "drupal/rest_menu_items": "^2.6",
