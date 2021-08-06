@@ -9,3 +9,8 @@ services:
     arguments: ['%jsonapi.base_path%']
     tags:
       - { name: event_subscriber }
+  prisoner_hub_prison_context.outbound_path_processor:
+    class: Drupal\prisoner_hub_prison_context\PathProcessorOutbound
+    arguments: ['@current_route_match', '%jsonapi.base_path%']
+    tags:
+      - { name: path_processor_outbound, priority: 200 }
