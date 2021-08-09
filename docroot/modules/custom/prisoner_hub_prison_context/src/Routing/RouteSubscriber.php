@@ -39,12 +39,12 @@ class RouteSubscriber extends RouteSubscriberBase {
       /* @var \Symfony\Component\Routing\Route $route */
       if (self::isJsonApiRoute($route)) {
         $new_route = clone($route);
-        $this->addPrisonContextToRoute($route, str_replace($this->jsonapiBasePath, $this->jsonapiBasePath . '/prison/{prison}', $route->getPath()));
+        $this->addPrisonContextToRoute($new_route, str_replace($this->jsonapiBasePath, $this->jsonapiBasePath . '/prison/{prison}', $route->getPath()));
         $collection->add('prisoner_hub_prison_context.' . $name, $new_route);
       }
       elseif ($name == 'decoupled_router.path_translation') {
         $new_route = clone($route);
-        $this->addPrisonContextToRoute($route, 'router/prison/{prison}/translate-path');
+        $this->addPrisonContextToRoute($new_route, 'router/prison/{prison}/translate-path');
         $collection->add('prisoner_hub_prison_context.' . $name, $new_route);
       }
     }
