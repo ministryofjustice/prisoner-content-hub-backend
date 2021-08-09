@@ -2,7 +2,6 @@
 
 namespace Drupal\prisoner_hub_prison_context;
 
-
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
