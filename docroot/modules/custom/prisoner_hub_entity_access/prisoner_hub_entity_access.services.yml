@@ -15,4 +15,4 @@ services:
     arguments: ['@prisoner_hub_entity_access.prison_category_loader']
   prisoner_hub_entity_access.entity_access_check:
     class: Drupal\prisoner_hub_entity_access\EntityAccessCheck
-    arguments: ['@entity_type.manager']
+    arguments: ['@prisoner_hub_entity_access.prison_category_loader', '@entity_type.manager']
