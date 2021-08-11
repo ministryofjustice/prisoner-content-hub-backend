@@ -1,6 +1,10 @@
 <?php
 
-use Drupal\prisoner_hub_entity_access\EntityAccessCheck;
+/**
+ * @file
+ * Primary hook implementations for Prisoner hub entity access module.
+ */
+
 
 /**
  * Implements hook_search_api_query_alter().
