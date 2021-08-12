@@ -61,7 +61,7 @@ function prisoner_content_hub_profile_deploy_set_tag_prisons() {
 function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
   // See https://www.qed42.com/blog/url-alias-update-using-batch-api-drupal-8
   $entities = [];
-  $entities['node'] = \Drupal::entityQuery('node')->execute();
+  $entities['node'] = \Drupal::entityQuery('node')->accessCheck(FALSE)->execute();
   $entities['taxonomy_term'] = \Drupal::entityQuery('taxonomy_term')->condition('vid', ['moj_categories', 'series', 'tags'], 'IN')->execute();
   $result = [];
 
