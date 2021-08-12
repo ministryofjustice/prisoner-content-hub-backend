@@ -8,3 +8,5 @@ dependencies:
   - entity:entity
   - search_api:search_api
   - prisoner_hub_prison_context:prisoner_hub_prison_context
+test_dependencies:
+  - jsonapi_search_api:jsonapi_search_api

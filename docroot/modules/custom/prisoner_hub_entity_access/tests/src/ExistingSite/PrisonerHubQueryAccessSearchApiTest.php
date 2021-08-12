@@ -75,7 +75,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
     foreach ($this->bundles as $bundle) {
       $this->setupEntitiesTaggedWithoutPrisonOrCategory($this->entityTypeId, $bundle);
     }
-    $this->assertJsonApiResponse([], $this->jsonApiUrl);
+    $this->assertJsonApiListResponse([], $this->jsonApiUrl);
   }
 
   /**
@@ -87,7 +87,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
     foreach ($this->bundles as $bundle) {
       $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithPrisonButNoCategory($this->entityTypeId, $bundle));
     }
-    $this->assertJsonApiResponse($entities_to_check, $this->jsonApiUrl);
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
   }
 
   /**
@@ -99,7 +99,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
     foreach ($this->bundles as $bundle) {
       $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithCategoryButNoPrison($this->entityTypeId, $bundle));
     }
-    $this->assertJsonApiResponse($entities_to_check, $this->jsonApiUrl);
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
   }
 
   /**
@@ -111,17 +111,17 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
     foreach ($this->bundles as $bundle) {
       $entities_to_check = array_merge($entities_to_check, $this->setupContentTaggedWithPrisonAndCategory($this->entityTypeId, $bundle));
     }
-    $this->assertJsonApiResponse($entities_to_check, $this->jsonApiUrl);
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
   }
 
   /**
    * Refresh the index before we check search results via JSON:API.
    */
-  protected function assertJsonApiResponse(array $entities_to_check, Url $url) {
+  protected function assertJsonApiListResponse(array $entities_to_check, Url $url) {
     $this->index->indexItems();
     // Need to tell elastic to refresh the index immediately.
     $this->client->indices()->refresh();
-    parent::assertJsonApiResponse($entities_to_check, $url);
+    parent::assertJsonApiListResponse($entities_to_check, $url);
   }
 
 }

@@ -7,12 +7,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\taxonomy\TermInterface;
 
 /**
- * Abstract base class for implementing prison category filtering.
- *
- * This class provides a link between the different query alter API's that we
- * need to implement (i.e. QueryAccess API and Search API).
+ * Drupal service for loading the current prison category.
  */
-abstract class QueryAlterBase {
+class PrisonCategoryLoader {
 
   /**
    * The route match service.
@@ -42,14 +39,29 @@ abstract class QueryAlterBase {
   }
 
   /**
-   * Get the current prison Taxonomy term from the route.
+   * Get the current prison Taxonomy term ID from the route.
    *
-   * @return \Drupal\taxonomy\TermInterface|null
-   *   Either the prison Taxonomy term if exists, or NULL if one was not found
-   *   on the current route.
+   * @return int|null
+   *   Either the prison Taxonomy term ID if exists, or NULL if one was not
+   *   found on the current route.
    */
-  protected function getCurrentPrison() {
-    return $this->routeMatch->getParameter('prison');
+  public function getPrisonIdFromCurrentRoute() {
+    $name = $this->routeMatch->getRouteName();
+    $currentPrison = $this->routeMatch->getParameter('prison');
+    return $currentPrison ? (int)$currentPrison->id() : NULL;
+  }
+
+  public function getPrisonCategoryIdFromCurrentRoute() {
+    $currentPrison = $this->routeMatch->getParameter('prison');
+    return $currentPrison ?  $this->getPrisonCategoryFromPrisonTerm($currentPrison) : $currentPrison;
+  }
+
+  public function getPrisonFieldName() {
+    return $this->prisonFieldName;
+  }
+
+  public function getPrisonCategoryFieldName() {
+    return $this->prisonCategoryFieldName;
   }
 
   /**
@@ -63,7 +75,7 @@ abstract class QueryAlterBase {
    *   returned (in the case of two or more prison categories assigned to the
    *   current prison).
    */
-  protected function getPrisonCategory(TermInterface $term) {
+  public function getPrisonCategoryFromPrisonTerm(TermInterface $term) {
     $field_value = $term->get($this->prisonCategoryFieldName)->getValue();
     return (int)$field_value[0]['target_id'];
   }
