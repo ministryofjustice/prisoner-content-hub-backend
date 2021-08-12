@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1c34f1b526b2ff94f982cf590e8b75f",
+    "content-hash": "d78d43e17ebef7ad100c40b8c868104f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2671,7 +2671,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-55-private-files-image-styles.patch",
+                    "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-56-private-files-image-styles.patch",
                     "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
                     "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
                     "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch"
