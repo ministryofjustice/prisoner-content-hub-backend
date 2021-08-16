@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d78d43e17ebef7ad100c40b8c868104f",
+    "content-hash": "8378dc8ab31f845b96c46ea954455517",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1833,7 +1833,8 @@
                 },
                 "patches_applied": {
                     "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
-                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch"
+                    "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch",
+                    "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch"
                 }
             },
             "autoload": {
