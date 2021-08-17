@@ -1,0 +1,13 @@
+diff --git a/core/modules/editor/src/Plugin/Filter/EditorFileReference.php b/core/modules/editor/src/Plugin/Filter/EditorFileReference.php
+index 8cb9aad2d6..17d451753b 100644
+--- a/core/modules/editor/src/Plugin/Filter/EditorFileReference.php
++++ b/core/modules/editor/src/Plugin/Filter/EditorFileReference.php
+@@ -123,7 +123,7 @@ public function process($text, $langcode) {
+ 
+           $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
+           if ($file instanceof FileInterface) {
+-            $result->addCacheTags($file->getCacheTags());
++            $result->addCacheableDependency($file);
+           }
+         }
+       }
