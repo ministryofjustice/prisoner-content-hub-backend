@@ -5,7 +5,11 @@
  * Primary hook implementations for Prisoner hub taxonomy sorting module.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -45,7 +49,7 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
             [
               $terms_with_episode_sorting,
             ],
-        ]
+        ],
       ];
     }
 
@@ -59,8 +63,112 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
             [
               $terms_with_release_date_sorting,
             ],
-        ]
+        ],
       ];
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ *
+ * Create the series_sort_value base field.
+ * Note that a one-off call to actually create the field is required.
+ * See prisoner_hub_taxonomy_sorting_update_9001().
+ */
+function prisoner_hub_taxonomy_sorting_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+  $fields = [];
+  if ($entity_type->id() === 'node') {
+    $fields['series_sort_value'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Series sort value'))
+      ->setDescription(t('A calculated sorting value for a content within a series.'))
+      ->setReadOnly(TRUE);
+  }
+  return $fields;
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Copy sorting value from either season+episode OR release date fields to the
+ * series_sort_value field.
+ */
+function prisoner_hub_taxonomy_sorting_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof ContentEntityInterface && $entity->hasField('field_moj_series')) {
+    $series_result = $entity->get('field_moj_series')->referencedEntities();
+    if (empty($series_result)) {
+      // No series attached to content, do nothing.
+      return;
+    }
+    $series_entity = current($series_result);
+    $sort_by_value = $series_entity->get('field_sort_by')->getString();
+    switch ($sort_by_value) {
+      case 'season_and_episode_asc':
+      case 'season_and_episode_desc':
+        $season_number = $entity->get('field_moj_season')->getString();
+        $episode_number = $entity->get('field_moj_episode')->getString();
+
+        // If either season or episode number is empty, set the value to 0 and
+        // warn the user.  This should only ever happen if content is being
+        // bulk updated. (As when editing the content directly, the fields are
+        // made mandatory).
+        if (empty($season_number) || empty($episode_number)) {
+          $link = Link::fromTextAndUrl($entity->label(), $entity->toUrl());
+          \Drupal::messenger()->addWarning(t('Missing season or episode number for :link. This could effect how the content is sorted within a series.', [':link' => $link->toString()]));
+          $calculated_sort_value = 0;
+        }
+        else {
+          // Episode number must be padded to account for the different lengths
+          // upto 999.  E.g. season 1 episode 15 could be mixed up
+          // with season 11 episode 5.
+          $episode_number_padded = str_pad($episode_number, 3, '0', STR_PAD_LEFT);
+          $calculated_sort_value = (int)$season_number . $episode_number_padded;
+        }
+        break;
+      case 'release_date_asc':
+      case 'release_date_desc':
+        if ($entity->field_release_date->date) {
+          $calculated_sort_value = $entity->field_release_date->date->getTimestamp();
+        }
+        else {
+          // If release date field is empty, set the value to 0 and
+          // warn the user.  This should only ever happen if content is being
+          // bulk updated. (As when editing the content directly, the field is
+          // made mandatory).
+          $link = Link::fromTextAndUrl($entity->label(), $entity->toUrl());
+          \Drupal::messenger()->addWarning(t('Missing release date for :link. This could effect how the content is sorted within a series.', [':link' => $link->toString()]));
+          $calculated_sort_value = 0;
+        }
+        break;
+    }
+
+    // If the sorting is descending, cast this as a negative number to invert
+    // the direction.  This allows us to always use ASC direction when running
+    // queries, e.g. through JSON:API.
+    if (substr($sort_by_value, -4) == 'desc') {
+      $calculated_sort_value = -$calculated_sort_value;
+    }
+    $entity->set('series_sort_value', $calculated_sort_value);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * Check to see whether the sort_by value has changed on a series.
+ * If so, update all the content associated with that series.
+ */
+function prisoner_hub_taxonomy_sorting_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof ContentEntityInterface && $entity->hasField('field_sort_by')) {
+    /** @var ContentEntityInterface $original_entity */
+    if ($entity->original->get('field_sort_by')->getString() != $entity->get('field_sort_by')->getString()) {
+      $results = \Drupal::entityQuery('node')->condition('field_moj_series', $entity->id())->execute();
+      $nodes = Node::loadMultiple($results);
+      /** @var \Drupal\node\NodeInterface $node */
+      foreach ($nodes as $node) {
+        // Resave the node to invoke hook_entity_presave().
+        $node->save();
+      }
     }
   }
 }
