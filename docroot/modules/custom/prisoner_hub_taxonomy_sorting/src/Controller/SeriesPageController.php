@@ -23,30 +23,6 @@ class SeriesPageController extends ControllerBase {
    */
   public function renderPage(TermInterface $taxonomy_term) {
     $view_name = 'series_taxonomy_term_content_sorting';
-    $sort_by_field_value = $taxonomy_term->get('field_sort_by')->getValue();
-    switch ($sort_by_field_value[0]['value']) {
-      case 'season_and_episode_asc':
-        $view_display_id = 'embed_2';
-        break;
-
-      case 'release_date_desc':
-        $view_display_id = 'embed_3';
-        break;
-
-      case 'release_date_asc':
-        $view_display_id = 'embed_4';
-        break;
-
-      case 'season_and_episode_desc':
-      default:
-        $view_display_id = 'embed_1';
-    }
-    $view = Views::getView($view_name);
-    return $view->buildRenderable($view_display_id, [$taxonomy_term->id()]);
-  }
-
-  public function renderChangeContentOrderPage(TermInterface $taxonomy_term) {
-    $view_name = 'seconday_tag_term_content_sorting';
     $view_display_id = 'embed_1';
     $view = Views::getView($view_name);
     return $view->buildRenderable($view_display_id, [$taxonomy_term->id()]);
