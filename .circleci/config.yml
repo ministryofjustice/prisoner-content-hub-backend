@@ -50,7 +50,7 @@ commands:
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
             helm upgrade ${HELM_BACKEND_RELEASE_NAME} ~/git/helm_deploy/prisoner-content-hub-backend \
-              --install --wait --force --reset-values --timeout 360s \
+              --install --wait --force --reset-values --timeout 1200s \
               --namespace=${KUBE_NAMESPACE} \
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.environment >>.yaml \
               --set image.tag=${VERSION_TO_DEPLOY} \
