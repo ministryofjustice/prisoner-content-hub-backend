@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8378dc8ab31f845b96c46ea954455517",
+    "content-hash": "2029bbe285e342b9a8ae079f7cae0cef",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1834,7 +1834,8 @@
                 "patches_applied": {
                     "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
                     "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch",
-                    "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch"
+                    "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
+                    "Issue #3057545 - ResourceTypeRepository wrongly assumes that all entity reference fields have the setting \"target_type\".": "patches/drupal-3057545-34.patch"
                 }
             },
             "autoload": {
@@ -2320,6 +2321,68 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/diff",
                 "issues": "https://www.drupal.org/project/issues/diff"
+            }
+        },
+        {
+            "name": "drupal/dynamic_entity_reference",
+            "version": "1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/dynamic_entity_reference.git",
+                "reference": "8.x-1.12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/dynamic_entity_reference-8.x-1.12.zip",
+                "reference": "8.x-1.12",
+                "shasum": "ee0423f07d962ccd1c1116ac81de3e96f28ac89a"
+            },
+            "require": {
+                "drupal/core": "^8.7.7 || ^9"
+            },
+            "require-dev": {
+                "drupal/diff": "1.x-dev"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.12",
+                    "datestamp": "1620309082",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "Issue #3173822: Exposed operators are not included in fieldsets": "patches/dynamic_entity_reference-3057556-4.patch"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Lee Rowlands",
+                    "homepage": "https://www.drupal.org/u/larowlan",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Jibran Ijaz",
+                    "homepage": "https://www.drupal.org/u/jibran",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "larowlan",
+                    "homepage": "https://www.drupal.org/user/395439"
+                }
+            ],
+            "description": "Provides a field that allows an entity-reference field to reference more than one entity type.",
+            "homepage": "http://drupal.org/project/dynamic_entity_reference",
+            "support": {
+                "source": "http://cgit.drupalcode.org/dynamic_entity_reference",
+                "issues": "http://drupal.org/project/dynamic_entity_reference",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
             }
         },
         {

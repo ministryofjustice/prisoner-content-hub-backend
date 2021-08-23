@@ -1,0 +1,245 @@
+diff --git a/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php b/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
+index 01761e14c5..726a2defc9 100644
+--- a/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
++++ b/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
+@@ -39,7 +39,7 @@
+  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
+  * )
+  */
+-class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
++class EntityReferenceItem extends FieldItemBase implements EntityReferenceItemInterface, OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
+ 
+   /**
+    * {@inheritdoc}
+@@ -708,4 +708,19 @@ public static function getPreconfiguredOptions() {
+     return $options;
+   }
+ 
++  /**
++   * {@inheritdoc}
++   */
++  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition) {
++    $settings = $field_definition->getSettings();
++    $target_type_id = $settings['target_type'];
++    $handler_settings = $settings['handler_settings'];
++
++    $has_target_bundles = isset($handler_settings['target_bundles']) && !empty($handler_settings['target_bundles']);
++    $target_bundles = $has_target_bundles
++      ? $handler_settings['target_bundles']
++      : array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($target_type_id));
++    return [$target_type_id => $target_bundles];
++  }
++
+ }
+diff --git a/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItemInterface.php b/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItemInterface.php
+new file mode 100644
+index 0000000000..92bd86f497
+--- /dev/null
++++ b/core/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItemInterface.php
+@@ -0,0 +1,26 @@
++<?php
++
++namespace Drupal\Core\Field\Plugin\Field\FieldType;
++
++use Drupal\Core\Field\FieldDefinitionInterface;
++
++/**
++ * Interface definition for EntityReference items.
++ */
++interface EntityReferenceItemInterface {
++
++  /**
++   * Returns the referenceable entity types and bundles.
++   *
++   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
++   *   The field definition for which to retrieve the referenceable entity
++   *   types and bundles.
++   *
++   * @return array
++   *   An array keyed by entity type IDs where the values are an indexed
++   *   array of bundle IDs or entity type ID if the entity type does not have
++   *   bundles.
++   */
++  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition);
++
++}
+diff --git a/core/modules/jsonapi/src/Context/FieldResolver.php b/core/modules/jsonapi/src/Context/FieldResolver.php
+index 9790d4804b..959bd4037a 100644
+--- a/core/modules/jsonapi/src/Context/FieldResolver.php
++++ b/core/modules/jsonapi/src/Context/FieldResolver.php
+@@ -330,9 +330,10 @@ public function resolveInternalEntityQueryPath(ResourceType $resource_type, $ext
+       $resource_types = $this->getRelatableResourceTypes($resource_types, $candidate_definitions);
+ 
+       $at_least_one_entity_reference_field = FALSE;
+-      $candidate_property_names = array_unique(NestedArray::mergeDeepArray(array_map(function (FieldItemDataDefinitionInterface $definition) use (&$at_least_one_entity_reference_field) {
++      $data_reference_target_property_name = FALSE;
++      $candidate_property_names = array_unique(NestedArray::mergeDeepArray(array_map(function (FieldItemDataDefinitionInterface $definition) use (&$at_least_one_entity_reference_field, &$data_reference_target_property_name, $cacheability) {
+         $property_definitions = $definition->getPropertyDefinitions();
+-        return array_reduce(array_keys($property_definitions), function ($property_names, $property_name) use ($property_definitions, &$at_least_one_entity_reference_field) {
++        return array_reduce(array_keys($property_definitions), function ($property_names, $property_name) use ($property_definitions, &$at_least_one_entity_reference_field, &$data_reference_target_property_name, $cacheability) {
+           $property_definition = $property_definitions[$property_name];
+           $is_data_reference_definition = $property_definition instanceof DataReferenceTargetDefinition;
+           if (!$property_definition->isInternal()) {
+@@ -341,6 +342,18 @@ public function resolveInternalEntityQueryPath(ResourceType $resource_type, $ext
+             // representation. Hence it must also not be exposed in 400
+             // responses' error messages.
+             $property_names[] = $is_data_reference_definition ? 'id' : $property_name;
++            if ($is_data_reference_definition) {
++              if ($data_reference_target_property_name && $data_reference_target_property_name !== $property_name) {
++                throw new CacheableBadRequestHttpException($cacheability, sprintf(
++                  'Conflicting data reference definitions. The property `%s` conflicts with `%s` property.',
++                  $property_name,
++                  $data_reference_target_property_name
++                ));
++              }
++              else {
++                $data_reference_target_property_name = $property_name;
++              }
++            }
+           }
+           if ($is_data_reference_definition) {
+             $at_least_one_entity_reference_field = TRUE;
+@@ -426,6 +439,9 @@ public function resolveInternalEntityQueryPath(ResourceType $resource_type, $ext
+         }
+         // The property is a reference, so add it to the breadcrumbs and
+         // continue resolving fields.
++        if (count($candidate_property_names) > 1) {
++          $reference_breadcrumbs[] = $data_reference_target_property_name;
++        }
+         $reference_breadcrumbs[] = array_shift($parts);
+       }
+     }
+@@ -603,9 +619,19 @@ protected static function getAllDataReferencePropertyNames(array $candidate_defi
+       $property_definitions = $definition->getPropertyDefinitions();
+       foreach ($property_definitions as $property_name => $property_definition) {
+         if ($property_definition instanceof DataReferenceDefinitionInterface) {
+-          $target_definition = $property_definition->getTargetDefinition();
+-          assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
+-          $reference_property_names[] = $property_name . ':' . $target_definition->getEntityTypeId();
++          $item_class = $definition->getClass();
++          if (method_exists($item_class, 'getReferenceableEntityTypes')) {
++            $field_definition = $definition->getFieldDefinition();
++            $target_type_bundles = $item_class::getReferenceableEntityTypes($field_definition);
++            foreach ($target_type_bundles as $entity_type_id => $bundles) {
++              $reference_property_names[] = $property_name . ':' . $entity_type_id;
++            }
++          }
++          else {
++            $target_definition = $property_definition->getTargetDefinition();
++            assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
++            $reference_property_names[] = $property_name . ':' . $target_definition->getEntityTypeId();
++          }
+         }
+       }
+       return $reference_property_names;
+diff --git a/core/modules/jsonapi/src/IncludeResolver.php b/core/modules/jsonapi/src/IncludeResolver.php
+index e68c9b218e..9a5e950a5d 100644
+--- a/core/modules/jsonapi/src/IncludeResolver.php
++++ b/core/modules/jsonapi/src/IncludeResolver.php
+@@ -6,7 +6,7 @@
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\Field\FieldItemListInterface;
+-use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
++use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
+ use Drupal\jsonapi\Access\EntityAccessChecker;
+ use Drupal\jsonapi\Context\FieldResolver;
+ use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
+@@ -136,10 +136,19 @@ protected function resolveIncludeTree(array $include_tree, Data $data, Data $inc
+           continue;
+         }
+         $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+-        assert(!empty($target_type));
+-        foreach ($field_list as $field_item) {
+-          assert($field_item instanceof EntityReferenceItem);
+-          $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
++        if (!empty($target_type)) {
++          foreach ($field_list as $field_item) {
++            assert($field_item instanceof EntityReferenceItemInterface);
++            $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
++          }
++        }
++        else {
++          foreach ($field_list as $field_item) {
++            assert($field_item instanceof EntityReferenceItemInterface);
++            // Support entity reference fields, which don't have the referenced
++            // target type stored in settings.
++            $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
++          }
+         }
+       }
+       foreach ($references as $target_type => $ids) {
+diff --git a/core/modules/jsonapi/src/ResourceType/ResourceTypeRepository.php b/core/modules/jsonapi/src/ResourceType/ResourceTypeRepository.php
+index fe508b9708..eb636fde44 100644
+--- a/core/modules/jsonapi/src/ResourceType/ResourceTypeRepository.php
++++ b/core/modules/jsonapi/src/ResourceType/ResourceTypeRepository.php
+@@ -15,6 +15,7 @@
+ use Drupal\Core\Entity\FieldableEntityInterface;
+ use Drupal\Core\Field\FieldDefinitionInterface;
+ use Drupal\Core\Installer\InstallerKernel;
++use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
+ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
+ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
+@@ -425,29 +426,40 @@ protected function calculateRelatableResourceTypes(ResourceType $resource_type,
+   protected function getRelatableResourceTypesFromFieldDefinition(FieldDefinitionInterface $field_definition, array $resource_types) {
+     $item_definition = $field_definition->getItemDefinition();
+     $entity_type_id = $item_definition->getSetting('target_type');
+-    $handler_settings = $item_definition->getSetting('handler_settings');
+-    $target_bundles = empty($handler_settings['target_bundles']) ? $this->getAllBundlesForEntityType($entity_type_id) : $handler_settings['target_bundles'];
+     $relatable_resource_types = [];
++    $item_class = $item_definition->getClass();
++    if (is_subclass_of($item_class, EntityReferenceItemInterface::class)) {
++      $target_type_bundles = $item_class::getReferenceableBundles($field_definition);
++    }
++    else {
++      $handler_settings = $item_definition->getSetting('handler_settings');
+ 
+-    foreach ($target_bundles as $target_bundle) {
+-      if ($resource_type = static::lookupResourceType($resource_types, $entity_type_id, $target_bundle)) {
+-        $relatable_resource_types[] = $resource_type;
+-      }
+-      // Do not warn during the site installation since system integrity
+-      // is not guaranteed in this period and the warnings may pop up falsy,
+-      // adding confusion to the process.
+-      elseif (!InstallerKernel::installationAttempted()) {
+-        trigger_error(
+-          sprintf(
+-            'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist. Please take action.',
+-            $field_definition->getName(),
+-            $field_definition->getTargetEntityTypeId(),
+-            $field_definition->getTargetBundle(),
+-            $entity_type_id,
+-            $target_bundle
+-          ),
+-          E_USER_WARNING
+-        );
++      $has_target_bundles = isset($handler_settings['target_bundles']) && !empty($handler_settings['target_bundles']);
++      $target_bundles = $has_target_bundles ? $handler_settings['target_bundles'] : $this->getAllBundlesForEntityType($entity_type_id);
++      $target_type_bundles = [$entity_type_id => $target_bundles];
++    }
++
++    foreach ($target_type_bundles as $entity_type_id => $target_bundles) {
++      foreach ($target_bundles as $target_bundle) {
++        if ($resource_type = static::lookupResourceType($resource_types, $entity_type_id, $target_bundle)) {
++          $relatable_resource_types[] = $resource_type;
++        }
++        // Do not warn during site installation since system integrity
++        // is not guaranteed during this period and may cause confusing and
++        // unnecessary warnings.
++        elseif (!InstallerKernel::installationAttempted()) {
++          trigger_error(
++            sprintf(
++              'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist. Please take action.',
++              $field_definition->getName(),
++              $field_definition->getTargetEntityTypeId(),
++              $field_definition->getTargetBundle(),
++              $entity_type_id,
++              $target_bundle
++            ),
++            E_USER_WARNING
++          );
++        }
+       }
+     }
+ 
