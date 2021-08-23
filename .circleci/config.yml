@@ -26,7 +26,7 @@ commands:
     steps:
       - kubernetes/install
       - helm/install-helm-client:
-          version: v3.2.1
+          version: v3.6.3
       - checkout:
           path: ~/git
       - attach_workspace:
