@@ -3,11 +3,13 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.moj_categories.field_featured_tiles
     - field.field.taxonomy_term.moj_categories.field_legacy_landing_page
     - field.field.taxonomy_term.moj_categories.field_moj_prisons
     - field.field.taxonomy_term.moj_categories.field_prison_categories
     - taxonomy.vocabulary.moj_categories
   module:
+    - dynamic_entity_reference
     - field_group
     - path
     - text
@@ -41,6 +43,16 @@ content:
       placeholder: ''
       rows: 5
     third_party_settings: {  }
+  field_featured_tiles:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 40
+      placeholder: ''
+    third_party_settings: {  }
+    type: dynamic_entity_reference_default
+    region: content
   field_legacy_landing_page:
     weight: 3
     settings:
