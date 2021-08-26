@@ -16,9 +16,9 @@ id: taxonomy_term.moj_categories.field_featured_tiles
 field_name: field_featured_tiles
 entity_type: taxonomy_term
 bundle: moj_categories
-label: 'Featured tiles'
+label: 'Featured tiles list'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
