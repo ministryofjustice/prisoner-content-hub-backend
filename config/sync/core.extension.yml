@@ -15,6 +15,7 @@ module:
   datetime: 0
   decoupled_router: 0
   diff: 0
+  dynamic_entity_reference: 0
   editor: 0
   elasticsearch_connector: 0
   entity: 0
