@@ -3,12 +3,14 @@
 /**
  * This is a NAME.deploy.php file. It contains "deploy" functions. These are
  * one-time functions that run *after* config is imported during a deployment.
- * These are a higher level alternative to hook_update_n and hook_post_update_NAME
- * functions. See https://www.drush.org/latest/deploycommand/#authoring-update-functions
- * for a detailed comparison.
+ * These are a higher level alternative to hook_update_n and
+ * hook_post_update_NAME functions. See
+ * https://www.drush.org/latest/deploycommand/#authoring-update-functions for a
+ * detailed comparison.
  */
 
 
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
@@ -111,4 +113,26 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
     return 'Updated ' . $sandbox['current'] . ' paths';
   }
 
+}
+
+/**
+ * Bulk update paths for content and taxonomy terms.
+ */
+function prisoner_content_hub_profile_deploy_category_tiles() {
+  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
+  $terms = Term::loadMultiple($result);
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $featured_tiles_value = [];
+    $featured_content = \Drupal::service('moj_resources.category_featured_content_api_class')->CategoryFeaturedContentApiEndpoint($term->id(), 50, 0);
+    foreach ($featured_content as $item) {
+      $featured_tiles_value[] = [
+        'target_id' => $item['id'],
+        'target_type' => $item['content_type'] == 'series' ? 'taxonomy_term' : 'node',
+      ];
+    }
+    $term->set('field_featured_tiles', $featured_tiles_value);
+    $term->save();
+  }
 }
