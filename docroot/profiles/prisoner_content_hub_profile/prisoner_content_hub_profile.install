@@ -127,3 +127,19 @@ function prisoner_content_hub_profile_update_8013() {
     $file_usage->add($file, 'file', 'node', $row->entity_id);
   }
 }
+
+/**
+ * Update content assigned with more than one series, to be part of just one
+ * series.
+ */
+function prisoner_content_hub_profile_update_8014() {
+  $query = \Drupal::entityQuery('node')->condition('field_moj_series.%delta', 0, '>')->accessCheck(FALSE);
+  $results = $query->execute();
+  $nodes = Node::loadMultiple($results);
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $field_value = $node->get('field_moj_series')->get(0)->getValue();
+    $node->set('field_moj_series', $field_value);
+    $node->save();
+  }
+}
