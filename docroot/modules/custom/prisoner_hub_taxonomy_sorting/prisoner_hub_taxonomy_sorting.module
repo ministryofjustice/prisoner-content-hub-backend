@@ -28,10 +28,10 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
       /* @var \Drupal\taxonomy\TermInterface $term */
       $sort_by_value = $term->get('field_sort_by')->getValue();
       if (in_array($sort_by_value[0]['value'], ['season_and_episode_desc', 'season_and_episode_asc'])) {
-        $terms_with_episode_sorting[] = ['value' => [$term->id()]];
+        $terms_with_episode_sorting[] = ['value' => $term->id()];
       }
       elseif (in_array($sort_by_value[0]['value'], ['release_date_desc', 'release_date_asc'])) {
-        $terms_with_release_date_sorting[] = ['value' => [$term->id()]];
+        $terms_with_release_date_sorting[] = ['value' => $term->id()];
       }
     }
 
@@ -41,10 +41,7 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
     else {
       $element['group_season_and_episode_number']['#states'] = [
         'visible' => [
-          ':input[name="field_moj_series[]"]' =>
-            [
-              $terms_with_episode_sorting,
-            ],
+          ':input[name="field_moj_series"]' => $terms_with_episode_sorting
         ]
       ];
     }
@@ -55,10 +52,7 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
     else {
       $element['group_release_date']['#states'] = [
         'visible' => [
-          ':input[name="field_moj_series[]"]' =>
-            [
-              $terms_with_release_date_sorting,
-            ],
+          ':input[name="field_moj_series"]' => $terms_with_release_date_sorting
         ]
       ];
     }
