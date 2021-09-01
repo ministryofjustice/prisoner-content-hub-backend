@@ -22,3 +22,14 @@ function prisoner_content_hub_profile_toolbar_alter(&$items) {
   // users to prisons).
   unset($items['home']);
 }
+
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Disable all email messages from being sent, as they just result in an error
+ * in the logs.
+ */
+function prisoner_content_hub_profile_mail_alter(&$message) {
+  $message['send'] = FALSE;
+}
