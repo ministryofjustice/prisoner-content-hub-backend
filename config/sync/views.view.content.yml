@@ -1437,7 +1437,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          operator: '='
+          operator: contains
           value: ''
           group: 1
           exposed: true
@@ -1447,9 +1447,17 @@ display:
             description: ''
             use_operator: true
             operator: field_moj_description_value_op
-            operator_limit_selection: false
+            operator_limit_selection: true
             operator_list:
               contains: contains
+              word: word
+              allwords: allwords
+              not: not
+              shorterthan: shorterthan
+              longerthan: longerthan
+              regular_expression: regular_expression
+              empty: empty
+              'not empty': 'not empty'
             identifier: field_moj_description_value
             required: false
             remember: false
