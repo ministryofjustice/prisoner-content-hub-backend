@@ -29,7 +29,7 @@ function prisoner_hub_taxonomy_sorting_update_9002(&$sandbox) {
     $sandbox['result'] = $query->execute();
   }
 
-  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 20, TRUE));
 
   foreach ($nodes as $node) {
     /** @var \Drupal\node\NodeInterface $node */
