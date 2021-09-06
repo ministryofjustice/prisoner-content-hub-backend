@@ -38,3 +38,32 @@ function prisoner_hub_taxonomy_sorting_deploy_copy_moj_date_2() {
   Drupal::database()->query("INSERT INTO node_revision__field_release_date SELECT * FROM node_revision__field_moj_date;");
 }
 
+/**
+ * Bulk populate values for series_sort_value field.
+ */
+function prisoner_hub_taxonomy_sorting_deploy_set_series_value_field(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $query = \Drupal::entityQuery('node');
+    // Get all nodes tagged with "Youth female".
+    $query->exists('field_moj_series');
+    $query->accessCheck(FALSE);
+    $sandbox['result'] = $query->execute();
+  }
+
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
+
+  foreach ($nodes as $node) {
+    /** @var \Drupal\node\NodeInterface $node */
+    // Resave the node to invoke hook_entity_presave().
+    $node->save();
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['progress'];
+  }
+  return 'Processed nodes: ' . $sandbox['progress'];
+}
+
+
