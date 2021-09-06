@@ -47,7 +47,6 @@ function prisoner_hub_taxonomy_sorting_deploy_set_series_value_field(&$sandbox) 
     $query = \Drupal::entityQuery('node');
     // Get all nodes tagged with "Youth female".
     $query->exists('field_moj_series');
-    $query->accessCheck(FALSE);
     $sandbox['result'] = $query->execute();
   }
 
