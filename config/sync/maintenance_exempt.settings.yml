@@ -1,0 +1,3 @@
+exempt_ips: ''
+exempt_urls: "/health\r\n/jsonapi/*\r\n/api/*\r\n/v2/api/*"
+query_key: ''
