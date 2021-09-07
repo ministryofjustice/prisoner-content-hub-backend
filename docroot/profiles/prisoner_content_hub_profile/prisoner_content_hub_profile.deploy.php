@@ -112,3 +112,29 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
   }
 
 }
+
+
+/**
+ * Update categories to have the same values for prison and prison category
+ * fields as their landing pages.
+ */
+function prisoner_content_hub_profile_deploy_update_categories() {
+  $result = \Drupal::entityQuery('node')->condition('type', 'landing_page')->accessCheck(FALSE)->execute();
+  $nodes = Node::loadMultiple($result);
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    if ($node->hasField('field_moj_landing_page_term')) {
+      $ref_entities = $node->get('field_moj_landing_page_term')->referencedEntities();
+      if (empty($ref_entities)) {
+        continue;
+      }
+      /** @var \Drupal\taxonomy\TermInterface $category_term */
+      $category_term = current($ref_entities);
+      $category_term->set('field_moj_prisons', $node->get('field_moj_prisons')->getValue());
+      $category_term->set('field_prison_categories', $node->get('field_prison_categories')->getValue());
+      $category_term->set('status', $node->get('status')->getValue());
+      $category_term->save();
+    }
+  }
+
+}
