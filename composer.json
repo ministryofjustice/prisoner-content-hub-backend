@@ -30,6 +30,7 @@
         "drupal/jsonapi_image_styles": "^2.0@beta",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
+        "drupal/maintenance_exempt": "1.x-dev",
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^4.1",
         "drupal/monolog": "^2.0",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8378dc8ab31f845b96c46ea954455517",
+    "content-hash": "e3ad04e0c2a9eb3a5e40bd2260bad410",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3131,6 +3131,56 @@
                 "source": "https://git.drupalcode.org/project/jsonapi_search_api",
                 "issues": "https://www.drupal.org/project/issues/jsonapi_search_api"
             }
+        },
+        {
+            "name": "drupal/maintenance_exempt",
+            "version": "dev-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/maintenance_exempt.git",
+                "reference": "600d77d213d58c1c2c2e01d4a577b4640f00472e"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.2+2-dev",
+                    "datestamp": "1593615521",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "RandallKent",
+                    "homepage": "https://www.drupal.org/user/164904"
+                },
+                {
+                    "name": "malcomio",
+                    "homepage": "https://www.drupal.org/user/418511"
+                },
+                {
+                    "name": "webchick",
+                    "homepage": "https://www.drupal.org/user/24967"
+                }
+            ],
+            "description": "Allow exemption of maintenance mode based on either certain set IP addresses or matching a set query string value.",
+            "homepage": "https://www.drupal.org/project/maintenance_exempt",
+            "support": {
+                "source": "https://git.drupalcode.org/project/maintenance_exempt"
+            },
+            "time": "2020-07-01T14:58:15+00:00"
         },
         {
             "name": "drupal/memcache",
@@ -13598,6 +13648,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -14621,6 +14672,7 @@
         "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_page_limit": 10,
         "drupal/jsonapi_search_api": 5,
+        "drupal/maintenance_exempt": 20,
         "drupal/taxonomy_machine_name": 20,
         "drupal/theme_switcher": 20,
         "drupal/views_entity_form_field": 10
