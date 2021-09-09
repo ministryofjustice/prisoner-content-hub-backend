@@ -112,8 +112,7 @@ function prisoner_hub_taxonomy_sorting_entity_presave(Drupal\Core\Entity\EntityI
           // to 0 and warn the user.  This should only ever happen if content is
           // being bulk updated. (As when editing the content directly, the
           // fields are made mandatory and dont allow numbers outside the range).
-          $link = Link::fromTextAndUrl($entity->label(), $entity->toUrl());
-          \Drupal::messenger()->addWarning(t('Missing season or episode number for :link. This could effect how the content is sorted within a series.', [':link' => $link->toString()]));
+          \Drupal::messenger()->addWarning(t('Missing season or episode number for :content. This could effect how the content is sorted within a series.', [':content' => $entity->label()]));
           $calculated_sort_value = 0;
         }
         break;
@@ -127,8 +126,7 @@ function prisoner_hub_taxonomy_sorting_entity_presave(Drupal\Core\Entity\EntityI
           // warn the user.  This should only ever happen if content is being
           // bulk updated. (As when editing the content directly, the field is
           // made mandatory).
-          $link = Link::fromTextAndUrl($entity->label(), $entity->toUrl());
-          \Drupal::messenger()->addWarning(t('Missing release date for :link. This could effect how the content is sorted within a series.', [':link' => $link->toString()]));
+          \Drupal::messenger()->addWarning(t('Missing release date for :content. This could effect how the content is sorted within a series.', [':content' => $entity->label()]));
           $calculated_sort_value = 0;
         }
         break;
