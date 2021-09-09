@@ -43,22 +43,20 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
       hide($element['group_season_and_episode_number']);
     }
     else {
-      $element['group_season_and_episode_number']['#states'] = [
-        'visible' => [
-          ':input[name="field_moj_series"]' => $terms_with_episode_sorting
-        ]
-      ];
+      $element['group_season_and_episode_number']['#states']['visible'][':input[name="field_moj_series"]'] = $terms_with_episode_sorting;
+      $element['field_moj_season']['widget'][0]['value']['#states']['required'][':input[name="field_moj_series"]'] = $terms_with_episode_sorting;
+      $element['field_moj_episode']['widget'][0]['value']['#states']['required'][':input[name="field_moj_series"]'] = $terms_with_episode_sorting;
     }
 
     if (empty($terms_with_release_date_sorting)) {
       hide($element['group_release_date']);
     }
     else {
-      $element['group_release_date']['#states'] = [
-        'visible' => [
-          ':input[name="field_moj_series"]' => $terms_with_release_date_sorting
-        ]
-      ];
+      $element['group_release_date']['#states']['visible'][':input[name="field_moj_series"]'] = $terms_with_release_date_sorting;
+      // Currently we cannot set a required state for field_release_date.
+      // See https://www.drupal.org/project/drupal/issues/2419131
+      // However, this field has a default value (of the current date),
+      // so it's less likely to not be set.
     }
   }
 }
