@@ -131,6 +131,9 @@
             },
             "drupal/views_ef_fieldset": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
+            },
+            "drupal/jsonapi_image_styles": {
+                "Issue #3232157: Image styles are generated for other types of file entites": "patches/jsonapi_image_styles-3232157-image-styles-are-generated-for-other-types-of-file-entities-2.patch"
             }
         },
         "patches-ignore": {
