@@ -32,7 +32,7 @@
         "drupal/jsonapi_search_api": "^1.0@RC",
         "drupal/maintenance_exempt": "1.x-dev",
         "drupal/memcache": "^2.0",
-        "drupal/migrate_tools": "^4.1",
+        "drupal/migrate_tools": "^5.0",
         "drupal/monolog": "^2.0",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
@@ -164,6 +164,7 @@
         "drupal/console": "^1.9",
         "drupal/core-dev": "^9.0.0",
         "drupal/devel": "^4.0",
+        "phpspec/prophecy-phpunit": "^2",
         "weitzman/drupal-test-traits": "^1.5"
     }
 }
