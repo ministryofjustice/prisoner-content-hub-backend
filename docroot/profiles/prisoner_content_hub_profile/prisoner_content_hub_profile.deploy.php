@@ -116,9 +116,14 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
 /**
  * Update description field on series to have the content from summary field.
  */
-function prisoner_content_hub_profile_deploy_copy_summary() {
-  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
-  $terms = Term::loadMultiple($result);
+function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['result'] = $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
+  }
+
+  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], PRISONER_CONTENT_HUB_PROFILE_BATCH_LIMIT, TRUE));
+
   /** @var \Drupal\taxonomy\TermInterface $term */
   foreach ($terms as $term) {
     $term->set('description', $term->get('field_content_summary')->getValue());
