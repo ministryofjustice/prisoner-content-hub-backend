@@ -3,9 +3,10 @@
 /**
  * This is a NAME.deploy.php file. It contains "deploy" functions. These are
  * one-time functions that run *after* config is imported during a deployment.
- * These are a higher level alternative to hook_update_n and hook_post_update_NAME
- * functions. See https://www.drush.org/latest/deploycommand/#authoring-update-functions
- * for a detailed comparison.
+ * These are a higher level alternative to hook_update_n and
+ * hook_post_update_NAME functions. See
+ * https://www.drush.org/latest/deploycommand/#authoring-update-functions for a
+ * detailed comparison.
  */
 
 
@@ -110,7 +111,31 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
   else {
     return 'Updated ' . $sandbox['current'] . ' paths';
   }
+}
 
+/**
+ * Update series to reference categories.
+ */
+function prisoner_content_hub_profile_deploy_update_series() {
+  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
+  $terms = Term::loadMultiple($result);
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $nodes_result = \Drupal::entityQuery('node')->condition('field_moj_series', $term->id())->execute();
+    $nodes = Node::loadMultiple($nodes_result);
+    $new_category_values = [];
+    /** @var \Drupal\node\NodeInterface $node */
+    foreach ($nodes as $node) {
+      $category_values = $node->get('field_moj_top_level_categories')->getValue();
+      foreach ($category_values as $category_value) {
+        $new_category_values[$category_value['target_id']] = $category_value;
+      }
+    }
+    $new_category_values = array_values($new_category_values);
+    $term->set('field_category', $new_category_values);
+    $term->save();
+  }
 }
 
 /**
