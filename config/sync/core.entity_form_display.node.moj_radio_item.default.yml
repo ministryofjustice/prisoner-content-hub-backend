@@ -49,8 +49,9 @@ third_party_settings:
         - field_moj_series
         - group_season_and_episode_number
         - group_release_date
+        - group_category
       parent_name: ''
-      weight: 11
+      weight: 9
       format_type: fieldset
       region: content
       format_settings:
@@ -86,6 +87,19 @@ third_party_settings:
         id: ''
         classes: ''
       label: 'Which date would you like to assign to this content?'
+    group_category:
+      children:
+        - field_moj_top_level_categories
+      parent_name: group_series
+      weight: 14
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: true
+      label: Category
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
 id: node.moj_radio_item.default
@@ -107,7 +121,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 10
+    weight: 11
     settings:
       display_label: true
     third_party_settings: {  }
@@ -131,7 +145,7 @@ content:
     type: number
     region: content
   field_moj_prisons:
-    weight: 16
+    weight: 17
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -181,13 +195,9 @@ content:
     region: content
   field_moj_top_level_categories:
     weight: 9
-    settings:
-      autocomplete: false
-      match_operator: CONTAINS
-      match_limit: 10
-      width: 100%
+    settings: {  }
     third_party_settings: {  }
-    type: select2_entity_reference
+    type: options_buttons
     region: content
   field_prison_categories:
     weight: 15

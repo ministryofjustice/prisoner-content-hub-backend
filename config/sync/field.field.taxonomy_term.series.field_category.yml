@@ -1,19 +1,19 @@
-uuid: d9d16b3d-8fe8-47eb-a511-84aa3590d7b6
+uuid: 78f5ccfb-0dd7-4100-9896-7706124a1b5c
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_top_level_categories
-    - node.type.moj_radio_item
+    - field.storage.taxonomy_term.field_category
     - taxonomy.vocabulary.moj_categories
-id: node.moj_radio_item.field_moj_top_level_categories
-field_name: field_moj_top_level_categories
-entity_type: node
-bundle: moj_radio_item
+    - taxonomy.vocabulary.series
+id: taxonomy_term.series.field_category
+field_name: field_category
+entity_type: taxonomy_term
+bundle: series
 label: Category
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
