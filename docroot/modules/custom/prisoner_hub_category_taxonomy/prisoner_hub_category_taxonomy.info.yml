@@ -1,0 +1,7 @@
+name: 'Prisoner Hub Category Taxonomy'
+type: module
+description: 'Provides custom enhacements to Drupals taxonomy fields, to support users in categorising their content.'
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - field_group:field_group

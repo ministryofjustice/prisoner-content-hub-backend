@@ -60,49 +60,6 @@ function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(arra
       // so it's less likely to not be set.
     }
   }
-
-  if (isset($element['group_series'])) {
-    $element['no_series'] = [
-      '#title' => 'This content is not part of any series',
-      '#type' => 'checkbox',
-      '#weight' => 99,
-      '#group' => 'group_series'
-    ];
-    $element['group_category']['#states']['visible'][':input[name="no_series"]']['checked'] = TRUE;
-    $element['group_season_and_episode_number']['#states']['visible'][':input[name="no_series"]']['checked'] = FALSE;
-    $element['group_release_date']['#states']['visible'][':input[name="no_series"]']['checked'] = FALSE;
-    $element['field_moj_series']['#states']['visible'][':input[name="no_series"]']['checked'] = FALSE;
-
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function prisoner_hub_taxonomy_sorting_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if ($form_state->getFormObject() instanceof NodeForm) {
-    array_unshift($form['actions']['submit']['#submit'],'prisoner_hub_taxonomy_sorting_node_form_submit');
-  }
-  $sopt =1;
-}
-
-function prisoner_hub_taxonomy_sorting_node_form_submit(&$form, FormStateInterface &$form_state) {
-  $stop = 1;
-  if ($form_state->getValue('no_series')) {
-    $form_state->unsetValue('field_moj_series');
-    $form_state->unsetValue('field_moj_episode');
-    $form_state->unsetValue('field_moj_season');
-    $form_state->unsetValue('field_release_date');
-    $stop = 1;
-  }
-else {
-    /** @var ContentEntityInterface $entity */
-    //$entity = $form_state->getFormObject()->getEntity();
-    // unset field.
-    //$entity->set('field_moj_top_level_categories', NULL);
-    $form_state->unsetValue('field_moj_top_level_categories');
-    //$val = $form_state->getValue('field_moj_top_level_categories');
-  }
 }
 
 /**
