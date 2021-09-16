@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_series
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
+    - field.field.node.moj_pdf_item.field_not_in_series
     - field.field.node.moj_pdf_item.field_prison_categories
     - field.field.node.moj_pdf_item.field_release_date
     - node.type.moj_pdf_item
@@ -112,6 +113,16 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_not_in_series:
+    weight: 18
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   field_prison_categories:
     weight: 13

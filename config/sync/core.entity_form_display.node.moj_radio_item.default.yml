@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_series
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
+    - field.field.node.moj_radio_item.field_not_in_series
     - field.field.node.moj_radio_item.field_prison_categories
     - field.field.node.moj_radio_item.field_release_date
     - image.style.thumbnail
@@ -47,9 +48,9 @@ third_party_settings:
     group_series:
       children:
         - field_moj_series
+        - field_not_in_series
         - group_season_and_episode_number
         - group_release_date
-        - group_category
       parent_name: ''
       weight: 9
       format_type: fieldset
@@ -65,7 +66,7 @@ third_party_settings:
         - field_moj_season
         - field_moj_episode
       parent_name: group_series
-      weight: 12
+      weight: 13
       format_type: fieldset
       region: content
       format_settings:
@@ -78,7 +79,7 @@ third_party_settings:
       children:
         - field_release_date
       parent_name: group_series
-      weight: 13
+      weight: 14
       format_type: fieldset
       region: content
       format_settings:
@@ -90,15 +91,15 @@ third_party_settings:
     group_category:
       children:
         - field_moj_top_level_categories
-      parent_name: group_series
-      weight: 14
+      parent_name: ''
+      weight: 10
       format_type: fieldset
       region: content
       format_settings:
+        description: 'Please enter a category for the content, this is required if no series has been selected.'
+        required_fields: true
         id: ''
         classes: ''
-        description: ''
-        required_fields: true
       label: Category
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
@@ -138,14 +139,14 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_episode:
-    weight: 14
+    weight: 13
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_moj_prisons:
-    weight: 17
+    weight: 28
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -195,12 +196,23 @@ content:
     region: content
   field_moj_top_level_categories:
     weight: 9
-    settings: {  }
+    settings:
+      autocomplete: false
+      match_operator: CONTAINS
+      match_limit: 10
+      width: 100%
     third_party_settings: {  }
-    type: options_buttons
+    type: select2_entity_reference
+    region: content
+  field_not_in_series:
+    weight: 12
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_prison_categories:
-    weight: 15
+    weight: 27
     settings: {  }
     third_party_settings: {  }
     type: options_buttons

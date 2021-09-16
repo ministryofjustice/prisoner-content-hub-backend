@@ -1,0 +1,18 @@
+uuid: 798a4251-720d-4112-9d81-befdb12f9412
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_not_in_series
+field_name: field_not_in_series
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

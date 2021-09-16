@@ -1,16 +1,16 @@
-client_key: ''
+client_key: 'https://7e038c55ab3547be95934595b77723f5@o345774.ingest.sentry.io/5377063'
 environment: ''
 release: ''
-fatal_error_handler: false
+fatal_error_handler: true
 fatal_error_handler_memory: 2560
 log_levels:
-  1: 0
-  2: 0
-  3: 0
-  4: 0
-  5: 0
-  6: 0
-  7: 0
+  1: 1
+  2: 2
+  3: 3
+  4: 4
+  5: 5
+  6: 6
+  7: 7
   8: 0
 drush_error_handler: false
 stack: true
@@ -24,3 +24,5 @@ ca_cert: ''
 ignored_channels: {  }
 _core:
   default_config_hash: o1Lgj8FSHbxxBeB7nWl-QtfAb_UCG7wFxLXti23jFkE
+browser_traces_sample_rate: null
+auto_session_tracking: false

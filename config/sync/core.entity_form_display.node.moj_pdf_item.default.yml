@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_series
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
+    - field.field.node.moj_pdf_item.field_not_in_series
     - field.field.node.moj_pdf_item.field_prison_categories
     - field.field.node.moj_pdf_item.field_release_date
     - image.style.thumbnail
@@ -46,10 +47,11 @@ third_party_settings:
     group_series:
       children:
         - field_moj_series
+        - field_not_in_series
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 10
+      weight: 7
       format_type: fieldset
       region: content
       format_settings:
@@ -63,7 +65,7 @@ third_party_settings:
         - field_moj_season
         - field_moj_episode
       parent_name: group_series
-      weight: 18
+      weight: 19
       format_type: fieldset
       region: content
       format_settings:
@@ -76,7 +78,7 @@ third_party_settings:
       children:
         - field_release_date
       parent_name: group_series
-      weight: 19
+      weight: 20
       format_type: fieldset
       region: content
       format_settings:
@@ -85,6 +87,19 @@ third_party_settings:
         id: ''
         classes: ''
       label: 'Which date would you like to assign to this content?'
+    group_category:
+      children:
+        - field_moj_top_level_categories
+      parent_name: ''
+      weight: 8
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: true
+      label: Category
 _core:
   default_config_hash: Oo1-wQanlhvJ6-TSJzG1NYGLiNQTTRYKYbcOAPOE09g
 id: node.moj_pdf_item.default
@@ -143,7 +158,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 7
+    weight: 10
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -179,6 +194,13 @@ content:
       width: 100%
     third_party_settings: {  }
     type: select2_entity_reference
+    region: content
+  field_not_in_series:
+    weight: 18
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_prison_categories:
     weight: 16
