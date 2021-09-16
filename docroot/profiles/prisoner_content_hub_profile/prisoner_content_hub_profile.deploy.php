@@ -137,3 +137,48 @@ function prisoner_content_hub_profile_deploy_update_series() {
     $term->save();
   }
 }
+
+/**
+ * Update content based on if it has a series.
+ *
+ * Content with a series, will have its category removed, and field_not_in_series set to 0.
+ * Content not in a series, will have field_not_in_series set to 1.
+ */
+function prisoner_content_hub_profile_deploy_remove_categories_from_content_with_series(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $query = \Drupal::entityQuery('node');
+    // Perform on unpublished nodes.
+    $query->condition('type', ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'], 'IN');
+    $query->accessCheck(FALSE);
+    $sandbox['result'] = $query->execute();
+  }
+
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $series_entities = $node->get('field_moj_series')->referencedEntities();
+    if (empty($series_entities)) {
+      $node->set('field_not_in_series', 1);
+      // Ensure all series related fields are blank.
+      $node->set('field_moj_series', NULL);
+      $node->set('field_moj_episode', NULL);
+      $node->set('field_moj_season', NULL);
+      $node->set('field_release_date', NULL);
+    }
+    else {
+      $node->set('field_moj_top_level_categories', NULL);
+      $node->set('field_not_in_series', 0);
+    }
+    $node->save();
+    $sandbox['progress']++;
+  }
+
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['progress'];
+  }
+  return 'Processed nodes: ' . $sandbox['progress'];
+
+}
