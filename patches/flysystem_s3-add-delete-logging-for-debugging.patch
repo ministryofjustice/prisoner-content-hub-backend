@@ -1,0 +1,12 @@
+diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
+index 3cc4087..9f84db9 100644
+--- a/src/File/FlysystemS3FileSystem.php
++++ b/src/File/FlysystemS3FileSystem.php
+@@ -238,6 +238,7 @@ class FlysystemS3FileSystem extends FileSystem {
+    * @codeCoverageIgnore
+    */
+   public function delete($path) {
++    $this->logger->warning('File deleted from S3: !path \n !debug', ['!path' => $path, '!debug' => print_r($_SERVER, TRUE)]);
+     if (method_exists($this->fileSystem, 'delete')) {
+       return $this->fileSystem->delete($path);
+     }
