@@ -56,12 +56,11 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: 'Select which series this episode belongs to. Then, select either a season and episode number <strong>or</strong> a date.'
-        open: '1'
+        description: 'Select the series this content belongs to. Then enter either a session and episode number or the date of release.'
         required_fields: true
         id: ''
         classes: ''
-      label: 'How does this episode fit into a Series?'
+      label: 'Does this content fit into a Series?'
     group_season_and_episode_number:
       children:
         - field_moj_season
@@ -97,10 +96,10 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
+        description: 'Please enter and select the category for this content. This is required if no series has been selected for the content.'
+        required_fields: true
         id: ''
         classes: ''
-        description: ''
-        required_fields: true
       label: Category
 _core:
   default_config_hash: B5OiZXT0G73JfRrJJusCp_kfo5rvcSOdsoUw9IGpDSo
