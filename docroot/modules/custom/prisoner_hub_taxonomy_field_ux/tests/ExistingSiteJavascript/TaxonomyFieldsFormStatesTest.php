@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_category_taxonomy\ExistingSiteJavascript;
+namespace Drupal\Tests\prisoner_hub_taxonomy_field_ux\ExistingSiteJavascript;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
- * Javascript tests to ensure that the category and series fields are shown correctly.
+ * Functional tests to ensure that prison context jsonapi paths work correctly.
  *
- * @group prisoner_hub_category_taxonomy
+ * @group prisoner_hub_taxonomy_field_ux
  */
-class CategoryFieldTest extends ExistingSiteWebDriverTestBase {
+class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
 
   /**
    * The Studio Administrator user.
@@ -64,20 +64,20 @@ class CategoryFieldTest extends ExistingSiteWebDriverTestBase {
     $this->localContentManagerUser->save();
     $this->localContentManagerUser->passRaw = 'password';
 
-    // Create some taxonomy terms to test with.
+    // Create taxonomy terms with field_sort_by values.
     // These will be automatically cleaned up at the end of the test.
-    $series_vocab = Vocabulary::load('series');
-    $this->createTerm($series_vocab);
-    $categories_vocab = Vocabulary::load('moj_categories');
-    $this->createTerm($categories_vocab);
+    $vocab = Vocabulary::load('series');
+    $this->episodeNumberTerm = $this->createTerm($vocab, ['name' => 'Series 1', 'field_sort_by' => 'season_and_episode_asc']);
+    $this->releaseDateTerm = $this->createTerm($vocab, ['name' => 'Series 2', 'field_sort_by' => 'release_date_desc']);
   }
 
   /**
    * Test the correct fields appear when logged in as a studio admin.
    */
-  public function testCategoryFieldsStudioAdmin() {
+  public function testSeriesSortingFieldsStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
     foreach (self::$contentTypes as $contentType) {
+      $this->checkSortingFieldVisibility($contentType);
       $this->checkCategoryFieldVisibility($contentType);
     }
   }
@@ -85,10 +85,10 @@ class CategoryFieldTest extends ExistingSiteWebDriverTestBase {
   /**
    * Test the correct fields appear when logged in as a local content manager.
    */
-  public function testCategoryFieldsLocalContentManager() {
+  public function testSeriesSortingFieldsLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
     foreach (self::$contentTypes as $contentType) {
-      $this->checkCategoryFieldVisibility($contentType);
+      $this->checkSortingFieldVisibility($contentType);
     }
   }
 
@@ -100,21 +100,28 @@ class CategoryFieldTest extends ExistingSiteWebDriverTestBase {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  private function checkCategoryFieldVisibility($content_type) {
+  private function checkSortingFieldVisibility($content_type) {
     $this->visit('/node/add/' . $content_type);
     $web_assert = $this->assertSession();
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
+    $season_field = $page->findField('Season');
+    $episode_field = $page->findField('Episode');
+    $release_date_field = $page->findField('Date');
+    self::assertFalse($season_field->isVisible());
+    self::assertFalse($episode_field->isVisible());
+    self::assertFalse($release_date_field->isVisible());
+
     $series_field = $page->findField('Series');
-    $category_field = $page->findField('Category');
-    self::assertFalse($category_field->isVisible());
-    self::assertTrue($series_field->isVisible());
+    $series_field->setValue($this->episodeNumberTerm->id());
+    self::assertTrue($season_field->isVisible());
+    self::assertTrue($episode_field->isVisible());
+    self::assertFalse($release_date_field->isVisible());
 
-    $not_in_series_field = $page->findField('field_not_in_series[value]');
-    $not_in_series_field->check();
-    self::assertTrue($category_field->isVisible());
-    self::assertFalse($series_field->isVisible());
-
+    $series_field->setValue($this->releaseDateTerm->id());
+    self::assertFalse($season_field->isVisible());
+    self::assertFalse($episode_field->isVisible());
+    self::assertTrue($release_date_field->isVisible());
   }
 
   /**

@@ -48,10 +48,10 @@ module:
   options: 0
   path: 0
   path_alias: 0
-  prisoner_hub_category_taxonomy: 0
   prisoner_hub_cms_help: 0
   prisoner_hub_entity_access: 0
   prisoner_hub_prison_context: 0
+  prisoner_hub_taxonomy_field_ux: 0
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
   rdf: 0
