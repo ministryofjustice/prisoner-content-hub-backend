@@ -1,0 +1,46 @@
+diff --git a/src/Plugin/Field/FieldType/ImageStyleNormalizedFieldItemList.php b/src/Plugin/Field/FieldType/ImageStyleNormalizedFieldItemList.php
+index caa1b70..63edfe3 100644
+--- a/src/Plugin/Field/FieldType/ImageStyleNormalizedFieldItemList.php
++++ b/src/Plugin/Field/FieldType/ImageStyleNormalizedFieldItemList.php
+@@ -21,24 +21,26 @@ protected function computeValue() {
+     $config = \Drupal::config('jsonapi_image_styles.settings');
+     $styles = [];
+     $entity = $this->getEntity();
+-    $uri = ($entity instanceof File) ? $entity->getFileUri() : FALSE;
+-
+-    $defined_styles = ($config->get('image_styles')) ? $config->get('image_styles') : [];
+-    if (!empty(array_filter($defined_styles))) {
+-      foreach ($defined_styles as $key) {
+-        $styles[$key] = ImageStyle::load($key);
++    $uri = ($entity instanceof File && substr($entity->getMimeType(), 0, 5) === 'image') ? $entity->getFileUri() : FALSE;
++
++    if ($uri) {
++      $defined_styles = ($config->get('image_styles')) ? $config->get('image_styles') : [];
++      if (!empty(array_filter($defined_styles))) {
++        foreach ($defined_styles as $key) {
++          $styles[$key] = ImageStyle::load($key);
++        }
++      }
++      else {
++        $styles = ImageStyle::loadMultiple();
+       }
+-    }
+-    else {
+-      $styles = ImageStyle::loadMultiple();
+-    }
+ 
+-    $offset = 0;
+-    foreach ($styles as $name => $style) {
+-      if ($style instanceof ImageStyle) {
+-        $this->list[] = $this->createItem($offset, ['url' => [$name => $style->buildUrl($uri)]]);
++      $offset = 0;
++      foreach ($styles as $name => $style) {
++        if ($style instanceof ImageStyle) {
++          $this->list[] = $this->createItem($offset, ['url' => [$name => $style->buildUrl($uri)]]);
++        }
++        $offset++;
+       }
+-      $offset++;
+     }
+   }
+ 

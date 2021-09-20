@@ -16,7 +16,7 @@
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
-        "drupal/dynamic_entity_reference": "^1.0",
+        "drupal/dynamic_entity_reference": "^1.12",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
         "drupal/field_group": "^3.1",
@@ -31,8 +31,9 @@
         "drupal/jsonapi_image_styles": "^2.0@beta",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
+        "drupal/maintenance_exempt": "1.x-dev",
         "drupal/memcache": "^2.0",
-        "drupal/migrate_tools": "^4.1",
+        "drupal/migrate_tools": "^5.0",
         "drupal/monolog": "^2.0",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
@@ -116,7 +117,8 @@
                 "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-56-private-files-image-styles.patch",
                 "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
                 "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
-                "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch"
+                "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch",
+                "Debug file deletions for https://trello.com/c/ZVSfPcz6/89-fix-the-mysterious-missing-file-issue": "patches/flysystem_s3-add-delete-logging-for-debugging.patch"
             },
             "twistor/stream-util": {
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
@@ -135,6 +137,9 @@
             },
             "drupal/dynamic_entity_reference": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/dynamic_entity_reference-3057556-4.patch"
+            },
+            "drupal/jsonapi_image_styles": {
+                "Issue #3232157: Image styles are generated for other types of file entites": "patches/jsonapi_image_styles-3232157-image-styles-are-generated-for-other-types-of-file-entities-2.patch"
             }
         },
         "patches-ignore": {
@@ -168,6 +173,7 @@
         "drupal/console": "^1.9",
         "drupal/core-dev": "^9.0.0",
         "drupal/devel": "^4.0",
+        "phpspec/prophecy-phpunit": "^2",
         "weitzman/drupal-test-traits": "^1.5"
     }
 }

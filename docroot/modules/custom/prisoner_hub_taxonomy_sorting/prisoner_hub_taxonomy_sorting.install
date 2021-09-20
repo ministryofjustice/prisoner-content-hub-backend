@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for the prisoner_hub_taxonomy_sorting module.
+ */
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Add the series_sort_value field to the node entity type.
+ */
+function prisoner_hub_taxonomy_sorting_update_9001(&$sandbox) {
+  $definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node')['series_sort_value'];
+  \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($definition);
+
+}

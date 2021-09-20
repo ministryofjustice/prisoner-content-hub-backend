@@ -1430,6 +1430,58 @@ display:
           hierarchy: false
           error_message: true
           plugin_id: taxonomy_index_tid
+        field_moj_description_value:
+          id: field_moj_description_value
+          table: node__field_moj_description
+          field: field_moj_description_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_moj_description_value_op
+            label: Description
+            description: ''
+            use_operator: true
+            operator: field_moj_description_value_op
+            operator_limit_selection: true
+            operator_list:
+              contains: contains
+              word: word
+              allwords: allwords
+              not: not
+              shorterthan: shorterthan
+              longerthan: longerthan
+              regular_expression: regular_expression
+              empty: empty
+              'not empty': 'not empty'
+            identifier: field_moj_description_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
       sorts: {  }
       title: Content
       empty:
@@ -1512,45 +1564,67 @@ display:
                   title: General
                   description: ''
                   open: '1'
-                  weight: '-31'
+                  weight: '-35'
                   id: container-2
                   pid: root
                   depth: '1'
                   type: container
                 title:
-                  weight: '-27'
+                  weight: '-33'
                   id: title
                   pid: container-2
                   depth: '2'
                   type: filter
                 nid:
-                  weight: '-26'
+                  weight: '-32'
                   id: nid
                   pid: container-2
                   depth: '2'
                   type: filter
                 type:
-                  weight: '-25'
+                  weight: '-31'
                   id: type
                   pid: container-2
                   depth: '2'
                   type: filter
                 status:
-                  weight: '-24'
+                  weight: '-30'
                   id: status
                   pid: container-2
                   depth: '2'
                   type: filter
                 field_moj_category_featured_item_value:
-                  weight: '-23'
+                  weight: '-29'
                   id: field_moj_category_featured_item_value
                   pid: container-2
                   depth: '2'
                   type: filter
                 uid:
-                  weight: '-22'
+                  weight: '-28'
                   id: uid
                   pid: container-2
+                  depth: '2'
+                  type: filter
+                container-6:
+                  container_type: details
+                  title: Description
+                  description: ''
+                  open: '1'
+                  weight: '-34'
+                  id: container-6
+                  pid: root
+                  depth: '1'
+                  type: container
+                field_moj_description_value_op:
+                  weight: '-35'
+                  id: field_moj_description_value_op
+                  pid: container-6
+                  depth: '2'
+                  type: filter
+                field_moj_description_value:
+                  weight: '-34'
+                  id: field_moj_description_value
+                  pid: container-6
                   depth: '2'
                   type: filter
                 container-1:
@@ -1558,7 +1632,7 @@ display:
                   title: Taxonomy
                   description: ''
                   open: '1'
-                  weight: '-30'
+                  weight: '-31'
                   id: container-1
                   pid: root
                   depth: '1'
@@ -1586,7 +1660,7 @@ display:
                   title: Prisons
                   description: ''
                   open: '1'
-                  weight: '-29'
+                  weight: '-30'
                   id: container-0
                   pid: root
                   depth: '1'
@@ -1608,7 +1682,7 @@ display:
                   title: 'Prison categories'
                   description: ''
                   open: '1'
-                  weight: '-28'
+                  weight: '-29'
                   id: container-5
                   pid: root
                   depth: '1'
@@ -1630,38 +1704,28 @@ display:
                   title: ''
                   description: ''
                   open: '1'
-                  weight: '-27'
+                  weight: '-28'
                   id: container-3
                   pid: root
                   depth: '1'
                   type: container
                 submit:
-                  weight: '-31'
+                  weight: '-35'
                   id: submit
                   pid: container-3
                   depth: '2'
                   type: buttons
                 reset:
-                  weight: '-30'
+                  weight: '-34'
                   id: reset
                   pid: container-3
                   depth: '2'
                   type: buttons
-                container-6:
-                  container_type: details
-                  title: 'Container 5'
-                  description: ''
-                  weight: '-25'
-                  open: 0
-                  id: container-6
-                  pid: root
-                  depth: '1'
-                  type: container
                 container-4:
                   container_type: details
                   title: 'Container 6'
                   description: ''
-                  weight: '-24'
+                  weight: '-27'
                   open: 0
                   id: container-4
                   pid: root
@@ -1671,7 +1735,7 @@ display:
                   container_type: details
                   title: 'Container 7'
                   description: ''
-                  weight: '-23'
+                  weight: '-26'
                   open: 0
                   id: container-7
                   pid: root
@@ -1681,7 +1745,7 @@ display:
                   container_type: details
                   title: 'Container 8'
                   description: ''
-                  weight: '-22'
+                  weight: '-25'
                   open: 0
                   id: container-8
                   pid: root
@@ -1691,7 +1755,7 @@ display:
                   container_type: details
                   title: 'Container 9'
                   description: ''
-                  weight: '-21'
+                  weight: '-24'
                   open: 0
                   id: container-9
                   pid: root
@@ -1701,7 +1765,7 @@ display:
                   container_type: details
                   title: 'Container 10'
                   description: ''
-                  weight: '-20'
+                  weight: '-23'
                   open: 0
                   id: container-10
                   pid: root
@@ -1711,7 +1775,7 @@ display:
                   container_type: details
                   title: 'Container 11'
                   description: ''
-                  weight: '-19'
+                  weight: '-22'
                   open: 0
                   id: container-11
                   pid: root
@@ -1721,7 +1785,7 @@ display:
                   container_type: details
                   title: 'Container 12'
                   description: ''
-                  weight: '-18'
+                  weight: '-21'
                   open: 0
                   id: container-12
                   pid: root
@@ -1731,7 +1795,7 @@ display:
                   container_type: details
                   title: 'Container 13'
                   description: ''
-                  weight: '-17'
+                  weight: '-20'
                   open: 0
                   id: container-13
                   pid: root
@@ -1741,9 +1805,29 @@ display:
                   container_type: details
                   title: 'Container 14'
                   description: ''
-                  weight: '-16'
+                  weight: '-19'
                   open: 0
                   id: container-14
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-15:
+                  container_type: details
+                  title: 'Container 15'
+                  description: ''
+                  weight: '-18'
+                  open: 0
+                  id: container-15
+                  pid: root
+                  depth: '1'
+                  type: container
+                container-16:
+                  container_type: details
+                  title: 'Container 16'
+                  description: ''
+                  weight: '-17'
+                  open: 0
+                  id: container-16
                   pid: root
                   depth: '1'
                   type: container

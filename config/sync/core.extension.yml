@@ -39,6 +39,7 @@ module:
   layout_builder: 0
   layout_discovery: 0
   link: 0
+  maintenance_exempt: 0
   menu_ui: 0
   moj: 0
   moj_healthcheck: 0
