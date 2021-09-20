@@ -128,5 +128,12 @@ function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
   foreach ($terms as $term) {
     $term->set('description', $term->get('field_content_summary')->getValue());
     $term->save();
+    $sandbox['progress']++;
   }
+  
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['progress'];
+  }
+  return 'Processed terms: ' . $sandbox['progress'];
 }
