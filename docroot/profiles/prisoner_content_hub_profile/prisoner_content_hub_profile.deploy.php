@@ -122,7 +122,7 @@ function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
     $sandbox['result'] = $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
   }
 
-  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], PRISONER_CONTENT_HUB_PROFILE_BATCH_LIMIT, TRUE));
+  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
 
   /** @var \Drupal\taxonomy\TermInterface $term */
   foreach ($terms as $term) {
