@@ -117,24 +117,29 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
  * Update series to reference categories.
  */
 function prisoner_content_hub_profile_deploy_update_series() {
-  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
-  $terms = Term::loadMultiple($result);
+  $terms_result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->accessCheck(FALSE)->execute();
+  $terms = Term::loadMultiple($terms_result);
+  $nodes_result = \Drupal::entityQuery('node')->exists('field_moj_series')->accessCheck(FALSE)->execute();
+  $nodes = Node::loadMultiple($nodes_result);
 
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  foreach ($terms as $term) {
-    $nodes_result = \Drupal::entityQuery('node')->condition('field_moj_series', $term->id())->execute();
-    $nodes = Node::loadMultiple($nodes_result);
-    $new_category_values = [];
-    /** @var \Drupal\node\NodeInterface $node */
-    foreach ($nodes as $node) {
-      $category_values = $node->get('field_moj_top_level_categories')->getValue();
-      foreach ($category_values as $category_value) {
-        $new_category_values[$category_value['target_id']] = $category_value;
-      }
+  $new_category_values = [];
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    foreach ($node->get('field_moj_top_level_categories')->getValue() as $value) {
+      $new_category_values[$node->field_moj_series->target_id][] = $value['target_id'];
     }
-    $new_category_values = array_values($new_category_values);
-    $term->set('field_category', $new_category_values);
-    $term->save();
+  }
+
+  foreach ($new_category_values as $term_id => $category_values) {
+    if (isset($terms[$term_id])) {
+      $new_category_field_value = [];
+      foreach (array_unique($category_values) as $category_value) {
+        $new_category_field_value[] = ['target_id' => $category_value];
+      }
+      $term = $terms[$term_id];
+      $term->set('field_category', $new_category_field_value);
+      $term->save();
+    }
   }
 }
 
@@ -155,7 +160,7 @@ function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
     $term->save();
     $sandbox['progress']++;
   }
-  
+
   $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
   if ($sandbox['#finished'] ) {
     return 'Completed updated, processed total of: ' . $sandbox['progress'];
