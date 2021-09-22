@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.search_result
+    - field.field.node.page.field_feature_on_category
     - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
@@ -32,6 +33,7 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_feature_on_category: true
   field_moj_category_featured_item: true
   field_moj_description: true
   field_moj_episode: true

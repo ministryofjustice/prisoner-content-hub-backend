@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_feature_on_category
     - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
@@ -96,6 +97,28 @@ content:
     weight: 4
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_feature_on_category:
+    weight: 10
+    settings: {  }
+    third_party_settings:
+      conditional_fields:
+        6d8bca50-b95a-4e51-b5cf-92e63913edea:
+          dependee: field_moj_top_level_categories
+          settings:
+            state: '!empty'
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form: {  }
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: page
+    type: options_buttons
     region: content
   field_moj_category_featured_item:
     weight: 8
