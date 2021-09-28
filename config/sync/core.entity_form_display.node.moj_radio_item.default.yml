@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_radio_item.field_feature_on_category
     - field.field.node.moj_radio_item.field_moj_audio
     - field.field.node.moj_radio_item.field_moj_category_featured_item
     - field.field.node.moj_radio_item.field_moj_description
@@ -34,7 +35,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
       parent_name: ''
-      weight: 12
+      weight: 13
       format_type: fieldset
       region: content
       format_settings:
@@ -50,7 +51,7 @@ third_party_settings:
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 11
+      weight: 12
       format_type: fieldset
       region: content
       format_settings:
@@ -99,6 +100,12 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_feature_on_category:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
   field_moj_audio:
     type: file_generic
     weight: 4
@@ -107,7 +114,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 10
+    weight: 11
     settings:
       display_label: true
     third_party_settings: {  }
@@ -209,12 +216,12 @@ content:
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -222,7 +229,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 17
     third_party_settings: {  }
     region: content
   title:
@@ -250,7 +257,7 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }

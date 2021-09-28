@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_pdf_item.field_feature_on_category
     - field.field.node.moj_pdf_item.field_moj_category_featured_item
     - field.field.node.moj_pdf_item.field_moj_description
     - field.field.node.moj_pdf_item.field_moj_episode
@@ -33,7 +34,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
       parent_name: ''
-      weight: 11
+      weight: 12
       format_type: fieldset
       region: content
       format_settings:
@@ -49,7 +50,7 @@ third_party_settings:
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 10
+      weight: 11
       format_type: fieldset
       region: content
       format_settings:
@@ -98,8 +99,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_moj_category_featured_item:
+  field_feature_on_category:
     weight: 9
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_moj_category_featured_item:
+    weight: 10
     settings:
       display_label: true
     third_party_settings: {  }
@@ -200,12 +207,12 @@ content:
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -213,7 +220,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 16
     third_party_settings: {  }
     region: content
   title:
@@ -236,7 +243,7 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }

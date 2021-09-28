@@ -1,19 +1,19 @@
-uuid: 9172a417-4ae6-458e-950e-0c10275f5da0
+uuid: 8018d468-d50e-4106-b19c-122232bdc269
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_feature_on_category
-    - node.type.page
+    - node.type.moj_radio_item
     - taxonomy.vocabulary.moj_categories
-id: node.page.field_feature_on_category
+id: node.moj_radio_item.field_feature_on_category
 field_name: field_feature_on_category
 entity_type: node
-bundle: page
+bundle: moj_radio_item
 label: 'Feature on category'
 description: '<small>Select whether this content should be featured on a category page.</small>'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
