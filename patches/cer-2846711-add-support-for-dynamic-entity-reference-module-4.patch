@@ -1,0 +1,92 @@
+diff --git a/src/Entity/CorrespondingReference.php b/src/Entity/CorrespondingReference.php
+index 15f3b55..ceb1970 100644
+--- a/src/Entity/CorrespondingReference.php
++++ b/src/Entity/CorrespondingReference.php
+@@ -342,12 +342,12 @@ class CorrespondingReference extends ConfigEntityBase implements CorrespondingRe
+     $field = $correspondingEntity->get($correspondingFieldName);
+ 
+     $target_type = $field->getSetting('target_type');
+-    if ($entity->getEntityTypeId() != $target_type) {
++    if ($target_type && $entity->getEntityTypeId() != $target_type) {
+       return;
+     }
+ 
+     $handler_settings = $field->getSetting('handler_settings');
+-    $target_bundles = $handler_settings['target_bundles'];
++    $target_bundles = $handler_settings['target_bundles'] ?? [];
+     if (!empty($target_bundles) && !in_array($entity->bundle(), $target_bundles)) {
+       return;
+     }
+@@ -357,7 +357,7 @@ class CorrespondingReference extends ConfigEntityBase implements CorrespondingRe
+     $index = NULL;
+ 
+     foreach ($values as $idx => $value) {
+-      if ($value['target_id'] == $entity->id()) {
++      if ($value['target_id'] == $entity->id() && (!isset($value['target_type']) || $value['target_type'] == $entity->getEntityTypeId())) {
+         if ($operation == CorrespondingReferenceOperations::ADD) {
+           return;
+         }
+@@ -376,7 +376,7 @@ class CorrespondingReference extends ConfigEntityBase implements CorrespondingRe
+         }
+         break;
+       case CorrespondingReferenceOperations::ADD:
+-        $synced_values = ['target_id' => $entity->id()];
++        $synced_values = ['target_id' => $entity->id(), 'target_type' => $entity->getEntityTypeId()];
+         switch ($this->getAddDirection()) {
+           case 'prepend':
+             array_unshift($values, $synced_values);
+@@ -445,13 +445,13 @@ class CorrespondingReference extends ConfigEntityBase implements CorrespondingRe
+     $originalField = $original->get($fieldName);
+ 
+     foreach ($entityField as $fieldItem) {
+-      if (!$this->entityHasValue($original, $fieldName, $fieldItem->target_id)) {
++      if (!$this->entityHasValue($original, $fieldName, $fieldItem->target_id, $fieldItem->target_type ?? NULL)) {
+         $differences[CorrespondingReferenceOperations::ADD][] = $fieldItem->entity;
+       }
+     }
+ 
+     foreach ($originalField as $fieldItem) {
+-      if (!$this->entityHasValue($entity, $fieldName, $fieldItem->target_id)) {
++      if (!$this->entityHasValue($entity, $fieldName, $fieldItem->target_id, $fieldItem->target_type ?? NULL)) {
+         $differences[CorrespondingReferenceOperations::REMOVE][] = $fieldItem->entity;
+       }
+     }
+@@ -468,17 +468,19 @@ class CorrespondingReference extends ConfigEntityBase implements CorrespondingRe
+    *   The field name on the entity to check.
+    * @param mixed $id
+    *   The corresponding ID to check.
++   * @param string|NULL $entityType
++   *   (Optional) The corresponding entity type to check.
+    *
+    * @return bool
+    *   TRUE if value already exists, FALSE otherwise.
+    */
+-  protected function entityHasValue(FieldableEntityInterface $entity, $fieldName, $id) {
++  protected function entityHasValue(FieldableEntityInterface $entity, $fieldName, $id, $entityType = NULL) {
+     if (!$entity->hasField($fieldName)) {
+       return FALSE;
+     }
+ 
+     foreach ($entity->get($fieldName) as $fieldItem) {
+-      if ($fieldItem->target_id == $id) {
++      if ($fieldItem->target_id == $id && (!is_null($entityType) || $fieldItem->target_type == $entityType)) {
+         return TRUE;
+       }
+     }
+diff --git a/src/Form/CorrespondingReferenceForm.php b/src/Form/CorrespondingReferenceForm.php
+index 553b301..20b8d45 100644
+--- a/src/Form/CorrespondingReferenceForm.php
++++ b/src/Form/CorrespondingReferenceForm.php
+@@ -165,9 +165,10 @@ class CorrespondingReferenceForm extends EntityForm {
+    *   The reference field map.
+    */
+   protected function getReferenceFieldMap() {
+-    $map = $this->fieldManager->getFieldMapByFieldType('entity_reference');
++    $entity_reference_map = $this->fieldManager->getFieldMapByFieldType('entity_reference');
++    $dynamic_reference_map = $this->fieldManager->getFieldMapByFieldType('dynamic_entity_reference');
+ 
+-    return $map;
++    return array_merge($entity_reference_map, $dynamic_reference_map);
+   }
+ 
+   /**

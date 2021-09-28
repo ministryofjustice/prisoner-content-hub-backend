@@ -9,7 +9,7 @@
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
         "drupal/book_blocks": "^1.6",
-        "drupal/cer": "^4.0@alpha",
+        "drupal/cer": "4.x-dev",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
         "drupal/core-recommended": "~9.1.11",
@@ -112,6 +112,9 @@
             ]
         },
         "installer-types": ["bower-asset", "npm-asset"],
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
         "patches": {
             "drupal/flysystem_s3": {
                 "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-56-private-files-image-styles.patch",
@@ -140,6 +143,9 @@
             },
             "drupal/jsonapi_image_styles": {
                 "Issue #3232157: Image styles are generated for other types of file entites": "patches/jsonapi_image_styles-3232157-image-styles-are-generated-for-other-types-of-file-entities-2.patch"
+            },
+            "drupal/cer": {
+                "Issue #2846314: Add support for Dynamic Entity Reference fields": "patches/cer-2846711-add-support-for-dynamic-entity-reference-module-4.patch"
             }
         },
         "patches-ignore": {
