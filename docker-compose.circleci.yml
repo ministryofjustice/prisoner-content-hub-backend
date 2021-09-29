@@ -50,7 +50,7 @@ services:
     ports:
       - 6379:6379
     networks:
-      - prisoner_content_hub
+      - circleci-prisoner_content_hub
 
 networks:
   circleci-prisoner_content_hub:
