@@ -138,6 +138,10 @@ if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   // for any updates to be automatically added, and also ensures we do not add
   // the config during site installation (which will result in an error).
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+
+  // Allow the services to work before the Redis module itself is enabled.
+  // TODO: Remove this after Redis has been deployed.
+  $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
 }
 
 $settings['config_sync_directory'] = '../config/sync';
