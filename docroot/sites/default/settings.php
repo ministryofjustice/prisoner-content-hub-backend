@@ -126,8 +126,8 @@ $config['raven.settings'] = [
 
 // Do not load Redis during installation (required for CircleCI builds).
 // See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
-if (!InstallerKernel::installationAttempted()) {
-  $settings['redis.connection']['interface'] = 'Predis';
+if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+  $settings['redis.connection']['interface'] = 'PhpRedis';
   $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
   if (getenv('REDIS_PASSWORD', true)) {
     $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);

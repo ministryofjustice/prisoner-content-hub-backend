@@ -56,8 +56,7 @@
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
-        "oomphinc/composer-installers-extender": "^2.0",
-        "predis/predis": "^1.1"
+        "oomphinc/composer-installers-extender": "^2.0"
     },
     "conflict": {
         "drupal/drupal": "*"
