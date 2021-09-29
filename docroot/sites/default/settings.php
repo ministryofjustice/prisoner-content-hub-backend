@@ -122,8 +122,9 @@ $config['raven.settings'] = [
   'fatal_error_handler' => true
 ];
 
-$settings['redis.connection']['interface'] = 'Predis'; // Can be "Predis".
-$settings['redis.connection']['host']      =  getenv('REDIS_HOST', true);  // Your Redis instance hostname.
+$settings['redis.connection']['interface'] = 'Predis';
+$settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
+$settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
 $settings['cache']['default'] = 'cache.backend.redis';
 
 $settings['config_sync_directory'] = '../config/sync';
