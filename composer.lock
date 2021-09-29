@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98d620c38c7260819a9edebb8889e7d3",
+    "content-hash": "6b2dfd0fb2d89a661c0ce372772f40e1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2355,7 +2355,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Issue #3173822: Exposed operators are not included in fieldsets": "patches/dynamic_entity_reference-3057556-4.patch"
+                    "Issue #3057556: Incompatibility with jsonapi relatable resource search": "patches/dynamic_entity_reference-3057556-4.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
