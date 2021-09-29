@@ -76,12 +76,12 @@ env:
   - name: REDIS_HOST
     valueFrom:
       secretKeyRef:
-        name: {{ Values.application.drupal-redis }}
+        name: {{ Values.application.redisSecretName }}
         key: primary_endpoint_address
   - name: REDIS_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ Values.application.drupal-redis }}
+        name: {{ Values.application.redisSecretName }}
         key: auth_token
 
 {{- end -}}
