@@ -124,7 +124,9 @@ $config['raven.settings'] = [
 
 $settings['redis.connection']['interface'] = 'Predis';
 $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
-$settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
+if (getenv('REDIS_PASSWORD', true)) {
+  $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
+}
 $settings['cache']['default'] = 'cache.backend.redis';
 
 $settings['config_sync_directory'] = '../config/sync';
