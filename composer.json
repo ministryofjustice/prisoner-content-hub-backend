@@ -37,6 +37,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
         "drupal/raven": "^2.27",
+        "drupal/redis": "^1.5",
         "drupal/rest_menu_items": "^2.6",
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",
@@ -55,7 +56,8 @@
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
-        "oomphinc/composer-installers-extender": "^2.0"
+        "oomphinc/composer-installers-extender": "^2.0",
+        "predis/predis": "^1.1"
     },
     "conflict": {
         "drupal/drupal": "*"
