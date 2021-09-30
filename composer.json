@@ -36,7 +36,7 @@
         "drupal/monolog": "^2.0",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
-        "drupal/raven": "^2.27",
+        "drupal/raven": "^3.2",
         "drupal/rest_menu_items": "^2.6",
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",

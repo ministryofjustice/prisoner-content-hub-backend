@@ -119,7 +119,9 @@ $config['raven.settings'] = [
     // 7, // Info
     // 8  // Debug
   ],
-  'fatal_error_handler' => true
+  'fatal_error_handler' => true,
+  'traces_sample_rate' => 0.25,
+  'database_tracing' => TRUE,
 ];
 
 $settings['config_sync_directory'] = '../config/sync';
