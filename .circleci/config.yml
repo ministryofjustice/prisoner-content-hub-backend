@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/workspace
   docker:
-    - image: mojdigitalstudio/circleci-build-container
+    - image: ministryofjustice/cloud-platform-tools
 main_branch: &main_branch
   filters:
     branches:
@@ -24,7 +24,6 @@ commands:
       environment:
         type: string
     steps:
-      - kubernetes/install
       - helm/install-helm-client:
           version: v3.6.3
       - checkout:
