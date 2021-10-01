@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/workspace
   docker:
-    - image: mojdigitalstudio/circleci-build-container
+    - image: ministryofjustice/cloud-platform-tools
 main_branch: &main_branch
   filters:
     branches:
@@ -24,7 +24,6 @@ commands:
       environment:
         type: string
     steps:
-      - kubernetes/install
       - helm/install-helm-client:
           version: v3.6.3
       - checkout:
@@ -79,9 +78,8 @@ jobs:
           name: Install Docker Compose
           command: |
             set -x
-            curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            apk add python3 python3-dev libffi-dev openssl-dev gcc libc-dev make && \
+            pip3 install docker-compose==1.29.2
       - run:
           name: Build docker images with docker compose
           command: |
