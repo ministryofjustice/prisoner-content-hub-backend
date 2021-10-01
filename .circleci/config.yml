@@ -151,6 +151,7 @@ jobs:
             git config user.name "Circle CI"
             git config user.email "circle@circleci.com"
             git tag -a "$(date '+%Y-%m-%d')-$CIRCLE_BUILD_NUM" $CIRCLE_SHA1 -m "$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=%B)"
+            apk add openssh
             git push origin "$(date '+%Y-%m-%d')-$CIRCLE_BUILD_NUM"
       - run:
           name: Persist build number for deployment
