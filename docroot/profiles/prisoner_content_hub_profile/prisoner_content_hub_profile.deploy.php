@@ -170,7 +170,7 @@ function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
 }
 
 /**
- * Bulk update paths for content and taxonomy terms.
+ * Bulk update categories to have featured content tiles.
  */
 function prisoner_content_hub_profile_deploy_category_tiles() {
   $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
