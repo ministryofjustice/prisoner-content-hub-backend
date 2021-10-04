@@ -55,14 +55,14 @@ content:
       rows: 5
     third_party_settings: {  }
   field_category:
-    type: entity_reference_autocomplete
+    type: select2_entity_reference
     weight: 4
     region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
-      size: 60
-      placeholder: ''
+      autocomplete: false
+      width: 100%
     third_party_settings: {  }
   field_content_summary:
     weight: 1
@@ -74,13 +74,9 @@ content:
     region: content
   field_feature_on_category:
     weight: 5
-    settings:
-      autocomplete: false
-      match_operator: CONTAINS
-      match_limit: 10
-      width: 100%
+    settings: {  }
     third_party_settings: {  }
-    type: select2_entity_reference
+    type: options_buttons
     region: content
   field_feature_programme_code:
     weight: 12
