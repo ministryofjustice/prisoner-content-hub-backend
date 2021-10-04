@@ -51,7 +51,7 @@ third_party_settings:
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 12
+      weight: 9
       format_type: fieldset
       region: content
       format_settings:
@@ -101,7 +101,7 @@ content:
     third_party_settings: {  }
     region: content
   field_feature_on_category:
-    weight: 10
+    weight: 11
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -114,7 +114,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 11
+    weight: 12
     settings:
       display_label: true
     third_party_settings: {  }
@@ -187,7 +187,7 @@ content:
     type: image_image
     region: content
   field_moj_top_level_categories:
-    weight: 9
+    weight: 10
     settings:
       autocomplete: false
       match_operator: CONTAINS
