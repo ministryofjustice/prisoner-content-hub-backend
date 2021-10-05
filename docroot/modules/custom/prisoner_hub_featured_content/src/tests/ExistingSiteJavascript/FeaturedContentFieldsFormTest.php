@@ -56,7 +56,8 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   protected $seriesWithoutCategoryTerm;
 
   /**
-   * Content types to test on.  These should all contain the category and series field.
+   * Content types to test on.  These should all contain the category and
+   * series field.
    *
    * @var string[]
    */
@@ -65,7 +66,8 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   /**
    * Create users and taxonomy terms to test with.
    *
-   * This has mostly been copied over from Drupal\Tests\prisoner_hub_taxonomy_sorting\ExistingSiteJavascript/SeriesFieldsFormTest
+   * This has mostly been copied over from
+   * Drupal\Tests\prisoner_hub_taxonomy_sorting\ExistingSiteJavascript/SeriesFieldsFormTest
    * @TODO: Move this all into a base class.
    */
   public function setUp(): void {
@@ -99,6 +101,19 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
     $series_vocab = Vocabulary::load('series');
     $this->seriesWithCategoryTerm = $this->createTerm($series_vocab, ['name' => 'Series 1', 'field_category' => ['target_id' => $this->categoryTermForSeries->id()]]);
     $this->seriesWithoutCategoryTerm = $this->createTerm($series_vocab, ['name' => 'Series 2']);
+
+    foreach (self::$contentTypes as $contentType) {
+      $values = [
+        'type' => $contentType,
+        'uid' => $this->localContentManagerUser->id(),
+      ];
+      $this->nodes['category'][] = $this->createNode(array_merge($values, [
+        'field_moj_top_level_categories' => ['target_id' => $this->categoryTerm->id()],
+      ]));
+      $this->nodes['series'][] = $this->createNode(array_merge($values, [
+        'field_moj_series' => ['target_id' => $this->seriesWithCategoryTerm->id()],
+      ]));
+    }
   }
 
   /**
@@ -107,8 +122,9 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   public function testFeatuerdContentFieldsStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
     foreach (self::$contentTypes as $contentType) {
-      $this->testFeaturedContentFieldVisibility($contentType);
+      $this->testFeaturedContentFieldVisibilityNewContent($contentType);
     }
+    $this->testFeaturedContentFieldVisibilityExistingContent();
   }
 
   /**
@@ -117,8 +133,9 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   public function testFeaturedContentFieldsLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
     foreach (self::$contentTypes as $contentType) {
-      $this->testFeaturedContentFieldVisibility($contentType);
+      $this->testFeaturedContentFieldVisibilityNewContent($contentType);
     }
+    $this->testFeaturedContentFieldVisibilityExistingContent();
   }
 
   /**
@@ -129,18 +146,16 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  private function testFeaturedContentFieldVisibility($content_type) {
+  private function testFeaturedContentFieldVisibilityNewContent($content_type) {
     $this->visit('/node/add/' . $content_type);
     $web_assert = $this->assertSession();
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
-    //self::assertTrue(is_null($feature_on_category_field), "Feature on category field is not visible.");
 
     $series_field = $page->findField('Series');
-
     $series_field->setValue($this->seriesWithCategoryTerm->id());
 
-    $feature_on_category_field = $page->findField($this->categoryTermForSeries->label());
+    $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField($this->categoryTermForSeries->label());
     self::assertTrue($feature_on_category_field->isVisible());
 
     $series_field->setValue($this->seriesWithoutCategoryTerm->id());
@@ -148,12 +163,36 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
 
     $category_field = $page->findField('Category');
     $category_field->setValue($this->categoryTerm->id());
-    $feature_on_category_field = $page->findField($this->categoryTerm->label());
+    $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField($this->categoryTerm->label());
     self::assertTrue($feature_on_category_field->isVisible());
   }
 
+
   /**
-   * Remove the users we created for the test (this isn't handled by the parent class).
+   * Helper function to test on existing content.
+   */
+  private function testFeaturedContentFieldVisibilityExistingContent() {
+    /** @var \Drupal\node\NodeInterface $node */
+    foreach ($this->nodes as $category_or_series => $nodes) {
+      foreach ($nodes as $node) {
+        $this->visit('/node/' . $node->id() . '/edit');
+        $web_assert = $this->assertSession();
+        $web_assert->statusCodeEquals(200);
+        $feature_on_category_field_wrapper = $this->getCurrentPage()->findById('edit-field-feature-on-category-wrapper');
+        if ($category_or_series == 'category') {
+          $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTerm->label());
+        }
+        else {
+          $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTermForSeries->label());
+        }
+        self::assertTrue($feature_on_category_field->isVisible());
+      }
+    }
+  }
+
+  /**
+   * Remove the users we created for the test (this isn't handled by the parent
+   * class).
    */
   public function tearDown(): void {
     parent::tearDown();
