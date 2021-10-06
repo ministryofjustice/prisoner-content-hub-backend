@@ -128,7 +128,12 @@ $config['raven.settings'] = [
 // See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
 if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   $settings['redis.connection']['interface'] = 'PhpRedis';
-  $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
+  if (getenv('REDIS_TLS_ENABLED', 'true') == 'true') {
+    $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
+  }
+  else {
+    $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
+  }
   if (getenv('REDIS_PASSWORD', true)) {
     $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
   }

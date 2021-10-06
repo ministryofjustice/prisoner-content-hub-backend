@@ -83,5 +83,7 @@ env:
       secretKeyRef:
         name: {{ .Values.application.redisSecretName }}
         key: auth_token
+  - name: REDIS_TLS_ENABLED
+    value: "true"
 
 {{- end -}}
