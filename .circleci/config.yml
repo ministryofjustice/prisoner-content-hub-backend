@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/workspace
   docker:
-    - image: ministryofjustice/cloud-platform-tools
+    - image: cimg/base:2021.10
 main_branch: &main_branch
   filters:
     branches:
@@ -24,6 +24,7 @@ commands:
       environment:
         type: string
     steps:
+      - kubernetes/install
       - helm/install-helm-client:
           version: v3.6.3
       - checkout:
@@ -74,12 +75,6 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
-      - run:
-          name: Install Docker Compose
-          command: |
-            set -x
-            apk add python3 python3-dev libffi-dev openssl-dev gcc libc-dev make && \
-            pip3 install docker-compose==1.29.2
       - run:
           name: Build docker images with docker compose
           command: |
@@ -151,7 +146,6 @@ jobs:
             git config user.name "Circle CI"
             git config user.email "circle@circleci.com"
             git tag -a "$(date '+%Y-%m-%d')-$CIRCLE_BUILD_NUM" $CIRCLE_SHA1 -m "$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=%B)"
-            apk add openssh
             git push origin "$(date '+%Y-%m-%d')-$CIRCLE_BUILD_NUM"
       - run:
           name: Persist build number for deployment
