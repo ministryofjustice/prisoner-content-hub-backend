@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.series.field_content_summary
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_audio
     - field.field.taxonomy_term.series.field_featured_image
@@ -32,13 +31,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_content_summary:
-    weight: 0
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
-    region: content
   field_feature_programme_code:
     weight: 10
     label: above
