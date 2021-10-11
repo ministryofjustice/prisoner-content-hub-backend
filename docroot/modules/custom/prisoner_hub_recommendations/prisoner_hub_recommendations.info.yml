@@ -1,0 +1,8 @@
+name: 'Prisoner Hub Recommendations'
+type: module
+description: 'Provides a JSON:API resource for content recommendations.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - jsonapi_resources:jsonapi_resources

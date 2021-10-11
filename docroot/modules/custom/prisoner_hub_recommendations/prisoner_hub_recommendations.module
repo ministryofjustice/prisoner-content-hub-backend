@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_recommendations.module.
+ */
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Apply random sorting via query tag.
+ */
+function prisoner_hub_recommendations_query_sort_by_random_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
+  $query->orderRandom();
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Apply a condition that will ensure no results are returned.
+ */
+function prisoner_hub_recommendations_query_no_results_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
+  $query->where('1 = 0');
+}
