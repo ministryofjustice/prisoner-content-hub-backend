@@ -54,6 +54,7 @@ module:
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
   rdf: 0
+  redis: 0
   rest: 0
   restui: 0
   role_delegation: 0

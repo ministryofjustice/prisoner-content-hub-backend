@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Installer\InstallerKernel;
+
 $databases = [];
 $databases['default']['default'] = array(
   'database' => getenv('HUB_DB_ENV_MYSQL_DATABASE', true),
@@ -121,6 +123,31 @@ $config['raven.settings'] = [
   ],
   'fatal_error_handler' => true
 ];
+
+// Do not load Redis during installation (required for CircleCI builds).
+// See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
+if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+  $settings['redis.connection']['interface'] = 'PhpRedis';
+  if (getenv('REDIS_TLS_ENABLED', 'true') == 'true') {
+    $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
+  }
+  else {
+    $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
+  }
+  if (getenv('REDIS_PASSWORD', true)) {
+    $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
+  }
+  $settings['cache']['default'] = 'cache.backend.redis';
+
+  // Load in the services config directly from the module.  This allows
+  // for any updates to be automatically added, and also ensures we do not add
+  // the config during site installation (which will result in an error).
+  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+
+  // Allow the services to work before the Redis module itself is enabled.
+  // TODO: Remove this after Redis has been deployed.
+  $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+}
 
 $settings['config_sync_directory'] = '../config/sync';
 

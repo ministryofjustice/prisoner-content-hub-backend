@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66b7557904b9461d108f9b7e61241ff0",
+    "content-hash": "fbbdd4956c757be8a610b5a72cef0cc1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1834,7 +1834,8 @@
                 "patches_applied": {
                     "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
                     "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch",
-                    "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch"
+                    "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
+                    "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache.": "https://www.drupal.org/files/issues/2021-04-19/2352009-max-age-bubbling-9.1.x.patch"
                 }
             },
             "autoload": {
@@ -2914,6 +2915,11 @@
                 "reference": "c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28"
             },
             "type": "drupal-module",
+            "extra": {
+                "patches_applied": {
+                    "Issue #3241626: 404 on cross bundle routes when uninstalling another module": "patches/jsonapi_cross_bundles-3241626-fix-404-on-cross-bundle-routes-when-uninstalling-another-module-2.patch"
+                }
+            },
             "license": [
                 "GPL-2.0+"
             ],
@@ -3675,6 +3681,62 @@
                     "url": "https://www.patreon.com/mfb"
                 }
             ]
+        },
+        {
+            "name": "drupal/redis",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/redis.git",
+                "reference": "8.x-1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/redis-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "4283333dc2bf405045765b83ca662acc409a6543"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "suggest": {
+                "predis/predis": "^1.1.1"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1609972488",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\redis\\": "src"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "pounard",
+                    "homepage": "https://www.drupal.org/user/240164"
+                }
+            ],
+            "description": "Integration of Drupal with the Redis key-value store.",
+            "homepage": "https://www.drupal.org/project/redis",
+            "support": {
+                "source": "https://git.drupalcode.org/project/redis"
+            }
         },
         {
             "name": "drupal/rest_menu_items",
@@ -13726,7 +13788,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
