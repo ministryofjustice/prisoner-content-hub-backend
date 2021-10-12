@@ -59,15 +59,14 @@ class ContentSuggestions extends EntityQueryResourceBase {
     $query->addTag('sort_by_random');
 
     $condition_group = $query->orConditionGroup();
+    $query->condition($condition_group);
 
     $secondary_tags = array_column($node->get('field_moj_secondary_tags')->getValue(), 'target_id');
 
     $data = [];
     if (!empty($secondary_tags)) {
       $condition_group->condition('field_moj_secondary_tags', $secondary_tags, 'IN');
-      $query_copy = $query;
-      $query_copy->condition($condition_group);
-      $data = $this->loadResourceObjectDataFromEntityQuery($query_copy, $cacheability);
+      $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
     }
 
     // Only apply category condition if the secondary tags will bring back
@@ -79,23 +78,21 @@ class ContentSuggestions extends EntityQueryResourceBase {
         $categories = array_column($series_entities[0]->get('field_category')->getValue(), 'target_id');
         if (!empty($categories)) {
           $condition_group->condition('field_moj_series.entity:taxonomy_term.field_category', $categories, 'IN');
+          $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
         }
       }
       else {
         $categories = array_column($node->get('field_moj_top_level_categories')->getValue(), 'target_id');
         if (!empty($categories)) {
           $condition_group->condition('field_moj_top_level_categories', $categories, 'IN');
+          $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
         }
       }
     }
 
-    // If no conditions have been set, then return no results.
-    if ($condition_group->count() == 0) {
+    // If no data set, then return no results.
+    if (empty($data)) {
       $data = $this->createCollectionDataFromEntities([]);
-    }
-    else {
-      $query->condition($condition_group);
-      $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
     }
 
     $response = $this->createJsonapiResponse($data, $request);
