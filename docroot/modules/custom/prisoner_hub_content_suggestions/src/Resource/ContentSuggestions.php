@@ -64,10 +64,9 @@ class ContentSuggestions extends EntityQueryResourceBase {
 
     $condition_group = $query->orConditionGroup();
     $query->condition($condition_group);
+    $data = [];
 
     $secondary_tags = array_column($node->get('field_moj_secondary_tags')->getValue(), 'target_id');
-
-    $data = [];
     if (!empty($secondary_tags)) {
       $condition_group->condition('field_moj_secondary_tags', $secondary_tags, 'IN');
       $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
