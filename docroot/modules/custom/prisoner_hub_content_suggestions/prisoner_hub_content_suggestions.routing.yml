@@ -9,6 +9,3 @@ prisoner_hub_content_suggestions.jsonapi.get_suggestions:
       node:
         type: entity:node
         converter: paramconverter.jsonapi.entity_uuid
-
-
-

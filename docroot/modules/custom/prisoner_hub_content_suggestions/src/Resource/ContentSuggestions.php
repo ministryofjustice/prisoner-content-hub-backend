@@ -3,9 +3,6 @@
 namespace Drupal\prisoner_hub_content_suggestions\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\jsonapi\JsonApiResource\ResourceObject;
-use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_resources\Entity\Query\PaginatorMetadata;
 use Drupal\jsonapi_resources\Resource\EntityQueryResourceBase;
@@ -90,14 +87,15 @@ class ContentSuggestions extends EntityQueryResourceBase {
           $condition_group->condition('field_moj_top_level_categories', $categories, 'IN');
         }
       }
-      // If no conditions have been set, then return no results.
-      if ($condition_group->count() == 0) {
-        $data = $this->createCollectionDataFromEntities([]);
-      }
-      else {
-        $query->condition($condition_group);
-        $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
-      }
+    }
+
+    // If no conditions have been set, then return no results.
+    if ($condition_group->count() == 0) {
+      $data = $this->createCollectionDataFromEntities([]);
+    }
+    else {
+      $query->condition($condition_group);
+      $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
     }
 
     $response = $this->createJsonapiResponse($data, $request);
@@ -112,5 +110,4 @@ class ContentSuggestions extends EntityQueryResourceBase {
   public function getRouteResourceTypes(Route $route, string $route_name): array {
     return $this->getResourceTypesByEntityTypeId('node');
   }
-
 }
