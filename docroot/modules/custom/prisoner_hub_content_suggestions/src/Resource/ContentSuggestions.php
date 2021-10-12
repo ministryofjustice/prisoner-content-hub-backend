@@ -51,7 +51,11 @@ class ContentSuggestions extends EntityQueryResourceBase {
     // Exclude the current series.
     $series_value = $node->get('field_moj_series')->getValue();
     if (!empty($series_value)) {
-      $query->condition('field_moj_series', $series_value[0]['target_id'], '<>');
+      // Need to create an OR group to account for content that has no series.
+      $series_condition_group = $query->orConditionGroup();
+      $series_condition_group->condition('field_moj_series', $series_value[0]['target_id'], '<>');
+      $series_condition_group->notExists('field_moj_series');
+      $query->condition($series_condition_group);
     }
 
     // Add a query tag so that we can apply random sorting via hook_query_TAG_alter().

@@ -165,6 +165,30 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
+   * Helper function to assert that a jsonapi response returns the expected entities.
+   *
+   * @param array $entities_to_check
+   *   A list of entity uuids to check for in the JSON response.
+   * @param NodeInterface $node
+   *   The node to check suggestions for.
+   */
+  protected function assertJsonApiSuggestionsResponse(array $entities_to_check, NodeInterface $node) {
+    $url = Url::fromUri('internal:/jsonapi/node/' . $node->getType() . '/' . $node->uuid(). '/suggestions', ['query' => ['page[limit]' => 4]]);
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+    $response_document = Json::decode((string) $response->getBody());
+    $message = 'JSON response returns the correct results on url: ' . $url->toString();
+    if (empty($entities_to_check)) {
+      $this->assertEmpty($response_document['data'], $message);
+    }
+    else {
+      $this->assertEqualsCanonicalizing($entities_to_check, array_map(static function (array $data) {
+        return $data['id'];
+      }, $response_document['data']), $message);
+    }
+  }
+
+  /**
    * Test that content with tag and a category returns content with the same
    * tag and category.
    */
@@ -178,36 +202,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       ],
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTag], $node);
-  }
-
-  /**
-   * Helper function to assert that a jsonapi response returns the expected entities.
-   *
-   * Note this only works with JSON:API responses that return multiple rows.
-   * I.e. /jsonapi/node/page, and *not* /jsonapi/node/page/uuid.
-   *
-   * @param array $entities_to_check
-   *   A list of entity uuids to check for in the JSON response.
-   * @param string $bundle
-   *   The bundle machine name to check for.
-   */
-  protected function assertJsonApiSuggestionsResponse(array $entities_to_check, NodeInterface $node) {
-    $url = Url::fromUri('internal:/jsonapi/node/' . $node->getType() . '/' . $node->uuid(). '/suggestions', ['query' => ['page[limit]' => 4]]);
-    $response = $this->getJsonApiResponse($url);
-    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
-    $response_document = Json::decode((string) $response->getBody());
-    $message = 'JSON response returns the correct results on url: ' . $url->toString();
-    if (empty($entities_to_check)) {
-      $this->assertEmpty($response_document['data'], $message);
-    }
-    else {
-      if (count($entities_to_check) > 1) {
-        $stop = 1;
-      }
-      $this->assertEqualsCanonicalizing($entities_to_check, array_map(static function (array $data) {
-        return $data['id'];
-      }, $response_document['data']), $message);
-    }
   }
 
   /**
