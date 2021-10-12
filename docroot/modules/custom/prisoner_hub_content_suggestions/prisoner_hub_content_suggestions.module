@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_content_suggestions.module.
+ */
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Apply random sorting via query tag.
+ */
+function prisoner_hub_content_suggestions_query_sort_by_random_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
+  $query->orderRandom();
+}

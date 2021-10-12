@@ -1,0 +1,14 @@
+prisoner_hub_content_suggestions.jsonapi.get_suggestions:
+  path: '/%jsonapi%/node/{resource_type}/{node}/suggestions'
+  defaults:
+    _jsonapi_resource: Drupal\prisoner_hub_content_suggestions\Resource\ContentSuggestions
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      node:
+        type: entity:node
+        converter: paramconverter.jsonapi.entity_uuid
+
+
+

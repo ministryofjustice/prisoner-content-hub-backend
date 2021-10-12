@@ -1,6 +1,6 @@
-name: 'Prisoner Hub Recommendations'
+name: 'Prisoner Hub Suggestions'
 type: module
-description: 'Provides a JSON:API resource for content recommendations.'
+description: 'Provides a JSON:API resource for content suggestions.'
 core: 8.x
 core_version_requirement: ^8 || ^9
 package: 'Custom'
