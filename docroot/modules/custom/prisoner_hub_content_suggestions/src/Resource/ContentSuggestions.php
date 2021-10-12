@@ -71,6 +71,7 @@ class ContentSuggestions extends EntityQueryResourceBase {
     if (!empty($secondary_tags)) {
       $condition_group->condition('field_moj_secondary_tags', $secondary_tags, 'IN');
       $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
+      $query->addMetaData('sort_by_random_processed', TRUE);
     }
 
     // Only apply category condition if the secondary tags will bring back
