@@ -3,9 +3,10 @@
 /**
  * This is a NAME.deploy.php file. It contains "deploy" functions. These are
  * one-time functions that run *after* config is imported during a deployment.
- * These are a higher level alternative to hook_update_n and hook_post_update_NAME
- * functions. See https://www.drush.org/latest/deploycommand/#authoring-update-functions
- * for a detailed comparison.
+ * These are a higher level alternative to hook_update_n and
+ * hook_post_update_NAME functions. See
+ * https://www.drush.org/latest/deploycommand/#authoring-update-functions for a
+ * detailed comparison.
  */
 
 
@@ -110,7 +111,36 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
   else {
     return 'Updated ' . $sandbox['current'] . ' paths';
   }
+}
 
+/**
+ * Update series to reference categories.
+ */
+function prisoner_content_hub_profile_deploy_update_series() {
+  $terms_result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->accessCheck(FALSE)->execute();
+  $terms = Term::loadMultiple($terms_result);
+  $nodes_result = \Drupal::entityQuery('node')->exists('field_moj_series')->accessCheck(FALSE)->execute();
+  $nodes = Node::loadMultiple($nodes_result);
+
+  $new_category_values = [];
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    foreach ($node->get('field_moj_top_level_categories')->getValue() as $value) {
+      $new_category_values[$node->field_moj_series->target_id][] = $value['target_id'];
+    }
+  }
+
+  foreach ($new_category_values as $term_id => $category_values) {
+    if (isset($terms[$term_id])) {
+      $new_category_field_value = [];
+      foreach (array_unique($category_values) as $category_value) {
+        $new_category_field_value[] = ['target_id' => $category_value];
+      }
+      $term = $terms[$term_id];
+      $term->set('field_category', $new_category_field_value);
+      $term->save();
+    }
+  }
 }
 
 /**
@@ -130,7 +160,7 @@ function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
     $term->save();
     $sandbox['progress']++;
   }
-  
+
   $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
   if ($sandbox['#finished'] ) {
     return 'Completed updated, processed total of: ' . $sandbox['progress'];
