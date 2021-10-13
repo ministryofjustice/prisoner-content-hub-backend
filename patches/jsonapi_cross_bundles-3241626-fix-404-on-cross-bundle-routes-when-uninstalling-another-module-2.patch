@@ -1,0 +1,21 @@
+diff --git a/src/ResourceType/CrossBundleResourceTypeRepository.php b/src/ResourceType/CrossBundleResourceTypeRepository.php
+index db72946..40b9410 100644
+--- a/src/ResourceType/CrossBundleResourceTypeRepository.php
++++ b/src/ResourceType/CrossBundleResourceTypeRepository.php
+@@ -66,6 +66,8 @@ class CrossBundleResourceTypeRepository implements ResourceTypeRepositoryInterfa
+    * {@inheritdoc}
+    */
+   public function getByTypeName($type_name) {
++    // Ensure jsonapi.resource_types cache is generated from this class.
++    $this->all();
+     return $this->inner->getByTypeName($type_name);
+   }
+ 
+@@ -73,6 +75,7 @@ class CrossBundleResourceTypeRepository implements ResourceTypeRepositoryInterfa
+    * {@inheritdoc}
+    */
+   public function get($entity_type_id, $bundle) {
++    $this->all();
+     return $this->inner->get($entity_type_id, $bundle);
+   }
+ 

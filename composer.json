@@ -27,7 +27,7 @@
         "drupal/govuk_inline_form_errors": "2.0.0-beta2",
         "drupal/health_check": "^1.1",
         "drupal/image_style_warmer": "^1.1",
-        "drupal/jsonapi_cross_bundles": "dev-3172761-unable-to-install#c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28",
+        "drupal/jsonapi_cross_bundles": "^1.0",
         "drupal/jsonapi_image_styles": "^2.0@beta",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
@@ -37,7 +37,8 @@
         "drupal/monolog": "^2.0",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
-        "drupal/raven": "^2.27",
+        "drupal/raven": "^3.2",
+        "drupal/redis": "^1.5",
         "drupal/rest_menu_items": "^2.6",
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",
@@ -46,7 +47,6 @@
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
         "drupal/taxonomy_machine_name": "1.x-dev",
-        "drupal/theme_switcher": "dev-8.x-1.x#06bf0a03a8cd6932d4ee8369973128c4915e9eef",
         "drupal/token": "^1.5",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
@@ -146,6 +146,9 @@
             },
             "drupal/cer": {
                 "Issue #2846314: Add support for Dynamic Entity Reference fields": "patches/cer-2846711-add-support-for-dynamic-entity-reference-module-4.patch"
+            },
+            "drupal/jsonapi_cross_bundles": {
+                "Issue #3241626: 404 on cross bundle routes when uninstalling another module": "patches/jsonapi_cross_bundles-3241626-fix-404-on-cross-bundle-routes-when-uninstalling-another-module-2.patch"
             }
         },
         "patches-ignore": {
@@ -164,14 +167,6 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.drupalcode.org/issue/jsonapi_cross_bundles-3172761"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.drupalcode.org/issue/theme_switcher-3154752"
         }
     ],
     "require-dev": {

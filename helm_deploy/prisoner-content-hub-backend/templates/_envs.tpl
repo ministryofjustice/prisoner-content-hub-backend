@@ -73,5 +73,17 @@ env:
     value: {{ quote .Values.application.sentry_release }}
   - name: TRUSTED_HOSTS
     value: {{ include "prisoner-content-hub-backend.trustedHosts" . }}
+  - name: REDIS_HOST
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.redisSecretName }}
+        key: primary_endpoint_address
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.redisSecretName }}
+        key: auth_token
+  - name: REDIS_TLS_ENABLED
+    value: "true"
 
 {{- end -}}
