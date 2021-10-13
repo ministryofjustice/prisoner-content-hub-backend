@@ -80,7 +80,7 @@ index 6db5014..f42658e 100644
 +    // also means we can't cache any pages with signed URLs at all. When we
 +    // can implement this, we should parse out max-age from the generated
 +    // URL as suggested at https://github.com/aws/aws-sdk-php/issues/1052.
-+    \Drupal::service('page_cache_kill_switch')->trigger();
++    //\Drupal::service('page_cache_kill_switch')->trigger();
 +  }
 +}
 diff --git a/flysystem_s3.services.yml b/flysystem_s3.services.yml
