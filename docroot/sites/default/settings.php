@@ -121,7 +121,9 @@ $config['raven.settings'] = [
     // 7, // Info
     // 8  // Debug
   ],
-  'fatal_error_handler' => true
+  'fatal_error_handler' => true,
+  'traces_sample_rate' => 0.25,
+  'database_tracing' => TRUE,
 ];
 
 // Do not load Redis during installation (required for CircleCI builds).

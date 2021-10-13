@@ -26,7 +26,7 @@
         "drupal/govuk_inline_form_errors": "2.0.0-beta2",
         "drupal/health_check": "^1.1",
         "drupal/image_style_warmer": "^1.1",
-        "drupal/jsonapi_cross_bundles": "dev-3172761-unable-to-install#c0c90e6ecdd894732a0ca58f6d6c314e9dc29f28",
+        "drupal/jsonapi_cross_bundles": "^1.0",
         "drupal/jsonapi_image_styles": "^2.0@beta",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
@@ -36,7 +36,7 @@
         "drupal/monolog": "^2.0",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
-        "drupal/raven": "^2.27",
+        "drupal/raven": "^3.2",
         "drupal/redis": "^1.5",
         "drupal/rest_menu_items": "^2.6",
         "drupal/restui": "^1.18",
@@ -46,7 +46,6 @@
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
         "drupal/taxonomy_machine_name": "1.x-dev",
-        "drupal/theme_switcher": "dev-8.x-1.x#06bf0a03a8cd6932d4ee8369973128c4915e9eef",
         "drupal/token": "^1.5",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
@@ -126,8 +125,7 @@
             "drupal/core": {
                 "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
                 "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch",
-                "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
-                "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache.": "https://www.drupal.org/files/issues/2021-04-19/2352009-max-age-bubbling-9.1.x.patch"
+                "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch"
             },
             "drupal/jsonapi_page_limit": {
                 "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch"
@@ -158,14 +156,6 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.drupalcode.org/issue/jsonapi_cross_bundles-3172761"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.drupalcode.org/issue/theme_switcher-3154752"
         }
     ],
     "require-dev": {
