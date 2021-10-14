@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for the prisoner_hub_cms_help module.
+ */
+
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+
+/**
+ * Add Help button the main nav.
+ */
+function prisoner_hub_cms_help_update_9001(&$sandbox) {
+  $item = MenuLinkContent::create([
+    'link' => ['uri' => 'internal:/node/10221'],
+    'title' => 'Help',
+    'menu_name' => 'admin',
+    'weight' => -55,
+    'parent' => 'system.admin',
+  ]);
+  $item->save();
+}
