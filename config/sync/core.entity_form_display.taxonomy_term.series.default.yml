@@ -4,22 +4,19 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.series.field_category
+    - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
-    - field.field.taxonomy_term.series.field_featured_audio
     - field.field.taxonomy_term.series.field_featured_image
     - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_moj_prisons
-    - field.field.taxonomy_term.series.field_moj_promoted
     - field.field.taxonomy_term.series.field_prison_categories
-    - field.field.taxonomy_term.series.field_promoted_feature
-    - field.field.taxonomy_term.series.field_promoted_to_prison
     - field.field.taxonomy_term.series.field_sort_by
     - image.style.thumbnail
     - taxonomy.vocabulary.series
   module:
     - field_group
-    - file
     - image
+    - select2
     - text
 third_party_settings:
   field_group:
@@ -28,7 +25,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
       parent_name: ''
-      weight: 12
+      weight: 13
       format_type: fieldset
       region: content
       format_settings:
@@ -52,32 +49,31 @@ content:
       rows: 5
     third_party_settings: {  }
   field_category:
-    type: entity_reference_autocomplete
+    type: select2_entity_reference
     weight: 4
     region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
-      size: 60
-      placeholder: ''
+      autocomplete: false
+      width: 100%
     third_party_settings: {  }
+  field_feature_on_category:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
   field_feature_programme_code:
-    weight: 11
+    weight: 12
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_featured_audio:
-    weight: 10
-    settings:
-      progress_indicator: throbber
-    third_party_settings: {  }
-    type: file_generic
-    region: content
   field_featured_image:
-    weight: 6
+    weight: 7
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -85,7 +81,7 @@ content:
     type: image_image
     region: content
   field_moj_category_featured_item:
-    weight: 5
+    weight: 6
     settings:
       display_label: true
     third_party_settings: {  }
@@ -97,35 +93,11 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
-  field_moj_promoted:
-    weight: 7
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_prison_categories:
     weight: 11
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
-  field_promoted_feature:
-    weight: 8
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
-  field_promoted_to_prison:
-    weight: 9
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_sort_by:
     weight: 3
@@ -145,7 +117,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 14
     region: content
     third_party_settings: {  }
 hidden:

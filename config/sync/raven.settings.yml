@@ -14,7 +14,7 @@ log_levels:
   8: 0
 drush_error_handler: false
 stack: true
-timeout: 2
+timeout: !!float 2
 message_limit: 2048
 trace: false
 javascript_error_handler: false

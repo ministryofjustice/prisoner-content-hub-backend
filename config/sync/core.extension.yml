@@ -15,6 +15,7 @@ module:
   datetime: 0
   decoupled_router: 0
   diff: 0
+  dynamic_entity_reference: 0
   editor: 0
   elasticsearch_connector: 0
   entity: 0
@@ -50,6 +51,7 @@ module:
   path_alias: 0
   prisoner_hub_cms_help: 0
   prisoner_hub_entity_access: 0
+  prisoner_hub_featured_content: 0
   prisoner_hub_prison_context: 0
   prisoner_hub_taxonomy_sorting: 0
   raven: 0

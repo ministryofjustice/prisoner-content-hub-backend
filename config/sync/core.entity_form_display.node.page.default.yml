@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_feature_on_category
     - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
@@ -48,7 +49,7 @@ third_party_settings:
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 10
+      weight: 8
       format_type: fieldset
       region: content
       format_settings:
@@ -98,7 +99,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 8
+    weight: 10
     settings:
       display_label: true
     third_party_settings: {  }
@@ -135,7 +136,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 9
+    weight: 7
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -171,7 +172,7 @@ content:
     type: image_image
     region: content
   field_moj_top_level_categories:
-    weight: 7
+    weight: 9
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -241,5 +242,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_feature_on_category: true
   promote: true
   sticky: true

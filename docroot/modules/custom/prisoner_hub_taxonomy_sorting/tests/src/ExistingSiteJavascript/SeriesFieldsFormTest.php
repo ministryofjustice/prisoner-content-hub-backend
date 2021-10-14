@@ -7,9 +7,9 @@ use Drupal\user\Entity\User;
 use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
 
 /**
- * Functional tests to ensure that prison context jsonapi paths work correctly.
+ * Functional tests to ensure that series sorting fields work correctly.
  *
- * @group prisoner_hub_prison_context
+ * @group prisoner_hub_taxonomy_sorting
  */
 class SeriesFieldsFormTest extends ExistingSiteWebDriverTestBase {
 

@@ -1,18 +1,19 @@
-uuid: 519aad2e-ae39-42e9-a5d6-d395a411550f
+uuid: e3d6a582-0a15-47e7-bf4f-61af0b695a33
 langcode: en
 status: true
 dependencies:
   module:
+    - node
     - taxonomy
-id: taxonomy_term.field_promoted_to_prison
-field_name: field_promoted_to_prison
-entity_type: taxonomy_term
+id: node.field_feature_on_category
+field_name: field_feature_on_category
+entity_type: node
 type: entity_reference
 settings:
   target_type: taxonomy_term
 module: core
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

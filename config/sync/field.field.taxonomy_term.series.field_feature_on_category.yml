@@ -1,16 +1,16 @@
-uuid: 820370b2-8063-49b5-96cc-8987f23b01b5
+uuid: c060fbe5-2cbf-43a8-b0b0-d285219ab0dc
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_promoted_to_prison
-    - taxonomy.vocabulary.prisons
+    - field.storage.taxonomy_term.field_feature_on_category
+    - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.series
-id: taxonomy_term.series.field_promoted_to_prison
-field_name: field_promoted_to_prison
+id: taxonomy_term.series.field_feature_on_category
+field_name: field_feature_on_category
 entity_type: taxonomy_term
 bundle: series
-label: 'Promote to a prison'
+label: 'Feature on category'
 description: ''
 required: false
 translatable: false
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      prisons: prisons
+      moj_categories: moj_categories
     sort:
       field: name
       direction: asc

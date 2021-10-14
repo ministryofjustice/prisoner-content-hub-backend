@@ -10,6 +10,7 @@
  */
 
 
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
@@ -166,4 +167,26 @@ function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
     return 'Completed updated, processed total of: ' . $sandbox['progress'];
   }
   return 'Processed terms: ' . $sandbox['progress'];
+}
+
+/**
+ * Bulk update categories to have featured content tiles.
+ */
+function prisoner_content_hub_profile_deploy_category_tiles() {
+  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
+  $terms = Term::loadMultiple($result);
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $featured_tiles_value = [];
+    $featured_content = \Drupal::service('moj_resources.category_featured_content_api_class')->CategoryFeaturedContentApiEndpoint($term->id(), 50, 0);
+    foreach ($featured_content as $item) {
+      $featured_tiles_value[] = [
+        'target_id' => $item['id'],
+        'target_type' => $item['content_type'] == 'series' ? 'taxonomy_term' : 'node',
+      ];
+    }
+    $term->set('field_featured_tiles', $featured_tiles_value);
+    $term->save();
+  }
 }

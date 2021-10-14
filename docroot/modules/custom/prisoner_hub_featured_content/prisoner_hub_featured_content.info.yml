@@ -1,0 +1,5 @@
+name: 'Prisoner Hub Featured Content'
+type: module
+description: 'Provides custom functionality relating to how content can be "featured" on the Hub.'
+core_version_requirement: ^8 || ^9
+package: 'Custom'
