@@ -12,24 +12,26 @@ use Drupal\taxonomy\Entity\Term;
  *
  * Attach relevant Javascript to node edit forms to allow featuring content
  * for categories.
+ *
+ * DISABLED. TODO: Enable once we switch over category pages to JSON:API.
  */
-function prisoner_hub_featured_content_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if (isset($form['field_feature_on_category'])) {
-    // Attach our library, which includes the prisoner-hub-featured-content.js file.
-    $form['#attached']['library'][] = 'prisoner_hub_featured_content/prisoner_hub_featured_content';
-
-    if (isset($form['field_moj_series'])) {
-      // Get all series taxonomy terms, keyed by their associated category.
-      $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
-      $terms = Term::loadMultiple($result);
-      $series_by_categories = [];
-      /** @var \Drupal\taxonomy\TermInterface $term */
-      foreach ($terms as $term) {
-        $series_by_categories[$term->id()] = array_column($term->get('field_category')->getValue(), 'target_id');
-      }
-      // Export $series_by_categories as a JSON setting, so that we can use it
-      // in Javascript (see prisoner-hub-featured-content.js).
-      $form['#attached']['drupalSettings']['prisonerHubFeaturedContent']['seriesByCategory'] = $series_by_categories;
-    }
-  }
-}
+//function prisoner_hub_featured_content_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+//  if (isset($form['field_feature_on_category'])) {
+//    // Attach our library, which includes the prisoner-hub-featured-content.js file.
+//    $form['#attached']['library'][] = 'prisoner_hub_featured_content/prisoner_hub_featured_content';
+//
+//    if (isset($form['field_moj_series'])) {
+//      // Get all series taxonomy terms, keyed by their associated category.
+//      $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
+//      $terms = Term::loadMultiple($result);
+//      $series_by_categories = [];
+//      /** @var \Drupal\taxonomy\TermInterface $term */
+//      foreach ($terms as $term) {
+//        $series_by_categories[$term->id()] = array_column($term->get('field_category')->getValue(), 'target_id');
+//      }
+//      // Export $series_by_categories as a JSON setting, so that we can use it
+//      // in Javascript (see prisoner-hub-featured-content.js).
+//      $form['#attached']['drupalSettings']['prisonerHubFeaturedContent']['seriesByCategory'] = $series_by_categories;
+//    }
+//  }
+//}
