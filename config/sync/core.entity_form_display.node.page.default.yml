@@ -33,7 +33,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
       parent_name: ''
-      weight: 13
+      weight: 11
       format_type: fieldset
       region: content
       format_settings:
@@ -98,30 +98,8 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_feature_on_category:
-    weight: 11
-    settings: {  }
-    third_party_settings:
-      conditional_fields:
-        6d8bca50-b95a-4e51-b5cf-92e63913edea:
-          dependee: field_moj_top_level_categories
-          settings:
-            state: '!empty'
-            condition: value
-            grouping: AND
-            values_set: 1
-            value: ''
-            values: {  }
-            value_form: {  }
-            effect: show
-            effect_options: {  }
-            selector: ''
-          entity_type: node
-          bundle: page
-    type: options_buttons
-    region: content
   field_moj_category_featured_item:
-    weight: 12
+    weight: 10
     settings:
       display_label: true
     third_party_settings: {  }
@@ -223,12 +201,12 @@ content:
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 14
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -236,7 +214,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 15
     third_party_settings: {  }
     region: content
   title:
@@ -259,10 +237,11 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_feature_on_category: true
   promote: true
   sticky: true
