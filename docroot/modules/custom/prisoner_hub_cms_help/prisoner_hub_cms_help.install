@@ -15,7 +15,7 @@ function prisoner_hub_cms_help_update_9001(&$sandbox) {
     'link' => ['uri' => 'internal:/node/10221'],
     'title' => 'Help',
     'menu_name' => 'admin',
-    'weight' => -55,
+    'weight' => 99,
     'parent' => 'system.admin',
   ]);
   $item->save();
