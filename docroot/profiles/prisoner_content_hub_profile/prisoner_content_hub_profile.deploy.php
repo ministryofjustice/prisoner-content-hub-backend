@@ -190,3 +190,39 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
     $term->save();
   }
 }
+
+/**
+ * Update any embedded links inside description fields, so that they point to
+ * the category and not the landing page.
+ */
+function prisoner_content_hub_profile_deploy_update_embedded_links_to_landing_pages() {
+  $landing_pages = [];
+  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
+  $terms = Term::loadMultiple($result);
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $referenced_entities = $term->get('field_legacy_landing_page')->referencedEntities();
+    if (!empty($referenced_entities)) {
+      /** @var \Drupal\node\NodeInterface $referenced_entity */
+      $referenced_entity = array_shift($referenced_entities);
+      $landing_pages['/tags/' . $term->id()] = '/content/' . $referenced_entity->id();
+    }
+  }
+
+  $result = \Drupal::entityQuery('node')
+    ->condition('field_moj_description', '/content/', 'CONTAINS')
+    ->accessCheck(FALSE)
+    ->execute();
+  $nodes = Node::loadMultiple($result);
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $count = 0;
+    $description = $node->get('field_moj_description')->getValue();
+    $description[0]['value'] = str_replace(array_values($landing_pages), array_keys($landing_pages), $description[0]['value'], $count);
+    if ($count) {
+      $node->set('field_moj_description', $description);
+      $node->save();
+      print 'Updated description on node: ' . $node->id() . PHP_EOL;
+    }
+  }
+}
