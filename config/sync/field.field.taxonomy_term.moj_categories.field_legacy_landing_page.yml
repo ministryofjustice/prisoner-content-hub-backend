@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_legacy_landing_page
-    - node.type.landing_page
     - taxonomy.vocabulary.moj_categories
 id: taxonomy_term.moj_categories.field_legacy_landing_page
 field_name: field_legacy_landing_page
@@ -19,8 +18,7 @@ default_value_callback: ''
 settings:
   handler: 'default:node'
   handler_settings:
-    target_bundles:
-      landing_page: landing_page
+    target_bundles: {  }
     sort:
       field: _none
     auto_create: false
