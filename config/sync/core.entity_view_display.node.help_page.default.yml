@@ -8,7 +8,6 @@ dependencies:
   module:
     - book
     - layout_builder
-    - prisoner_hub_cms_help
     - text
     - user
 third_party_settings:
@@ -39,18 +38,6 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 4
-          6a143e49-8f2f-49f3-a5eb-cf92cbb495c6:
-            uuid: 6a143e49-8f2f-49f3-a5eb-cf92cbb495c6
-            region: second
-            configuration:
-              id: author_information_block
-              label: 'Author information block'
-              provider: prisoner_hub_cms_help
-              label_display: '0'
-              context_mapping:
-                node: layout_builder.entity
-            additional: {  }
             weight: 5
           69e20ee4-7b97-4596-9ed9-05a41b3b169e:
             uuid: 69e20ee4-7b97-4596-9ed9-05a41b3b169e
@@ -64,6 +51,27 @@ third_party_settings:
               context_mapping: {  }
             additional: {  }
             weight: 2
+          e359e2e8-3c7f-4093-8285-ae9715a589a9:
+            uuid: e359e2e8-3c7f-4093-8285-ae9715a589a9
+            region: second
+            configuration:
+              id: 'field_block:node:help_page:title'
+              label: Title
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: plain_string_formatter
+                settings:
+                  link_to_entity: false
+                  wrap_tag: h1
+                  wrap_class: ''
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 4
         third_party_settings: {  }
 id: node.help_page.default
 targetEntityType: node
