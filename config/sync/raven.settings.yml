@@ -33,3 +33,4 @@ twig_tracing: false
 traces_sample_rate: 0.25
 browser_traces_sample_rate: null
 auto_session_tracking: false
+send_client_reports: false
