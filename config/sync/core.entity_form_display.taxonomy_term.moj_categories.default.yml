@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
-    - field.field.taxonomy_term.moj_categories.field_legacy_landing_page
     - field.field.taxonomy_term.moj_categories.field_moj_prisons
     - field.field.taxonomy_term.moj_categories.field_prison_categories
     - taxonomy.vocabulary.moj_categories
@@ -65,16 +64,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: dynamic_entity_reference_default
-    region: content
-  field_legacy_landing_page:
-    weight: 2
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_moj_prisons:
     weight: 5
