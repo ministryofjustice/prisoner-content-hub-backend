@@ -26,7 +26,7 @@ function prisoner_hub_cms_help_entity_view_alter(array &$build, Drupal\Core\Enti
 function prisoner_hub_cms_help_preprocess_menu(&$variables) {
   static $book_urls = [];
   if (empty($book_urls)) {
-    /** @var \Drupal\book\BookManagerInterface $book_maneger */
+    /** @var \Drupal\book\BookManagerInterface $book_manager */
     $book_manager = \Drupal::service('book.manager');
     $books = $book_manager->getAllBooks();
     foreach ($books as $book) {
