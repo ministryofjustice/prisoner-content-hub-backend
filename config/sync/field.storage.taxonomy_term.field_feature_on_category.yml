@@ -1,18 +1,18 @@
-uuid: ba238325-400a-4cae-ae38-5c82312c42b4
+uuid: 277324fc-a618-48e8-afed-6afe03196d92
 langcode: en
 status: true
 dependencies:
   module:
     - taxonomy
-id: taxonomy_term.field_content_summary
-field_name: field_content_summary
+id: taxonomy_term.field_feature_on_category
+field_name: field_feature_on_category
 entity_type: taxonomy_term
-type: string_long
+type: entity_reference
 settings:
-  case_sensitive: false
+  target_type: taxonomy_term
 module: core
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_feature_on_category
     - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
@@ -258,10 +259,11 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_feature_on_category: true
   promote: true
   sticky: true

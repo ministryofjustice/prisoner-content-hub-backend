@@ -45,5 +45,12 @@ services:
     networks:
       - circleci-prisoner_content_hub
 
+  prisoner-content-hub-redis:
+    image: redis:5.0.6
+    ports:
+      - 6379:6379
+    networks:
+      - circleci-prisoner_content_hub
+
 networks:
   circleci-prisoner_content_hub:

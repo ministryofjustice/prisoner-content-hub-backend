@@ -77,8 +77,11 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install uploadprogress \
     && docker-php-ext-enable uploadprogress
 
+RUN pecl install redis \
+  && docker-php-ext-enable redis
+
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=/bin --filename=composer --version=1.10.22 \
+  && php composer-setup.php --install-dir=/bin --filename=composer --version=2.1.8 \
   && php -r "unlink('composer-setup.php');"
 
 # Add the composer bin directory to the path.

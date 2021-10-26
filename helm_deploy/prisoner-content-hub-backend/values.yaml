@@ -34,6 +34,7 @@ application:
     region: eu-west-2
     cname: ''
     cnameIsBucket: false
+  redisSecretName: drupal-redis
 
 volumes:
   - name: apache-cache

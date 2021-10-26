@@ -8,15 +8,15 @@ log_levels:
   2: 2
   3: 3
   4: 4
-  5: 5
-  6: 6
-  7: 7
+  5: 0
+  6: 0
+  7: 0
   8: 0
-drush_error_handler: false
+drush_error_handler: true
 stack: true
 timeout: !!float 2
 message_limit: 2048
-trace: false
+trace: true
 javascript_error_handler: false
 public_dsn: ''
 ssl: verify_ssl
@@ -24,5 +24,13 @@ ca_cert: ''
 ignored_channels: {  }
 _core:
   default_config_hash: o1Lgj8FSHbxxBeB7nWl-QtfAb_UCG7wFxLXti23jFkE
+send_user_data: true
+send_request_body: true
+rate_limit: null
+request_tracing: false
+database_tracing: true
+twig_tracing: false
+traces_sample_rate: 0.25
 browser_traces_sample_rate: null
 auto_session_tracking: false
+send_client_reports: false

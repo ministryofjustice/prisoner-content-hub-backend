@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_feature_on_category
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_description
     - field.field.node.moj_video_item.field_moj_episode
@@ -115,7 +116,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_category_featured_item:
-    weight: 10
+    weight: 11
     settings:
       display_label: true
     third_party_settings: {  }
@@ -187,7 +188,7 @@ content:
     third_party_settings: {  }
     region: content
   field_moj_top_level_categories:
-    weight: 9
+    weight: 10
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -276,6 +277,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_feature_on_category: true
   field_moj_archived: true
   promote: true
   sticky: true

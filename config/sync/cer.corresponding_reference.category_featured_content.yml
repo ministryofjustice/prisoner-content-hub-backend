@@ -1,0 +1,15 @@
+uuid: 6ffe1193-14ff-415b-999e-3986c0807e8c
+langcode: en
+status: true
+dependencies: {  }
+id: category_featured_content
+label: 'Category featured content'
+enabled: true
+first_field: field_feature_on_category
+second_field: field_featured_tiles
+add_direction: prepend
+bundles:
+  node:
+    - '*'
+  taxonomy_term:
+    - '*'

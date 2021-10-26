@@ -175,7 +175,7 @@ parameters:
     supportsCredentials: false
 
   monolog.channel_handlers:
-    default: ["stream", "errStream"]
+    default: ["stream", "errStream", "drupal.raven"]
 
   jsonapi_page_limit.size_max: []
   jsonapi_page_limit.global_size_max: 100

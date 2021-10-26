@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Installer\InstallerKernel;
+
 $databases = [];
 $databases['default']['default'] = array(
   'database' => getenv('HUB_DB_ENV_MYSQL_DATABASE', true),
@@ -101,26 +103,45 @@ $settings['file_public_base_url'] = getenv('FILE_PUBLIC_BASE_URL', true);
 $elasticsearch_cluster = getenv("ELASTICSEARCH_CLUSTER", true);
 $config['elasticsearch_connector.cluster.'.$elasticsearch_cluster]['url'] = getenv("ELASTICSEARCH_HOST", true);
 
-// Configuration options can be found here: https://git.drupalcode.org/project/raven/-/blob/8.x-2.x/config/install/raven.settings.yml
-//
-// We don't _need_ to specify the DSN, environment, or release here, but doing so
-// displays the setting in the UI, making debugging easier
+// Raven (sentry integration) module allows for setting values via environment
+// variables.  See https://git.drupalcode.org/project/raven/-/blob/14ddb8158b480c2e65884b4d4c561a14c17acf2b/README.md#L109
+// We also set them here so that they show up on the admin/config/development/logging
+// to avoid any confusion.
 $config['raven.settings'] = [
   'client_key' => getenv("SENTRY_DSN", true),
   'environment' => getenv("SENTRY_ENVIRONMENT", true),
   'release' => getenv("SENTRY_RELEASE", true),
-  'log_levels' => [
-    1, // Emergency
-    2, // Alert
-    3, // Critical
-    4, // Error
-    // 5, // Warning
-    // 6, // Notice
-    // 7, // Info
-    // 8  // Debug
-  ],
-  'fatal_error_handler' => true
 ];
+// We want to ignore all flysytem errors on non-prod environments.
+// There will be lots of these due to missing files.
+if ($config['raven.settings']['environment'] != 'production') {
+  $config['raven.settings']['ignored_channels'] = ['flysystem'];
+}
+
+// Do not load Redis during installation (required for CircleCI builds).
+// See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
+if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+  $settings['redis.connection']['interface'] = 'PhpRedis';
+  if (getenv('REDIS_TLS_ENABLED', 'true') == 'true') {
+    $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
+  }
+  else {
+    $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
+  }
+  if (getenv('REDIS_PASSWORD', true)) {
+    $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
+  }
+  $settings['cache']['default'] = 'cache.backend.redis';
+
+  // Load in the services config directly from the module.  This allows
+  // for any updates to be automatically added, and also ensures we do not add
+  // the config during site installation (which will result in an error).
+  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+
+  // Allow the services to work before the Redis module itself is enabled.
+  // TODO: Remove this after Redis has been deployed.
+  $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+}
 
 $settings['config_sync_directory'] = '../config/sync';
 
