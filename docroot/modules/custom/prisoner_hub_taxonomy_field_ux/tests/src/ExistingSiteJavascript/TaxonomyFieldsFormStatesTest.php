@@ -72,18 +72,27 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
   }
 
   /**
-   * Test the correct fields appear when logged in as a studio admin.
+   * Test the correct series sorting fields appear when logged in as a studio admin.
    */
   public function testSeriesSortingFieldsStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
     foreach (self::$contentTypes as $contentType) {
       $this->checkSortingFieldVisibility($contentType);
+    }
+  }
+
+  /**
+   * Test that the category field appears when logged in as a studio admin.
+   */
+  public function testCategoryFieldStudioAdmin() {
+    $this->drupalLogin($this->studioAdministrator);
+    foreach (self::$contentTypes as $contentType) {
       $this->checkCategoryFieldVisibility($contentType);
     }
   }
 
   /**
-   * Test the correct fields appear when logged in as a local content manager.
+   * Test the correct series sorting fields appear when logged in as a local content mamager..
    */
   public function testSeriesSortingFieldsLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
@@ -93,7 +102,17 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
   }
 
   /**
-   * Helper function to test a specific content type.
+   * Test that the category field appears when logged in as a local content manager.
+   */
+  public function testCategoryFieldLocalContentManager() {
+    $this->drupalLogin($this->localContentManagerUser);
+    foreach (self::$contentTypes as $contentType) {
+      $this->checkCategoryFieldVisibility($contentType);
+    }
+  }
+
+  /**
+   * Helper function to test series field visibility.
    *
    * @param string $content_type
    *   The content type machine name.
@@ -122,6 +141,27 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
     self::assertFalse($season_field->isVisible());
     self::assertFalse($episode_field->isVisible());
     self::assertTrue($release_date_field->isVisible());
+  }
+
+  /**
+   * Helper function to test category field visibility.
+   *
+   * @param string $content_type
+   *   The content type machine name.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  private function checkCategoryFieldVisibility($content_type) {
+    $this->visit('/node/add/' . $content_type);
+    $web_assert = $this->assertSession();
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getCurrentPage();
+    $category_field = $page->findField('Category');
+    self::assertFalse($category_field->isVisible());
+
+    $not_in_series_field = $page->findField('This content is not part of any series');
+    $not_in_series_field->check();
+    self::assertTrue($category_field->isVisible());
   }
 
   /**
