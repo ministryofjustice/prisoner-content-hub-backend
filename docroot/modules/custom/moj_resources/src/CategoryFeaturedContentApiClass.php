@@ -199,7 +199,7 @@ class CategoryFeaturedContentApiClass
     $loadedTerms = $this->termStorage->loadMultiple($termIds);
     $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
       $prisons = array_column($term->field_moj_prisons->getValue(), 'target_id');
-      if ($term->field_moj_category_featured_item->value == true && in_array($prisonId, $prisons)) {
+      if ($term->field_moj_category_featured_item->value == true && (!$prisonId || in_array($prisonId, $prisons))) {
         return true;
       } else {
         return false;
