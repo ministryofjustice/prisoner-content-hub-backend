@@ -235,3 +235,10 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
     $term->save();
   }
 }
+
+/**
+ * Re-deploy the update series job, to account for updates since it was last run.
+ */
+function prisoner_content_hub_profile_deploy_update_series_redeploy() {
+  prisoner_content_hub_profile_deploy_update_series();
+}
