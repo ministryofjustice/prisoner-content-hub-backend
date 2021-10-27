@@ -1,4 +1,4 @@
-# Prisoner Hub Entity Access
+# Prisoner Hub Prison Access
 
 This module provides entity access rules to show/hide content based on the current prison.
 It uses the values of the "Prison" (field_moj_prison) and "Prison Categories" (field_prison_categories),

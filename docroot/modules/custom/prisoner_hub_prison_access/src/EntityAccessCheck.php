@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\prisoner_hub_entity_access;
+namespace Drupal\prisoner_hub_prison_access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -20,7 +20,7 @@ class EntityAccessCheck {
   /**
    * The prison category loader service.
    *
-   * @var \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader
+   * @var \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader
    */
   protected $prisonCategoryLoader;
 
@@ -32,7 +32,7 @@ class EntityAccessCheck {
   /**
    * EntityAccessCheck constructor.
    *
-   * @param \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader $prison_category_loader
+   * @param \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader $prison_category_loader
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    */
   public function __construct(PrisonCategoryLoader $prison_category_loader, EntityTypeManager $entity_type_manager) {

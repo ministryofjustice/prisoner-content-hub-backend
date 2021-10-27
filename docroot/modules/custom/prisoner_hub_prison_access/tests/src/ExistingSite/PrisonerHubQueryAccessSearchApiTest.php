@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Core\Url;
 use Drupal\elasticsearch_connector\Entity\Cluster;
@@ -10,7 +10,7 @@ use Drupal\search_api\Entity\Index;
  * Test that the jsonapi responses for nodes tagged with prisons and
  * prison categories return the correct response.
  *
- * @group prisoner_hub_entity_access
+ * @group prisoner_hub_prison_access
  */
 class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase {
 

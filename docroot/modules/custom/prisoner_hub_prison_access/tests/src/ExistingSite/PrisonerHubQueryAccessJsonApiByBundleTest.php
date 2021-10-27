@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Core\Url;
 
@@ -8,7 +8,7 @@ use Drupal\Core\Url;
  * Test that the JSON:API responses for taxonomy terms tagged with prisons and
  * prison categories return the correct response.
  *
- * @group prisoner_hub_entity_access
+ * @group prisoner_hub_prison_access
  */
 class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTestBase {
 

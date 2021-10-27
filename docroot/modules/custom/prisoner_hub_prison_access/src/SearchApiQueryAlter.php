@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\prisoner_hub_entity_access;
+namespace Drupal\prisoner_hub_prison_access;
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\search_api\Query\ConditionGroup;
@@ -15,14 +15,14 @@ class SearchApiQueryAlter {
   /**
    * The prison category loader service.
    *
-   * @var \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader
+   * @var \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader
    */
   protected $prisonCategoryLoader;
 
   /**
    * SearchApiQueryAlter constructor.
    *
-   * @param \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader $prison_category_loader
+   * @param \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader $prison_category_loader
    */
   public function __construct(PrisonCategoryLoader $prison_category_loader) {
     $this->prisonCategoryLoader = $prison_category_loader;
