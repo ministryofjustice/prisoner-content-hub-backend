@@ -25,32 +25,18 @@ class PrisonerHubSeriesAccessTest extends ExistingSiteBase {
   use TaxonomyCreationTrait;
 
   /**
-   * A generated series term, that is linked to $this->$categoryTerm.
-   *
-   * @var \Drupal\taxonomy\Entity\Term
-   */
-  protected $seriesTerm;
-
-  /**
-   * Set up content and taxonomy terms to test with.
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $vocab_series = Vocabulary::load('series');
-    $this->seriesTerm = $this->createTerm($vocab_series);
-  }
-
-  /**
    * Test a series with no available content is a 403.
    */
   public function testSeriesWithNoAvailableContent() {
+    $vocab_series = Vocabulary::load('series');
+    $series = $this->createTerm($vocab_series);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $this->seriesTerm->id()]
+        ['target_id' => $series->id()]
       ],
-      'status' => 0,
+      'status' => NodeInterface::NOT_PUBLISHED,
     ]);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $this->seriesTerm->bundle() . '/' . $this->seriesTerm->uuid());
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(403, $response->getStatusCode(), $url->toString() . ' returns a 403 response.');
   }
@@ -59,12 +45,15 @@ class PrisonerHubSeriesAccessTest extends ExistingSiteBase {
    * Test a series with at least 1 available content is a 200.
    */
   public function testSeriesWithAvailableContent() {
+    $vocab_series = Vocabulary::load('series');
+    $series = $this->createTerm($vocab_series);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $this->seriesTerm->id()]
+        ['target_id' => $series->id()]
       ],
+      'status' => NodeInterface::PUBLISHED,
     ]);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $this->seriesTerm->bundle() . '/' . $this->seriesTerm->uuid());
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }
