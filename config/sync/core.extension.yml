@@ -7,6 +7,7 @@ module:
   book: 0
   book_blocks: 0
   breakpoint: 0
+  cache_control_override: 0
   cer: 0
   ckeditor: 0
   config: 0
@@ -47,6 +48,7 @@ module:
   monolog: 0
   node: 0
   options: 0
+  page_cache: 0
   path: 0
   path_alias: 0
   prisoner_hub_cms_help: 0
