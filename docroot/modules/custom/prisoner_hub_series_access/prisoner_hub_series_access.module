@@ -25,6 +25,9 @@ function prisoner_hub_series_access_entity_access(\Drupal\Core\Entity\EntityInte
     $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
       return $query->execute();
     });
+    if ($account->hasPermission('edit terms in series')) {
+      return AccessResult::neutral();
+    }
     return AccessResult::forbiddenIf(count($results) == 0);
   }
 }
