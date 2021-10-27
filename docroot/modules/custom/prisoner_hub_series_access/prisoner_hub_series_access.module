@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_series_access.module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Render\RenderContext;
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Prevent access to series if there is no available content within.
+ */
+function prisoner_hub_series_access_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  if ($entity->getEntityTypeId() == 'taxonomy_term' && $entity->bundle() == 'series') {
+    $query = \Drupal::entityQuery('node');
+    $query->condition('field_moj_series', $entity->id());
+
+    // Query must be executed in render context to avoid 500 errors when
+    // being run through JSON:API.  For more info
+    // @See Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
+    $context = new RenderContext();
+    $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
+      return $query->execute();
+    });
+    return AccessResult::forbiddenIf(count($results) == 0);
+  }
+}
