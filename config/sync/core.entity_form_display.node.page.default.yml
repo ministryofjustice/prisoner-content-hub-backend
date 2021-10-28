@@ -120,6 +120,12 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
+  field_feature_on_category:
+    type: options_buttons
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_moj_description:
     weight: 1
     settings:
@@ -264,6 +270,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_feature_on_category: true
+  field_moj_category_featured_item: true
   promote: true
   sticky: true

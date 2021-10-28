@@ -242,3 +242,10 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
 function prisoner_content_hub_profile_deploy_update_series_redeploy() {
   prisoner_content_hub_profile_deploy_update_series();
 }
+
+/**
+ * Re-run the featured content update, to update to the latest content.
+ */
+function prisoner_content_hub_profile_deploy_category_tiles_redeploy() {
+  prisoner_content_hub_profile_deploy_category_tiles();
+}
