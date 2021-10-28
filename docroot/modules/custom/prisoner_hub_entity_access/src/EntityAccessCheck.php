@@ -65,10 +65,10 @@ class EntityAccessCheck {
       $prison_category_field_name = $this->prisonCategoryLoader->getPrisonCategoryFieldName();
       if ($entity->hasField($prison_field_name) && $entity->hasField($prison_category_field_name)) {
         if ($this->fieldValueExists($entity->get($prison_field_name), $current_prison_id)) {
-          return AccessResult::neutral();
+          return AccessResult::allowed();
         }
         if ($this->fieldValueExists($entity->get($prison_category_field_name), $this->prisonCategoryLoader->getPrisonCategoryIdFromCurrentRoute())) {
-          return AccessResult::neutral();
+          return AccessResult::allowed();
         }
         return AccessResult::forbidden();
       }
