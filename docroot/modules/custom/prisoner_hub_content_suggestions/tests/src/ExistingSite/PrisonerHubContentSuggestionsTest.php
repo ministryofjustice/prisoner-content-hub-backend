@@ -165,6 +165,23 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
+   * Test that content with tag and a category returns content with the same
+   * tag and category.
+   */
+  public function testContentWithTagAndCategory() {
+    $node = $this->createNode([
+      'field_moj_secondary_tags' => [
+        ['target_id' => $this->secondaryTagTerm->id()]
+      ],
+      'field_moj_top_level_categories' => [
+        ['target_id' => $this->categoryTerm->id()]
+      ],
+    ]);
+    $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTag], $node);
+  }
+
+
+  /**
    * Helper function to assert that a jsonapi response returns the expected entities.
    *
    * @param array $entities_to_check
@@ -186,22 +203,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
         return $data['id'];
       }, $response_document['data']), $message);
     }
-  }
-
-  /**
-   * Test that content with tag and a category returns content with the same
-   * tag and category.
-   */
-  public function testContentWithTagAndCategory() {
-    $node = $this->createNode([
-      'field_moj_secondary_tags' => [
-        ['target_id' => $this->secondaryTagTerm->id()]
-      ],
-      'field_moj_top_level_categories' => [
-        ['target_id' => $this->categoryTerm->id()]
-      ],
-    ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTag], $node);
   }
 
   /**
