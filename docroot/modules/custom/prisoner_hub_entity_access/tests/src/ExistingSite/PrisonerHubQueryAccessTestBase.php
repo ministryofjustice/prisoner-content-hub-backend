@@ -4,6 +4,7 @@ namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -125,7 +126,20 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
       case 'taxonomy_term':
         $vocabulary = Vocabulary::load($bundle);
-        return $this->createTerm($vocabulary, $values)->uuid();
+        $term = $this->createTerm($vocabulary, $values);
+
+        // Series require available content to be accessible
+        // (via prisoner_hub_series_access module).
+        // TODO: Refactor all tests across custom modules to use the same entity creation process.
+        if ($bundle == 'series') {
+          $this->createNode([
+            'field_moj_series' => ['target_id' => $term->id()],
+            'field_prison_categories' => [
+              ['target_id' => $this->prisonCategoryTerm->id()]
+            ],
+          ]);
+        }
+        return $term->uuid();
     }
   }
 
@@ -160,6 +174,11 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
       $this->createEntityTaggedWithPrisonButNoCategory($entity_type_id, $bundle, $this->anotherPrisonTerm->id());
     }
 
+    // Also create some unpublished entities.
+    for ($i = 0; $i < $amount; $i++) {
+      $this->createEntityTaggedWithPrisonButNoCategory($entity_type_id, $bundle, $this->prisonTerm->id(), FALSE);
+    }
+
    return $entities_to_check;
   }
 
@@ -169,11 +188,12 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @return int
    *   The uuid of the created entity.
    */
-  public function createEntityTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $prison_id) {
+  public function createEntityTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $prison_id, $status = NodeInterface::PUBLISHED) {
     $values = [
       $this->prisonFieldName => [
         ['target_id' => $prison_id]
       ],
+      'status' => $status,
     ];
     return $this->createEntity($entity_type_id, $bundle, $values);
   }
@@ -204,11 +224,12 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @return int
    *   The uuid of the created entity.
    */
-  public function createEntityTaggedWithCategoryButNoPrison(string $entity_type_id, string $bundle, int $prison_category_id) {
+  public function createEntityTaggedWithCategoryButNoPrison(string $entity_type_id, string $bundle, int $prison_category_id, $status = NodeInterface::PUBLISHED) {
     $values = [
       $this->prisonCategoryFieldName => [
         ['target_id' => $prison_category_id],
       ],
+      'status' => $status,
     ];
     return $this->createEntity($entity_type_id, $bundle, $values);
   }
@@ -239,7 +260,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @return int
    *   The uuid of the created entity.
    */
-  public function createEntityTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, string $prison_id, int $prison_category_id) {
+  public function createEntityTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, string $prison_id, int $prison_category_id, $status = NodeInterface::PUBLISHED) {
     $values = [
       $this->prisonFieldName => [
         ['target_id' => $prison_id],
@@ -247,6 +268,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
       $this->prisonCategoryFieldName => [
         ['target_id' => $prison_category_id],
       ],
+      'status' => $status,
     ];
     return $this->createEntity($entity_type_id, $bundle, $values);
   }
