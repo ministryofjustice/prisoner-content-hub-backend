@@ -190,3 +190,10 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
     $term->save();
   }
 }
+
+/**
+ * Re-run the featured content update, to update to the latest content.
+ */
+function prisoner_content_hub_profile_deploy_category_tiles_redeploy() {
+  prisoner_content_hub_profile_deploy_category_tiles();
+}
