@@ -120,7 +120,11 @@ function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
 function prisoner_content_hub_profile_deploy_update_series() {
   $terms_result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->accessCheck(FALSE)->execute();
   $terms = Term::loadMultiple($terms_result);
-  $nodes_result = \Drupal::entityQuery('node')->exists('field_moj_series')->accessCheck(FALSE)->execute();
+  $nodes_result = \Drupal::entityQuery('node')
+    ->exists('field_moj_series')
+    ->accessCheck(TRUE)
+    ->condition('status', 1)
+    ->execute();
   $nodes = Node::loadMultiple($nodes_result);
 
   $new_category_values = [];
@@ -131,16 +135,16 @@ function prisoner_content_hub_profile_deploy_update_series() {
     }
   }
 
-  foreach ($new_category_values as $term_id => $category_values) {
-    if (isset($terms[$term_id])) {
-      $new_category_field_value = [];
-      foreach (array_unique($category_values) as $category_value) {
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $new_category_field_value = [];
+    if (isset($new_category_values[$term->id()])) {
+      foreach (array_unique($new_category_values[$term->id()]) as $category_value) {
         $new_category_field_value[] = ['target_id' => $category_value];
       }
-      $term = $terms[$term_id];
-      $term->set('field_category', $new_category_field_value);
-      $term->save();
     }
+    $term->set('field_category', $new_category_field_value);
+    $term->save();
   }
 }
 
@@ -192,7 +196,8 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
 }
 
 /**
- * Re-deploy the update series job, to account for updates since it was last run.
+ * Re-deploy the update series job, to account for updates since it was last
+ * run.
  */
 function prisoner_content_hub_profile_deploy_update_series_redeploy() {
   prisoner_content_hub_profile_deploy_update_series();
@@ -209,8 +214,9 @@ function prisoner_content_hub_profile_deploy_category_tiles_redeploy() {
 /**
  * Update content based on if it has a series.
  *
- * Content with a series, will have its category removed, and field_not_in_series set to 0.
- * Content not in a series, will have field_not_in_series set to 1.
+ * Content with a series, will have its category removed, and
+ * field_not_in_series set to 0. Content not in a series, will have
+ * field_not_in_series set to 1.
  */
 function prisoner_content_hub_profile_deploy_z_remove_categories_from_content_with_series(&$sandbox) {
   if (!isset($sandbox['progress'])) {
