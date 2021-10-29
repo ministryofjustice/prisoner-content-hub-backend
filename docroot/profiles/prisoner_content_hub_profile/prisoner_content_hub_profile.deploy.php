@@ -212,7 +212,7 @@ function prisoner_content_hub_profile_deploy_category_tiles_redeploy() {
  * Content with a series, will have its category removed, and field_not_in_series set to 0.
  * Content not in a series, will have field_not_in_series set to 1.
  */
-function prisoner_content_hub_profile_deploy_z_docroot/profiles/prisoner_content_hub_profile/prisoner_content_hub_profile.deploy.phpremove_categories_from_content_with_series(&$sandbox) {
+function prisoner_content_hub_profile_deploy_z_remove_categories_from_content_with_series(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     $query = \Drupal::entityQuery('node');
