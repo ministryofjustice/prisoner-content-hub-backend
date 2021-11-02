@@ -1,0 +1,7 @@
+name: 'Prisoner Hub Taxonomy Field UX'
+type: module
+description: 'Provides CMS UX enhacements for Taxonomy (and related) fields.'
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - field_group:field_group

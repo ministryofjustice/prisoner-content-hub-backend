@@ -1,0 +1,4 @@
+services:
+  prisoner_hub_taxonomy_field_ux.entity_form_states:
+    class: Drupal\prisoner_hub_taxonomy_field_ux\EntityFormStates
+    arguments: ['@entity_type.manager']

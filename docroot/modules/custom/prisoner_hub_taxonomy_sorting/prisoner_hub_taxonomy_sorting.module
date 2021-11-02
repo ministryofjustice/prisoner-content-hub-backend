@@ -7,59 +7,7 @@
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Entity\Term;
-
-/**
- * Implements hook_field_group_form_process_build_alter().
- *
- * Add visible states to episode number and release date fields.
- * Dependent on what sorting has been applied to the Series selected.
- */
-function prisoner_hub_taxonomy_sorting_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
-  if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
-
-    $terms_with_episode_sorting = [];
-    $terms_with_release_date_sorting = [];
-
-    $query = \Drupal::entityQuery('taxonomy_term');
-    $query->exists('field_sort_by');
-    $result = $query->execute();
-    $terms = Term::loadMultiple($result);
-    foreach ($terms as $term) {
-      /* @var \Drupal\taxonomy\TermInterface $term */
-      $sort_by_value = $term->get('field_sort_by')->getValue();
-      if (in_array($sort_by_value[0]['value'], ['season_and_episode_desc', 'season_and_episode_asc'])) {
-        $terms_with_episode_sorting[] = ['value' => $term->id()];
-      }
-      elseif (in_array($sort_by_value[0]['value'], ['release_date_desc', 'release_date_asc'])) {
-        $terms_with_release_date_sorting[] = ['value' => $term->id()];
-      }
-    }
-
-    if (empty($terms_with_episode_sorting)) {
-      hide($element['group_season_and_episode_number']);
-    }
-    else {
-      $element['group_season_and_episode_number']['#states']['visible'][':input[name="field_moj_series"]'] = $terms_with_episode_sorting;
-      $element['field_moj_season']['widget'][0]['value']['#states']['required'][':input[name="field_moj_series"]'] = $terms_with_episode_sorting;
-      $element['field_moj_episode']['widget'][0]['value']['#states']['required'][':input[name="field_moj_series"]'] = $terms_with_episode_sorting;
-    }
-
-    if (empty($terms_with_release_date_sorting)) {
-      hide($element['group_release_date']);
-    }
-    else {
-      $element['group_release_date']['#states']['visible'][':input[name="field_moj_series"]'] = $terms_with_release_date_sorting;
-      // Currently we cannot set a required state for field_release_date.
-      // See https://www.drupal.org/project/drupal/issues/2419131
-      // However, this field has a default value (of the current date),
-      // so it's less likely to not be set.
-    }
-  }
-}
 
 /**
  * Implements hook_entity_base_field_info().
