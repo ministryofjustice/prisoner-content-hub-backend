@@ -180,15 +180,36 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
   $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
   $terms = Term::loadMultiple($result);
 
+  // Use the currently live prisons to search for content.
+  $prisons = [
+    792, // Berwyn
+    793, // Wayland
+    959, // Cookham
+    1076, // Lindholme
+  ];
+
   /** @var \Drupal\taxonomy\TermInterface $term */
   foreach ($terms as $term) {
     $featured_tiles_value = [];
-    $featured_content = \Drupal::service('moj_resources.category_featured_content_api_class')->CategoryFeaturedContentApiEndpoint($term->id(), 50, 0);
-    foreach ($featured_content as $item) {
-      $featured_tiles_value[] = [
-        'target_id' => $item['id'],
-        'target_type' => $item['content_type'] == 'series' ? 'taxonomy_term' : 'node',
-      ];
+    $prison_values = [];
+    $used_values = [];
+    foreach ($prisons as $prison_id) {
+      $prison_values[$prison_id] = \Drupal::service('moj_resources.category_featured_content_api_class')->CategoryFeaturedContentApiEndpoint($term->id(), 10, $prison_id);
+    }
+    for ($i = 0; $i < 10; $i++) {
+      foreach ($prisons as $prison_id) {
+        if (isset($prison_values[$prison_id][$i])) {
+          $target_id = $prison_values[$prison_id][$i]['id'];
+          $target_type = $prison_values[$prison_id][$i]['content_type'] == 'series' ? 'taxonomy_term' : 'node';
+          if (!isset($used_values[$target_type][$target_id])) {
+            $featured_tiles_value[] = [
+              'target_id' => $target_id,
+              'target_type' => $target_type,
+            ];
+            $used_values[$target_type][$target_id] = TRUE;
+          }
+        }
+      }
     }
     $term->set('field_featured_tiles', $featured_tiles_value);
     $term->save();
@@ -196,20 +217,20 @@ function prisoner_content_hub_profile_deploy_category_tiles() {
 }
 
 /**
- * Re-deploy the update series job, to account for updates since it was last
- * run.
- */
-function prisoner_content_hub_profile_deploy_update_series_redeploy() {
-  prisoner_content_hub_profile_deploy_update_series();
-}
-
-/**
  * Re-run the featured content update, to update to the latest content.
  */
-function prisoner_content_hub_profile_deploy_category_tiles_redeploy() {
+function prisoner_content_hub_profile_deploy_a_category_tiles_redeploy() {
   prisoner_content_hub_profile_deploy_category_tiles();
 }
 
+
+/**
+ * Re-deploy the update series job, to account for updates since it was last
+ * run.
+ */
+function prisoner_content_hub_profile_deploy_b_update_series_redeploy() {
+  prisoner_content_hub_profile_deploy_update_series();
+}
 
 /**
  * Update content based on if it has a series.
