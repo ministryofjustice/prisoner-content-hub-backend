@@ -99,6 +99,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
 
     $this->nodeWithCategory = $this->createNode([
       'field_moj_top_level_categories' => $this->categoryTerm->id(),
+      'field_not_in_series' => TRUE,
     ])->uuid();
   }
 
@@ -143,7 +144,8 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     $node = $this->createNode([
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()]
-      ]
+      ],
+      'field_not_in_series' => TRUE,
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory], $node);
   }
@@ -164,6 +166,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithSeries, $this->nodeWithTag], $node);
   }
 
+
   /**
    * Test that content with tag and a category returns content with the same
    * tag and category.
@@ -176,6 +179,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()]
       ],
+      'field_not_in_series' => TRUE,
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTag], $node);
   }

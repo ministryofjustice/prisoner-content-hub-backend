@@ -109,9 +109,11 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
       ];
       $this->nodes['category'][] = $this->createNode(array_merge($values, [
         'field_moj_top_level_categories' => ['target_id' => $this->categoryTerm->id()],
+        'field_not_in_series' => 1,
       ]));
       $this->nodes['series'][] = $this->createNode(array_merge($values, [
         'field_moj_series' => ['target_id' => $this->seriesWithCategoryTerm->id()],
+        'field_not_in_series' => 0,
       ]));
     }
   }
