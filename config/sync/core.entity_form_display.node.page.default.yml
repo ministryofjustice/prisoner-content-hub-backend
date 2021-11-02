@@ -115,17 +115,10 @@ content:
     region: content
   field_feature_on_category:
     type: options_buttons
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_moj_category_featured_item:
-    weight: 11
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_moj_description:
     weight: 1
     settings:
@@ -229,12 +222,12 @@ content:
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 13
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -242,7 +235,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 15
     third_party_settings: {  }
     region: content
   title:
