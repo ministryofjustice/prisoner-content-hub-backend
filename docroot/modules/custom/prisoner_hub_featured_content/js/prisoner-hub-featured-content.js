@@ -17,7 +17,7 @@
           filterCheckboxes($(e.currentTarget).val());
         });
       // Trigger change event if value is not empty.
-      if ($categoryField.val().length) {
+      if ($categoryField.length && $categoryField.val().length) {
         $categoryField.change();
       }
 
@@ -30,7 +30,7 @@
           filterCheckboxes(selectedCategories);
         });
       // Trigger change event if value is not empty.
-      if ($seriesField.val().length) {
+      if ($seriesField.length && $seriesField.val().length) {
         $seriesField.change();
       }
 
