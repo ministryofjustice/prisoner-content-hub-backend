@@ -11,6 +11,4 @@ Currently, this includes the following features:
   Example url: /jsonapi/node/moj_video_item?filter[field_moj_series.meta.drupal_internal__tid]=123&sort=series_sort_value
 * Creates a CMS page: "Edit episode order", accessed via a tab when editing a Series or Secondary tag.  This displays a
   list of content in the same order as it would on the frontend, and allows the content to be bulk updated in one place.
-* Shows/hides season/episode number and release date fields depending on what sorting has been selected for the
-  associated Series.
 

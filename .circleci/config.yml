@@ -50,7 +50,7 @@ commands:
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
             helm upgrade ${HELM_BACKEND_RELEASE_NAME} ~/git/helm_deploy/prisoner-content-hub-backend \
-              --install --wait --reset-values --timeout 1200s \
+              --install --wait --reset-values --timeout 1500s \
               --namespace=${KUBE_NAMESPACE} \
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.environment >>.yaml \
               --set image.tag=${VERSION_TO_DEPLOY} \
@@ -58,7 +58,7 @@ commands:
               --set application.sentry_dsn="${DRUPAL_SENTRY_DSN}" \
               --set application.sentry_environment="${SENTRY_ENVIRONMENT}" \
               --set application.sentry_release="${CIRCLE_BUILD_NUM}"
-          no_output_timeout: 1200
+          no_output_timeout: 1500
 
 jobs:
   run_tests:

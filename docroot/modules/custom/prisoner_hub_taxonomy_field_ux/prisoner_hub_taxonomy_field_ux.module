@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_taxonomy_field_ux.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_field_group_form_process_build_alter().
+ *
+ * Apply form conditional states via the Drupal\prisoner_hub_taxonomy_field_ux\EntityFormStates service.
+ */
+function prisoner_hub_taxonomy_field_ux_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
+  if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
+    \Drupal::service('prisoner_hub_taxonomy_field_ux.entity_form_states')->applyToForm($element);
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Clear out series/category data.
+ */
+function prisoner_hub_taxonomy_field_ux_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof NodeInterface && $entity->hasField('field_not_in_series')) {
+    if ($entity->field_not_in_series->value) {
+      $entity->set('field_moj_series', NULL);
+      $entity->set('field_moj_episode', NULL);
+      $entity->set('field_moj_season', NULL);
+      $entity->set('field_release_date', NULL);
+    }
+    else {
+      $entity->set('field_moj_top_level_categories', NULL);
+    }
+  }
+}

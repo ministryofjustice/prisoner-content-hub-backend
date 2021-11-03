@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_series_access.module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Render\RenderContext;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Prevent access to series if there is no available content within.
+ */
+function prisoner_hub_series_access_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  if ($entity->getEntityTypeId() == 'taxonomy_term' && $entity->bundle() == 'series') {
+    $query = \Drupal::entityQuery('node');
+    $query->condition('field_moj_series', $entity->id());
+
+    // We have to add in our own condition for status, as amazingly this isn't
+    // implemented by default.
+    // See https://drupal.stackexchange.com/a/257370/4831
+    $query->condition('status', NodeInterface::PUBLISHED);
+
+    // Query must be executed in render context to avoid 500 errors when
+    // being run through JSON:API.  For more info
+    // @See Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
+    $context = new RenderContext();
+    $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
+      return $query->execute();
+    });
+    if ($account->hasPermission('edit terms in series')) {
+      return AccessResult::neutral();
+    }
+    return AccessResult::forbiddenIf(count($results) == 0);
+  }
+}
