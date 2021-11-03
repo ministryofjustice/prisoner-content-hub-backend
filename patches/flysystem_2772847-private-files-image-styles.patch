@@ -4,17 +4,17 @@ index 13811fc..e1b7781 100644
 +++ b/README.md
 @@ -39,7 +39,7 @@ $schemes = [
        // Optional configuration settings.
-
+ 
        // 'options' => [
 -      //   'ACL' => 'public-read',
 +      //   'ACL' => 'public-read',   // If bucket is private, set to 'private'
        //   'StorageClass' => 'REDUCED_REDUNDANCY',
        // ],
-
+ 
 @@ -66,6 +66,12 @@ $schemes = [
        // 'public' => TRUE,                        // Set to TRUE to link to files
                                                    // using direct links.
-
+ 
 +      // 'expires' => '+600 seconds',             // An optional expiry time
 +                                                  // to use when generating
 +                                                  // presigend URLs for private
@@ -25,12 +25,12 @@ index 13811fc..e1b7781 100644
                                                    // support is enabled for the
                                                    // bucket.
 @@ -77,3 +83,12 @@ $schemes = [
-
+ 
  $settings['flysystem'] = $schemes;
  ```
 +
 +## Private ACL
-+If using a bucket with a private ACL, i.e. you have set
++If using a bucket with a private ACL, i.e. you have set 
 +`$settings['flysystem']['s3']['config']['options']['ACL'] = 'private'` from above.
 +You must then add the following to your settings.php file:
 +```php
@@ -39,21 +39,21 @@ index 13811fc..e1b7781 100644
 +As the itok parameter will interfere with the signature in the url.
 \ No newline at end of file
 diff --git a/flysystem_s3.module b/flysystem_s3.module
-index 6db5014..f42658e 100644
+index 6db5014..ae69e36 100644
 --- a/flysystem_s3.module
 +++ b/flysystem_s3.module
 @@ -5,6 +5,10 @@
   * Contains flysystem_s3.module.
   */
-
+ 
 +use Drupal\Core\Cache\CacheableMetadata;
 +use Drupal\Core\Site\Settings;
 +use Drupal\Core\StreamWrapper\StreamWrapperManager;
 +use Drupal\file\FileInterface;
  use Drupal\flysystem_s3\S3CorsManagedFileHelper;
-
+ 
  /**
-@@ -13,3 +17,29 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
+@@ -13,3 +17,27 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
  function flysystem_s3_element_info_alter(array &$types) {
    S3CorsManagedFileHelper::alterInfo($types);
  }
@@ -70,19 +70,17 @@ index 6db5014..f42658e 100644
 +    $url = $entity->get('uri');
 +    $scheme = StreamWrapperManager::getScheme($url->value);
 +    if (isset($settings[$scheme]) && isset($settings[$scheme]['config']['expires'])) {
-+      $entity->addCacheableDependency(
-+        (new CacheableMetadata())->setCacheMaxAge((int)$settings[$scheme]['config']['expires'])
-+      );
++      // We currently only support timestamp expiration (although the S3 api
++      // accepts other formats).
++      if (is_int($settings[$scheme]['config']['expires'])) {
++        $entity->addCacheableDependency(
++          (new CacheableMetadata())->setCacheMaxAge((int)$settings[$scheme]['config']['expires'] - \Drupal::time()->getRequestTime())
++        );
++      }
 +    }
-+    // TODO: The page cache does not currently respect max-age cache
-+    // headers. We can't set proper max-age based on the signing time until
-+    // https://www.drupal.org/node/2352009 is fixed. Unfortunately, this
-+    // also means we can't cache any pages with signed URLs at all. When we
-+    // can implement this, we should parse out max-age from the generated
-+    // URL as suggested at https://github.com/aws/aws-sdk-php/issues/1052.
-+    \Drupal::service('page_cache_kill_switch')->trigger();
 +  }
 +}
++
 diff --git a/flysystem_s3.services.yml b/flysystem_s3.services.yml
 index e36dc60..beb7a9d 100644
 --- a/flysystem_s3.services.yml
@@ -98,9 +96,9 @@ index 201f40c..ed74c9b 100644
 --- a/src/File/FlysystemS3FileSystem.php
 +++ b/src/File/FlysystemS3FileSystem.php
 @@ -2,30 +2,65 @@
-
+ 
  namespace Drupal\flysystem_s3\File;
-
+ 
 +use Drupal\Core\File\Exception\FileWriteException;
  use Drupal\Core\File\FileSystem;
 +use Drupal\Core\File\FileSystemInterface;
@@ -108,13 +106,13 @@ index 201f40c..ed74c9b 100644
 +use Drupal\Core\StreamWrapper\StreamWrapperManager;
  use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
  use Psr\Log\LoggerInterface;
-
+ 
  /**
 - * Decorates the Drupal FileSystem service to handle chmod() for S3.
 + * Decorates the Drupal FileSystem service to handle S3.
   */
  class FlysystemS3FileSystem extends FileSystem {
-
+ 
 +
    /**
 -   * FlysystemS3FileSystem constructor.
@@ -167,7 +165,7 @@ index 201f40c..ed74c9b 100644
 +    $this->logger = $logger;
 +    $this->fileSystem = $file_system;
    }
-
+ 
    /**
 @@ -60,13 +95,295 @@ class FlysystemS3FileSystem extends FileSystem {
     * @see \Twistor\FlysystemStreamWrapper::stream_metadata
@@ -175,11 +173,11 @@ index 201f40c..ed74c9b 100644
    public function chmod($uri, $mode = NULL) {
 -    $scheme = parent::uriScheme($uri);
 +    $scheme = $this->fileSystem->uriScheme($uri);
-
+ 
      if ($this->isPrivateS3Scheme($scheme)) {
        is_dir($uri) ? $mode = 0700 : $mode = 0600;
      }
-
+ 
 -    return parent::chmod($uri, $mode);
 +    return $this->fileSystem->chmod($uri, $mode);
 +  }
@@ -465,7 +463,7 @@ index 201f40c..ed74c9b 100644
 +    return isset($settings[$scheme])
 +      && $settings[$scheme]['driver'] == 's3';
    }
-
+ 
    /**
 @@ -80,8 +397,7 @@ class FlysystemS3FileSystem extends FileSystem {
     */
@@ -483,7 +481,7 @@ index d4cb6c4..c31e92c 100644
 +++ b/src/Flysystem/S3.php
 @@ -3,17 +3,22 @@
  namespace Drupal\flysystem_s3\Flysystem;
-
+ 
  use Aws\Credentials\Credentials;
 -use Aws\S3\S3Client;
  use Aws\S3\Exception\S3Exception;
@@ -503,7 +501,7 @@ index d4cb6c4..c31e92c 100644
  use League\Flysystem\Config;
 +use Psr\Log\LoggerInterface;
  use Symfony\Component\DependencyInjection\ContainerInterface;
-
+ 
  /**
 @@ -37,7 +42,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
    /**
@@ -513,11 +511,11 @@ index d4cb6c4..c31e92c 100644
 +   * @var \Aws\S3\S3ClientInterface
     */
    protected $client;
-
+ 
 @@ -62,6 +67,27 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
     */
    protected $urlPrefix;
-
+ 
 +  /**
 +   * The amount of time presigned URLs are valid for, such as '+60 seconds'.
 +   *
@@ -564,32 +562,32 @@ index d4cb6c4..c31e92c 100644
      $this->isPublic = $config->get('public', FALSE);
      $this->options = $config->get('options', []);
 +    $this->expires = $config->get('expires', '+3600 seconds');
-
+ 
      $this->urlPrefix = $this->calculateUrlPrefix($config);
 +
 +    $this->renderer = $renderer;
 +    $this->logger = $logger;
    }
-
+ 
    /**
 @@ -98,7 +132,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
-
+ 
      unset($configuration['key'], $configuration['secret']);
-
+ 
 -    return new static($client, new Config($configuration));
 +    return new static($client, new Config($configuration), $container->get('renderer'), $container->get('logger.channel.flysystem'));
    }
-
+ 
    /**
 @@ -195,10 +229,36 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
-
+ 
      $target = $this->getTarget($uri);
-
+ 
 -    if (strpos($target, 'styles/') === 0 && !file_exists($uri)) {
 +    if (strpos($target, 'styles/') === 0 && !$this->getAdapter()->has($target)) {
        $this->generateImageStyle($target);
      }
-
+ 
 +    // This method can only return FALSE if the wrapper does not exist, and not
 +    // if there is an error in generating the URL. If an asset is missing on S3,
 +    // then the getVisibility() call will throw an exception. In that case,
@@ -618,92 +616,7 @@ index d4cb6c4..c31e92c 100644
 +
      return $this->urlPrefix . '/' . UrlHelper::encodePath($target);
    }
-
-diff --git a/tests/src/Unit/File/FileSystemTest.php b/tests/src/Unit/File/FileSystemTest.php
-new file mode 100644
-index 0000000..ad30713
---- /dev/null
-+++ b/tests/src/Unit/File/FileSystemTest.php
-@@ -0,0 +1,79 @@
-+<?php
-+
-+namespace NoDrupal\Tests\flysystem_s3\Unit\File;
-+
-+use Drupal\Core\File\FileSystemInterface;
-+use Drupal\Core\Site\Settings;
-+use Drupal\flysystem_s3\File\FileSystem;
-+use Drupal\Tests\UnitTestCase;
-+use org\bovigo\vfs\vfsStream;
-+use Prophecy\Argument;
-+
-+/**
-+ * Tests the filesystem decorator to handle chmod().
-+ *
-+ * @coversDefaultClass \Drupal\flysystem_s3\File\FileSystem
-+ *
-+ * @group flysystem_s3
-+ */
-+class FileSystemTest extends UnitTestCase {
-+
-+  /**
-+   * Test that we pass public files straight through to chmod().
-+   */
-+  public function testPublicChmod() {
-+    $settings = new Settings([
-+      'flysystem' => [
-+        's3' => [
-+          'driver' => 's3',
-+          'config' => [
-+            'options' => [
-+              'ACL' => 'public-read',
-+            ],
-+          ],
-+        ],
-+      ],
-+    ]);
-+    $decorated = $this->prophesize(FileSystemInterface::class);
-+    $decorated->uriScheme(Argument::type('string'))->willReturn('s3');
-+    $decorated->chmod('s3://test.txt', NULL)->willReturn(TRUE);
-+    $decorated = $decorated->reveal();
-+    $filesystem = new FileSystem($settings, $decorated);
-+    $this->assertTrue($filesystem->chmod('s3://test.txt'));
-+  }
-+
-+  /**
-+   * Test that private files are chmod'ed correctly.
-+   */
-+  public function testPrivateChmod() {
-+    $structure = [
-+      'test.txt' => 'test file',
-+      'directory' => [],
-+    ];
-+    $root = vfsStream::setup('s3', NULL, $structure);
-+
-+    $settings = new Settings([
-+      'flysystem' => [
-+        'vfs' => [
-+          'driver' => 's3',
-+          'config' => [
-+            'options' => [
-+              'ACL' => 'private',
-+            ],
-+          ],
-+        ],
-+      ],
-+    ]);
-+    $decorated = $this->prophesize(FileSystemInterface::class);
-+    $decorated->uriScheme(Argument::type('string'))->willReturn('vfs');
-+    $decorated->chmod('vfs://s3/test.txt', 0600)->willReturn(TRUE);
-+    $decorated->uriScheme(Argument::type('string'))->willReturn('vfs');
-+    $decorated->chmod('vfs://s3/directory', 0700)->willReturn(TRUE);
-+    $decorated = $decorated->reveal();
-+
-+    $filesystem = new FileSystem($settings, $decorated);
-+    $this->assertTrue($filesystem->chmod(vfsStream::url('s3/test.txt')));
-+    $this->assertTrue($filesystem->chmod(vfsStream::url('s3/directory')));
-+  }
-+
-+}
+ 
 diff --git a/tests/src/Unit/Flysystem/S3Test.php b/tests/src/Unit/Flysystem/S3Test.php
 index b6491bb..306cc5c 100644
 --- a/tests/src/Unit/Flysystem/S3Test.php
@@ -726,13 +639,13 @@ index b6491bb..306cc5c 100644
  use Symfony\Component\HttpFoundation\Request;
  use Symfony\Component\HttpFoundation\RequestStack;
 +use Symfony\Component\HttpFoundation\Response;
-
+ 
  /**
   * @coversDefaultClass \Drupal\flysystem_s3\Flysystem\S3
 @@ -23,20 +30,32 @@ use Symfony\Component\HttpFoundation\RequestStack;
   */
  class S3Test extends UnitTestCase {
-
+ 
 +  protected $renderer;
 +  protected $logger;
 +
@@ -748,7 +661,7 @@ index b6491bb..306cc5c 100644
        'cname' => 'example.com',
 +      'cname_is_bucket' => TRUE,
      ];
-
+ 
 -    $client = new S3Client([
 -      'version' => 'latest',
 -      'region' => 'beep',
@@ -762,21 +675,21 @@ index b6491bb..306cc5c 100644
 +      ],
 +    ]));
 +    $client = $client->reveal();
-
+ 
 -    $plugin = new S3($client, new Config($configuration));
 +    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
-
+ 
      $this->assertInstanceOf(AdapterInterface::class, $plugin->getAdapter());
-
+ 
 @@ -44,12 +63,12 @@ class S3Test extends UnitTestCase {
-
+ 
      $configuration['prefix'] = '';
-
+ 
 -    $plugin = new S3($client, new Config($configuration));
 +    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
      $this->assertSame('http://example.com/foo%201.html', $plugin->getExternalUrl('s3://foo 1.html'));
    }
-
+ 
    /**
 -   * Tests merging defaults into configuration arrays.
 +   * Test merging defaults into configuration arrays.
@@ -789,11 +702,11 @@ index b6491bb..306cc5c 100644
      $container->get('request_stack')->push(Request::create('https://example.com/'));
 +    $container->set('renderer', $this->renderer);
 +    $container->set('logger.channel.flysystem', $this->logger);
-
+ 
      $configuration = [
        'key'    => 'fee',
 @@ -86,12 +107,24 @@ class S3Test extends UnitTestCase {
-
+ 
      $plugin = S3::create($container, $configuration, '', '');
      $this->assertInstanceOf(S3::class, $plugin);
 +    $client = $this->prophesize(S3Client::class);
@@ -807,45 +720,45 @@ index b6491bb..306cc5c 100644
 +    $plugin = new S3($client, new Config($configuration), $this->renderer, $this->logger);
 +    $this->assertInstanceOf('\Drupal\flysystem_s3\Flysystem\S3', $plugin);
    }
-
+ 
    public function testCreateUsingNonAwsConfiguration() {
      $container = new ContainerBuilder();
      $container->set('request_stack', new RequestStack());
      $container->get('request_stack')->push(Request::create('https://example.com/'));
 +    $container->set('renderer', $this->renderer);
 +    $container->set('logger.channel.flysystem', $this->logger);
-
+ 
      $configuration = [
        'key'      => 'fee',
 @@ -102,7 +135,6 @@ class S3Test extends UnitTestCase {
      ];
-
+ 
      $plugin = S3::create($container, $configuration, '', '');
 -    $this->assertSame('https://something.somewhere.tld/foo%201.html', $plugin->getExternalUrl('s3://foo 1.html'));
      $this->assertSame('https://api.somewhere.tld', (string) $plugin->getAdapter()->getClient()->getEndpoint());
    }
-
+ 
 @@ -110,6 +142,8 @@ class S3Test extends UnitTestCase {
      $container = new ContainerBuilder();
      $container->set('request_stack', new RequestStack());
      $container->get('request_stack')->push(Request::create('http://example.com/'));
 +    $container->set('renderer', $this->renderer);
 +    $container->set('logger.channel.flysystem', $this->logger);
-
+ 
      $configuration = [
        'key'             => 'foo',
 @@ -121,7 +155,6 @@ class S3Test extends UnitTestCase {
      ];
-
+ 
      $plugin = S3::create($container, $configuration, '', '');
 -    $this->assertSame('http://storage.example.com/my-bucket/foo%201.html', $plugin->getExternalUrl('s3://foo 1.html'));
      $this->assertSame('https://api.somewhere.tld', (string) $plugin->getAdapter()->getClient()->getEndpoint());
    }
-
+ 
 @@ -131,19 +164,76 @@ class S3Test extends UnitTestCase {
        'bucket'   => 'my-bucket',
      ];
-
+ 
 -    $plugin = new S3($this->createMock(S3ClientInterface::class), new Config($configuration));
 +    $client = $this->prophesize(S3Client::class);
 +    $client->getCommand('getObjectAcl', Argument::type('array'))->willReturn($this->prophesize(\Aws\Command::class)->reveal());
@@ -907,19 +820,19 @@ index b6491bb..306cc5c 100644
 +    $plugin = new S3($client, new Config($configuration), $this->renderer, $logger->reveal(), $kill_switch);
      $this->assertSame('http://s3.amazonaws.com/my-bucket/foo.html', $plugin->getExternalUrl('s3://foo.html'));
    }
-
+ 
    public function testEnsure() {
      $client = $this->prophesize(S3ClientInterface::class);
      $client->doesBucketExist(Argument::type('string'))->willReturn(TRUE);
 -    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']));
 +    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']), $this->renderer, $this->logger);
-
+ 
      $this->assertSame([], $plugin->ensure());
-
+ 
      $client->doesBucketExist(Argument::type('string'))->willReturn(FALSE);
 -    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']));
 +    $plugin = new S3($client->reveal(), new Config(['bucket' => 'example-bucket']), $this->renderer, $this->logger);
-
+ 
      $result = $plugin->ensure();
      $this->assertSame(1, count($result));
 @@ -154,6 +244,8 @@ class S3Test extends UnitTestCase {
@@ -929,5 +842,5 @@ index b6491bb..306cc5c 100644
 +    $container->set('renderer', $this->renderer);
 +    $container->set('logger.channel.flysystem', $this->logger);
      $container->set('cache.default', new MemoryBackend('bin'));
-
+ 
      $configuration = ['bucket' => 'example-bucket'];
