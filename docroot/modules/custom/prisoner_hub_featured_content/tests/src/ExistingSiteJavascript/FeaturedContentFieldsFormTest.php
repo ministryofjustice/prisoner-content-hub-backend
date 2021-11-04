@@ -189,9 +189,6 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
         else {
           $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTermForSeries->label());
         }
-        if (!$feature_on_category_field->isVisible()) {
-          print $node->id(); exit;
-        }
         self::assertTrue($feature_on_category_field->isVisible());
       }
     }
