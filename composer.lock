@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4dfb7c05a5a161219de4c9c4ac122d4a",
+    "content-hash": "b433d65c9dd27a471083916f52b4e473",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2923,6 +2923,50 @@
             "homepage": "https://www.drupal.org/project/flysystem_s3",
             "support": {
                 "source": "https://git.drupalcode.org/project/flysystem_s3"
+            }
+        },
+        {
+            "name": "drupal/form_state_empty",
+            "version": "1.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/form_state_empty.git",
+                "reference": "1.0.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/form_state_empty-1.0.0-alpha2.zip",
+                "reference": "1.0.0-alpha2",
+                "shasum": "2e7fe4ce5c5e668af1315ed3b30ff5abd7ec01df"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-alpha2",
+                    "datestamp": "1634571058",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Donnyboypony",
+                    "homepage": "https://www.drupal.org/user/523868"
+                }
+            ],
+            "description": "Extends core's Form API States to allow the emptying of fields with javascript.",
+            "homepage": "https://www.drupal.org/project/form_state_empty",
+            "support": {
+                "source": "https://git.drupalcode.org/project/form_state_empty"
             }
         },
         {
@@ -16539,6 +16583,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/cer": 20,
+        "drupal/form_state_empty": 15,
         "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_page_limit": 10,
         "drupal/jsonapi_search_api": 5,
