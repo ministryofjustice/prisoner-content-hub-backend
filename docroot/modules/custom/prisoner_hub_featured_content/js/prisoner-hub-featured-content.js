@@ -14,7 +14,9 @@
       $categoryField
         .once()
         .on('change', (e) => {
-          filterCheckboxes($(e.currentTarget).val());
+          if ($(e.currentTarget).is(":visible")) {
+            filterCheckboxes($(e.currentTarget).val());
+          }
         });
       // Trigger change event if value is not empty.
       if ($categoryField.length && $categoryField.val().length) {
@@ -24,10 +26,12 @@
       $seriesField
         .once()
         .on('change', (e) => {
-          // Retrieve the categories for the series via drupalSettings.
-          const seriesVal = $(e.currentTarget).val();
-          const selectedCategories = drupalSettings.prisonerHubFeaturedContent.seriesByCategory.hasOwnProperty(seriesVal) ? drupalSettings.prisonerHubFeaturedContent.seriesByCategory[seriesVal] : [];
-          filterCheckboxes(selectedCategories);
+          if ($(e.currentTarget).is(":visible")) {
+            // Retrieve the categories for the series via drupalSettings.
+            const seriesVal = $(e.currentTarget).val();
+            const selectedCategories = drupalSettings.prisonerHubFeaturedContent.seriesByCategory.hasOwnProperty(seriesVal) ? drupalSettings.prisonerHubFeaturedContent.seriesByCategory[seriesVal] : [];
+            filterCheckboxes(selectedCategories);
+          }
         });
       // Trigger change event if value is not empty.
       if ($seriesField.length && $seriesField.val().length) {
