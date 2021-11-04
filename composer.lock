@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b2fc68aacfac5b456f2d68646a205ca",
+    "content-hash": "da7768a6fcb9692d600facb228e0a4c5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1712,50 +1712,6 @@
             "homepage": "https://www.drupal.org/project/book_blocks",
             "support": {
                 "source": "https://git.drupalcode.org/project/book_blocks"
-            }
-        },
-        {
-            "name": "drupal/cache_control_override",
-            "version": "1.0.0-alpha2",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/cache_control_override.git",
-                "reference": "8.x-1.0-alpha2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/cache_control_override-8.x-1.0-alpha2.zip",
-                "reference": "8.x-1.0-alpha2",
-                "shasum": "24f97b80eb3d335256eabd2e5e71886526a2385a"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-alpha2",
-                    "datestamp": "1597733165",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "asgorobets",
-                    "homepage": "https://www.drupal.org/user/1399950"
-                }
-            ],
-            "description": "Override page Cache-Control header based on bubbled cacheability metadata.",
-            "homepage": "https://www.drupal.org/project/cache_control_override",
-            "support": {
-                "source": "https://git.drupalcode.org/project/cache_control_override"
             }
         },
         {
@@ -16582,7 +16538,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/cache_control_override": 15,
         "drupal/cer": 20,
         "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_page_limit": 10,
