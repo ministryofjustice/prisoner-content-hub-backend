@@ -163,6 +163,8 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
     $series_field->setValue($this->seriesWithoutCategoryTerm->id());
     self::assertFalse($feature_on_category_field->isVisible());
 
+    $not_in_series_field = $page->findField('This content is not part of any series');
+    $not_in_series_field->check();
     $category_field = $page->findField('Category');
     $category_field->setValue($this->categoryTerm->id());
     $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField($this->categoryTerm->label());

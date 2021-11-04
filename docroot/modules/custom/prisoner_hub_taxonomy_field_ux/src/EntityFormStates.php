@@ -79,7 +79,9 @@ class EntityFormStates {
       hide($form['group_season_and_episode_number']);
     }
     else {
-      $form['group_season_and_episode_number']['#states']['visible'][':input[name="field_moj_series"]'] = $this->episodeSortingStates;
+      $form['group_season_and_episode_number']['#states']['visible'] = [
+        ':input[name="field_moj_series"]' => $this->episodeSortingStates,
+      ];
       $form['field_moj_season']['widget'][0]['value']['#states']['required'] = [
         ':input[name="field_moj_series"]' => $this->episodeSortingStates,
         'and',
@@ -96,19 +98,24 @@ class EntityFormStates {
       hide($form['group_release_date']);
     }
     else {
-      $form['group_release_date']['#states']['visible'][':input[name="field_moj_series"]'] = $this->releaseDateSortingStates;
+      $form['group_release_date']['#states']['visible'] = [
+        ':input[name="field_moj_series"]' => $this->releaseDateSortingStates,
+      ];
       // Currently we cannot set a required state for field_release_date.
       // See https://www.drupal.org/project/drupal/issues/2419131
       // However, this field has a default value (of the current date),
       // so it's less likely to not be set.
     }
 
+    // Apply states to the category field and group, based on field_not_in_series.
     $form['group_category']['#states']['visible'][':input[name="field_not_in_series[value]"]']['checked'] = TRUE;
     $form['field_moj_top_level_categories']['widget']['#states']['required'][':input[name="field_not_in_series[value]"]']['checked'] = TRUE;
+    $form['field_moj_top_level_categories']['widget']['#states']['empty'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
+
+    // Apply states to the series field and group, based on field_not_in_series.
     $form['field_moj_series']['#states']['visible'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
     $form['field_moj_series']['widget']['#states']['required'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
-    $form['group_season_and_episode_number']['#states']['visible'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
-    $form['group_release_date']['#states']['visible'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
+    $form['field_moj_series']['#states']['empty'][':input[name="field_not_in_series[value]"]']['checked'] = TRUE;
   }
 
 }
