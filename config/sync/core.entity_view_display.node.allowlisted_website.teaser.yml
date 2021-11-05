@@ -1,0 +1,47 @@
+uuid: 0bb2454d-b008-45b1-bf1d-bdd8f0c3ff9f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.allowlisted_website.field_display_url
+    - field.field.node.allowlisted_website.field_feature_on_category
+    - field.field.node.allowlisted_website.field_moj_episode
+    - field.field.node.allowlisted_website.field_moj_prisons
+    - field.field.node.allowlisted_website.field_moj_season
+    - field.field.node.allowlisted_website.field_moj_series
+    - field.field.node.allowlisted_website.field_moj_thumbnail_image
+    - field.field.node.allowlisted_website.field_moj_top_level_categories
+    - field.field.node.allowlisted_website.field_not_in_series
+    - field.field.node.allowlisted_website.field_prison_categories
+    - field.field.node.allowlisted_website.field_release_date
+    - field.field.node.allowlisted_website.field_summary
+    - field.field.node.allowlisted_website.field_url
+    - node.type.allowlisted_website
+  module:
+    - user
+id: node.allowlisted_website.teaser
+targetEntityType: node
+bundle: allowlisted_website
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_display_url: true
+  field_feature_on_category: true
+  field_moj_episode: true
+  field_moj_prisons: true
+  field_moj_season: true
+  field_moj_series: true
+  field_moj_thumbnail_image: true
+  field_moj_top_level_categories: true
+  field_not_in_series: true
+  field_prison_categories: true
+  field_release_date: true
+  field_summary: true
+  field_url: true
+  search_api_excerpt: true
