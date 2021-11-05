@@ -116,11 +116,11 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
         'type' => $contentType,
         'uid' => $this->localContentManagerUser->id(),
       ];
-      $this->nodes['category'][] = $this->createNode(array_merge($values, [
+      $this->nodes[$contentType][] = $this->createNode(array_merge($values, [
         'field_moj_top_level_categories' => ['target_id' => $this->categoryTerm->id()],
         'field_not_in_series' => 1,
       ]));
-      $this->nodes['series'][] = $this->createNode(array_merge($values, [
+      $this->nodes[$contentType][] = $this->createNode(array_merge($values, [
         'field_moj_series' => ['target_id' => $this->seriesWithCategoryTerm->id()],
         'field_not_in_series' => 0,
       ]));
@@ -130,23 +130,42 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   /**
    * Test the correct fields appear when logged in as a studio admin.
    */
-  public function testFeatuerdContentFieldsStudioAdmin() {
+  public function testFeatuerdContentFieldsStudioAdminNewContent() {
     $this->drupalLogin($this->studioAdministrator);
     foreach (self::$studioAdminContentTypes as $contentType) {
       $this->testFeaturedContentFieldVisibilityNewContent($contentType);
     }
-    $this->testFeaturedContentFieldVisibilityExistingContent();
+  }
+
+  /**
+   * Test the correct fields appear when logged in as a studio admin.
+   */
+  public function testFeatuerdContentFieldsStudioAdminExistingContent() {
+    $this->drupalLogin($this->studioAdministrator);
+    foreach (self::$studioAdminContentTypes as $contentType) {
+      $this->testFeaturedContentFieldVisibilityExistingContent($contentType);
+    }
   }
 
   /**
    * Test the correct fields appear when logged in as a local content manager.
    */
-  public function testFeaturedContentFieldsLocalContentManager() {
+  public function testFeaturedContentFieldsLocalContentManagerNewContent() {
     $this->drupalLogin($this->localContentManagerUser);
     foreach (self::$localContentManagerContentTypes as $contentType) {
       $this->testFeaturedContentFieldVisibilityNewContent($contentType);
     }
-    $this->testFeaturedContentFieldVisibilityExistingContent();
+  }
+
+
+  /**
+   * Test the correct fields appear when logged in as a local content manager.
+   */
+  public function testFeaturedContentFieldsLocalContentManagerExistingContent() {
+    $this->drupalLogin($this->localContentManagerUser);
+    foreach (self::$localContentManagerContentTypes as $contentType) {
+      $this->testFeaturedContentFieldVisibilityExistingContent($contentType);
+    }
   }
 
   /**
@@ -157,8 +176,8 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  private function testFeaturedContentFieldVisibilityNewContent($content_type) {
-    $this->visit('/node/add/' . $content_type);
+  private function testFeaturedContentFieldVisibilityNewContent($contentType) {
+    $this->visit('/node/add/' . $contentType);
     $web_assert = $this->assertSession();
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
@@ -184,22 +203,20 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   /**
    * Helper function to test on existing content.
    */
-  private function testFeaturedContentFieldVisibilityExistingContent() {
+  private function testFeaturedContentFieldVisibilityExistingContent($contentType) {
     /** @var \Drupal\node\NodeInterface $node */
-    foreach ($this->nodes as $category_or_series => $nodes) {
-      foreach ($nodes as $node) {
-        $this->visit('/node/' . $node->id() . '/edit');
-        $web_assert = $this->assertSession();
-        $web_assert->statusCodeEquals(200);
-        $feature_on_category_field_wrapper = $this->getCurrentPage()->findById('edit-field-feature-on-category-wrapper');
-        if ($category_or_series == 'category') {
-          $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTerm->label());
-        }
-        else {
-          $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTermForSeries->label());
-        }
-        self::assertTrue($feature_on_category_field->isVisible());
+    foreach ($this->nodes[$contentType] as $node) {
+      $this->visit('/node/' . $node->id() . '/edit');
+      $web_assert = $this->assertSession();
+      $web_assert->statusCodeEquals(200);
+      $feature_on_category_field_wrapper = $this->getCurrentPage()->findById('edit-field-feature-on-category-wrapper');
+      if ($node->field_not_in_series->value) {
+        $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTerm->label());
       }
+      else {
+        $feature_on_category_field = $feature_on_category_field_wrapper->findField($this->categoryTermForSeries->label());
+      }
+      self::assertTrue($feature_on_category_field->isVisible());
     }
   }
 
