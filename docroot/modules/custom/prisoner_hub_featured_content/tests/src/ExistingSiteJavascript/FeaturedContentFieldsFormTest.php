@@ -56,12 +56,20 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
   protected $seriesWithoutCategoryTerm;
 
   /**
-   * Content types to test on.  These should all contain the category and
-   * series field.
+   * Content types to test on for studio admins.
+   * These should all contain the category and series field.
    *
    * @var string[]
    */
-  protected static $contentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'];
+  protected static $studioAdminContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item', 'allowlisted_website'];
+
+  /**
+   * Content types to test on for local content managers.
+   * These should all contain the category and series field.
+   *
+   * @var string[]
+   */
+  protected static $localContentManagerContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'];
 
   /**
    * Create users and taxonomy terms to test with.
@@ -102,7 +110,8 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
     $this->seriesWithCategoryTerm = $this->createTerm($series_vocab, ['name' => 'Series 1', 'field_category' => ['target_id' => $this->categoryTermForSeries->id()]]);
     $this->seriesWithoutCategoryTerm = $this->createTerm($series_vocab, ['name' => 'Series 2']);
 
-    foreach (self::$contentTypes as $contentType) {
+    $contenTypes = array_unique(array_merge(self::$studioAdminContentTypes, self::$localContentManagerContentTypes));
+    foreach ($contenTypes as $contentType) {
       $values = [
         'type' => $contentType,
         'uid' => $this->localContentManagerUser->id(),
@@ -123,7 +132,7 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
    */
   public function testFeatuerdContentFieldsStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
-    foreach (self::$contentTypes as $contentType) {
+    foreach (self::$studioAdminContentTypes as $contentType) {
       $this->testFeaturedContentFieldVisibilityNewContent($contentType);
     }
     $this->testFeaturedContentFieldVisibilityExistingContent();
@@ -134,7 +143,7 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
    */
   public function testFeaturedContentFieldsLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
-    foreach (self::$contentTypes as $contentType) {
+    foreach (self::$localContentManagerContentTypes as $contentType) {
       $this->testFeaturedContentFieldVisibilityNewContent($contentType);
     }
     $this->testFeaturedContentFieldVisibilityExistingContent();
