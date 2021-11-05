@@ -37,7 +37,7 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: "<p>Specify the featured content and series that should appear for this category.</p>\r\n\r\n<p>An unlimited number of items can be added, however only the first <strong>10</strong> <em>available</em> will be used.  Please ensure you have added at least <strong>10</strong> items.\r\n</p>\r\n<p>\r\n(<em>Available</em> refers to content that is accessible in the prison where the category is being viewed).</p>"
+        description: "<p>Choose content items or series overviews that will appear on this category’s page.</p>\r\n\r\n<p>Only the first 10 selected and available will be featured on the category page.\r\n</p>\r\n<p>\r\nAvailable means content that is accessible in the prison where the category is being viewed.</p>"
         required_fields: true
         id: ''
         classes: ''

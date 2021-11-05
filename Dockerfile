@@ -150,6 +150,10 @@ USER www-data
 
 ###########################################################################################
 # Create optimised build
+#
+# This stage should be used in production.
+# It has been purposely set as the last stage of this file, so that it becomes the default
+# when no build stage has been specified.
 ###########################################################################################
 FROM base as optimised-build
 

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_category_featured_item
+    - field.storage.node.field_feature_on_category
     - field.storage.node.field_moj_prisons
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_series
@@ -422,14 +422,14 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_moj_category_featured_item:
-          id: field_moj_category_featured_item
-          table: node__field_moj_category_featured_item
-          field: field_moj_category_featured_item
+        field_feature_on_category:
+          id: field_feature_on_category
+          table: node__field_feature_on_category
+          field: field_feature_on_category
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Feature for category'
+          label: 'Feature on category'
           exclude: false
           alter:
             alter_text: false
@@ -470,13 +470,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: value
-          type: boolean
+          click_sort_column: target_id
+          type: entity_reference_label
           settings:
-            format: yes-no
-            format_custom_true: ''
-            format_custom_false: ''
-          group_column: value
+            link: true
+          group_column: target_id
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -1080,26 +1078,26 @@ display:
           hierarchy: false
           error_message: true
           plugin_id: taxonomy_index_tid
-        field_moj_category_featured_item_value:
-          id: field_moj_category_featured_item_value
-          table: node__field_moj_category_featured_item
-          field: field_moj_category_featured_item_value
+        field_feature_on_category_target_id:
+          id: field_feature_on_category_target_id
+          table: node__field_feature_on_category
+          field: field_feature_on_category_target_id
           relationship: none
           group_type: group
           admin_label: ''
-          operator: '='
-          value: All
+          operator: or
+          value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: ''
-            label: 'Feature for category'
+            operator_id: field_feature_on_category_target_id_op
+            label: 'Feature on category'
             description: ''
             use_operator: false
-            operator: field_moj_category_featured_item_value_op
+            operator: field_feature_on_category_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_moj_category_featured_item_value
+            identifier: field_feature_on_category_target_id
             required: false
             remember: false
             multiple: false
@@ -1109,6 +1107,7 @@ display:
               moj_local_content_manager: '0'
               local_administrator: '0'
               administrator: '0'
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -1121,7 +1120,13 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: boolean
+          reduce_duplicates: false
+          type: textfield
+          limit: true
+          vid: moj_categories
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
         field_moj_secondary_tags_target_id:
           id: field_moj_secondary_tags_target_id
           table: node__field_moj_secondary_tags
@@ -1522,7 +1527,7 @@ display:
         - user.permissions
       max-age: 0
       tags:
-        - 'config:field.storage.node.field_moj_category_featured_item'
+        - 'config:field.storage.node.field_feature_on_category'
         - 'config:field.storage.node.field_moj_prisons'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_series'
@@ -1593,12 +1598,6 @@ display:
                   pid: container-2
                   depth: '2'
                   type: filter
-                field_moj_category_featured_item_value:
-                  weight: '-29'
-                  id: field_moj_category_featured_item_value
-                  pid: container-2
-                  depth: '2'
-                  type: filter
                 uid:
                   weight: '-28'
                   id: uid
@@ -1638,19 +1637,25 @@ display:
                   depth: '1'
                   type: container
                 field_moj_top_level_categories_target_id:
-                  weight: '-31'
+                  weight: '-33'
                   id: field_moj_top_level_categories_target_id
                   pid: container-1
                   depth: '2'
                   type: filter
+                field_feature_on_category_target_id:
+                  weight: '-32'
+                  id: field_feature_on_category_target_id
+                  pid: container-1
+                  depth: '2'
+                  type: filter
                 field_moj_secondary_tags_target_id:
-                  weight: '-30'
+                  weight: '-31'
                   id: field_moj_secondary_tags_target_id
                   pid: container-1
                   depth: '2'
                   type: filter
                 field_moj_series_target_id:
-                  weight: '-29'
+                  weight: '-30'
                   id: field_moj_series_target_id
                   pid: container-1
                   depth: '2'
@@ -1712,12 +1717,6 @@ display:
                 submit:
                   weight: '-35'
                   id: submit
-                  pid: container-3
-                  depth: '2'
-                  type: buttons
-                reset:
-                  weight: '-34'
-                  id: reset
                   pid: container-3
                   depth: '2'
                   type: buttons
@@ -1821,16 +1820,6 @@ display:
                   pid: root
                   depth: '1'
                   type: container
-                container-16:
-                  container_type: details
-                  title: 'Container 16'
-                  description: ''
-                  weight: '-17'
-                  open: 0
-                  id: container-16
-                  pid: root
-                  depth: '1'
-                  type: container
     display_plugin: page
     display_title: Page
     id: page_1
@@ -1846,7 +1835,7 @@ display:
         - user.permissions
       max-age: 0
       tags:
-        - 'config:field.storage.node.field_moj_category_featured_item'
+        - 'config:field.storage.node.field_feature_on_category'
         - 'config:field.storage.node.field_moj_prisons'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_series'

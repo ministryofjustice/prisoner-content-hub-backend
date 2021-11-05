@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.page.field_moj_stand_first
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
+    - field.field.node.page.field_not_in_series
     - field.field.node.page.field_prison_categories
     - field.field.node.page.field_release_date
     - image.style.thumbnail
@@ -46,6 +47,7 @@ third_party_settings:
     group_series:
       children:
         - field_moj_series
+        - field_not_in_series
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
@@ -53,17 +55,17 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: 'Select which series this episode belongs to. Then, select either a season and episode number <strong>or</strong> a date.'
+        description: 'Select the series this content belongs to. Then enter either a season and episode number or the date of release.'
         required_fields: true
         id: ''
         classes: ''
-      label: 'How does this episode fit into a Series?'
+      label: 'Does this content fit into a Series?'
     group_season_and_episode_number:
       children:
         - field_moj_season
         - field_moj_episode
       parent_name: group_series
-      weight: 15
+      weight: 16
       format_type: fieldset
       region: content
       format_settings:
@@ -76,7 +78,7 @@ third_party_settings:
       children:
         - field_release_date
       parent_name: group_series
-      weight: 16
+      weight: 17
       format_type: fieldset
       region: content
       format_settings:
@@ -85,6 +87,19 @@ third_party_settings:
         id: ''
         classes: ''
       label: 'Which date would you like to assign to this content?'
+    group_category:
+      children:
+        - field_moj_top_level_categories
+      parent_name: ''
+      weight: 9
+      format_type: fieldset
+      region: content
+      format_settings:
+        description: 'Please enter and select the category for this content. This is required if no series has been selected for the content.'
+        required_fields: true
+        id: ''
+        classes: ''
+      label: Category
 _core:
   default_config_hash: KSvzyFhdLuxniTsunUnUfpfMmod2l57GibtVjL8ymHM
 id: node.page.default
@@ -98,13 +113,12 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_moj_category_featured_item:
+  field_feature_on_category:
+    type: options_buttons
     weight: 10
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
     region: content
+    settings: {  }
+    third_party_settings: {  }
   field_moj_description:
     weight: 1
     settings:
@@ -123,7 +137,7 @@ content:
     type: number
     region: content
   field_moj_prisons:
-    weight: 20
+    weight: 21
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -172,14 +186,21 @@ content:
     type: image_image
     region: content
   field_moj_top_level_categories:
-    weight: 9
+    weight: 11
     settings:
+      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
-      autocomplete: false
       width: 100%
     third_party_settings: {  }
     type: select2_entity_reference
+    region: content
+  field_not_in_series:
+    weight: 15
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   field_prison_categories:
     weight: 19
@@ -188,7 +209,7 @@ content:
     type: options_buttons
     region: content
   field_release_date:
-    weight: 17
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -242,6 +263,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_feature_on_category: true
+  field_moj_category_featured_item: true
   promote: true
   sticky: true

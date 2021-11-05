@@ -73,6 +73,15 @@ class CategoryFeaturedContentApiClass
     $nodes = $this->promotedNodes($categoryId, $numberOfResults, $prisonId);
     $results = array_merge($series, $nodes);
 
+    //sort them out
+    usort($results, function ($a, $b) {
+      if ($a->changed && $b->changed) {
+        return $b->changed->value - $a->changed->value;
+      }
+
+      return 0;
+    });
+
     return array_slice($results, 0, $numberOfResults);
   }
   /**
@@ -198,9 +207,8 @@ class CategoryFeaturedContentApiClass
   {
     $loadedTerms = $this->termStorage->loadMultiple($termIds);
     $promotedTerms = array_filter($loadedTerms, function ($term) use ($prisonId) {
-      if ($term->field_moj_category_featured_item->value == true && $prisonId == $term->field_promoted_to_prison->target_id) {
-        return true;
-      } elseif ($term->field_moj_category_featured_item->value == true && !$term->field_promoted_to_prison->target_id) {
+      $prisons = array_column($term->field_moj_prisons->getValue(), 'target_id');
+      if ($term->field_moj_category_featured_item->value == true && (!$prisonId || in_array($prisonId, $prisons))) {
         return true;
       } else {
         return false;
