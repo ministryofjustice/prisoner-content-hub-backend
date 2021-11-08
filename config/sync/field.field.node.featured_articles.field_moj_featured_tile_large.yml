@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_moj_featured_tile_large
     - node.type.featured_articles
-    - node.type.landing_page
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
@@ -26,7 +25,6 @@ settings:
     target_bundles:
       moj_radio_item: moj_radio_item
       page: page
-      landing_page: landing_page
       moj_pdf_item: moj_pdf_item
       moj_video_item: moj_video_item
     sort:
