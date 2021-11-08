@@ -60,8 +60,6 @@ module:
   raven: 0
   rdf: 0
   redis: 0
-  rest: 0
-  restui: 0
   role_delegation: 0
   scheduler: 0
   search_api: 0
