@@ -28,6 +28,7 @@ module:
   flysystem: 0
   flysystem_s3: 0
   form_state_empty: 0
+  health_check: 0
   image: 0
   image_style_warmer: 0
   inline_form_errors: 0
@@ -43,7 +44,6 @@ module:
   maintenance_exempt: 0
   menu_ui: 0
   moj: 0
-  moj_healthcheck: 0
   monolog: 0
   node: 0
   options: 0
