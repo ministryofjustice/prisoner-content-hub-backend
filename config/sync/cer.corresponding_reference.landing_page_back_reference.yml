@@ -7,7 +7,6 @@ label: 'Landing page back reference'
 enabled: true
 first_field: field_legacy_landing_page
 second_field: field_moj_landing_page_term
-add_direction: null
 bundles:
   node:
     - '*'
