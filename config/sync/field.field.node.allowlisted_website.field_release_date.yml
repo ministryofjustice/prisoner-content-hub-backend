@@ -1,0 +1,24 @@
+uuid: 5e6eae24-14c6-4cc1-9fe2-46c4dc835fca
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_date
+    - node.type.allowlisted_website
+  module:
+    - datetime
+id: node.allowlisted_website.field_release_date
+field_name: field_release_date
+entity_type: node
+bundle: allowlisted_website
+label: Date
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

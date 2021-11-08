@@ -1,0 +1,23 @@
+uuid: 15bcce10-01c4-473f-b0bb-36f6508c48ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_episode
+    - node.type.allowlisted_website
+id: node.allowlisted_website.field_moj_episode
+field_name: field_moj_episode
+entity_type: node
+bundle: allowlisted_website
+label: Episode
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 999
+  prefix: ''
+  suffix: ''
+field_type: integer
