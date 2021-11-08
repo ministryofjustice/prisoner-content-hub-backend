@@ -1,0 +1,23 @@
+uuid: e5f95a7c-e2b9-4275-bfa1-254861be6412
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_season
+    - node.type.allowlisted_website
+id: node.allowlisted_website.field_moj_season
+field_name: field_moj_season
+entity_type: node
+bundle: allowlisted_website
+label: Season
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 999
+  prefix: ''
+  suffix: ''
+field_type: integer
