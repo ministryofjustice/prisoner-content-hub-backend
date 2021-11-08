@@ -44,7 +44,6 @@ module:
   menu_ui: 0
   moj: 0
   moj_healthcheck: 0
-  moj_resources: 0
   monolog: 0
   node: 0
   options: 0
