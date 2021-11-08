@@ -1,17 +1,17 @@
-uuid: 11a5923f-7c9b-4ba2-a623-fbfd2c79eb73
+uuid: de33264b-858c-4de7-aaae-a51d62ae3607
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_url
+    - field.storage.node.field_external_url
     - node.type.allowlisted_website
   module:
     - link
-id: node.allowlisted_website.field_url
-field_name: field_url
+id: node.allowlisted_website.field_external_url
+field_name: field_external_url
 entity_type: node
 bundle: allowlisted_website
-label: URL
+label: 'External URL'
 description: ''
 required: true
 translatable: false

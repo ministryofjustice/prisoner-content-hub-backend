@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.allowlisted_website.field_display_url
+    - field.field.node.allowlisted_website.field_external_url
     - field.field.node.allowlisted_website.field_feature_on_category
     - field.field.node.allowlisted_website.field_moj_episode
     - field.field.node.allowlisted_website.field_moj_prisons
@@ -15,7 +16,6 @@ dependencies:
     - field.field.node.allowlisted_website.field_prison_categories
     - field.field.node.allowlisted_website.field_release_date
     - field.field.node.allowlisted_website.field_summary
-    - field.field.node.allowlisted_website.field_url
     - image.style.thumbnail
     - node.type.allowlisted_website
   module:
@@ -35,7 +35,7 @@ third_party_settings:
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 5
+      weight: 6
       format_type: fieldset
       region: content
       format_settings:
@@ -75,7 +75,7 @@ third_party_settings:
       children:
         - field_moj_top_level_categories
       parent_name: ''
-      weight: 6
+      weight: 7
       format_type: fieldset
       region: content
       format_settings:
@@ -89,7 +89,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
       parent_name: ''
-      weight: 9
+      weight: 10
       format_type: fieldset
       region: content
       format_settings:
@@ -105,20 +105,28 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   field_display_url:
-    weight: 4
+    weight: 5
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_external_url:
+    weight: 3
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
   field_feature_on_category:
-    weight: 7
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -198,17 +206,9 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_url:
-    weight: 3
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
   path:
     type: path
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -216,17 +216,17 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 11
+    weight: 12
     region: content
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -234,14 +234,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 18
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 13
     region: content
     third_party_settings: {  }
   title:
@@ -254,7 +254,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 9
     settings:
       match_operator: CONTAINS
       size: 60
@@ -264,7 +264,7 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }

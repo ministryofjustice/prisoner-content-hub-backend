@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.allowlisted_website.field_display_url
+    - field.field.node.allowlisted_website.field_external_url
     - field.field.node.allowlisted_website.field_feature_on_category
     - field.field.node.allowlisted_website.field_moj_episode
     - field.field.node.allowlisted_website.field_moj_prisons
@@ -15,7 +16,6 @@ dependencies:
     - field.field.node.allowlisted_website.field_prison_categories
     - field.field.node.allowlisted_website.field_release_date
     - field.field.node.allowlisted_website.field_summary
-    - field.field.node.allowlisted_website.field_url
     - node.type.allowlisted_website
   module:
     - datetime
@@ -34,6 +34,18 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: content
+  field_external_url:
+    weight: 115
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
     region: content
   field_feature_on_category:
     weight: 113
@@ -128,18 +140,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
-    region: content
-  field_url:
-    weight: 103
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
     region: content
   links:
     weight: 100
