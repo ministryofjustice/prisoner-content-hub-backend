@@ -2,5 +2,8 @@ image:
   pullPolicy: Always
 
 ingress:
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-prisoner-content-hub-development-blue
+    
   hosts:
     - host: cms-prisoner-content-hub-development.apps.live-1.cloud-platform.service.justice.gov.uk
