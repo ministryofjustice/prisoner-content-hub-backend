@@ -28,6 +28,7 @@ module:
   flysystem: 0
   flysystem_s3: 0
   form_state_empty: 0
+  health_check: 0
   image: 0
   image_style_warmer: 0
   inline_form_errors: 0
@@ -42,9 +43,6 @@ module:
   link: 0
   maintenance_exempt: 0
   menu_ui: 0
-  moj: 0
-  moj_healthcheck: 0
-  moj_resources: 0
   monolog: 0
   node: 0
   options: 0
@@ -61,8 +59,6 @@ module:
   raven: 0
   rdf: 0
   redis: 0
-  rest: 0
-  restui: 0
   role_delegation: 0
   scheduler: 0
   search_api: 0
