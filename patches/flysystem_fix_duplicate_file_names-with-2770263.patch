@@ -1,18 +1,80 @@
 diff --git a/src/Controller/S3CorsUploadAjaxController.php b/src/Controller/S3CorsUploadAjaxController.php
-index b01010e..5c6b67d 100644
+index b01010e..409c5d8 100644
 --- a/src/Controller/S3CorsUploadAjaxController.php
 +++ b/src/Controller/S3CorsUploadAjaxController.php
-@@ -81,10 +81,11 @@ class S3CorsUploadAjaxController extends ControllerBase {
+@@ -73,10 +73,11 @@ class S3CorsUploadAjaxController extends ControllerBase {
+     $client = $adapter->getClient();
+     $bucket = $adapter->getBucket();
+     $destination = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($post['destination']));
++    $filename = $this->createFilename($post['filename'], $post['destination']);
+ 
+     // Retrieve the file name and build the URI.
+     // Destination does not contain a prefix as it is applied by the fly system.
+-    $uri = \Drupal::service('file_system')->createFilename($post['filename'], $post['destination']);
++    $uri = \Drupal::service('file_system')->createFilename($filename, $post['destination']);
+     // Apply the prefix to the URI and use it as a key in the POST request.
      $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($uri));
  
-     // Create a temporary file to return with a file ID in the response.
-+    $temp_filename =  tempnam($post['destination'], $post['filename']);
+@@ -84,7 +85,7 @@ class S3CorsUploadAjaxController extends ControllerBase {
      $file = File::create([
--      'uri' => $uri,
-+      'uri' => $scheme . '://' . $temp_filename,
+       'uri' => $uri,
        'filesize' => $post['filesize'],
 -      'filename' => $post['filename'],
-+      'filename' => $temp_filename,
++      'filename' => $filename,
        'filemime' => $post['filemime'],
        'uid' => \Drupal::currentUser()->getAccount()->id(),
      ]);
+@@ -119,4 +120,53 @@ class S3CorsUploadAjaxController extends ControllerBase {
+     return new JsonResponse($data);
+   }
+ 
++  /**
++   * Creates a unique filename.
++   *
++   * If a file with the specified name already exists in the files_managed table
++   * a new one will be generated.
++   * @See FileSystemInterface::createFilename();
++   *
++   * @param string $filename
++   *   The filename with extension, e.g. "flowers.jpg".
++   * @param $destination
++   *   The destination including stream wrapper, e.g. "s3://prefix".
++   *
++   * @return string
++   *   A filename that is unique, e.g. flowers_1.jpg.
++   */
++  protected function createFilename($filename, $destination) {
++    // Check for existing filenames in the file_managed table.
++    $basename = \Drupal::service('file_system')->basename($filename);
++    $result = \Drupal::entityQuery('file')
++      ->accessCheck(FALSE)
++      ->condition('filename', $basename, 'STARTS_WITH')
++      ->condition('uri', $destination, 'STARTS_WITH')
++      ->execute();
++    if (!empty($result)) {
++      $files = File::loadMultiple($result);
++      $existing_filenames = [];
++      foreach ($files as $file) {
++        $existing_filenames[] = $file->filename;
++      }
++
++      // Destination file already exists, generate an alternative.
++      $pos = strrpos($basename, '.');
++      if ($pos !== FALSE) {
++        $name = substr($basename, 0, $pos);
++        $ext = substr($basename, $pos);
++      }
++      else {
++        $name = $basename;
++        $ext = '';
++      }
++
++      $counter = 0;
++      do {
++        $filename = $name . '_' . $counter++ . $ext;
++      } while (in_array($filename, $existing_filenames));
++    }
++    return $filename;
++  }
++
+ }
