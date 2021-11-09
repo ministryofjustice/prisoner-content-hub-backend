@@ -1,0 +1,18 @@
+diff --git a/src/Controller/S3CorsUploadAjaxController.php b/src/Controller/S3CorsUploadAjaxController.php
+index b01010e..5c6b67d 100644
+--- a/src/Controller/S3CorsUploadAjaxController.php
++++ b/src/Controller/S3CorsUploadAjaxController.php
+@@ -81,10 +81,11 @@ class S3CorsUploadAjaxController extends ControllerBase {
+     $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($uri));
+ 
+     // Create a temporary file to return with a file ID in the response.
++    $temp_filename =  tempnam($post['destination'], $post['filename']);
+     $file = File::create([
+-      'uri' => $uri,
++      'uri' => $scheme . '://' . $temp_filename,
+       'filesize' => $post['filesize'],
+-      'filename' => $post['filename'],
++      'filename' => $temp_filename,
+       'filemime' => $post['filemime'],
+       'uid' => \Drupal::currentUser()->getAccount()->id(),
+     ]);
