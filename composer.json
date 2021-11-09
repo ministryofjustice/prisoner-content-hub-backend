@@ -122,7 +122,7 @@
                 "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
                 "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
                 "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch",
-                "Debug file deletions for https://trello.com/c/ZVSfPcz6/89-fix-the-mysterious-missing-file-issue": "patches/flysystem_s3-add-delete-logging-for-debugging.patch"
+                "Issue TBC - Fix duplicate file names": "patches/flysystem_fix_duplicate_file_names.patch"
             },
             "twistor/stream-util": {
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
