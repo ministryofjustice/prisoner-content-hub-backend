@@ -3,6 +3,7 @@
 namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
 
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 
 /**
  * Test that the correct access is applied when accessing entities directly
@@ -121,6 +122,20 @@ class PrisonerHubEntityAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
     }
   }
 
+
+  /**
+   * Test that we can access the correct entities, when tagged with both a
+   * prison and a category.
+   */
+  public function testContentTaggedWithPrisonAndCategoryUnpublished() {
+    foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
+      foreach ($bundles as $bundle) {
+        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisonAndCategory($entity_type_id, $bundle, $this->prisonTerm->id(), $this->prisonCategoryTerm->id(), NodeInterface::NOT_PUBLISHED);
+        $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_403);
+        $this->assertJsonApiResponseByStatusCode($url, 403);
+      }
+    }
+  }
 
   /**
    * @param \Drupal\Core\Url $url
