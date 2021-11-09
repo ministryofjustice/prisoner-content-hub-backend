@@ -143,3 +143,16 @@ function prisoner_content_hub_profile_update_8014() {
     $node->save();
   }
 }
+
+
+/**
+ * Remove all landing pages (so that we can remove the content type).
+ */
+function prisoner_content_hub_profile_update_8015() {
+  $results = \Drupal::entityQuery('node')->condition('type', 'landing_page')->accessCheck(FALSE)->execute();
+  $nodes = Node::loadMultiple($results);
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $node->delete();
+  }
+}

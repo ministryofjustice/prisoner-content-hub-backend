@@ -41,7 +41,19 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
    */
   protected $releaseDateTerm;
 
-  protected static $contentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'];
+  /**
+   * Content types to test on for studio admins.
+   *
+   * @var string[]
+   */
+  protected static $studioAdminContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item', 'allowlisted_website'];
+
+  /**
+   * Content types to test on for local content managers.
+   *
+   * @var string[]
+   */
+  protected static $localContentManagerContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'];
 
   public function setUp() {
     parent::setUp();
@@ -76,7 +88,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
    */
   public function testSeriesSortingFieldsStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
-    foreach (self::$contentTypes as $contentType) {
+    foreach (self::$studioAdminContentTypes as $contentType) {
       $this->checkSortingFieldVisibility($contentType);
     }
   }
@@ -86,7 +98,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
    */
   public function testCategoryFieldStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
-    foreach (self::$contentTypes as $contentType) {
+    foreach (self::$studioAdminContentTypes as $contentType) {
       $this->checkCategoryFieldVisibility($contentType);
     }
   }
@@ -96,7 +108,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
    */
   public function testSeriesSortingFieldsLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
-    foreach (self::$contentTypes as $contentType) {
+    foreach (self::$localContentManagerContentTypes as $contentType) {
       $this->checkSortingFieldVisibility($contentType);
     }
   }
@@ -106,7 +118,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
    */
   public function testCategoryFieldLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
-    foreach (self::$contentTypes as $contentType) {
+    foreach (self::$localContentManagerContentTypes as $contentType) {
       $this->checkCategoryFieldVisibility($contentType);
     }
   }

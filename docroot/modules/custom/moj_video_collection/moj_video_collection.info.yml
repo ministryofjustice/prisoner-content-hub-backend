@@ -1,7 +1,0 @@
-name: MoJ Video Collection Content Type
-description: Handles the creation of Video Collection content type
-package: MoJ Self Service
-dependencies:
-    - moj_video_item
-type: module
-core: 8.x

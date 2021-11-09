@@ -7,6 +7,7 @@
       const $checkboxes = $('[name^="field_feature_on_category"]'); // Use name^ to account for multiple checkbox fields.
       const $categoryField = $('[name="field_moj_top_level_categories[]"], [name="field_category[]"]');
       const $seriesField = $('[name="field_moj_series"]');
+      const $notInSeries = $('[name="field_not_in_series[value]"]');
 
       // Hide the entire fieldset upon page load.
       $checkboxes.closest('fieldset').once().hide();
@@ -60,6 +61,16 @@
           return selectedCategories.includes(checkbox.value);
         }
       }
+
+      // Hide checkboxes when field_not_in_series is switched.
+      $notInSeries
+        .once()
+        .on('change', (e) => {
+          $checkboxes
+            .prop('checked', false)
+            .closest('div.form-item')
+            .hide();
+        });
     }
   };
 })(Drupal, drupalSettings, jQuery);
