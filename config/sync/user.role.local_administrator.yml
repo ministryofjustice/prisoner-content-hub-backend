@@ -26,6 +26,8 @@ permissions:
   - 'assign local_administrator role'
   - 'assign moj_local_content_manager role'
   - 'bypass node access'
+  - 'clone node entity'
+  - 'clone taxonomy_term entity'
   - 'create allowlisted_website content'
   - 'create featured_articles content'
   - 'create help_page content'
