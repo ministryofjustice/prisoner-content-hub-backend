@@ -3,9 +3,9 @@ index 55ebec9..f9625ca 100644
 --- a/src/Form/EntityCloneForm.php
 +++ b/src/Form/EntityCloneForm.php
 @@ -2,8 +2,11 @@
- 
+
  namespace Drupal\entity_clone\Form;
- 
+
 +use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
  use Drupal\Core\Entity\EntityInterface;
 +use Drupal\Core\Entity\EntityPublishedInterface;
@@ -17,7 +17,7 @@ index 55ebec9..f9625ca 100644
 @@ -64,6 +67,20 @@ class EntityCloneForm extends FormBase {
     */
    protected $messenger;
- 
+
 +  /**
 +   * The module handler service.
 +   *
@@ -58,7 +58,7 @@ index 55ebec9..f9625ca 100644
 +    $this->moduleHanlder = $module_handler;
 +    $this->entityDefinitionUpdateManager = $entity_definition_update_manager;
    }
- 
+
    /**
 @@ -134,7 +157,9 @@ class EntityCloneForm extends FormBase {
        $container->get('messenger'),
@@ -70,17 +70,17 @@ index 55ebec9..f9625ca 100644
 +      $container->get('entity.definition_update_manager')
      );
    }
- 
+
 @@ -166,6 +191,16 @@ class EntityCloneForm extends FormBase {
          ];
        }
- 
+
 +      $has_content_translation_status_field = $this->moduleHanlder->moduleExists('content_translation') && $this->entityDefinitionUpdateManager->getFieldStorageDefinition('content_translation_status', $this->entityTypeDefinition->id());
 +      if ($this->entity instanceof EntityPublishedInterface || $has_content_translation_status_field) {
 +        $form['status'] =[
 +          '#type' => 'checkbox',
 +          '#title' => $this->stringTranslationManager->translate('Save cloned @entity_type as published', ['@entity_type' => $this->entityTypeDefinition->getLabel()]),
-+          '#description' => $this->stringTranslationManager->translate('If the cloned entity should be save as a published entuty.'),
++          '#description' => $this->stringTranslationManager->translate('If the cloned entity should be save as a published entity.'),
 +          '#default_value' => FALSE,
 +        ];
 +      }
@@ -89,9 +89,9 @@ index 55ebec9..f9625ca 100644
        $form['actions']['clone'] = [
          '#type' => 'submit',
 @@ -205,6 +240,20 @@ class EntityCloneForm extends FormBase {
- 
+
      $duplicate = $this->entity->createDuplicate();
- 
+
 +    $has_content_translation_status_field = $this->moduleHanlder->moduleExists('content_translation') && $this->entityDefinitionUpdateManager->getFieldStorageDefinition('content_translation_status', $this->entityTypeDefinition->id());
 +    if ($duplicate instanceof EntityPublishedInterface || $has_content_translation_status_field) {
 +      if ($duplicate instanceof EntityPublishedInterface) {
