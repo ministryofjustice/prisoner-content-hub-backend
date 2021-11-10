@@ -17,8 +17,8 @@ stack: true
 timeout: !!float 2
 message_limit: 2048
 trace: true
-javascript_error_handler: false
-public_dsn: ''
+javascript_error_handler: true
+public_dsn: 'https://7e038c55ab3547be95934595b77723f5@o345774.ingest.sentry.io/5377063'
 ssl: verify_ssl
 ca_cert: ''
 ignored_channels: {  }

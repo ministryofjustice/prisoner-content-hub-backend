@@ -43,6 +43,7 @@ permissions:
   - 'revert moj_video_item revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'send javascript errors to sentry'
   - 'view any unpublished moj_pdf_item content'
   - 'view any unpublished moj_radio_item content'
   - 'view any unpublished moj_video_item content'

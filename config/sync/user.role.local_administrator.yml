@@ -120,6 +120,7 @@ permissions:
   - 'revert moj_video_item revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'send javascript errors to sentry'
   - 'use text format full_html'
   - 'view allowlisted_website revisions'
   - 'view any unpublished allowlisted_website content'
