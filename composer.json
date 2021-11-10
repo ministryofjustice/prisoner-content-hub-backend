@@ -19,6 +19,7 @@
         "drupal/dynamic_entity_reference": "^1.12",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
+        "drupal/entity_clone": "^1.0@beta",
         "drupal/field_group": "^3.1",
         "drupal/flood_unblock": "^2.0",
         "drupal/flysystem": "^2.0",
@@ -151,6 +152,9 @@
             },
             "drupal/jsonapi_cross_bundles": {
                 "Issue #3241626: 404 on cross bundle routes when uninstalling another module": "patches/jsonapi_cross_bundles-3241626-fix-404-on-cross-bundle-routes-when-uninstalling-another-module-2.patch"
+            },
+            "drupal/entity_clone": {
+                "Issue #3036068: Make it possible to configure the published state of cloned entities.": "patches/entity_clone-3036068-20.patch"
             }
         },
         "patches-ignore": {

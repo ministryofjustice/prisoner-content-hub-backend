@@ -1,8 +1,0 @@
-name: MoJ Search
-description: Adds search endpoint.
-package: MoJ Self Service
-dependencies:
-    - search_api
-    - search_api_db
-type: module
-core: 8.x
