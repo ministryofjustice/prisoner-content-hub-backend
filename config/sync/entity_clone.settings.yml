@@ -1,0 +1,34 @@
+form_settings:
+  file:
+    hidden: true
+    default_value: false
+    disable: false
+  node:
+    hidden: true
+    default_value: false
+    disable: false
+  path_alias:
+    hidden: true
+    default_value: false
+    disable: false
+  search_api_task:
+    hidden: true
+    default_value: false
+    disable: false
+  shortcut:
+    hidden: true
+    default_value: false
+    disable: false
+  taxonomy_term:
+    hidden: true
+    default_value: false
+    disable: false
+  user:
+    hidden: true
+    default_value: false
+    disable: false
+  menu_link_content:
+    hidden: true
+    default_value: false
+    disable: false
+take_ownership: 1
