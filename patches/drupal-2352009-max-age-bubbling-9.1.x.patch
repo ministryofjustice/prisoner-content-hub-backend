@@ -1,0 +1,45 @@
+diff --git a/core/lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php b/core/lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
+index c8d76eb294..db190a4558 100644
+--- a/core/lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
++++ b/core/lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
+@@ -15,6 +15,7 @@
+ use Symfony\Component\HttpKernel\Event\ResponseEvent;
+ use Symfony\Component\HttpKernel\KernelEvents;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++use Drupal\Core\Cache\CacheBackendInterface;
+ 
+ /**
+  * Response subscriber to handle finished responses.
+@@ -251,6 +252,13 @@ protected function setResponseCacheable(Response $response, Request $request) {
+     }
+ 
+     $max_age = $this->config->get('cache.page.max_age');
++    $response_max_age = $response->getCacheableMetadata()->getCacheMaxAge();
++    if ($response_max_age !== CacheBackendInterface::CACHE_PERMANENT) {
++      $max_age = min(
++        $this->config->get('cache.page.max_age'),
++        $response_max_age
++      );
++    }
+     $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
+ 
+     // In order to support HTTP cache-revalidation, ensure that there is a
+diff --git a/core/modules/page_cache/src/StackMiddleware/PageCache.php b/core/modules/page_cache/src/StackMiddleware/PageCache.php
+index ba07414d63..9a224c4cd3 100644
+--- a/core/modules/page_cache/src/StackMiddleware/PageCache.php
++++ b/core/modules/page_cache/src/StackMiddleware/PageCache.php
+@@ -277,6 +277,14 @@ protected function storeResponse(Request $request, Response $response) {
+       $expire = Cache::PERMANENT;
+     }
+ 
++    // Respect rendered max-age.
++    // @see https://www.drupal.org/node/2352009
++    $max_age = $response->getCacheableMetadata()->getCacheMaxAge();
++    if ($max_age != Cache::PERMANENT) {
++      $render_expire = $request_time + $max_age;
++      $expire = $expire == Cache::PERMANENT ? $render_expire : min($expire, $render_expire);
++    }
++
+     if ($expire === Cache::PERMANENT || $expire > $request_time) {
+       $tags = $response->getCacheableMetadata()->getCacheTags();
+       $this->set($request, $response, $expire, $tags);
