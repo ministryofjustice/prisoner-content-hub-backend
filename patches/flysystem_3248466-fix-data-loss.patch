@@ -22,10 +22,10 @@ index b01010e..f993336 100644
        'uid' => \Drupal::currentUser()->getAccount()->id(),
      ]);
 diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
-index ed74c9b..12e2cfa 100644
+index ed74c9b..da62fae 100644
 --- a/src/File/FlysystemS3FileSystem.php
 +++ b/src/File/FlysystemS3FileSystem.php
-@@ -2,6 +2,8 @@
+@@ -2,12 +2,15 @@
  
  namespace Drupal\flysystem_s3\File;
  
@@ -34,7 +34,14 @@ index ed74c9b..12e2cfa 100644
  use Drupal\Core\File\Exception\FileWriteException;
  use Drupal\Core\File\FileSystem;
  use Drupal\Core\File\FileSystemInterface;
-@@ -37,6 +39,13 @@ class FlysystemS3FileSystem extends FileSystem {
+ use Drupal\Core\Site\Settings;
+ use Drupal\Core\StreamWrapper\StreamWrapperManager;
+ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
++use Drupal\file\Entity\File;
+ use Psr\Log\LoggerInterface;
+ 
+ /**
+@@ -37,6 +40,13 @@ class FlysystemS3FileSystem extends FileSystem {
     */
    protected $streamWrapperManager;
  
@@ -48,7 +55,7 @@ index ed74c9b..12e2cfa 100644
    /**
     * The file system being decorated.
     *
-@@ -56,10 +65,11 @@ class FlysystemS3FileSystem extends FileSystem {
+@@ -56,10 +66,11 @@ class FlysystemS3FileSystem extends FileSystem {
     * @param \Drupal\Core\File\FileSystemInterface $file_system
     *   The file system being decorated.
     */
@@ -61,7 +68,7 @@ index ed74c9b..12e2cfa 100644
      $this->fileSystem = $file_system;
    }
  
-@@ -360,15 +370,65 @@ class FlysystemS3FileSystem extends FileSystem {
+@@ -360,15 +371,65 @@ class FlysystemS3FileSystem extends FileSystem {
    /**
     * {@inheritdoc}
     *
