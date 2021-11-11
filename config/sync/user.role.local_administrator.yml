@@ -122,6 +122,7 @@ permissions:
   - 'revert moj_video_item revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'send javascript errors to sentry'
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
