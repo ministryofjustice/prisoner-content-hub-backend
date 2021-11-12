@@ -1,5 +1,5 @@
 diff --git a/flysystem_s3.js b/flysystem_s3.js
-index dfebbae..2e29c3e 100644
+index dfebbae..784e30c 100644
 --- a/flysystem_s3.js
 +++ b/flysystem_s3.js
 @@ -44,6 +44,21 @@
@@ -48,3 +48,14 @@ index dfebbae..2e29c3e 100644
              });
          });
        });
+@@ -271,7 +289,9 @@
+         .once('auto-cors-upload')
+         .on('change.autoCorsFileUpload', Drupal.flysystemS3.submitCorsUpload)
+         // Disable the upload button trigger so that the CORS upload handler can run first.
+-        .off('change.autoFileUpload', Drupal.file.triggerUploadButton);
++        .off('change.autoFileUpload', Drupal.file.triggerUploadButton)
++          // Disable core disableFields functionality, as this is implemented in the CORS submit handler.
++        .off('mousedown', Drupal.file.disableFields);
+     },
+     detach: function (context, setting, trigger) {
+       if (trigger === 'unload') {
