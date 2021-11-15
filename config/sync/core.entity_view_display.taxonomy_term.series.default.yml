@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.series.field_category
+    - field.field.taxonomy_term.series.field_exclude_feedback
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
@@ -28,6 +29,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_exclude_feedback:
+    weight: 16
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
   field_feature_on_category:
     weight: 15
     label: above
