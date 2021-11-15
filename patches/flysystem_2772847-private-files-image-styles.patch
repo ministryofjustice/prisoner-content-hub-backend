@@ -1,5 +1,5 @@
 diff --git a/README.md b/README.md
-index 13811fc..e1b7781 100644
+index 13811fc..28ac1da 100644
 --- a/README.md
 +++ b/README.md
 @@ -39,7 +39,7 @@ $schemes = [
@@ -39,7 +39,7 @@ index 13811fc..e1b7781 100644
 +As the itok parameter will interfere with the signature in the url.
 \ No newline at end of file
 diff --git a/flysystem_s3.module b/flysystem_s3.module
-index 6db5014..f42658e 100644
+index 6db5014..ae69e36 100644
 --- a/flysystem_s3.module
 +++ b/flysystem_s3.module
 @@ -5,6 +5,10 @@
@@ -53,7 +53,7 @@ index 6db5014..f42658e 100644
  use Drupal\flysystem_s3\S3CorsManagedFileHelper;
 
  /**
-@@ -13,3 +17,29 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
+@@ -13,3 +17,27 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
  function flysystem_s3_element_info_alter(array &$types) {
    S3CorsManagedFileHelper::alterInfo($types);
  }
@@ -70,19 +70,17 @@ index 6db5014..f42658e 100644
 +    $url = $entity->get('uri');
 +    $scheme = StreamWrapperManager::getScheme($url->value);
 +    if (isset($settings[$scheme]) && isset($settings[$scheme]['config']['expires'])) {
-+      $entity->addCacheableDependency(
-+        (new CacheableMetadata())->setCacheMaxAge((int)$settings[$scheme]['config']['expires'])
-+      );
++      // We currently only support timestamp expiration (although the S3 api
++      // accepts other formats).
++      if (is_int($settings[$scheme]['config']['expires'])) {
++        $entity->addCacheableDependency(
++          (new CacheableMetadata())->setCacheMaxAge($settings[$scheme]['config']['expires'] - \Drupal::time()->getRequestTime())
++        );
++      }
 +    }
-+    // TODO: The page cache does not currently respect max-age cache
-+    // headers. We can't set proper max-age based on the signing time until
-+    // https://www.drupal.org/node/2352009 is fixed. Unfortunately, this
-+    // also means we can't cache any pages with signed URLs at all. When we
-+    // can implement this, we should parse out max-age from the generated
-+    // URL as suggested at https://github.com/aws/aws-sdk-php/issues/1052.
-+    \Drupal::service('page_cache_kill_switch')->trigger();
 +  }
 +}
++
 diff --git a/flysystem_s3.services.yml b/flysystem_s3.services.yml
 index e36dc60..beb7a9d 100644
 --- a/flysystem_s3.services.yml
