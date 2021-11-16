@@ -158,7 +158,7 @@
                 "Issue #3036068: Make it possible to configure the published state of cloned entities.": "patches/entity_clone-3036068-20.patch"
             },
             "drupal/form_state_empty": {
-                "Support IE11 by removing arrow functions.": "patches/form_state_empty-support-ie-11.patch"
+                "https://github.com/smithmilner/form_state_empty/pull/4 - Support IE11 by removing arrow functions.": "patches/form_state_empty-support-ie-11.patch"
             }
         },
         "patches-ignore": {
