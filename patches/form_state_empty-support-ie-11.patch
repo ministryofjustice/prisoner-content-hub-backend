@@ -1,0 +1,22 @@
+diff --git a/js/state-empty.js b/js/state-empty.js
+index c2cdb8e..1195c00 100644
+--- a/js/state-empty.js
++++ b/js/state-empty.js
+@@ -5,7 +5,7 @@
+ (function formEmptyState($, Drupal) {
+ 
+   Drupal.behaviors.stateEmpty = {
+-    attach: (context) => {
++    attach(context) {
+       $(context).on('state:empty', (e) => {
+         if (e.trigger && e.value) {
+           if (e.target.type == 'fieldset') {
+@@ -20,7 +20,7 @@
+         }
+       });
+     },
+-    detach: (context) => {
++    detach(context) {
+       $(context).off('state:empty');
+     }
+   };
