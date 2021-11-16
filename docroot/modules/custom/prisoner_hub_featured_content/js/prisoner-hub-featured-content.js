@@ -58,7 +58,7 @@
           $checkboxes.closest('fieldset').hide();
         }
         function isCurrentSelectedCategory(index, checkbox) {
-          return selectedCategories.includes(checkbox.value);
+          return $.inArray(checkbox.value, selectedCategories);
         }
       }
 
