@@ -3,7 +3,7 @@
   'use strict';
 
   Drupal.behaviors.prisonerHubFeaturedContent = {
-    attach: function (context) {
+    attach: function(context) {
       const $checkboxes = $('[name^="field_feature_on_category"]'); // Use name^ to account for multiple checkbox fields.
       const $categoryField = $('[name="field_moj_top_level_categories[]"], [name="field_category[]"]');
       const $seriesField = $('[name="field_moj_series"]');
@@ -14,7 +14,7 @@
 
       $categoryField
         .once()
-        .on('change', (e) => {
+        .on('change', function(e) {
           if ($(e.currentTarget).is(":visible")) {
             filterCheckboxes($(e.currentTarget).val());
           }
@@ -26,7 +26,7 @@
 
       $seriesField
         .once()
-        .on('change', (e) => {
+        .on('change', function(e) {
           if ($(e.currentTarget).is(":visible")) {
             // Retrieve the categories for the series via drupalSettings.
             const seriesVal = $(e.currentTarget).val();
@@ -65,7 +65,7 @@
       // Hide checkboxes when field_not_in_series is switched.
       $notInSeries
         .once()
-        .on('change', (e) => {
+        .on('change', function(e) {
           $checkboxes
             .prop('checked', false)
             .closest('div.form-item')
