@@ -1,0 +1,23 @@
+uuid: 780c0915-3533-4185-988c-193e77427443
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_exclude_feedback
+    - taxonomy.vocabulary.series
+id: taxonomy_term.series.field_exclude_feedback
+field_name: field_exclude_feedback
+entity_type: taxonomy_term
+bundle: series
+label: 'Exclude feedback'
+description: 'Select to hide the feedback form when viewing this series.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
