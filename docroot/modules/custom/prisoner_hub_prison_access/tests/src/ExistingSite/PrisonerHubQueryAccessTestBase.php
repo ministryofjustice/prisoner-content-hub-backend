@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
@@ -15,7 +15,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 /**
  * Base class that tests jsonapi responses for the correct results.
  *
- * @group prisoner_hub_entity_access
+ * @group prisoner_hub_prison_access
  */
 abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
@@ -78,8 +78,8 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->prisonFieldName = $this->container->getParameter('prisoner_hub_entity_access.prison_field_name');
-    $this->prisonCategoryFieldName = $this->container->getParameter('prisoner_hub_entity_access.category_field_name');
+    $this->prisonFieldName = $this->container->getParameter('prisoner_hub_prison_access.prison_field_name');
+    $this->prisonCategoryFieldName = $this->container->getParameter('prisoner_hub_prison_access.category_field_name');
 
     $vocab_prison_categories = Vocabulary::load('prison_category');
     $this->prisonCategoryTerm = $this->createTerm($vocab_prison_categories);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -10,9 +10,9 @@ use Drupal\node\NodeInterface;
  * through JSON:API.  We only care about the http status code, since the
  * contents of the response is up to the jsonapi module.
  *
- * @group prisoner_hub_entity_access
+ * @group prisoner_hub_prison_access
  */
-class PrisonerHubEntityAccessJsonApiTest extends PrisonerHubQueryAccessTestBase {
+class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase {
 
   /**
    * An array of bundles to check for, keyed by entity type.

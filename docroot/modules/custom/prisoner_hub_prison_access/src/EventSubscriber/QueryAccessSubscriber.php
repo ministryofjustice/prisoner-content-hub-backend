@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\prisoner_hub_entity_access\EventSubscriber;
+namespace Drupal\prisoner_hub_prison_access\EventSubscriber;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\QueryAccess\ConditionGroup;
 use Drupal\entity\QueryAccess\QueryAccessEvent;
-use Drupal\prisoner_hub_entity_access\PrisonCategoryLoader;
+use Drupal\prisoner_hub_prison_access\PrisonCategoryLoader;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,14 +23,14 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   /**
    * The prison category loader service.
    *
-   * @var \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader
+   * @var \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader
    */
   protected $prisonCategoryLoader;
 
   /**
    * SearchApiQueryAlter constructor.
    *
-   * @param \Drupal\prisoner_hub_entity_access\PrisonCategoryLoader $prison_category_loader
+   * @param \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader $prison_category_loader
    */
   public function __construct(PrisonCategoryLoader $prison_category_loader) {
     $this->prisonCategoryLoader = $prison_category_loader;

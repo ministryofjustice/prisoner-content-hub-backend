@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Drupal\prisoner_hub_entity_access;
+namespace Drupal\prisoner_hub_prison_access;
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\taxonomy\TermInterface;
