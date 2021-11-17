@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.series.field_category
+    - field.field.taxonomy_term.series.field_exclude_feedback
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
@@ -58,6 +59,13 @@ content:
       autocomplete: false
       width: 100%
     third_party_settings: {  }
+  field_exclude_feedback:
+    weight: 8
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_feature_on_category:
     weight: 4
     settings: {  }
@@ -110,7 +118,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 9
     region: content
     third_party_settings: {  }
 hidden:

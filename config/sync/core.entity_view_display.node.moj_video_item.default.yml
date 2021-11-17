@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_exclude_feedback
     - field.field.node.moj_video_item.field_feature_on_category
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_description
@@ -32,6 +33,16 @@ targetEntityType: node
 bundle: moj_video_item
 mode: default
 content:
+  field_exclude_feedback:
+    weight: 20
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
   field_feature_on_category:
     weight: 19
     label: above

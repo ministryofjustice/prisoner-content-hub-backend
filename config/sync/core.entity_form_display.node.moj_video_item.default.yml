@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_exclude_feedback
     - field.field.node.moj_video_item.field_feature_on_category
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_description
@@ -115,6 +116,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_exclude_feedback:
+    weight: 13
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_feature_on_category:
     type: options_buttons
     weight: 11
@@ -152,7 +160,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 11
+    weight: 10
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -230,12 +238,12 @@ content:
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -243,7 +251,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 17
     third_party_settings: {  }
     region: content
   title:
@@ -271,7 +279,7 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }

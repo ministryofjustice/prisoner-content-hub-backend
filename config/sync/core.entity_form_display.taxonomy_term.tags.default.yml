@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.tags.field_exclude_feedback
     - field.field.taxonomy_term.tags.field_featured_image
     - field.field.taxonomy_term.tags.field_moj_category_featured_item
     - field.field.taxonomy_term.tags.field_moj_prisons
@@ -45,6 +46,13 @@ content:
       placeholder: ''
       rows: 5
     third_party_settings: {  }
+  field_exclude_feedback:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_featured_image:
     weight: 4
     settings:
@@ -97,7 +105,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 8
     region: content
     third_party_settings: {  }
 hidden: {  }
