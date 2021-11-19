@@ -1,18 +1,14 @@
 parameters:
   prisoner_hub_prison_access.prison_field_name: field_moj_prisons
-  prisoner_hub_prison_access.category_field_name: field_prison_categories
 services:
-  prisoner_hub_prison_access.prison_category_loader:
-    class: Drupal\prisoner_hub_prison_access\PrisonCategoryLoader
-    arguments: ['@current_route_match','%prisoner_hub_prison_access.prison_field_name%', '%prisoner_hub_prison_access.category_field_name%']
   prisoner_hub_prison_access.query_access_subscriber:
     class: Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
-    arguments: ['@prisoner_hub_prison_access.prison_category_loader']
+    arguments: ['@entity_field.manager', '@entity_type.manager', '@current_route_match', '%prisoner_hub_prison_access.prison_field_name%']
     tags:
       - { name: event_subscriber, priority: 100 }
   prisoner_hub_prison_access.search_api_query_alter:
     class: Drupal\prisoner_hub_prison_access\SearchApiQueryAlter
-    arguments: ['@prisoner_hub_prison_access.prison_category_loader']
+    arguments: ['@current_route_match', '%prisoner_hub_prison_access.prison_field_name%']
   prisoner_hub_prison_access.entity_access_check:
     class: Drupal\prisoner_hub_prison_access\EntityAccessCheck
-    arguments: ['@prisoner_hub_prison_access.prison_category_loader', '@entity_type.manager']
+    arguments: ['@current_route_match', '@entity_type.manager', '%prisoner_hub_prison_access.prison_field_name%']

@@ -13,19 +13,25 @@ use Drupal\search_api\Query\QueryInterface;
 class SearchApiQueryAlter {
 
   /**
-   * The prison category loader service.
+   * The route match service.
    *
-   * @var \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader
+   * @var RouteMatchInterface
    */
-  protected $prisonCategoryLoader;
+  protected $routeMatch;
+
+  /**
+   * The prison field name.
+   *
+   * @var String
+   */
+  protected $prisonFieldName;
 
   /**
    * SearchApiQueryAlter constructor.
-   *
-   * @param \Drupal\prisoner_hub_prison_access\PrisonCategoryLoader $prison_category_loader
    */
-  public function __construct(PrisonCategoryLoader $prison_category_loader) {
-    $this->prisonCategoryLoader = $prison_category_loader;
+  public function __construct(RouteMatchInterface $route_match, string $prison_field_name) {
+    $this->routeMatch = $route_match;
+    $this->prisonFieldName = $prison_field_name;
   }
 
   /**
@@ -35,21 +41,19 @@ class SearchApiQueryAlter {
    *   The dispatched event.
    */
   public function searchApiQueryAlter(QueryInterface $query) {
-
     /* @var \Drupal\taxonomy\TermInterface $current_prison */
-    $current_prison_id = $this->prisonCategoryLoader->getPrisonIdFromCurrentRoute();
-    if (!$current_prison_id) {
+    $current_prison = $this->routeMatch->getParameter('prison');
+    if (!$current_prison) {
       return;
     }
 
     $condition_group = new ConditionGroup('OR');
-    $condition_group->addCondition($this->prisonCategoryLoader->getPrisonFieldName(), $current_prison_id);
+    $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
 
-    $prison_category_id = $this->prisonCategoryLoader->getPrisonCategoryIdFromCurrentRoute();
-    $condition_group->addCondition($this->prisonCategoryLoader->getPrisonCategoryFieldName(), $prison_category_id);
+    foreach ($current_prison->get('parent') as $parent) {
+      $condition_group->addCondition($this->prisonFieldName, $parent->target_id);
+    }
 
     $query->addConditionGroup($condition_group);
-
   }
-
 }
