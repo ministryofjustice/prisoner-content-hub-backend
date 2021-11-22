@@ -1,5 +1,5 @@
 parameters:
-  prisoner_hub_prison_access.prison_field_name: field_moj_prisons
+  prisoner_hub_prison_access.prison_field_name: field_prisons
 services:
   prisoner_hub_prison_access.query_access_subscriber:
     class: Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber

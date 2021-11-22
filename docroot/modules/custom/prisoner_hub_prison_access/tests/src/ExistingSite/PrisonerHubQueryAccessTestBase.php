@@ -79,7 +79,6 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     parent::setUp();
 
     $this->prisonFieldName = $this->container->getParameter('prisoner_hub_prison_access.prison_field_name');
-    $this->prisonCategoryFieldName = $this->container->getParameter('prisoner_hub_prison_access.category_field_name');
 
     $vocab_prisons = Vocabulary::load('prisons');
     $this->prisonCategoryTerm = $this->createTerm($vocab_prisons);
