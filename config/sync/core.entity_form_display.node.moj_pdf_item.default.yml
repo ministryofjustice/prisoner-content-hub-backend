@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
     - field.field.node.moj_pdf_item.field_not_in_series
     - field.field.node.moj_pdf_item.field_prison_categories
+    - field.field.node.moj_pdf_item.field_prisons
     - field.field.node.moj_pdf_item.field_release_date
     - image.style.thumbnail
     - node.type.moj_pdf_item
@@ -27,6 +28,7 @@ dependencies:
     - path
     - scheduler
     - select2
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
@@ -34,6 +36,7 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
       parent_name: ''
       weight: 11
       format_type: fieldset
@@ -207,6 +210,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_prisons:
+    weight: 18
+    settings:
+      start_minimized: true
+      leaves_only: false
+      select_parents: false
+      cascading_selection: 0
+      max_depth: 0
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_release_date:
     weight: 14

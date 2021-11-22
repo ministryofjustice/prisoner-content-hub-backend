@@ -8,13 +8,14 @@ dependencies:
     - node
     - search_api
   config:
+    - field.storage.node.field_moj_top_level_categories
     - field.storage.node.field_moj_description
+    - field.storage.node.field_prison_categories
     - field.storage.node.field_moj_prisons
+    - field.storage.node.field_prisons
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_stand_first
-    - field.storage.node.field_prison_categories
-    - field.storage.node.field_moj_top_level_categories
     - search_api.server.elasticsearch
 third_party_settings:
   elasticsearch_connector:
@@ -93,6 +94,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_prison_categories
+      module:
+        - taxonomy
+  field_prisons:
+    label: 'Prisons » Taxonomy term » Term ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_prisons:entity:tid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_prisons
       module:
         - taxonomy
   name:

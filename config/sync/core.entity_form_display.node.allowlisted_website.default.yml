@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.allowlisted_website.field_moj_top_level_categories
     - field.field.node.allowlisted_website.field_not_in_series
     - field.field.node.allowlisted_website.field_prison_categories
+    - field.field.node.allowlisted_website.field_prisons
     - field.field.node.allowlisted_website.field_release_date
     - field.field.node.allowlisted_website.field_summary
     - image.style.thumbnail
@@ -26,6 +27,7 @@ dependencies:
     - path
     - scheduler
     - select2
+    - term_reference_tree
 third_party_settings:
   field_group:
     group_series:
@@ -88,6 +90,7 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
       parent_name: ''
       weight: 10
       format_type: fieldset
@@ -191,6 +194,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_prisons:
+    weight: 20
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_release_date:
     weight: 18

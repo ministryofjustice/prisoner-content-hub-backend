@@ -3,17 +3,20 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.tags.field_exclude_feedback
     - field.field.taxonomy_term.tags.field_featured_image
     - field.field.taxonomy_term.tags.field_moj_category_featured_item
     - field.field.taxonomy_term.tags.field_moj_prisons
     - field.field.taxonomy_term.tags.field_moj_promoted
     - field.field.taxonomy_term.tags.field_prison_categories
+    - field.field.taxonomy_term.tags.field_prisons
     - image.style.thumbnail
     - taxonomy.vocabulary.tags
   module:
     - field_group
     - image
     - path
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
@@ -21,6 +24,7 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
       parent_name: ''
       weight: 6
       format_type: fieldset
@@ -45,6 +49,13 @@ content:
       placeholder: ''
       rows: 5
     third_party_settings: {  }
+  field_exclude_feedback:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_featured_image:
     weight: 4
     settings:
@@ -79,6 +90,17 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
+  field_prisons:
+    weight: 9
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
+    region: content
   name:
     type: string_textfield
     weight: 0
@@ -97,7 +119,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 8
     region: content
     third_party_settings: {  }
 hidden: {  }

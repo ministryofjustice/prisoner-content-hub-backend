@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_exclude_feedback
+    - field.field.node.moj_video_item.field_exclude_from_prison
     - field.field.node.moj_video_item.field_feature_on_category
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_description
@@ -16,6 +18,7 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_top_level_categories
     - field.field.node.moj_video_item.field_not_in_series
     - field.field.node.moj_video_item.field_prison_categories
+    - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
     - field.field.node.moj_video_item.field_video
     - image.style.thumbnail
@@ -28,6 +31,7 @@ dependencies:
     - path
     - scheduler
     - select2
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
@@ -35,6 +39,8 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 12
       format_type: fieldset
@@ -102,6 +108,20 @@ third_party_settings:
         id: ''
         classes: ''
       label: Category
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 3
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Select prisons that this content should be excluded from.'
+        open: false
+        required_fields: true
+      label: 'Exclude from prison'
 _core:
   default_config_hash: B5OiZXT0G73JfRrJJusCp_kfo5rvcSOdsoUw9IGpDSo
 id: node.moj_video_item.default
@@ -114,6 +134,24 @@ content:
     weight: 2
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_exclude_feedback:
+    weight: 13
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_exclude_from_prison:
+    weight: 20
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_feature_on_category:
     type: options_buttons
@@ -139,7 +177,7 @@ content:
     type: number
     region: content
   field_moj_prisons:
-    weight: 18
+    weight: 1
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -152,7 +190,7 @@ content:
     type: number
     region: content
   field_moj_secondary_tags:
-    weight: 11
+    weight: 10
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -204,10 +242,21 @@ content:
     type: boolean_checkbox
     region: content
   field_prison_categories:
-    weight: 17
+    type: options_buttons
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
+  field_prisons:
+    weight: 2
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_release_date:
     weight: 26
@@ -230,12 +279,12 @@ content:
     region: content
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -243,7 +292,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 17
     third_party_settings: {  }
     region: content
   title:
@@ -271,7 +320,7 @@ content:
     region: content
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }

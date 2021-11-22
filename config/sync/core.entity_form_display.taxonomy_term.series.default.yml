@@ -4,12 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.series.field_category
+    - field.field.taxonomy_term.series.field_exclude_feedback
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
     - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_moj_prisons
     - field.field.taxonomy_term.series.field_prison_categories
+    - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
     - image.style.thumbnail
     - taxonomy.vocabulary.series
@@ -17,6 +19,7 @@ dependencies:
     - field_group
     - image
     - select2
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
@@ -24,6 +27,7 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
       parent_name: ''
       weight: 7
       format_type: fieldset
@@ -58,6 +62,13 @@ content:
       autocomplete: false
       width: 100%
     third_party_settings: {  }
+  field_exclude_feedback:
+    weight: 8
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
   field_feature_on_category:
     weight: 4
     settings: {  }
@@ -81,7 +92,7 @@ content:
     type: image_image
     region: content
   field_moj_prisons:
-    weight: 15
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -91,6 +102,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_prisons:
+    weight: 13
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_sort_by:
     weight: 2
@@ -110,7 +132,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 9
     region: content
     third_party_settings: {  }
 hidden:

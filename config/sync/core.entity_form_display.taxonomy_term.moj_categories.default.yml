@@ -6,11 +6,13 @@ dependencies:
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
     - field.field.taxonomy_term.moj_categories.field_moj_prisons
     - field.field.taxonomy_term.moj_categories.field_prison_categories
+    - field.field.taxonomy_term.moj_categories.field_prisons
     - taxonomy.vocabulary.moj_categories
   module:
     - dynamic_entity_reference
     - field_group
     - path
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
@@ -18,6 +20,7 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
       parent_name: ''
       weight: 5
       format_type: fieldset
@@ -76,6 +79,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_prisons:
+    weight: 6
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   name:
     type: string_textfield

@@ -7,17 +7,20 @@ dependencies:
     - field.field.node.featured_articles.field_moj_featured_tile_small
     - field.field.node.featured_articles.field_moj_prisons
     - field.field.node.featured_articles.field_prison_categories
+    - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
   module:
     - field_group
     - path
     - scheduler
+    - term_reference_tree
 third_party_settings:
   field_group:
     group_prison_categories:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
       parent_name: ''
       weight: 6
       format_type: fieldset
@@ -71,6 +74,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_prisons:
+    weight: 16
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   path:
     type: path

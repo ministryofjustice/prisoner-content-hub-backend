@@ -1,0 +1,23 @@
+uuid: 301a981e-ca1b-4044-b485-f62d834df7c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_exclude_feedback
+    - node.type.moj_video_item
+id: node.moj_video_item.field_exclude_feedback
+field_name: field_exclude_feedback
+entity_type: node
+bundle: moj_video_item
+label: 'Exclude feedback'
+description: 'Select to hide the feedback form when viewing this content.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
