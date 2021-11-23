@@ -41,10 +41,46 @@ function prisoner_content_hub_profile_deploy_update_content_to_new_prison_field(
     }
     $prisons = $entity->get('field_moj_prisons')->referencedEntities();
     $new_prisons_value = [];
+    $prison_category_count = [];
     /** @var \Drupal\taxonomy\TermInterface $prison */
     foreach ($prisons as $prison) {
-      // Only add prisons that are in _other_ categories.
-      if (!in_array($prison->get('parent')->target_id, array_column($new_prison_categories_value, 'target_id'))) {
+      $parent_id = $prison->get('parent')->target_id;
+      // Add prison categories when there is more than one prison within that
+      // category.
+      if (!in_array($parent_id, array_column($new_prison_categories_value, 'target_id'))) {
+        if (!isset($prison_category_count[$parent_id])) {
+          $prison_category_count[$parent_id] = 1;
+        }
+        else {
+          $new_prison_categories_value[] = ['target_id' => $parent_id];
+          $prison_category_count[$parent_id]++;
+        }
+      }
+    }
+
+    // Special handling for Berwyn.
+    // If we've added adult male, but Berwyn was not included as a prison,
+    // make Berwyn specifically excluded.
+    if (isset($prison_category_count[$sandbox['prison_categories_map'][1014]]) && $prison_category_count[$sandbox['prison_categories_map'][1014]] > 1) {
+      $berwyn_included = FALSE;
+      $berwyn_tid = 792;
+      foreach ($prisons as $prison) {
+        if ($prison->id() == $berwyn_tid) {
+          $berwyn_included = TRUE;
+        }
+      }
+      if (!$berwyn_included) {
+        $entity->set('field_exclude_prison', [
+          ['target_id' => $berwyn_tid]
+        ]);
+      }
+    }
+
+    /** @var \Drupal\taxonomy\TermInterface $prison */
+    foreach ($prisons as $prison) {
+      $parent_id = $prison->get('parent')->target_id;
+      // Only add prisons that are in categories we have not yet added.
+      if (!in_array($parent_id, array_column($new_prison_categories_value, 'target_id'))) {
         $new_prisons_value[] = ['target_id' => $prison->id()];
       }
     }
