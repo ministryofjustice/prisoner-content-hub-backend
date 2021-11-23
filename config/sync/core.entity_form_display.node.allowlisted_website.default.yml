@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.allowlisted_website.field_display_url
+    - field.field.node.allowlisted_website.field_exclude_from_prison
     - field.field.node.allowlisted_website.field_external_url
     - field.field.node.allowlisted_website.field_feature_on_category
     - field.field.node.allowlisted_website.field_moj_episode
@@ -91,6 +92,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
         - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 10
       format_type: fieldset
@@ -101,6 +103,20 @@ third_party_settings:
         description: 'You can choose if your content appears in one prison only, or in multiple prisons. '
         required_fields: true
       label: 'Where would you like this content to appear?'
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 21
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Select prison(s) that this content should be excluded from.'
+        open: false
+        required_fields: true
+      label: 'Exclude from prison'
 id: node.allowlisted_website.default
 targetEntityType: node
 bundle: allowlisted_website
@@ -119,6 +135,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_exclude_from_prison:
+    weight: 26
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_external_url:
     weight: 3

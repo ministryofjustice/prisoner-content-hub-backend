@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.taxonomy_term.series.field_category
     - field.field.taxonomy_term.series.field_exclude_feedback
+    - field.field.taxonomy_term.series.field_exclude_from_prison
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
@@ -28,6 +29,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
         - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 7
       format_type: fieldset
@@ -39,6 +41,20 @@ third_party_settings:
         id: ''
         classes: ''
       label: 'Where would you like this content to appear?'
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 14
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Select prison(s) that this content should be excluded from.'
+        open: false
+        required_fields: true
+      label: 'Exclude from prison'
 id: taxonomy_term.series.default
 targetEntityType: taxonomy_term
 bundle: series
@@ -68,6 +84,17 @@ content:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_exclude_from_prison:
+    weight: 14
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_feature_on_category:
     weight: 4

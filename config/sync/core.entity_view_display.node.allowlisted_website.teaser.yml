@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.allowlisted_website.field_display_url
+    - field.field.node.allowlisted_website.field_exclude_from_prison
     - field.field.node.allowlisted_website.field_external_url
     - field.field.node.allowlisted_website.field_feature_on_category
     - field.field.node.allowlisted_website.field_moj_episode
@@ -33,6 +34,7 @@ content:
     region: content
 hidden:
   field_display_url: true
+  field_exclude_from_prison: true
   field_external_url: true
   field_feature_on_category: true
   field_moj_episode: true

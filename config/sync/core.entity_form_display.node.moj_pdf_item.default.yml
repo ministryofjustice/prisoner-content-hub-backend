@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_pdf_item.field_exclude_from_prison
     - field.field.node.moj_pdf_item.field_feature_on_category
     - field.field.node.moj_pdf_item.field_moj_category_featured_item
     - field.field.node.moj_pdf_item.field_moj_description
@@ -37,6 +38,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
         - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 11
       format_type: fieldset
@@ -104,6 +106,20 @@ third_party_settings:
         description: ''
         required_fields: true
       label: Category
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 19
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Select prison(s) that this content should be excluded from.'
+        open: false
+        required_fields: true
+      label: 'Exclude from prison'
 _core:
   default_config_hash: Oo1-wQanlhvJ6-TSJzG1NYGLiNQTTRYKYbcOAPOE09g
 id: node.moj_pdf_item.default
@@ -116,6 +132,17 @@ content:
     weight: 2
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_exclude_from_prison:
+    weight: 26
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_feature_on_category:
     type: options_buttons

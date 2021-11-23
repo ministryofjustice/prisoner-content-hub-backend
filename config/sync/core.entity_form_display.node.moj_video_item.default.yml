@@ -116,11 +116,11 @@ third_party_settings:
       format_type: details
       region: content
       format_settings:
+        description: 'Select prison(s) that this content should be excluded from.'
+        required_fields: true
         id: ''
         classes: ''
-        description: 'Select prisons that this content should be excluded from.'
         open: false
-        required_fields: true
       label: 'Exclude from prison'
 _core:
   default_config_hash: B5OiZXT0G73JfRrJJusCp_kfo5rvcSOdsoUw9IGpDSo

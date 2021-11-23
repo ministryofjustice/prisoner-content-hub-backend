@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_radio_item.field_exclude_feedback
+    - field.field.node.moj_radio_item.field_exclude_from_prison
     - field.field.node.moj_radio_item.field_feature_on_category
     - field.field.node.moj_radio_item.field_moj_audio
     - field.field.node.moj_radio_item.field_moj_category_featured_item
@@ -39,6 +40,7 @@ third_party_settings:
         - field_prison_categories
         - field_moj_prisons
         - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 12
       format_type: fieldset
@@ -106,6 +108,20 @@ third_party_settings:
         id: ''
         classes: ''
       label: Category
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 30
+      format_type: details
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Select prison(s) that this content should be excluded from.'
+        open: false
+        required_fields: true
+      label: 'Exclude from prison'
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
 id: node.moj_radio_item.default
@@ -125,6 +141,17 @@ content:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_exclude_from_prison:
+    weight: 30
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_feature_on_category:
     type: options_buttons
