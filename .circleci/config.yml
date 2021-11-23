@@ -204,21 +204,9 @@ workflows:
       - build_production:
           <<: *main_branch
 
-      - approve_deploy_development:
-          <<: *main_branch
-          type: approval
-          requires:
-            - build_production
-
       - deploy_cloud_platform_development:
           <<: *main_branch
           context: prisoner-content-hub-development
-          requires:
-            - approve_deploy_development
-
-      - approve_deploy_staging:
-          <<: *main_branch
-          type: approval
           requires:
             - build_production
 
@@ -226,7 +214,7 @@ workflows:
           <<: *main_branch
           context: prisoner-content-hub-staging
           requires:
-            - approve_deploy_staging
+            - build_production
 
       - approve_deploy_production:
           <<: *main_branch
