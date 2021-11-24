@@ -146,9 +146,10 @@ FROM test as local
 USER root
 RUN pecl install xdebug-3.0.4 \
   && docker-php-ext-enable xdebug
-USER www-data
 
-RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-recommended.ini
+RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
+
+USER www-data
 ###########################################################################################
 # Create optimised build
 #
