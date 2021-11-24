@@ -70,7 +70,7 @@ function prisoner_content_hub_profile_deploy_update_content_to_new_prison_field(
         }
       }
       if (!$berwyn_included) {
-        $entity->set('field_exclude_prison', [
+        $entity->set('field_exclude_from_prison', [
           ['target_id' => $berwyn_tid]
         ]);
       }
