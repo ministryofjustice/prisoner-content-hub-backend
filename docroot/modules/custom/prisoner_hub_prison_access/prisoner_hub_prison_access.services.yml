@@ -1,14 +1,15 @@
 parameters:
   prisoner_hub_prison_access.prison_field_name: field_prisons
+  prisoner_hub_prison_access.exclude_from_prison_field_name: field_exclude_from_prison
 services:
   prisoner_hub_prison_access.query_access_subscriber:
     class: Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
-    arguments: ['@entity_field.manager', '@entity_type.manager', '@current_route_match', '%prisoner_hub_prison_access.prison_field_name%']
+    arguments: ['@entity_field.manager', '@entity_type.manager', '@current_route_match', '%prisoner_hub_prison_access.prison_field_name%', '%prisoner_hub_prison_access.exclude_from_prison_field_name%']
     tags:
       - { name: event_subscriber, priority: 100 }
   prisoner_hub_prison_access.search_api_query_alter:
     class: Drupal\prisoner_hub_prison_access\SearchApiQueryAlter
-    arguments: ['@current_route_match', '%prisoner_hub_prison_access.prison_field_name%']
+    arguments: ['@current_route_match', '%prisoner_hub_prison_access.prison_field_name%', '%prisoner_hub_prison_access.exclude_from_prison_field_name%']
   prisoner_hub_prison_access.entity_access_check:
     class: Drupal\prisoner_hub_prison_access\EntityAccessCheck
-    arguments: ['@current_route_match', '@entity_type.manager', '%prisoner_hub_prison_access.prison_field_name%']
+    arguments: ['@current_route_match', '@entity_type.manager', '%prisoner_hub_prison_access.prison_field_name%', '%prisoner_hub_prison_access.exclude_from_prison_field_name%']

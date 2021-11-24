@@ -46,13 +46,21 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   protected $prisonFieldName;
 
   /**
+   * The prison field name.
+   *
+   * @var String
+   */
+  protected $excludeFromPrisonFieldName;
+
+  /**
    * QueryAccessSubscriber constructor.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, string $prison_field_name) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, string $prison_field_name, string $exclude_from_prison_field_name) {
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->prisonFieldName = $prison_field_name;
+    $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
   }
 
   /**
@@ -81,15 +89,15 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     $conditions = $event->getConditions();
     $conditions->alwaysFalse(FALSE);
 
-    $condition_group = new ConditionGroup('OR');
-    $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
+    $prisons_condition_group = new ConditionGroup('OR');
+    $prisons_condition_group->addCondition($this->prisonFieldName, $current_prison->id());
 
     // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
     // field enabled.  To do this we get a list of all bundles the field is
     // enabled, and add a 'NOT IN' condition.
     $entity_type = $this->entityTypeManager->getDefinition($event->getEntityTypeId());
     $bundles = $this->getFieldBundles($entity_type->id(), $this->prisonFieldName);
-    $condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
+    $prisons_condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
 
     // Load parents (aka prison categories) and filter by them as well.
     // Note that only initial parents will be loaded (i.e. not parents of parents).
@@ -99,11 +107,17 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     // and so will run through this query alter.  This could have unexpected
     // consequences.  (So for now, we just deal with one level of parents).
     foreach ($current_prison->get('parent') as $parent) {
-      $condition_group->addCondition($this->prisonFieldName, $parent->target_id);
+      $prisons_condition_group->addCondition($this->prisonFieldName, $parent->target_id);
     }
 
-    $conditions->addCondition($condition_group);
+    $exclude_from_prison_condition_group = new ConditionGroup('OR');
+    $exclude_from_prison_condition_group->addCondition($this->excludeFromPrisonFieldName, $current_prison->id(), '<>');
+    $exclude_from_prison_condition_group->addCondition($this->excludeFromPrisonFieldName, NULL, 'IS NULL');
 
+    $condition_group = new ConditionGroup('AND');
+    $condition_group->addCondition($prisons_condition_group);
+    $condition_group->addCondition($exclude_from_prison_condition_group);
+    $conditions->addCondition($condition_group);
   }
 
   /**

@@ -27,11 +27,19 @@ class SearchApiQueryAlter {
   protected $prisonFieldName;
 
   /**
+   * The prison field name.
+   *
+   * @var String
+   */
+  protected $excludeFromPrisonFieldName;
+
+  /**
    * SearchApiQueryAlter constructor.
    */
-  public function __construct(RouteMatchInterface $route_match, string $prison_field_name) {
+  public function __construct(RouteMatchInterface $route_match, string $prison_field_name, string $exclude_from_prison_field_name) {
     $this->routeMatch = $route_match;
     $this->prisonFieldName = $prison_field_name;
+    $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
   }
 
   /**
@@ -47,13 +55,17 @@ class SearchApiQueryAlter {
       return;
     }
 
-    $condition_group = new ConditionGroup('OR');
-    $condition_group->addCondition($this->prisonFieldName, $current_prison->id());
+    $prisons_condition_group = new ConditionGroup('OR');
+    $prisons_condition_group->addCondition($this->prisonFieldName, $current_prison->id());
 
     foreach ($current_prison->get('parent') as $parent) {
-      $condition_group->addCondition($this->prisonFieldName, $parent->target_id);
+      $prisons_condition_group->addCondition($this->prisonFieldName, $parent->target_id);
     }
+    $query->addConditionGroup($prisons_condition_group);
 
-    $query->addConditionGroup($condition_group);
+    $exclude_from_prison_condition_group = new ConditionGroup('OR');
+    $exclude_from_prison_condition_group->addCondition($this->excludeFromPrisonFieldName, $current_prison->id(), '<>');
+    $exclude_from_prison_condition_group->addCondition($this->excludeFromPrisonFieldName, NULL);
+    $query->addConditionGroup($exclude_from_prison_condition_group);
   }
 }

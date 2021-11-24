@@ -66,11 +66,11 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected $prisonFieldName;
 
   /**
-   * The prison category reference field name.
+   * The excluded from prison reference field name.
    *
    * @var String
    */
-  protected $prisonCategoryFieldName;
+  protected $excludeFromPrisonFieldName;
 
   /**
    * Sets up prison and prison category terms, to be used later when testing.
@@ -79,6 +79,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     parent::setUp();
 
     $this->prisonFieldName = $this->container->getParameter('prisoner_hub_prison_access.prison_field_name');
+    $this->excludeFromPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
 
     $vocab_prisons = Vocabulary::load('prisons');
     $this->prisonCategoryTerm = $this->createTerm($vocab_prisons);
@@ -162,16 +163,19 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @return int
    *   The uuid of the created entity.
    */
-  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED) {
+  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = []) {
     $values = [
       'status' => $status,
     ];
     foreach ($prison_ids as $prison_id) {
       $values[$this->prisonFieldName][] = ['target_id' => $prison_id];
     }
+    foreach ($excluded_prisons as $excluded_prison_id) {
+      $values[$this->excludeFromPrisonFieldName][] = ['target_id' => $excluded_prison_id];
+    }
+
     return $this->createEntity($entity_type_id, $bundle, $values);
   }
-
 
   /**
    * Setup entities that are tagged with a prison but _no_ category.
@@ -233,6 +237,46 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     // Also create some content tagged with a different category and prison.
     for ($i = 0; $i < $amount; $i++) {
       $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id(), $this->anotherPrisonCategoryTerm->id()]);
+    }
+
+    return $entities_to_check;
+  }
+
+  /**
+   * Setup entities that are tagged with a prison and excluded.
+   *
+   * @return array
+   *   An array of entities to check for.
+   */
+  protected function setupEntitiesTaggedWithPrisonAndExcluded(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
+    }
+
+    // Also create some content tagged with same prison but excluded.
+    for ($i = 0; $i < $amount; $i++) {
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], NodeInterface::PUBLISHED, [$this->prisonTerm->id()]);
+    }
+
+    return $entities_to_check;
+  }
+
+  /**
+   * Setup entities that are tagged with a prison and excluded.
+   *
+   * @return array
+   *   An array of entities to check for.
+   */
+  protected function setupEntitiesTaggedWithPrisonCategoryAndExcluded(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonCategoryTerm->id()]);
+    }
+
+    // Also create some content tagged with same prison but excluded.
+    for ($i = 0; $i < $amount; $i++) {
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonCategoryTerm->id()], NodeInterface::PUBLISHED, [$this->prisonTerm->id()]);
     }
 
     return $entities_to_check;

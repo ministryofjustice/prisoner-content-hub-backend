@@ -39,12 +39,20 @@ class EntityAccessCheck {
   protected $prisonFieldName;
 
   /**
+   * The prison field name.
+   *
+   * @var String
+   */
+  protected $excludeFromPrisonFieldName;
+
+  /**
    * EntityAccessCheck constructor.
    */
-  public function __construct(RouteMatchInterface $route_match, EntityTypeManager $entity_type_manager, string $prison_field_name) {
+  public function __construct(RouteMatchInterface $route_match, EntityTypeManager $entity_type_manager, string $prison_field_name, string $exclude_from_prison_field_name) {
     $this->routeMatch = $route_match;
     $this->entityTypeManager = $entity_type_manager;
     $this->prisonFieldName = $prison_field_name;
+    $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
   }
 
   /**
@@ -68,6 +76,9 @@ class EntityAccessCheck {
     }
 
     if ($entity instanceof ContentEntityInterface) {
+      if ($entity->hasField($this->excludeFromPrisonFieldName) && $this->fieldValueExists($entity->get($this->excludeFromPrisonFieldName), $current_prison->id())) {
+        return AccessResult::forbidden();
+      }
       if ($entity->hasField($this->prisonFieldName)) {
         if ($this->fieldValueExists($entity->get($this->prisonFieldName), $current_prison->id())) {
           return AccessResult::neutral();

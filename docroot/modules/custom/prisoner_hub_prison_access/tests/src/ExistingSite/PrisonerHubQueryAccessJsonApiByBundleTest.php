@@ -83,13 +83,39 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that  entities are returned in the JSON response, when tagged with a
+   * Test that entities are returned in the JSON response, when tagged with a
    * category and a prison.
    */
   public function testContentTaggedWithPrisonAndCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle) {
         $entities_to_check = $this->setupContentTaggedWithPrisonAndCategory($entity_type_id, $bundle);
+        $this->assertJsonApiListResponse($entities_to_check, $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle));
+      }
+    }
+  }
+
+  /**
+   * Test that correct entities are returned in the JSON response, when tagged
+   * with a prison and also excluded by that prison.
+   */
+  public function testContentTaggedWithPrisonButExcluded() {
+    foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
+      foreach ($bundles as $bundle) {
+        $entities_to_check = $this->setupEntitiesTaggedWithPrisonAndExcluded($entity_type_id, $bundle);
+        $this->assertJsonApiListResponse($entities_to_check, $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle));
+      }
+    }
+  }
+
+  /**
+   * Test that correct entities are returned in the JSON response, when tagged
+   * with a prison category and also excluded by that prison.
+   */
+  public function testContentTaggedWithPrisonCategoryButExcluded() {
+    foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
+      foreach ($bundles as $bundle) {
+        $entities_to_check = $this->setupEntitiesTaggedWithPrisonAndExcluded($entity_type_id, $bundle);
         $this->assertJsonApiListResponse($entities_to_check, $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle));
       }
     }

@@ -115,6 +115,30 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
+   * Test that correct entities are returned in the JSON response, when tagged
+   * with a prison and excluded from that prison.
+   */
+  public function testContentTaggedWithPrisonAndExcluded() {
+    $entities_to_check = [];
+    foreach ($this->bundles as $bundle) {
+      $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithPrisonAndExcluded($this->entityTypeId, $bundle));
+    }
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
+  }
+
+  /**
+   * Test that correct entities are returned in the JSON response, when tagged
+   * with a prison category and excluded from that prison.
+   */
+  public function testContentTaggedWithPrisonCategoryAndExcluded() {
+    $entities_to_check = [];
+    foreach ($this->bundles as $bundle) {
+      $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithPrisonCategoryAndExcluded($this->entityTypeId, $bundle));
+    }
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
+  }
+
+  /**
    * Refresh the index before we check search results via JSON:API.
    */
   protected function assertJsonApiListResponse(array $entities_to_check, Url $url) {
