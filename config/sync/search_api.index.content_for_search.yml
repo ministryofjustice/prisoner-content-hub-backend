@@ -10,6 +10,7 @@ dependencies:
   config:
     - field.storage.node.field_moj_top_level_categories
     - field.storage.node.field_moj_description
+    - field.storage.node.field_exclude_from_prison
     - field.storage.node.field_prison_categories
     - field.storage.node.field_moj_prisons
     - field.storage.node.field_prisons
@@ -29,6 +30,16 @@ name: 'Content for search'
 description: ''
 read_only: false
 field_settings:
+  field_exclude_from_prison:
+    label: 'Exclude from prison » Taxonomy term » Term ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_exclude_from_prison:entity:tid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_exclude_from_prison
+      module:
+        - taxonomy
   field_moj_description:
     label: 'Description » Processed text'
     datasource_id: 'entity:node'

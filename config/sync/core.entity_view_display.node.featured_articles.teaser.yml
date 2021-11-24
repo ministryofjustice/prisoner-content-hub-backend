@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.featured_articles.field_exclude_from_prison
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
     - field.field.node.featured_articles.field_moj_prisons
@@ -23,6 +24,7 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  field_exclude_from_prison: true
   field_moj_featured_tile_large: true
   field_moj_featured_tile_small: true
   field_moj_prisons: true
