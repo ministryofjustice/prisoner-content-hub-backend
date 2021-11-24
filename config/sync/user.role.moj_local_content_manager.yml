@@ -44,6 +44,7 @@ permissions:
   - 'revert page revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'use text format full_html'
   - 'view any unpublished moj_pdf_item content'
   - 'view any unpublished moj_radio_item content'
   - 'view any unpublished moj_video_item content'
