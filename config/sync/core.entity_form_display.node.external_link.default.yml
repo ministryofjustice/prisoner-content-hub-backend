@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.external_link.field_display_url
+    - field.field.node.external_link.field_exclude_from_prison
     - field.field.node.external_link.field_external_url
     - field.field.node.external_link.field_feature_on_category
     - field.field.node.external_link.field_moj_episode
@@ -14,6 +15,7 @@ dependencies:
     - field.field.node.external_link.field_moj_top_level_categories
     - field.field.node.external_link.field_not_in_series
     - field.field.node.external_link.field_prison_categories
+    - field.field.node.external_link.field_prisons
     - field.field.node.external_link.field_release_date
     - field.field.node.external_link.field_summary
     - image.style.thumbnail
@@ -26,6 +28,7 @@ dependencies:
     - path
     - scheduler
     - select2
+    - term_reference_tree
 third_party_settings:
   field_group:
     group_series:
@@ -35,7 +38,7 @@ third_party_settings:
         - group_season_and_episode_number
         - group_release_date
       parent_name: ''
-      weight: 6
+      weight: 5
       format_type: fieldset
       region: content
       format_settings:
@@ -75,7 +78,7 @@ third_party_settings:
       children:
         - field_moj_top_level_categories
       parent_name: ''
-      weight: 7
+      weight: 6
       format_type: fieldset
       region: content
       format_settings:
@@ -88,8 +91,10 @@ third_party_settings:
       children:
         - field_prison_categories
         - field_moj_prisons
+        - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
-      weight: 10
+      weight: 9
       format_type: fieldset
       region: content
       format_settings:
@@ -98,6 +103,20 @@ third_party_settings:
         description: 'You can choose if your content appears in one prison only, or in multiple prisons. '
         required_fields: true
       label: 'Where would you like this content to appear?'
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 21
+      format_type: details_open_non_empty
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: 'Select prison(s) that this content should be excluded from.'
+        required_fields: 1
+        open: false
+      label: 'Exclude from prison'
 id: node.external_link.default
 targetEntityType: node
 bundle: external_link
@@ -105,18 +124,29 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 11
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   field_display_url:
-    weight: 5
+    weight: 4
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
     region: content
+  field_exclude_from_prison:
+    type: term_reference_tree
+    weight: 11
+    region: content
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+    third_party_settings: {  }
   field_external_url:
     weight: 3
     settings:
@@ -126,7 +156,7 @@ content:
     type: link_default
     region: content
   field_feature_on_category:
-    weight: 8
+    weight: 7
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -192,6 +222,17 @@ content:
     third_party_settings: {  }
     type: options_buttons
     region: content
+  field_prisons:
+    type: term_reference_tree
+    weight: 20
+    region: content
+    settings:
+      cascading_selection: 1
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+    third_party_settings: {  }
   field_release_date:
     weight: 18
     settings: {  }
@@ -208,7 +249,7 @@ content:
     region: content
   path:
     type: path
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -221,12 +262,12 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -234,7 +275,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 18
+    weight: 19
     region: content
     third_party_settings: {  }
   sticky:
@@ -254,7 +295,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 9
+    weight: 8
     settings:
       match_operator: CONTAINS
       size: 60
@@ -264,7 +305,7 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }

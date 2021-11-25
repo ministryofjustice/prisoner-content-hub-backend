@@ -52,7 +52,7 @@ third_party_settings:
         - field_exclude_from_prison
       parent_name: group_prison_categories
       weight: 7
-      format_type: details
+      format_type: details_open_non_empty
       region: content
       format_settings:
         id: ''
