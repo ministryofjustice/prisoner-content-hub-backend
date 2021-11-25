@@ -1,16 +1,16 @@
-uuid: 61994e57-e09a-43b7-9326-079adeeeee3f
+uuid: 2df97294-b71a-49a0-aa2a-4d482cd242d9
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_moj_thumbnail_image
-    - node.type.allowlisted_website
+    - node.type.external_link
   module:
     - image
-id: node.allowlisted_website.field_moj_thumbnail_image
+id: node.external_link.field_moj_thumbnail_image
 field_name: field_moj_thumbnail_image
 entity_type: node
-bundle: allowlisted_website
+bundle: external_link
 label: 'Thumbnail image'
 description: ''
 required: true

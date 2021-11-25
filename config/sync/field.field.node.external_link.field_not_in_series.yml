@@ -1,14 +1,14 @@
-uuid: bcede32c-becf-4b89-a7ae-0d10e51d5c4c
+uuid: bf407f75-611d-4c91-8e82-b0c9c9f5d8ad
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_not_in_series
-    - node.type.allowlisted_website
-id: node.allowlisted_website.field_not_in_series
+    - node.type.external_link
+id: node.external_link.field_not_in_series
 field_name: field_not_in_series
 entity_type: node
-bundle: allowlisted_website
+bundle: external_link
 label: 'This content is not part of any series'
 description: ''
 required: false
