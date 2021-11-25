@@ -1,23 +1,23 @@
-uuid: bfba8f05-b608-4c4c-930a-3a530ae23a10
+uuid: 38d6ae76-861b-4ec4-a532-7061afbad285
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.allowlisted_website.field_display_url
-    - field.field.node.allowlisted_website.field_external_url
-    - field.field.node.allowlisted_website.field_feature_on_category
-    - field.field.node.allowlisted_website.field_moj_episode
-    - field.field.node.allowlisted_website.field_moj_prisons
-    - field.field.node.allowlisted_website.field_moj_season
-    - field.field.node.allowlisted_website.field_moj_series
-    - field.field.node.allowlisted_website.field_moj_thumbnail_image
-    - field.field.node.allowlisted_website.field_moj_top_level_categories
-    - field.field.node.allowlisted_website.field_not_in_series
-    - field.field.node.allowlisted_website.field_prison_categories
-    - field.field.node.allowlisted_website.field_release_date
-    - field.field.node.allowlisted_website.field_summary
+    - field.field.node.external_link.field_display_url
+    - field.field.node.external_link.field_external_url
+    - field.field.node.external_link.field_feature_on_category
+    - field.field.node.external_link.field_moj_episode
+    - field.field.node.external_link.field_moj_prisons
+    - field.field.node.external_link.field_moj_season
+    - field.field.node.external_link.field_moj_series
+    - field.field.node.external_link.field_moj_thumbnail_image
+    - field.field.node.external_link.field_moj_top_level_categories
+    - field.field.node.external_link.field_not_in_series
+    - field.field.node.external_link.field_prison_categories
+    - field.field.node.external_link.field_release_date
+    - field.field.node.external_link.field_summary
     - image.style.thumbnail
-    - node.type.allowlisted_website
+    - node.type.external_link
   module:
     - datetime
     - field_group
@@ -98,9 +98,9 @@ third_party_settings:
         description: 'You can choose if your content appears in one prison only, or in multiple prisons. '
         required_fields: true
       label: 'Where would you like this content to appear?'
-id: node.allowlisted_website.default
+id: node.external_link.default
 targetEntityType: node
-bundle: allowlisted_website
+bundle: external_link
 mode: default
 content:
   created:
