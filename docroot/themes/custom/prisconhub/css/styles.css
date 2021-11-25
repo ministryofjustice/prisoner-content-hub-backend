@@ -40,3 +40,10 @@ a[href="/admin/help"].toolbar-icon.is-active:before {
 a[href="/admin/help"].toolbar-icon:before {
   background-image: url(../../../../core/misc/icons/787878/questionmark-disc.svg);
 }
+
+/**
+ * Remove unnecessary top margin from term reference tree fieldsets.
+ */
+.field--widget-term-reference-tree fieldset {
+  margin-top: 0;
+}
