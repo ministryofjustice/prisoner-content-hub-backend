@@ -1,16 +1,16 @@
-uuid: fbae86d3-f99c-4199-9ac5-408af8c9be56
+uuid: 893e03d8-4404-4e39-8657-0ca4c6312ec4
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_series
-    - node.type.allowlisted_website
-    - taxonomy.vocabulary.series
-id: node.allowlisted_website.field_moj_series
-field_name: field_moj_series
+    - field.storage.node.field_prisons
+    - node.type.external_link
+    - taxonomy.vocabulary.prisons
+id: node.external_link.field_prisons
+field_name: field_prisons
 entity_type: node
-bundle: allowlisted_website
-label: Series
+bundle: external_link
+label: Prisons
 description: ''
 required: false
 translatable: true
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      series: series
+      prisons: prisons
     sort:
       field: name
       direction: asc

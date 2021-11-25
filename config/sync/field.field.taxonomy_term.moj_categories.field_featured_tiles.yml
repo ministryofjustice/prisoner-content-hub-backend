@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_featured_tiles
+    - node.type.external_link
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
@@ -18,7 +19,7 @@ entity_type: taxonomy_term
 bundle: moj_categories
 label: 'Featured tiles list'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -29,6 +30,7 @@ settings:
       target_bundles:
         moj_radio_item: moj_radio_item
         page: page
+        external_link: external_link
         moj_pdf_item: moj_pdf_item
         moj_video_item: moj_video_item
       sort:

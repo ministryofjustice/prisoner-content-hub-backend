@@ -150,7 +150,6 @@ datasource_settings:
     bundles:
       default: false
       selected:
-        - landing_page
         - moj_pdf_item
         - moj_radio_item
         - moj_video_item

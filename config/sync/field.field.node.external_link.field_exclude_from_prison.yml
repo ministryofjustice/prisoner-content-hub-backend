@@ -4,12 +4,12 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_exclude_from_prison
-    - node.type.allowlisted_website
+    - node.type.external_link
     - taxonomy.vocabulary.prisons
-id: node.allowlisted_website.field_exclude_from_prison
+id: node.external_link.field_exclude_from_prison
 field_name: field_exclude_from_prison
 entity_type: node
-bundle: allowlisted_website
+bundle: external_link
 label: 'Exclude from prison'
 description: ''
 required: false

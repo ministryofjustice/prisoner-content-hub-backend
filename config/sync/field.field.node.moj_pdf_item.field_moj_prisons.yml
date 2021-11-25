@@ -12,7 +12,7 @@ entity_type: node
 bundle: moj_pdf_item
 label: Prisons
 description: 'Select every prison you''d like to be able to view your content.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
