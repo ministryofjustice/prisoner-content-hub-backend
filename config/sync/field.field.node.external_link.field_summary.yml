@@ -1,14 +1,14 @@
-uuid: 8f7c7656-c598-450f-aa1f-2148586fe885
+uuid: 0ef538a6-9a95-49b7-8078-dc783cc48589
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_summary
-    - node.type.allowlisted_website
-id: node.allowlisted_website.field_summary
+    - node.type.external_link
+id: node.external_link.field_summary
 field_name: field_summary
 entity_type: node
-bundle: allowlisted_website
+bundle: external_link
 label: Summary
 description: ''
 required: false

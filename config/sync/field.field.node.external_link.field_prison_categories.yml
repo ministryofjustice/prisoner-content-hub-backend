@@ -1,15 +1,15 @@
-uuid: 3d260606-93a3-43cb-9bfb-545784afe323
+uuid: 46091195-5c6c-43c0-80b3-b48a1d017d77
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_prison_categories
-    - node.type.allowlisted_website
+    - node.type.external_link
     - taxonomy.vocabulary.prison_category
-id: node.allowlisted_website.field_prison_categories
+id: node.external_link.field_prison_categories
 field_name: field_prison_categories
 entity_type: node
-bundle: allowlisted_website
+bundle: external_link
 label: 'Prison categories'
 description: 'If your content is appropriate for a specific prison type, you should also select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male.'
 required: false

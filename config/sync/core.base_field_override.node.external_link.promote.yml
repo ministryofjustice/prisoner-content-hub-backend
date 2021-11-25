@@ -1,13 +1,13 @@
-uuid: 8429fbdf-90b8-4eb6-a3a3-141f25f89e1c
+uuid: 8acd2d6f-c8e7-49e3-923a-76a71dae3e6d
 langcode: en
 status: true
 dependencies:
   config:
-    - node.type.allowlisted_website
-id: node.allowlisted_website.promote
+    - node.type.external_link
+id: node.external_link.promote
 field_name: promote
 entity_type: node
-bundle: allowlisted_website
+bundle: external_link
 label: 'Promoted to front page'
 description: ''
 required: false
