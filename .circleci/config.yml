@@ -16,6 +16,7 @@ version: 2.1
 orbs:
   kubernetes: circleci/kubernetes@0.11.2
   helm: circleci/helm@1.2.0
+  hmpps: ministryofjustice/hmpps@3.11
 
 commands:
   release_to_namespace:
@@ -49,6 +50,7 @@ commands:
           name: Release to << parameters.environment >>
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
+            sed -i "s/appVersion:.*/appVersion: \"${VERSION_TO_DEPLOY}\"/g" "./helm_deploy/prisoner-content-hub-backend/Chart.yaml"
             helm upgrade ${HELM_BACKEND_RELEASE_NAME} ~/git/helm_deploy/prisoner-content-hub-backend \
               --install --wait --reset-values --timeout 1500s \
               --namespace=${KUBE_NAMESPACE} \
@@ -109,9 +111,12 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
+      - hmpps/create_app_version
       - run:
           name: Build Docker image
-          command: make build
+          command: |
+            BUILD_NUMBER="$APP_VERSION" \
+            make build
       - run:
           name: Push Docker image
           command: make push-preview
@@ -119,7 +124,7 @@ jobs:
           name: Persist build number for deployment
           command: |
             mkdir -p /tmp/build-info
-            echo preview > /tmp/build-info/version-to-deploy.txt
+            echo ${APP_VERSION} > /tmp/build-info/version-to-deploy.txt
       - persist_to_workspace:
           root: /tmp/build-info
           paths:
@@ -131,9 +136,12 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
+      - hmpps/create_app_version
       - run:
           name: Build Docker image
-          command: make build
+          command: |
+            BUILD_NUMBER="$APP_VERSION" \
+            make build
       - run:
           name: Push Docker image
           command: make push
@@ -151,7 +159,7 @@ jobs:
           name: Persist build number for deployment
           command: |
             mkdir -p /tmp/build-info
-            echo build-${CIRCLE_BUILD_NUM} > /tmp/build-info/version-to-deploy.txt
+            echo ${APP_VERSION} > /tmp/build-info/version-to-deploy.txt
       - persist_to_workspace:
           root: /tmp/build-info
           paths:
