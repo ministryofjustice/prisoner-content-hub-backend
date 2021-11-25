@@ -3,7 +3,7 @@ build-deps:
 	composer install --no-dev --no-ansi --no-scripts --prefer-dist --ignore-platform-reqs --no-interaction --no-autoloader
 
 build:
-	docker build -t prisoner-content-hub-backend --build-arg BUILD_NUMBER="$(APP_VERSION)"
+	docker build -t prisoner-content-hub-backend .
 
 clean:
 	rm -rf modules/contrib

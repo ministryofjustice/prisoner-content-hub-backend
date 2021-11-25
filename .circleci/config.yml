@@ -114,9 +114,7 @@ jobs:
       - hmpps/create_app_version
       - run:
           name: Build Docker image
-          command: |
-            BUILD_NUMBER="$APP_VERSION" \
-            make build
+          command: make build
       - run:
           name: Push Docker image
           command: make push-preview
@@ -139,9 +137,7 @@ jobs:
       - hmpps/create_app_version
       - run:
           name: Build Docker image
-          command: |
-            BUILD_NUMBER="$APP_VERSION" \
-            make build
+          command: make build
       - run:
           name: Push Docker image
           command: make push
