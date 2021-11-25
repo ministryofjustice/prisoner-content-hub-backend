@@ -1,15 +1,15 @@
-uuid: e5f95a7c-e2b9-4275-bfa1-254861be6412
+uuid: 9b26b42c-3e17-4305-8351-8a1d3dcdb186
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_season
-    - node.type.allowlisted_website
-id: node.allowlisted_website.field_moj_season
-field_name: field_moj_season
+    - field.storage.node.field_moj_episode
+    - node.type.external_link
+id: node.external_link.field_moj_episode
+field_name: field_moj_episode
 entity_type: node
-bundle: allowlisted_website
-label: Season
+bundle: external_link
+label: Episode
 description: ''
 required: false
 translatable: true

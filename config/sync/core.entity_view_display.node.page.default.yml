@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_feature_on_category
     - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
@@ -31,16 +30,6 @@ targetEntityType: node
 bundle: page
 mode: default
 content:
-  field_exclude_feedback:
-    weight: 18
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
-    region: content
   field_feature_on_category:
     weight: 17
     label: above

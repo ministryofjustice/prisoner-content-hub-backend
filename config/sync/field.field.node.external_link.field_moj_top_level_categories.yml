@@ -1,16 +1,16 @@
-uuid: fbae86d3-f99c-4199-9ac5-408af8c9be56
+uuid: d7521bce-bdd9-4264-9850-495c322bbc88
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_series
-    - node.type.allowlisted_website
-    - taxonomy.vocabulary.series
-id: node.allowlisted_website.field_moj_series
-field_name: field_moj_series
+    - field.storage.node.field_moj_top_level_categories
+    - node.type.external_link
+    - taxonomy.vocabulary.moj_categories
+id: node.external_link.field_moj_top_level_categories
+field_name: field_moj_top_level_categories
 entity_type: node
-bundle: allowlisted_website
-label: Series
+bundle: external_link
+label: Category
 description: ''
 required: false
 translatable: true
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      series: series
+      moj_categories: moj_categories
     sort:
       field: name
       direction: asc
