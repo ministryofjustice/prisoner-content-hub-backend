@@ -50,7 +50,7 @@ commands:
           name: Release to << parameters.environment >>
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
-            sed -i "s/appVersion:.*/appVersion: \"${VERSION_TO_DEPLOY}\"/g" "./helm_deploy/prisoner-content-hub-backend/Chart.yaml"
+            sed -i "s/appVersion:.*/appVersion: \"${VERSION_TO_DEPLOY}\"/g" ~/git/helm_deploy/prisoner-content-hub-backend/Chart.yaml
             helm upgrade ${HELM_BACKEND_RELEASE_NAME} ~/git/helm_deploy/prisoner-content-hub-backend \
               --install --wait --reset-values --timeout 1500s \
               --namespace=${KUBE_NAMESPACE} \
