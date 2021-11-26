@@ -15,7 +15,7 @@ version: 2.1
 
 orbs:
   kubernetes: circleci/kubernetes@0.11.2
-  helm: circleci/helm@1.2.0
+  hmpps: ministryofjustice/hmpps@3.11
 
 commands:
   release_to_namespace:
@@ -24,27 +24,16 @@ commands:
       environment:
         type: string
     steps:
-      - kubernetes/install
-      - helm/install-helm-client:
-          version: v3.6.3
       - checkout:
           path: ~/git
       - attach_workspace:
           at: /tmp/build-info
-      - run:
-          name: Configure kubectl context
-          command: |
-            echo -n ${KUBE_CLUSTER_CERT} | base64 -d > /tmp/cluster-ca.crt
-            kubectl config set-cluster ${KUBE_CLUSTER_NAME} \
-              --certificate-authority=/tmp/cluster-ca.crt \
-              --server="https://api.${KUBE_CLUSTER_NAME}"
-            kubectl config set-credentials circleci \
-              --token=${KUBE_TOKEN}
-            kubectl config set-context ${KUBE_CLUSTER_NAME} \
-              --cluster=${KUBE_CLUSTER_NAME} \
-              --user=circleci \
-              --namespace=${KUBE_NAMESPACE}
-            kubectl config use-context ${KUBE_CLUSTER_NAME}
+      - hmpps/k8s_setup:
+          ca-cert: KUBE_CLUSTER_CERT
+          cluster-name: KUBE_CLUSTER_NAME
+          kube-namespace: KUBE_NAMESPACE
+          kube-token: KUBE_TOKEN
+      - hmpps/install_helm
       - run:
           name: Release to << parameters.environment >>
           command: |
