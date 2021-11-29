@@ -141,6 +141,7 @@ content:
       max_depth: 0
       start_minimized: false
       select_parents: false
+      cascading_selection_enforce: false
     third_party_settings: {  }
     type: term_reference_tree
     region: content
@@ -241,11 +242,12 @@ content:
   field_prisons:
     weight: 18
     settings:
-      start_minimized: true
+      cascading_selection: 1
+      cascading_selection_enforce: true
+      max_depth: 0
+      start_minimized: false
       leaves_only: false
       select_parents: false
-      cascading_selection: 0
-      max_depth: 0
     third_party_settings: {  }
     type: term_reference_tree
     region: content

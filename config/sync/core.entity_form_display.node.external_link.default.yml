@@ -146,6 +146,7 @@ content:
       max_depth: 0
       start_minimized: false
       select_parents: false
+      cascading_selection_enforce: false
     third_party_settings: {  }
   field_external_url:
     weight: 3
@@ -228,6 +229,7 @@ content:
     region: content
     settings:
       cascading_selection: 1
+      cascading_selection_enforce: true
       max_depth: 0
       start_minimized: false
       leaves_only: false

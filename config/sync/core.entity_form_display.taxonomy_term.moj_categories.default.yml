@@ -82,6 +82,7 @@ content:
       max_depth: 0
       start_minimized: false
       select_parents: false
+      cascading_selection_enforce: false
     third_party_settings: {  }
     type: term_reference_tree
     region: content
@@ -111,6 +112,7 @@ content:
     weight: 6
     settings:
       cascading_selection: 1
+      cascading_selection_enforce: true
       max_depth: 0
       start_minimized: false
       leaves_only: false
