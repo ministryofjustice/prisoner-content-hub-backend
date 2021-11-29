@@ -10,15 +10,15 @@ clean:
 
 push:
 	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:build-$(CIRCLE_BUILD_NUM)
+	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:build-$(APP_VERSION)
 	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:latest
-	docker push mojdigitalstudio/prisoner-content-hub-backend:build-$(CIRCLE_BUILD_NUM)
+	docker push mojdigitalstudio/prisoner-content-hub-backend:build-$(APP_VERSION)
 	docker push mojdigitalstudio/prisoner-content-hub-backend:latest
 
 push-preview:
 	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:preview
-	docker push mojdigitalstudio/prisoner-content-hub-backend:preview
+	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:$(APP_VERSION)
+	docker push mojdigitalstudio/prisoner-content-hub-backend:$(APP_VERSION)
 
 install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y

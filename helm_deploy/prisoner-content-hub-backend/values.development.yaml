@@ -3,7 +3,7 @@ image:
 
 ingress:
   annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-prisoner-content-hub-development-blue
+    external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-prisoner-content-hub-development-green
     
   hosts:
-    - host: cms-prisoner-content-hub-development.apps.live-1.cloud-platform.service.justice.gov.uk
+    - host: cms-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk
