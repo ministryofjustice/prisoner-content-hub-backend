@@ -19,8 +19,6 @@ third_party_settings:
   field_group:
     group_prison_categories:
       children:
-        - field_prison_categories
-        - field_moj_prisons
         - field_prisons
         - group_exclude_from_prison
       parent_name: ''
@@ -28,8 +26,7 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: 'You can choose if your content appears in one prison only, or in multiple prisons.'
-        open: '1'
+        description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
         required_fields: true
         id: ''
         classes: ''
@@ -42,11 +39,10 @@ third_party_settings:
       format_type: details_open_non_empty
       region: content
       format_settings:
+        description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
+        required_fields: '1'
         id: ''
         classes: ''
-        description: 'Select prison(s) that this content should be excluded from.'
-        open: false
-        required_fields: true
       label: 'Exclude from prison'
 id: node.featured_articles.default
 targetEntityType: node
@@ -90,18 +86,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
-    region: content
-  field_moj_prisons:
-    weight: 15
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
-    region: content
-  field_prison_categories:
-    weight: 14
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
     region: content
   field_prisons:
     weight: 16
@@ -164,5 +148,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_moj_prisons: true
+  field_prison_categories: true
   promote: true
   sticky: true

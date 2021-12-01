@@ -89,8 +89,6 @@ third_party_settings:
       label: Category
     group_prison_categories:
       children:
-        - field_prison_categories
-        - field_moj_prisons
         - field_prisons
         - group_exclude_from_prison
       parent_name: ''
@@ -98,10 +96,10 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
+        description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
+        required_fields: true
         id: ''
         classes: ''
-        description: 'You can choose if your content appears in one prison only, or in multiple prisons. '
-        required_fields: true
       label: 'Where would you like this content to appear?'
     group_exclude_from_prison:
       children:
@@ -111,11 +109,10 @@ third_party_settings:
       format_type: details_open_non_empty
       region: content
       format_settings:
+        description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
+        required_fields: '1'
         id: ''
         classes: ''
-        description: 'Select prison(s) that this content should be excluded from.'
-        required_fields: 1
-        open: false
       label: 'Exclude from prison'
 id: node.external_link.default
 targetEntityType: node
@@ -169,12 +166,6 @@ content:
     third_party_settings: {  }
     type: number
     region: content
-  field_moj_prisons:
-    weight: 19
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_moj_season:
     weight: 16
     settings:
@@ -217,12 +208,6 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_prison_categories:
-    weight: 18
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_prisons:
     type: term_reference_tree
     weight: 20
@@ -251,25 +236,18 @@ content:
     region: content
   path:
     type: path
-    weight: 16
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 12
-    region: content
-    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 15
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -277,14 +255,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 19
-    region: content
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 13
+    weight: 15
     region: content
     third_party_settings: {  }
   title:
@@ -307,8 +278,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 18
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_moj_prisons: true
+  field_prison_categories: true
+  promote: true
+  sticky: true

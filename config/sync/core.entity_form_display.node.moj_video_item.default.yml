@@ -37,8 +37,6 @@ third_party_settings:
   field_group:
     group_prison_categories:
       children:
-        - field_prison_categories
-        - field_moj_prisons
         - field_prisons
         - group_exclude_from_prison
       parent_name: ''
@@ -46,8 +44,7 @@ third_party_settings:
       format_type: fieldset
       region: content
       format_settings:
-        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
-        open: '1'
+        description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
         required_fields: true
         id: ''
         classes: ''
@@ -116,11 +113,10 @@ third_party_settings:
       format_type: details_open_non_empty
       region: content
       format_settings:
-        description: 'Select prison(s) that this content should be excluded from.'
-        required_fields: true
+        description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
+        required_fields: '1'
         id: ''
         classes: ''
-        open: false
       label: 'Exclude from prison'
 _core:
   default_config_hash: B5OiZXT0G73JfRrJJusCp_kfo5rvcSOdsoUw9IGpDSo
@@ -176,12 +172,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: number
-    region: content
-  field_moj_prisons:
-    weight: 1
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
     region: content
   field_moj_season:
     weight: 14
@@ -242,12 +232,6 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_prison_categories:
-    type: options_buttons
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_prisons:
     weight: 2
     settings:
@@ -329,5 +313,7 @@ content:
 hidden:
   field_moj_archived: true
   field_moj_category_featured_item: true
+  field_moj_prisons: true
+  field_prison_categories: true
   promote: true
   sticky: true

@@ -47,3 +47,20 @@ a[href="/admin/help"].toolbar-icon:before {
 .field--widget-term-reference-tree fieldset {
   margin-top: 0;
 }
+
+.field-group-fieldset > .fieldset-wrapper > span {
+  margin: 0.5em 0;
+  display: inline-block;
+}
+
+.field-group-details-open-non-empty .claro-details__wrapper {
+  margin: 0.75rem 2.25rem;
+}
+
+.field-group-details-open-non-empty .claro-details__description {
+  font-size: inherit;
+}
+
+.field-group-fieldset .form-wrapper legend {
+  font-weight: bold;
+}
