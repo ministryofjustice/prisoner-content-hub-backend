@@ -1,0 +1,31 @@
+uuid: 3eb6bc14-4e7a-4baa-b5e8-661c2d3812f2
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+name: 'External link'
+type: external_link
+description: 'Use <em>external link</em> for creating a link from the Hub to an externally hosted website.  This has gone through a security process and has been allowlisted by the Digital Prisons Network team.'
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false

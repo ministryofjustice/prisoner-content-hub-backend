@@ -1,0 +1,23 @@
+uuid: 1c43f236-8f8e-4a73-9e8e-59fd611dbdeb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_exclude_feedback
+    - node.type.moj_radio_item
+id: node.moj_radio_item.field_exclude_feedback
+field_name: field_exclude_feedback
+entity_type: node
+bundle: moj_radio_item
+label: 'Exclude feedback'
+description: 'Select to hide the feedback form when viewing this content.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

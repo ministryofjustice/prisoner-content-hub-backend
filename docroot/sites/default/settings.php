@@ -67,7 +67,7 @@ $flysystem_schemes = [
       // Set to TRUE to link to files using direct links
       'public' => TRUE,
 
-      'expires' => '+3600 seconds',
+      'expires' => strtotime('tomorrow +3 hours', $_SERVER['REQUEST_TIME']),
 
       // Set to TRUE if CORS upload support is enabled for the bucket
        'cors' => TRUE,

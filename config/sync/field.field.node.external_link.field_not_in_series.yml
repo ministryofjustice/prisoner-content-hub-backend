@@ -1,0 +1,23 @@
+uuid: bf407f75-611d-4c91-8e82-b0c9c9f5d8ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_not_in_series
+    - node.type.external_link
+id: node.external_link.field_not_in_series
+field_name: field_not_in_series
+entity_type: node
+bundle: external_link
+label: 'This content is not part of any series'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

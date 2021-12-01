@@ -1,0 +1,50 @@
+diff --git a/flysystem_s3.js b/flysystem_s3.js
+index dfebbae..2e29c3e 100644
+--- a/flysystem_s3.js
++++ b/flysystem_s3.js
+@@ -44,6 +44,21 @@
+       // Store uploaded files fid values.
+       var uploadedFileFid = [];
+ 
++      // Disable "other" file fields, and also submit buttons.
++      // @See Drupal.file.disableFields().
++      var $enabledFields = [];
++      if ($fileElement.closest('div.js-form-managed-file').length > 0) {
++        $enabledFields = $fileElement
++            .closest('div.js-form-managed-file')
++            .find('input.js-form-file');
++      }
++      const $fieldsToTemporarilyDisable = $(
++          'div.js-form-managed-file input.js-form-file, input[type="submit"]',
++      )
++          .not($enabledFields)
++          .not(':disabled');
++      $fieldsToTemporarilyDisable.prop('disabled', true);
++
+       Object.keys(filelist).forEach(function (file) {
+ 
+         var file_obj = filelist[file];
+@@ -55,6 +70,7 @@
+           Drupal.flysystemS3.setCorsUploadProgress($progressBar, 1, Drupal.t('Signing request failed. Trying secondary upload method...'));
+           // Trigger the submit button to let normal AJAX process the upload.
+           Drupal.file.triggerUploadButton(event);
++          $fieldsToTemporarilyDisable.prop('disabled', false);
+         })
+         .done(function (signedFormData) {
+           Drupal.flysystemS3.setCorsUploadProgress($progressBar, 1, Drupal.t('Uploading @file', {'@file': file_obj.name}));
+@@ -64,6 +80,7 @@
+               Drupal.flysystemS3.setCorsUploadProgress($progressBar, 1, Drupal.t('Upload failed. Trying secondary upload method...'));
+               // Trigger the submit button to let normal AJAX process the upload.
+               Drupal.file.triggerUploadButton(event);
++              $fieldsToTemporarilyDisable.prop('disabled', false);
+             })
+             .done(function () {
+               // Set progress bar to 100% in case the upload was so fast.
+@@ -88,6 +105,7 @@
+                 // Trigger the submit button to let normal AJAX process the upload.
+                 Drupal.file.triggerUploadButton(event);
+               }
++              $fieldsToTemporarilyDisable.prop('disabled', false);
+             });
+         });
+       });

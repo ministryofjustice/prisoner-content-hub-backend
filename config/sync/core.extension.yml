@@ -19,6 +19,7 @@ module:
   editor: 0
   elasticsearch_connector: 0
   entity: 0
+  entity_clone: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -46,6 +47,7 @@ module:
   monolog: 0
   node: 0
   options: 0
+  page_cache: 0
   path: 0
   path_alias: 0
   prisoner_hub_cms_help: 0
