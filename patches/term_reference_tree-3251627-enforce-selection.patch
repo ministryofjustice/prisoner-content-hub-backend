@@ -64,7 +64,7 @@ index c89c115ff9ee8f70441280577bde1250939ed83f..9102e22a54c6527101e010de73ca8362
      $element['#max_depth'] = $this->getSetting('max_depth');
      $element['#start_minimized'] = $this->getSetting('start_minimized');
 diff --git a/term_reference_tree.js b/term_reference_tree.js
-index 864a084bbc211b9e3e85682a6531f9a74834de9d..c47a904133ea239fef8a3881d8267e08fc8bae6f 100644
+index 864a084bbc211b9e3e85682a6531f9a74834de9d..a17fbdf501c9a3ba65bf3d7eeaa0db131b043192 100644
 --- a/term_reference_tree.js
 +++ b/term_reference_tree.js
 @@ -115,6 +115,7 @@ Drupal.behaviors.termReferenceTree = {
@@ -98,12 +98,13 @@ index 864a084bbc211b9e3e85682a6531f9a74834de9d..c47a904133ea239fef8a3881d8267e08
              }
            } else if (mode_select && event_target_checked) {
              $(children).filter(':not(:checked)').click().trigger('change');
-@@ -136,6 +147,9 @@ Drupal.behaviors.termReferenceTree = {
+@@ -136,6 +147,10 @@ Drupal.behaviors.termReferenceTree = {
              $(children).filter(':checked').click().trigger('change');
            }
          });
++
 +        if(enforce_select) {
-+          $(this).find('.form-checkbox').trigger('change');
++          $(this).find('.form-checkbox:checked').trigger('change');
 +        }
          //End process checkbox changes.
        } //End Want a cascading checking.
