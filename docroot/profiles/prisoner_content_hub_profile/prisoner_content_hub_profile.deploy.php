@@ -104,15 +104,15 @@ function prisoner_content_hub_profile_create_new_prison_categories(&$sandbox) {
  * Note this is *not* a deploy hook.
  */
 function prisoner_content_hub_profile_add_categories(ContentEntityInterface $entity, array &$new_prison_field_value, array &$sandbox) {
-  if ($entity->hasField('field_category')) {
-    foreach ($entity->get('field_category')->getValue() as $category) {
+  if ($entity->hasField('field_moj_top_level_categories')) {
+    foreach ($entity->get('field_moj_top_level_categories')->getValue() as $category) {
       if ($category['target_id'] == 787) {
         // Do not add extra prison categories for content in Facilities list and catalogues".
         return;
       }
     }
   }
-  
+
   $prisons = $entity->get('field_moj_prisons')->referencedEntities();
   $prison_category_count = [];
   /** @var \Drupal\taxonomy\TermInterface $prison */
