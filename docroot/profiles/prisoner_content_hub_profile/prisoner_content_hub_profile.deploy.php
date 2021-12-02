@@ -19,10 +19,16 @@ use Drupal\taxonomy\Entity\Term;
 function prisoner_content_hub_profile_deploy_update_content_to_new_prison_field(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
-    $nodes_query = \Drupal::entityQuery('node')->exists('field_moj_prisons')->accessCheck(FALSE);
+    $nodes_query = \Drupal::entityQuery('node')
+      ->condition('type', 'help_page', '<>')
+      ->accessCheck(FALSE);
     $sandbox['result_nodes'] = $nodes_query->execute();
-    $terms_query = \Drupal::entityQuery('taxonomy_term')->exists('field_moj_prisons')->accessCheck(FALSE);
+
+    $terms_query = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', ['tags', 'series', 'moj_categories'], 'IN')
+      ->accessCheck(FALSE);
     $sandbox['result_terms'] = $terms_query->execute();
+
     prisoner_content_hub_profile_create_new_prison_categories($sandbox);
   }
 
@@ -43,7 +49,6 @@ function prisoner_content_hub_profile_deploy_update_content_to_new_prison_field(
     prisoner_content_hub_profile_add_categories($entity, $new_prison_field_value, $sandbox);
 
     $prisons = $entity->get('field_moj_prisons')->referencedEntities();
-    $new_prisons_value = [];
 
     /** @var \Drupal\taxonomy\TermInterface $prison */
     foreach ($prisons as $prison) {
