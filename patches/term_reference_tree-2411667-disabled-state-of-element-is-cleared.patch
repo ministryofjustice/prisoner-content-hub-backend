@@ -1,0 +1,53 @@
+diff --git a/term_reference_tree.js b/term_reference_tree.js
+index 864a084bbc211b9e3e85682a6531f9a74834de9d..3016ad26c6bbceb09b138b3a19bab7a70e7d9f2e 100644
+--- a/term_reference_tree.js
++++ b/term_reference_tree.js
+@@ -23,9 +23,10 @@ Drupal.behaviors.termReferenceTree = {
+       // On page load, check whether the maximum number of choices is already selected.
+       // If so, disable the other options.
+       var tree = $(this);
+-      checkMaxChoices(tree, false);
++      var disabledFields = tree.find('input[type=checkbox]:disabled');
++      checkMaxChoices(tree, false, disabledFields);
+       $(this).find('input[type=checkbox]').change(function() {
+-        checkMaxChoices(tree, $(this));
++        checkMaxChoices(tree, $(this), disabledFields);
+       });
+
+       //On page load, check if the user wants a cascading selection.
+@@ -78,7 +79,7 @@ Drupal.behaviors.termReferenceTree = {
+
+             var checkbox = $('#' + control_id);
+             checkbox.removeAttr('checked');
+-            checkMaxChoices(tree, checkbox);
++            checkMaxChoices(tree, checkbox, disabledFields);
+
+             //Show "nothing selected" message, if needed.
+             showNothingSelectedMessage(track_list_container);
+@@ -258,7 +259,7 @@ function removeNothingSelectedMessage(track_list_container) {
+
+ // This helper function checks if the maximum number of choices is already selected.
+ // If so, it disables all the other options.  If not, it enables them.
+-function checkMaxChoices(item, checkbox) {
++function checkMaxChoices(item, checkbox, disabledFields) {
+   var maxChoices = -1;
+   try {
+     maxChoices = parseInt(Drupal.settings.term_reference_tree.trees[item.attr('id')]['max_choices']);
+@@ -266,10 +267,13 @@ function checkMaxChoices(item, checkbox) {
+   catch (e){}
+   var count = item.find(':checked').length;
+
+-  if(maxChoices > 0 && count >= maxChoices) {
+-    item.find('input[type=checkbox]:not(:checked)').attr('disabled', 'disabled').parent().addClass('disabled');
+-  } else {
+-    item.find('input[type=checkbox]').removeAttr('disabled').parent().removeClass('disabled');
++  if(maxChoices > 0) {
++    if(count >= maxChoices) {
++      item.find('input[type=checkbox]:not(:checked)').attr('disabled', 'disabled').parent().addClass('disabled');
++    }
++    else {
++      item.find('input[type=checkbox]').not(disabledFields).removeAttr('disabled').parent().removeClass('disabled');
++    }
+   }
+
+   if(checkbox) {

@@ -9,307 +9,148 @@
  * detailed comparison.
  */
 
-
-use Drupal\Core\Url;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Copy over values from landing page content types to categories.
+ * Bulk update published content with new prison field.
  */
-function prisoner_content_hub_profile_deploy_copy_landing_page_values() {
-  $query = \Drupal::entityQuery('node');
-  $query->condition('type', 'landing_page');
-  $query->accessCheck(FALSE);
-  $result = $query->execute();
-  $nodes = Node::loadMultiple($result);
+function prisoner_content_hub_profile_deploy_update_content_to_new_prison_field(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $nodes_query = \Drupal::entityQuery('node')
+      ->condition('type', 'help_page', '<>')
+      ->accessCheck(FALSE);
+    $sandbox['result_nodes'] = $nodes_query->execute();
 
-  foreach ($nodes as $node) {
-    $referenced_entities = $node->get('field_moj_landing_page_term')->referencedEntities();
-    foreach ($referenced_entities as $referenced_entity) {
-      /** @var \Drupal\taxonomy\TermInterface $referenced_entity */
-      $referenced_entity->set('field_legacy_landing_page', $node->id());
-      $referenced_entity->set('field_moj_prisons', $node->get('field_moj_prisons')->getValue());
-      $referenced_entity->set('field_prison_categories', $node->get('field_prison_categories')->getValue());
-      $referenced_entity->set('description', $node->get('field_moj_description')->getValue());
+    $terms_query = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', ['tags', 'series', 'moj_categories'], 'IN')
+      ->accessCheck(FALSE);
+    $sandbox['result_terms'] = $terms_query->execute();
 
-      $referenced_entity->save();
-    }
-  }
-}
-
-/**
- * Set all Secondary tags to have every prison category.
- */
-function prisoner_content_hub_profile_deploy_set_tag_prisons() {
-  $query = \Drupal::entityQuery('taxonomy_term');
-  $query->condition('vid', 'tags');
-  $query->accessCheck(FALSE);
-  $result = $query->execute();
-  $terms = Term::loadMultiple($result);
-  foreach ($terms as $term) {
-    /** @var \Drupal\taxonomy\TermInterface $term */
-    // Set all four prison category term ids.
-    $term->set('field_prison_categories', [1011 => 1011, 1012 => 1012, 1013 => 1013, 1014 => 1014]);
-    $term->save();
+    prisoner_content_hub_profile_create_new_prison_categories($sandbox);
   }
 
-}
-
-
-/**
- * Bulk update paths for content and taxonomy terms.
- */
-function prisoner_content_hub_profile_deploy_update_paths(&$sandbox) {
-  // See https://www.qed42.com/blog/url-alias-update-using-batch-api-drupal-8
-  $entities = [];
-  $entities['node'] = \Drupal::entityQuery('node')->accessCheck(FALSE)->execute();
-  $entities['taxonomy_term'] = \Drupal::entityQuery('taxonomy_term')->condition('vid', ['moj_categories', 'series', 'tags'], 'IN')->execute();
-  $result = [];
-
-  foreach ($entities as $type => $entity_list) {
-    foreach ($entity_list as $entity_id) {
-      $result[] = [
-        'entity_type' => $type,
-        'id' => $entity_id,
-      ];
-    }
-  }
-
-  // Use the sandbox to store the information needed to track progression.
-  if (!isset($sandbox['current']))
-  {
-    // The count of entities visited so far.
-    $sandbox['current'] = 0;
-    // Total entities that must be visited.
-    $sandbox['max'] = count($result);
-    // A place to store messages during the run.
-  }
-
-  // Process entities by groups of 20.
-  // When a group is processed, the batch update engine determines
-  // whether it should continue processing in the same request or provide
-  // progress feedback to the user and wait for the next request.
-  $limit = 20;
-  $result = array_slice($result, $sandbox['current'], $limit);
-
-  foreach ($result as $row) {
-    $entity_storage = \Drupal::entityTypeManager()->getStorage($row['entity_type']);
-    $entity = $entity_storage->load($row['id']);
-
-    // Update Entity URL alias.
-    \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'update');
-
-    // Update our progress information.
-    $sandbox['current']++;
-  }
-
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
-
-  if ($sandbox['#finished'] >= 1) {
-    return 'The batch URL Alias update is finished.';
+  if ($sandbox['progress'] < count($sandbox['result_nodes'])) {
+    $entities = Node::loadMultiple(array_slice($sandbox['result_nodes'], $sandbox['progress'], 50, TRUE));
   }
   else {
-    return 'Updated ' . $sandbox['current'] . ' paths';
+    $entities = Term::loadMultiple(array_slice($sandbox['result_terms'], $sandbox['progress'] - count($sandbox['result_nodes']), 50, TRUE));
   }
-}
 
-/**
- * Update series to reference categories.
- */
-function prisoner_content_hub_profile_deploy_update_series() {
-  $terms_result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->accessCheck(FALSE)->execute();
-  $terms = Term::loadMultiple($terms_result);
-  $nodes_result = \Drupal::entityQuery('node')
-    ->exists('field_moj_series')
-    ->accessCheck(TRUE)
-    ->condition('status', 1)
-    ->execute();
-  $nodes = Node::loadMultiple($nodes_result);
-
-  $new_category_values = [];
-  /** @var \Drupal\node\NodeInterface $node */
-  foreach ($nodes as $node) {
-    foreach ($node->get('field_moj_top_level_categories')->getValue() as $value) {
-      $new_category_values[$node->field_moj_series->target_id][] = $value['target_id'];
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  foreach ($entities as $entity) {
+    $prison_category_values = array_column($entity->get('field_prison_categories')->getValue(), 'target_id');
+    $new_prison_field_value = [];
+    foreach ($prison_category_values as $prison_category_value) {
+      $new_prison_field_value[] = ['target_id' => $sandbox['prison_categories_map'][$prison_category_value]];
     }
-  }
+    prisoner_content_hub_profile_add_categories($entity, $new_prison_field_value, $sandbox);
 
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  foreach ($terms as $term) {
-    $new_category_field_value = [];
-    if (isset($new_category_values[$term->id()])) {
-      foreach (array_unique($new_category_values[$term->id()]) as $category_value) {
-        $new_category_field_value[] = ['target_id' => $category_value];
+    $prisons = $entity->get('field_moj_prisons')->referencedEntities();
+
+    /** @var \Drupal\taxonomy\TermInterface $prison */
+    foreach ($prisons as $prison) {
+      $parent_id = $prison->get('parent')->target_id;
+      // Only add prisons that are in categories we have not yet added.
+      if (!in_array($parent_id, array_column($new_prison_field_value, 'target_id'))) {
+        $new_prison_field_value[] = ['target_id' => $prison->id()];
       }
     }
-    $term->set('field_category', $new_category_field_value);
-    $term->save();
-  }
-}
-
-/**
- * Update description field on series to have the content from summary field.
- */
-function prisoner_content_hub_profile_deploy_copy_summary(&$sandbox) {
-  if (!isset($sandbox['progress'])) {
-    $sandbox['progress'] = 0;
-    $sandbox['result'] = $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'series')->execute();
-  }
-
-  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
-
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  foreach ($terms as $term) {
-    $term->set('description', $term->get('field_content_summary')->getValue());
-    $term->save();
+    $entity->set('field_prisons', $new_prison_field_value);
+    $entity->save();
     $sandbox['progress']++;
   }
 
-  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result_nodes']) + count($sandbox['result_terms']);
   if ($sandbox['#finished'] ) {
+    \Drupal::service('module_installer')->install(['prisoner_hub_prison_access']);
+    \Drupal::service('module_installer')->uninstall(['prisoner_hub_entity_access']);
     return 'Completed updated, processed total of: ' . $sandbox['progress'];
   }
-  return 'Processed terms: ' . $sandbox['progress'];
+  return 'Processed entities: ' . $sandbox['progress'];
 }
 
 /**
- * Bulk update categories to have featured content tiles.
- */
-function prisoner_content_hub_profile_deploy_category_tiles() {
-  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
-  $terms = Term::loadMultiple($result);
-
-  // Use the currently live prisons to search for content.
-  $prisons = [
-    792, // Berwyn
-    793, // Wayland
-    959, // Cookham
-    1076, // Lindholme
-  ];
-
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  foreach ($terms as $term) {
-    $featured_tiles_value = [];
-    $prison_values = [];
-    $used_values = [];
-    foreach ($prisons as $prison_id) {
-      $prison_values[$prison_id] = \Drupal::service('moj_resources.category_featured_content_api_class')->CategoryFeaturedContentApiEndpoint($term->id(), 10, $prison_id);
-    }
-    for ($i = 0; $i < 10; $i++) {
-      foreach ($prisons as $prison_id) {
-        if (isset($prison_values[$prison_id][$i])) {
-          $target_id = $prison_values[$prison_id][$i]['id'];
-          $target_type = $prison_values[$prison_id][$i]['content_type'] == 'series' ? 'taxonomy_term' : 'node';
-          if (!isset($used_values[$target_type][$target_id])) {
-            $featured_tiles_value[] = [
-              'target_id' => $target_id,
-              'target_type' => $target_type,
-            ];
-            $used_values[$target_type][$target_id] = TRUE;
-          }
-        }
-      }
-    }
-    $term->set('field_featured_tiles', $featured_tiles_value);
-    $term->save();
-  }
-}
-
-/**
- * Re-run the featured content update, to update to the latest content.
- */
-function prisoner_content_hub_profile_deploy_a_category_tiles_redeploy() {
-  prisoner_content_hub_profile_deploy_category_tiles();
-}
-
-
-/**
- * Re-deploy the update series job, to account for updates since it was last
- * run.
- */
-function prisoner_content_hub_profile_deploy_b_update_series_redeploy() {
-  prisoner_content_hub_profile_deploy_update_series();
-}
-
-/**
- * Update content based on if it has a series.
+ * Create new prison category terms, within the current prisons taxonomy.
  *
- * Content with a series, will have its category removed, and
- * field_not_in_series set to 0. Content not in a series, will have
- * field_not_in_series set to 1.
+ * Note this is *not* a deploy hook.
  */
-function prisoner_content_hub_profile_deploy_z_remove_categories_from_content_with_series(&$sandbox) {
-  if (!isset($sandbox['progress'])) {
-    $sandbox['progress'] = 0;
-    $query = \Drupal::entityQuery('node');
-    // Perform on unpublished nodes.
-    $query->condition('type', ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'], 'IN');
-    $query->accessCheck(FALSE);
-    $sandbox['result'] = $query->execute();
+function prisoner_content_hub_profile_create_new_prison_categories(&$sandbox) {
+  $female_term = Term::create(['name' => 'Female', 'vid' => 'prisons']);
+  $adult_male_term = Term::create(['name' => 'Adult male', 'vid' => 'prisons']);
+  $youth_male_term = Term::create(['name' => 'Youth male', 'vid' => 'prisons']);
+  $female_term->save();
+  $adult_male_term->save();
+  $youth_male_term->save();
+
+  // Old prison category IDs => newly created IDs
+  $sandbox['prison_categories_map'] = [
+    1012 => $female_term->id(),
+    1014 => $adult_male_term->id(),
+    1011 => $youth_male_term->id(),
+  ];
+  $prisons_result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'prisons')->accessCheck(FALSE)->execute();
+  $prisons = Term::loadMultiple($prisons_result);
+  // Set correct parents of current prisons according to existing prison categories.
+  /** @var \Drupal\taxonomy\TermInterface $prison */
+  foreach ($prisons as $prison) {
+    $prison_category = $prison->get('field_prison_categories')->target_id;
+    $new_parent = ['target_id' => $sandbox['prison_categories_map'][$prison_category]];
+    $prison->set('parent', $new_parent);
+    $prison->save();
   }
-
-  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 100, TRUE));
-
-  /** @var \Drupal\node\NodeInterface $node */
-  foreach ($nodes as $node) {
-    $series_entities = $node->get('field_moj_series')->referencedEntities();
-    if (empty($series_entities)) {
-      $node->set('field_not_in_series', 1);
-      // Ensure all series related fields are blank.
-      $node->set('field_moj_series', NULL);
-      $node->set('field_moj_episode', NULL);
-      $node->set('field_moj_season', NULL);
-      $node->set('field_release_date', NULL);
-    }
-    else {
-      $node->set('field_moj_top_level_categories', NULL);
-      $node->set('field_not_in_series', 0);
-    }
-    $node->save();
-    $sandbox['progress']++;
-  }
-
-  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
-  if ($sandbox['#finished'] ) {
-    return 'Completed updated, processed total of: ' . $sandbox['progress'];
-  }
-  return 'Processed nodes: ' . $sandbox['progress'];
-
 }
 
 /**
- * Update any embedded links inside description fields, so that they point to
- * the category and not the landing page.
+ * Add prison categories to $entity if there are more than 2 prisons within that category.
+ *
+ * Note this is *not* a deploy hook.
  */
-function prisoner_content_hub_profile_deploy_update_embedded_links_to_landing_pages() {
-  $landing_pages = [];
-  $result = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'moj_categories')->execute();
-  $terms = Term::loadMultiple($result);
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  foreach ($terms as $term) {
-    $referenced_entities = $term->get('field_legacy_landing_page')->referencedEntities();
-    if (!empty($referenced_entities)) {
-      /** @var \Drupal\node\NodeInterface $referenced_entity */
-      $referenced_entity = array_shift($referenced_entities);
-      $landing_pages['/tags/' . $term->id()] = '/content/' . $referenced_entity->id();
+function prisoner_content_hub_profile_add_categories(ContentEntityInterface $entity, array &$new_prison_field_value, array &$sandbox) {
+  if ($entity->hasField('field_moj_top_level_categories')) {
+    foreach ($entity->get('field_moj_top_level_categories')->getValue() as $category) {
+      if ($category['target_id'] == 787) {
+        // Do not add extra prison categories for content in Facilities list and catalogues".
+        return;
+      }
     }
   }
 
-  $result = \Drupal::entityQuery('node')
-    ->condition('field_moj_description', '/content/', 'CONTAINS')
-    ->accessCheck(FALSE)
-    ->execute();
-  $nodes = Node::loadMultiple($result);
-  /** @var \Drupal\node\NodeInterface $node */
-  foreach ($nodes as $node) {
-    $count = 0;
-    $description = $node->get('field_moj_description')->getValue();
-    $description[0]['value'] = str_replace(array_values($landing_pages), array_keys($landing_pages), $description[0]['value'], $count);
-    if ($count) {
-      $node->set('field_moj_description', $description);
-      $node->save();
-      print 'Updated description on node: ' . $node->id() . PHP_EOL;
+  $prisons = $entity->get('field_moj_prisons')->referencedEntities();
+  $prison_category_count = [];
+  /** @var \Drupal\taxonomy\TermInterface $prison */
+  foreach ($prisons as $prison) {
+    $parent_id = $prison->get('parent')->target_id;
+    // Add prison categories when there is more than one prison within that
+    // category.
+    if (!in_array($parent_id, array_column($new_prison_field_value, 'target_id'))) {
+      if (!isset($prison_category_count[$parent_id])) {
+        $prison_category_count[$parent_id] = 1;
+      }
+      else {
+        $new_prison_field_value[] = ['target_id' => $parent_id];
+        $prison_category_count[$parent_id]++;
+      }
+    }
+  }
+
+  // Special handling for Berwyn.
+  // If we've added adult male, but Berwyn was not included as a prison,
+  // make Berwyn specifically excluded.
+  if (isset($prison_category_count[$sandbox['prison_categories_map'][1014]]) && $prison_category_count[$sandbox['prison_categories_map'][1014]] > 1) {
+    $berwyn_included = FALSE;
+    $berwyn_tid = 792;
+    foreach ($prisons as $prison) {
+      if ($prison->id() == $berwyn_tid) {
+        $berwyn_included = TRUE;
+      }
+    }
+    if (!$berwyn_included) {
+      $entity->set('field_exclude_from_prison', [
+        ['target_id' => $berwyn_tid]
+      ]);
     }
   }
 }

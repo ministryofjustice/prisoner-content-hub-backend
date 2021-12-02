@@ -32,6 +32,7 @@ content:
     region: content
 hidden:
   field_display_url: true
+  field_exclude_from_prison: true
   field_external_url: true
   field_feature_on_category: true
   field_moj_episode: true
@@ -42,6 +43,7 @@ hidden:
   field_moj_top_level_categories: true
   field_not_in_series: true
   field_prison_categories: true
+  field_prisons: true
   field_release_date: true
   field_summary: true
   search_api_excerpt: true
