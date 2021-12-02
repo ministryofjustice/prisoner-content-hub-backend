@@ -5,12 +5,14 @@ dependencies:
   config:
     - field.field.taxonomy_term.series.field_category
     - field.field.taxonomy_term.series.field_exclude_feedback
+    - field.field.taxonomy_term.series.field_exclude_from_prison
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
     - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_moj_prisons
     - field.field.taxonomy_term.series.field_prison_categories
+    - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
     - image.style.thumbnail
     - taxonomy.vocabulary.series
@@ -18,24 +20,37 @@ dependencies:
     - field_group
     - image
     - select2
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
     group_prison_categories:
       children:
-        - field_prison_categories
-        - field_moj_prisons
+        - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 7
       format_type: fieldset
       region: content
       format_settings:
-        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
-        open: '1'
+        description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
         required_fields: true
         id: ''
         classes: ''
       label: 'Where would you like this content to appear?'
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 14
+      format_type: details_open_non_empty
+      region: content
+      format_settings:
+        description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
+        required_fields: '1'
+        id: ''
+        classes: ''
+      label: 'Exclude from prison'
 id: taxonomy_term.series.default
 targetEntityType: taxonomy_term
 bundle: series
@@ -66,6 +81,18 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
+  field_exclude_from_prison:
+    weight: 14
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+      cascading_selection_enforce: false
+    third_party_settings: {  }
+    type: term_reference_tree
+    region: content
   field_feature_on_category:
     weight: 4
     settings: {  }
@@ -88,17 +115,17 @@ content:
     third_party_settings: {  }
     type: image_image
     region: content
-  field_moj_prisons:
-    weight: 15
-    settings: {  }
+  field_prisons:
+    weight: 13
+    settings:
+      cascading_selection: 1
+      cascading_selection_enforce: true
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
     third_party_settings: {  }
-    type: options_buttons
-    region: content
-  field_prison_categories:
-    weight: 11
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
+    type: term_reference_tree
     region: content
   field_sort_by:
     weight: 2
@@ -123,4 +150,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_category_featured_item: true
+  field_moj_prisons: true
+  field_prison_categories: true
   path: true

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_radio_item.field_exclude_feedback
+    - field.field.node.moj_radio_item.field_exclude_from_prison
     - field.field.node.moj_radio_item.field_feature_on_category
     - field.field.node.moj_radio_item.field_moj_audio
     - field.field.node.moj_radio_item.field_moj_category_featured_item
@@ -18,6 +19,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_top_level_categories
     - field.field.node.moj_radio_item.field_not_in_series
     - field.field.node.moj_radio_item.field_prison_categories
+    - field.field.node.moj_radio_item.field_prisons
     - field.field.node.moj_radio_item.field_release_date
     - image.style.thumbnail
     - node.type.moj_radio_item
@@ -29,20 +31,20 @@ dependencies:
     - path
     - scheduler
     - select2
+    - term_reference_tree
     - text
 third_party_settings:
   field_group:
     group_prison_categories:
       children:
-        - field_prison_categories
-        - field_moj_prisons
+        - field_prisons
+        - group_exclude_from_prison
       parent_name: ''
       weight: 12
       format_type: fieldset
       region: content
       format_settings:
-        description: 'You can choose if your content appears in one prison only, or in multiple prisons.  '
-        open: '1'
+        description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
         required_fields: true
         id: ''
         classes: ''
@@ -103,6 +105,19 @@ third_party_settings:
         id: ''
         classes: ''
       label: Category
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      parent_name: group_prison_categories
+      weight: 30
+      format_type: details_open_non_empty
+      region: content
+      format_settings:
+        description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
+        required_fields: '1'
+        id: ''
+        classes: ''
+      label: 'Exclude from prison'
 _core:
   default_config_hash: H9T4wiAyjusjM_2Hght6rUqINd8rizB-sZGgsBC4obM
 id: node.moj_radio_item.default
@@ -122,6 +137,18 @@ content:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
+    region: content
+  field_exclude_from_prison:
+    weight: 30
+    settings:
+      leaves_only: true
+      cascading_selection: 0
+      max_depth: 0
+      start_minimized: false
+      select_parents: false
+      cascading_selection_enforce: false
+    third_party_settings: {  }
+    type: term_reference_tree
     region: content
   field_feature_on_category:
     type: options_buttons
@@ -152,12 +179,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: number
-    region: content
-  field_moj_prisons:
-    weight: 28
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
     region: content
   field_moj_programme_code:
     weight: 6
@@ -219,11 +240,17 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_prison_categories:
-    weight: 27
-    settings: {  }
+  field_prisons:
+    weight: 29
+    settings:
+      cascading_selection: 1
+      cascading_selection_enforce: true
+      max_depth: 0
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
     third_party_settings: {  }
-    type: options_buttons
+    type: term_reference_tree
     region: content
   field_release_date:
     weight: 20
@@ -287,5 +314,7 @@ content:
 hidden:
   field_moj_archived: true
   field_moj_category_featured_item: true
+  field_moj_prisons: true
+  field_prison_categories: true
   promote: true
   sticky: true

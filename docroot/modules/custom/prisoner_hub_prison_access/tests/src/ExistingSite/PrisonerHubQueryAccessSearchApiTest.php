@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Core\Url;
 use Drupal\elasticsearch_connector\Entity\Cluster;
@@ -10,7 +10,7 @@ use Drupal\search_api\Entity\Index;
  * Test that the jsonapi responses for nodes tagged with prisons and
  * prison categories return the correct response.
  *
- * @group prisoner_hub_entity_access
+ * @group prisoner_hub_prison_access
  */
 class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase {
 
@@ -110,6 +110,30 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
     $entities_to_check = [];
     foreach ($this->bundles as $bundle) {
       $entities_to_check = array_merge($entities_to_check, $this->setupContentTaggedWithPrisonAndCategory($this->entityTypeId, $bundle));
+    }
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
+  }
+
+  /**
+   * Test that correct entities are returned in the JSON response, when tagged
+   * with a prison and excluded from that prison.
+   */
+  public function testContentTaggedWithPrisonAndExcluded() {
+    $entities_to_check = [];
+    foreach ($this->bundles as $bundle) {
+      $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithPrisonAndExcluded($this->entityTypeId, $bundle));
+    }
+    $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
+  }
+
+  /**
+   * Test that correct entities are returned in the JSON response, when tagged
+   * with a prison category and excluded from that prison.
+   */
+  public function testContentTaggedWithPrisonCategoryAndExcluded() {
+    $entities_to_check = [];
+    foreach ($this->bundles as $bundle) {
+      $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithPrisonCategoryAndExcluded($this->entityTypeId, $bundle));
     }
     $this->assertJsonApiListResponse($entities_to_check, $this->jsonApiUrl);
   }

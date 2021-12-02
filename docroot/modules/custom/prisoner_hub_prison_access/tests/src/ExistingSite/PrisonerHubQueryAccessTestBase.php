@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_entity_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
@@ -15,7 +15,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 /**
  * Base class that tests jsonapi responses for the correct results.
  *
- * @group prisoner_hub_entity_access
+ * @group prisoner_hub_prison_access
  */
 abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
@@ -66,11 +66,11 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected $prisonFieldName;
 
   /**
-   * The prison category reference field name.
+   * The excluded from prison reference field name.
    *
    * @var String
    */
-  protected $prisonCategoryFieldName;
+  protected $excludeFromPrisonFieldName;
 
   /**
    * Sets up prison and prison category terms, to be used later when testing.
@@ -78,15 +78,15 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->prisonFieldName = $this->container->getParameter('prisoner_hub_entity_access.prison_field_name');
-    $this->prisonCategoryFieldName = $this->container->getParameter('prisoner_hub_entity_access.category_field_name');
+    $this->prisonFieldName = $this->container->getParameter('prisoner_hub_prison_access.prison_field_name');
+    $this->excludeFromPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
 
-    $vocab_prison_categories = Vocabulary::load('prison_category');
-    $this->prisonCategoryTerm = $this->createTerm($vocab_prison_categories);
+    $vocab_prisons = Vocabulary::load('prisons');
+    $this->prisonCategoryTerm = $this->createTerm($vocab_prisons);
 
     $vocab_prisons = Vocabulary::load('prisons');
     $values = [
-      $this->prisonCategoryFieldName => [
+      'parent' => [
         ['target_id' => $this->prisonCategoryTerm->id()],
       ],
     ];
@@ -95,9 +95,9 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
     // Create alternative prison and prison category taxonomy terms.
     // We will tag some content with this, to ensure it does not appear.
-    $this->anotherPrisonCategoryTerm = $this->createTerm($vocab_prison_categories);
+    $this->anotherPrisonCategoryTerm = $this->createTerm($vocab_prisons);
     $values = [
-      $this->prisonCategoryFieldName => [
+      'parent' => [
         ['target_id' => $this->anotherPrisonCategoryTerm->id()],
       ],
     ];
@@ -134,8 +134,8 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         if ($bundle == 'series') {
           $this->createNode([
             'field_moj_series' => ['target_id' => $term->id()],
-            'field_prison_categories' => [
-              ['target_id' => $this->prisonCategoryTerm->id()]
+            $this->prisonFieldName => [
+              ['target_id' => $this->prisonTerm->id()]
             ],
           ]);
         }
@@ -158,6 +158,26 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   }
 
   /**
+   * Create an entity tagged with a prison but no category.
+   *
+   * @return int
+   *   The uuid of the created entity.
+   */
+  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = []) {
+    $values = [
+      'status' => $status,
+    ];
+    foreach ($prison_ids as $prison_id) {
+      $values[$this->prisonFieldName][] = ['target_id' => $prison_id];
+    }
+    foreach ($excluded_prisons as $excluded_prison_id) {
+      $values[$this->excludeFromPrisonFieldName][] = ['target_id' => $excluded_prison_id];
+    }
+
+    return $this->createEntity($entity_type_id, $bundle, $values);
+  }
+
+  /**
    * Setup entities that are tagged with a prison but _no_ category.
    *
    * @return array
@@ -166,36 +186,20 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected function setupEntitiesTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
     for ($i = 0; $i < $amount; $i++) {
-      $entities_to_check[] = $this->createEntityTaggedWithPrisonButNoCategory($entity_type_id, $bundle, $this->prisonTerm->id());
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
     }
 
     // Also create some content tagged with a different prison.
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithPrisonButNoCategory($entity_type_id, $bundle, $this->anotherPrisonTerm->id());
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id()]);
     }
 
     // Also create some unpublished entities.
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithPrisonButNoCategory($entity_type_id, $bundle, $this->prisonTerm->id(), FALSE);
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], NodeInterface::NOT_PUBLISHED);
     }
 
    return $entities_to_check;
-  }
-
-  /**
-   * Create an entity tagged with a prison but no category.
-   *
-   * @return int
-   *   The uuid of the created entity.
-   */
-  public function createEntityTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $prison_id, $status = NodeInterface::PUBLISHED) {
-    $values = [
-      $this->prisonFieldName => [
-        ['target_id' => $prison_id]
-      ],
-      'status' => $status,
-    ];
-    return $this->createEntity($entity_type_id, $bundle, $values);
   }
 
   /**
@@ -207,31 +211,15 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected function setupEntitiesTaggedWithCategoryButNoPrison(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
     for ($i = 0; $i < $amount; $i++) {
-      $entities_to_check[] = $this->createEntityTaggedWithCategoryButNoPrison($entity_type_id, $bundle, $this->prisonCategoryTerm->id());
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonCategoryTerm->id()]);
     }
 
     // Also create some content tagged with a different prison category.
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithCategoryButNoPrison($entity_type_id, $bundle, $this->anotherPrisonCategoryTerm->id());
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonCategoryTerm->id()]);
     }
 
     return $entities_to_check;
-  }
-
-  /**
-   * Create an entity tagged with a category but no prison.
-   *
-   * @return int
-   *   The uuid of the created entity.
-   */
-  public function createEntityTaggedWithCategoryButNoPrison(string $entity_type_id, string $bundle, int $prison_category_id, $status = NodeInterface::PUBLISHED) {
-    $values = [
-      $this->prisonCategoryFieldName => [
-        ['target_id' => $prison_category_id],
-      ],
-      'status' => $status,
-    ];
-    return $this->createEntity($entity_type_id, $bundle, $values);
   }
 
   /**
@@ -243,34 +231,55 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected function setupContentTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
     for ($i = 0; $i < $amount; $i++) {
-      $entities_to_check[] = $this->createEntityTaggedWithPrisonAndCategory($entity_type_id, $bundle, $this->prisonTerm->id(), $this->prisonCategoryTerm->id());
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id(), $this->prisonCategoryTerm->id()]);
     }
 
     // Also create some content tagged with a different category and prison.
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithPrisonAndCategory($entity_type_id, $bundle, $this->anotherPrisonTerm->id(), $this->anotherPrisonCategoryTerm->id());
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id(), $this->anotherPrisonCategoryTerm->id()]);
     }
 
     return $entities_to_check;
   }
 
   /**
-   * Create an entity tagged with a prison and a category.
+   * Setup entities that are tagged with a prison and excluded.
    *
-   * @return int
-   *   The uuid of the created entity.
+   * @return array
+   *   An array of entities to check for.
    */
-  public function createEntityTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, string $prison_id, int $prison_category_id, $status = NodeInterface::PUBLISHED) {
-    $values = [
-      $this->prisonFieldName => [
-        ['target_id' => $prison_id],
-      ],
-      $this->prisonCategoryFieldName => [
-        ['target_id' => $prison_category_id],
-      ],
-      'status' => $status,
-    ];
-    return $this->createEntity($entity_type_id, $bundle, $values);
+  protected function setupEntitiesTaggedWithPrisonAndExcluded(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
+    }
+
+    // Also create some content tagged with same prison but excluded.
+    for ($i = 0; $i < $amount; $i++) {
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], NodeInterface::PUBLISHED, [$this->prisonTerm->id()]);
+    }
+
+    return $entities_to_check;
+  }
+
+  /**
+   * Setup entities that are tagged with a prison and excluded.
+   *
+   * @return array
+   *   An array of entities to check for.
+   */
+  protected function setupEntitiesTaggedWithPrisonCategoryAndExcluded(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entities_to_check = [];
+    for ($i = 0; $i < $amount; $i++) {
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonCategoryTerm->id()]);
+    }
+
+    // Also create some content tagged with same prison but excluded.
+    for ($i = 0; $i < $amount; $i++) {
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonCategoryTerm->id()], NodeInterface::PUBLISHED, [$this->prisonTerm->id()]);
+    }
+
+    return $entities_to_check;
   }
 
   /**

@@ -49,6 +49,7 @@
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
         "drupal/taxonomy_machine_name": "1.x-dev",
+        "drupal/term_reference_tree": "^1.1",
         "drupal/token": "^1.5",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
@@ -156,6 +157,10 @@
             },
             "drupal/entity_clone": {
                 "Issue #3036068: Make it possible to configure the published state of cloned entities.": "patches/entity_clone-3036068-20.patch"
+            },
+            "drupal/term_reference_tree": {
+                "Issue #2411667: \"Disabled\" state of the element is cleared.": "patches/term_reference_tree-2411667-disabled-state-of-element-is-cleared.patch",
+                "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection.patch"
             }
         },
         "patches-ignore": {

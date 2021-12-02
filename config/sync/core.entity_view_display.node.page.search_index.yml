@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_index
     - field.field.node.page.field_exclude_feedback
+    - field.field.node.page.field_exclude_from_prison
     - field.field.node.page.field_feature_on_category
     - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
@@ -18,6 +19,7 @@ dependencies:
     - field.field.node.page.field_moj_top_level_categories
     - field.field.node.page.field_not_in_series
     - field.field.node.page.field_prison_categories
+    - field.field.node.page.field_prisons
     - field.field.node.page.field_release_date
     - node.type.page
   module:
@@ -31,6 +33,7 @@ mode: search_index
 content: {  }
 hidden:
   field_exclude_feedback: true
+  field_exclude_from_prison: true
   field_feature_on_category: true
   field_moj_category_featured_item: true
   field_moj_description: true
@@ -44,6 +47,7 @@ hidden:
   field_moj_top_level_categories: true
   field_not_in_series: true
   field_prison_categories: true
+  field_prisons: true
   field_release_date: true
   links: true
   search_api_excerpt: true
