@@ -1,4 +1,4 @@
-name: 'Entity Edit Replace View'
+name: 'Prisoner Hub Edit Only'
 type: module
 description: 'Redirect the "view" route of an entity, with the edit route.'
 core: 8.x
