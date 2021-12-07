@@ -11,6 +11,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.ingress.allowed | quote }}
+    external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-jsonapi-prisoner-content-hub-development-green
 spec:
   tls:
   {{- range .Values.ingress.hosts }}
