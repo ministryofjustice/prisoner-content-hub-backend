@@ -10,6 +10,13 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      location /jsonapi/ {
+        {{- range $k, $v := .Values.ingress.allowed }}
+          allow {{ $v }};
+        {{- end }}
+        deny all;
+      }
 spec:
   tls:
   {{- range .Values.ingress.hosts }}
