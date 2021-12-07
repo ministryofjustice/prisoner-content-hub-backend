@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_category_featured_item
     - field.field.node.moj_radio_item.field_moj_description
     - field.field.node.moj_radio_item.field_moj_episode
-    - field.field.node.moj_radio_item.field_moj_prisons
     - field.field.node.moj_radio_item.field_moj_programme_code
     - field.field.node.moj_radio_item.field_moj_season
     - field.field.node.moj_radio_item.field_moj_secondary_tags
@@ -18,7 +17,6 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
     - field.field.node.moj_radio_item.field_not_in_series
-    - field.field.node.moj_radio_item.field_prison_categories
     - field.field.node.moj_radio_item.field_prisons
     - field.field.node.moj_radio_item.field_release_date
     - image.style.thumbnail
@@ -314,7 +312,5 @@ content:
 hidden:
   field_moj_archived: true
   field_moj_category_featured_item: true
-  field_moj_prisons: true
-  field_prison_categories: true
   promote: true
   sticky: true

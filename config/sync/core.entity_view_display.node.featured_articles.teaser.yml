@@ -7,8 +7,6 @@ dependencies:
     - field.field.node.featured_articles.field_exclude_from_prison
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
-    - field.field.node.featured_articles.field_moj_prisons
-    - field.field.node.featured_articles.field_prison_categories
     - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
   module:
@@ -27,7 +25,5 @@ hidden:
   field_exclude_from_prison: true
   field_moj_featured_tile_large: true
   field_moj_featured_tile_small: true
-  field_moj_prisons: true
-  field_prison_categories: true
   field_prisons: true
   search_api_excerpt: true

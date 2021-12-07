@@ -9,14 +9,12 @@ dependencies:
     - field.field.node.moj_pdf_item.field_moj_description
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
-    - field.field.node.moj_pdf_item.field_moj_prisons
     - field.field.node.moj_pdf_item.field_moj_season
     - field.field.node.moj_pdf_item.field_moj_secondary_tags
     - field.field.node.moj_pdf_item.field_moj_series
     - field.field.node.moj_pdf_item.field_moj_thumbnail_image
     - field.field.node.moj_pdf_item.field_moj_top_level_categories
     - field.field.node.moj_pdf_item.field_not_in_series
-    - field.field.node.moj_pdf_item.field_prison_categories
     - field.field.node.moj_pdf_item.field_prisons
     - field.field.node.moj_pdf_item.field_release_date
     - image.style.thumbnail
@@ -291,7 +289,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_category_featured_item: true
-  field_moj_prisons: true
-  field_prison_categories: true
   promote: true
   sticky: true

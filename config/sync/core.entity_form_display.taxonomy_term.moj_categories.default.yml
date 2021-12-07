@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.field.taxonomy_term.moj_categories.field_exclude_from_prison
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
-    - field.field.taxonomy_term.moj_categories.field_moj_prisons
-    - field.field.taxonomy_term.moj_categories.field_prison_categories
     - field.field.taxonomy_term.moj_categories.field_prisons
     - taxonomy.vocabulary.moj_categories
   module:
@@ -125,6 +123,4 @@ content:
     weight: 5
     region: content
     third_party_settings: {  }
-hidden:
-  field_moj_prisons: true
-  field_prison_categories: true
+hidden: {  }

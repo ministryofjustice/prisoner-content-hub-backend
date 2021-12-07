@@ -54,8 +54,8 @@ module:
   prisoner_hub_cms_help: 0
   prisoner_hub_content_suggestions: 0
   prisoner_hub_edit_only: 0
-  prisoner_hub_entity_access: 0
   prisoner_hub_featured_content: 0
+  prisoner_hub_prison_access: 0
   prisoner_hub_prison_context: 0
   prisoner_hub_series_access: 0
   prisoner_hub_taxonomy_field_ux: 0
