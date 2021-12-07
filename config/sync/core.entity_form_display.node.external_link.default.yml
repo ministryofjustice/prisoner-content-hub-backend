@@ -8,13 +8,11 @@ dependencies:
     - field.field.node.external_link.field_external_url
     - field.field.node.external_link.field_feature_on_category
     - field.field.node.external_link.field_moj_episode
-    - field.field.node.external_link.field_moj_prisons
     - field.field.node.external_link.field_moj_season
     - field.field.node.external_link.field_moj_series
     - field.field.node.external_link.field_moj_thumbnail_image
     - field.field.node.external_link.field_moj_top_level_categories
     - field.field.node.external_link.field_not_in_series
-    - field.field.node.external_link.field_prison_categories
     - field.field.node.external_link.field_prisons
     - field.field.node.external_link.field_release_date
     - field.field.node.external_link.field_summary
@@ -283,7 +281,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_moj_prisons: true
-  field_prison_categories: true
   promote: true
   sticky: true
