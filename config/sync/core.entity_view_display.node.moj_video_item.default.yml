@@ -9,7 +9,6 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_description
     - field.field.node.moj_video_item.field_moj_episode
-    - field.field.node.moj_video_item.field_moj_prisons
     - field.field.node.moj_video_item.field_moj_season
     - field.field.node.moj_video_item.field_moj_secondary_tags
     - field.field.node.moj_video_item.field_moj_series
@@ -17,7 +16,6 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
     - field.field.node.moj_video_item.field_not_in_series
-    - field.field.node.moj_video_item.field_prison_categories
     - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
     - field.field.node.moj_video_item.field_video
@@ -87,14 +85,6 @@ content:
     third_party_settings: {  }
     type: number_integer
     region: content
-  field_moj_prisons:
-    weight: 14
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_moj_season:
     weight: 10
     label: above
@@ -154,14 +144,6 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     type: boolean
-    region: content
-  field_prison_categories:
-    weight: 15
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
     region: content
   field_prisons:
     weight: 22
