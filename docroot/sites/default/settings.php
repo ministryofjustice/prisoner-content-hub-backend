@@ -17,7 +17,8 @@ $databases['default']['default'] = array(
 $trusted_hosts = getenv('TRUSTED_HOSTS', true);
 
 $settings['trusted_host_patterns'] = [
-  $trusted_hosts
+  $trusted_hosts,
+  '^localhost$', // For debugging purposes, see https://dsdmoj.atlassian.net/wiki/spaces/HUB/pages/3790667855/Drupal+and+JSON+API#Viewing-JSON%3AAPI-on-Cloud-platform-(debugging)
 ];
 
 /**
