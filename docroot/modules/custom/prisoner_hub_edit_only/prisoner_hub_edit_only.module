@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_edit_only.module.
+ */
+
+use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_local_tasks_alter().
+ *
+ * Replace the "View" with the "Edit" tab.
+ */
+function prisoner_hub_edit_only_local_tasks_alter(&$local_tasks) {
+  foreach (['node', 'taxonomy_term'] as $entity_type) {
+    $local_tasks['entity.' . $entity_type . '.canonical']['title'] = 'Edit';
+    $local_tasks['entity.' . $entity_type . '.canonical']['route_name'] = 'entity.' . $entity_type . '.edit_form';
+    unset($local_tasks['entity.' . $entity_type . '.edit_form']);
+  }
+
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * The node submit handler adds in a redirect to the view page.  This is now
+ * unnecessary as it will just redirect back to the edit page.  This form alter
+ * removes the redirect.
+ */
+function prisoner_hub_edit_only_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityFormInterface) {
+    $entity = $form_object->getEntity();
+    if ($entity->getEntityTypeId() == 'node' && $form_object instanceof ContentEntityForm) {
+      $form['actions']['submit']['#submit'][] = 'prisoner_hub_edit_only_form_submit';
+    }
+  }
+}
+
+/**
+ * Submit handler that removes the redirect on node edit forms.
+ */
+function prisoner_hub_edit_only_form_submit($form, FormStateInterface $form_state) {
+  // Only disable redirects if there is none specified in the url.
+  if (empty(\Drupal::request()->query->get('destination'))) {
+    $form_state->disableRedirect();
+  }
+}

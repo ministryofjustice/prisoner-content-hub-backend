@@ -156,3 +156,15 @@ function prisoner_content_hub_profile_update_8015() {
     $node->delete();
   }
 }
+
+/**
+ * Remove old prison categories (so that we can remove the taxonomy vocabulary).
+ */
+function prisoner_content_hub_profile_update_8016() {
+  $results = \Drupal::entityQuery('taxonomy_term')->condition('vid', 'prison_category')->accessCheck(FALSE)->execute();
+  $terms = Term::loadMultiple($results);
+  foreach ($terms as $term) {
+    $term->delete();
+  }
+
+}

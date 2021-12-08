@@ -4,16 +4,16 @@ status: true
 dependencies:
   config:
     - field.field.node.external_link.field_display_url
+    - field.field.node.external_link.field_exclude_from_prison
     - field.field.node.external_link.field_external_url
     - field.field.node.external_link.field_feature_on_category
     - field.field.node.external_link.field_moj_episode
-    - field.field.node.external_link.field_moj_prisons
     - field.field.node.external_link.field_moj_season
     - field.field.node.external_link.field_moj_series
     - field.field.node.external_link.field_moj_thumbnail_image
     - field.field.node.external_link.field_moj_top_level_categories
     - field.field.node.external_link.field_not_in_series
-    - field.field.node.external_link.field_prison_categories
+    - field.field.node.external_link.field_prisons
     - field.field.node.external_link.field_release_date
     - field.field.node.external_link.field_summary
     - node.type.external_link
@@ -64,14 +64,6 @@ content:
     third_party_settings: {  }
     type: number_integer
     region: content
-  field_moj_prisons:
-    weight: 111
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_moj_season:
     weight: 106
     label: above
@@ -115,14 +107,6 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     type: boolean
-    region: content
-  field_prison_categories:
-    weight: 112
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
     region: content
   field_release_date:
     weight: 108

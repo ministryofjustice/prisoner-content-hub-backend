@@ -22,8 +22,6 @@ push-preview:
 
 install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y
-	vendor/bin/drush pm-uninstall prisoner_hub_entity_access
-	vendor/bin/drush pm-enable prisoner_hub_prison_access
 
 run-tests:
 	echo "Running tests on existing site"
