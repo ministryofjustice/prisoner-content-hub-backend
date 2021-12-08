@@ -78,6 +78,12 @@ ingress:
        add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
     external-dns.alpha.kubernetes.io/aws-weight: "100"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      server_tokens off;
+      location /jsonapi {
+        deny all;
+        return 401;
+      }
 
 cron:
   schedule: "*/5 * * * *"
