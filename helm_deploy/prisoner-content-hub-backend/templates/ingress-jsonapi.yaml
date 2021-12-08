@@ -24,7 +24,7 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          - path: "/jsonapi"
+          - path: "/"
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
