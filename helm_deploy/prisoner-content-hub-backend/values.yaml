@@ -79,14 +79,9 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: 500m
     external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      location /jsonapi/ {
-        allow 217.33.148.210/32; #office
-        allow 35.177.252.195/32; #health-kick
-        allow 81.134.202.29/32; #mojvpn
-        allow 35.178.209.113/32; #cloudplatform-live1-1
-        allow 3.8.51.207/32; #cloudplatform-live1-2
-        allow 35.177.252.54/32; #cloudplatform-live1-3
+      location /jsonapi {
         deny all;
+        return 401;
       }
 
 cron:
