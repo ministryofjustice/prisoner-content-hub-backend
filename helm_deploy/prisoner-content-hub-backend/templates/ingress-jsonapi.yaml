@@ -14,13 +14,13 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-jsonapi-prisoner-content-hub-development-green
 spec:
   tls:
-  {{- range .Values.ingress.hosts-jsonapi }}
+  {{- range .Values.ingress.hosts_jsonapi }}
   - hosts:
     - {{ .host }}
     {{ if .cert_secret }}secretName: {{ .cert_secret }}{{ end }}
   {{- end }}
   rules:
-  {{- range .Values.ingress.hosts-jsonapi }}
+  {{- range .Values.ingress.hosts_jsonapi }}
     - host: {{ .host | quote }}
       http:
         paths:

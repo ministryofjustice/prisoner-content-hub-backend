@@ -7,5 +7,5 @@ ingress:
 
   hosts:
     - host: cms-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk
-  hosts-jsonapi:
+  hosts_jsonapi:
     - host: jsonapi-cms-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk
