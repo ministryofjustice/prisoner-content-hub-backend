@@ -14,10 +14,9 @@ $databases['default']['default'] = array(
   'driver' => 'mysql',
 );
 
-$trusted_hosts = getenv('TRUSTED_HOSTS', true);
-
 $settings['trusted_host_patterns'] = [
-  $trusted_hosts
+  getenv('TRUSTED_HOSTS', true),
+  getenv('TRUSTED_HOSTS_JSONAPI', true),
 ];
 
 /**

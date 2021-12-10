@@ -83,6 +83,19 @@ Create trusted host pattern
 {{- end }}
 
 {{/*
+Create trusted jsonapi host pattern
+*/}}
+{{- define "prisoner-content-hub-backend.trustedHostsJsonApi" -}}
+{{- with (first .Values.ingress.hosts_jsonapi) -}}
+^{{ (.host | replace "." "\\.") }}$
+{{- end }}
+{{- range (slice .Values.ingress.hosts_jsonapi 1) -}}
+|^{{ (.host | replace "." "\\.")}}$
+{{- end }}
+{{- printf "|^%s\\.%s\\.svc\\.cluster\\.local$" (include "prisoner-content-hub-backend.fullname" .) .Release.Namespace }}
+{{- end }}
+
+{{/*
 Create a string from a list of values joined by a comma
 */}}
 {{- define "app.joinListWithComma" -}}
