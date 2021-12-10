@@ -84,13 +84,13 @@ ingress:
         deny all;
         return 401;
       }
-    jsonapi:
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        nginx.ingress.kubernetes.io/server-snippet: |
-          add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
-        nginx.ingress.kubernetes.io/proxy-body-size: 500m
-        external-dns.alpha.kubernetes.io/aws-weight: "100"
+  jsonapi:
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/server-snippet: |
+        add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
+      nginx.ingress.kubernetes.io/proxy-body-size: 500m
+      external-dns.alpha.kubernetes.io/aws-weight: "100"
 
 cron:
   schedule: "*/5 * * * *"
