@@ -6,21 +6,20 @@ metadata:
   name: {{ $fullName }}-jsonapi
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  {{- with .Values.ingress.jsonapi.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.ingress.allowed | quote }}
-    external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-jsonapi-prisoner-content-hub-development-green
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.ingress.jsonapi.allowed | quote }}
 spec:
   tls:
-  {{- range .Values.ingress.hosts_jsonapi }}
+  {{- range .Values.ingress.jsonapi.hosts }}
   - hosts:
     - {{ .host }}
     {{ if .cert_secret }}secretName: {{ .cert_secret }}{{ end }}
   {{- end }}
   rules:
-  {{- range .Values.ingress.hosts_jsonapi }}
+  {{- range .Values.ingress.jsonapi.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

@@ -86,10 +86,10 @@ Create trusted host pattern
 Create trusted jsonapi host pattern
 */}}
 {{- define "prisoner-content-hub-backend.trustedHostsJsonApi" -}}
-{{- with (first .Values.ingress.hosts_jsonapi) -}}
+{{- with (first .Values.ingress.jsonapi.hosts) -}}
 ^{{ (.host | replace "." "\\.") }}$
 {{- end }}
-{{- range (slice .Values.ingress.hosts_jsonapi 1) -}}
+{{- range (slice .Values.ingress.jsonapi.hosts 1) -}}
 |^{{ (.host | replace "." "\\.")}}$
 {{- end }}
 {{- printf "|^%s\\.%s\\.svc\\.cluster\\.local$" (include "prisoner-content-hub-backend.fullname" .) .Release.Namespace }}
