@@ -71,10 +71,10 @@ env:
     value: {{ .Values.application.sentry_environment }}
   - name: SENTRY_RELEASE
     value: {{ quote .Values.application.sentry_release }}
-  - name: TRUSTED_HOSTS
-    value: {{ include "prisoner-content-hub-backend.trustedHosts" . }}
-  - name: TRUSTED_HOSTS_JSONAPI
-    value: {{ include "prisoner-content-hub-backend.trustedHostsJsonApi" . }}
+  - name: TRUSTED_HOST
+    value: {{ quote .Values.ingress.host }}
+  - name: TRUSTED_HOST_JSONAPI
+    value: {{ quote .Values.ingress.jsonapi.host }}
   - name: REDIS_HOST
     valueFrom:
       secretKeyRef:

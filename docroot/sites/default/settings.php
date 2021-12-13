@@ -15,8 +15,8 @@ $databases['default']['default'] = array(
 );
 
 $settings['trusted_host_patterns'] = [
-  getenv('TRUSTED_HOSTS', true),
-  getenv('TRUSTED_HOSTS_JSONAPI', true),
+  '^' . getenv('TRUSTED_HOST') . '$',
+  '^' . getenv('TRUSTED_HOST_JSONAPI') . '$',
 ];
 
 /**

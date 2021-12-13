@@ -12,19 +12,15 @@ metadata:
   {{- end }}
 spec:
   tls:
-  {{- range .Values.ingress.hosts }}
   - hosts:
-    - {{ .host }}
-    {{ if .cert_secret }}secretName: {{ .cert_secret }}{{ end }}
-  {{- end }}
+    - {{ .Values.ingress.host }}
+    {{ if .Values.ingress.cert_secret }}secretName: {{ .Values.ingress.cert_secret }}{{ end }}
   rules:
-  {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
           - path: "/"
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
-  {{- end }}
 {{- end -}}

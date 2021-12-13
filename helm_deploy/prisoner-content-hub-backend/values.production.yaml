@@ -1,15 +1,12 @@
 ingress:
   annotations:
     external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-prisoner-content-hub-production-blue
-  hosts:
-    - host: manage.content-hub.prisoner.service.justice.gov.uk
-      cert_secret: prisoner-content-hub-cms-certificate
-    - host: cms-prisoner-content-hub-production.apps.live-1.cloud-platform.service.justice.gov.uk
+  host: manage.content-hub.prisoner.service.justice.gov.uk
+  cert_secret: prisoner-content-hub-cms-certificate
   jsonapi:
     annotations:
       external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-jsonapi-prisoner-content-hub-production-blue
-    hosts:
-      - host: jsonapi-cms-prisoner-content-hub-production.apps.live-1.cloud-platform.service.justice.gov.uk
+    host: jsonapi-cms-prisoner-content-hub-production.apps.live-1.cloud-platform.service.justice.gov.uk
 
 application:
   # The S3 bucket for production exists in Ireland,
