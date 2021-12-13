@@ -1,6 +1,6 @@
 image_styles:
   tile_large: tile_large
   tile_small: tile_small
-  large: 0
-  medium: 0
-  thumbnail: 0
+  large: '0'
+  medium: '0'
+  thumbnail: '0'

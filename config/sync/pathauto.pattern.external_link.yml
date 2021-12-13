@@ -11,12 +11,12 @@ pattern: 'external-link/[node:nid]'
 selection_criteria:
   225bd9d4-ac2e-49ec-a23b-98ab8ced8120:
     id: node_type
-    bundles:
-      external_link: external_link
     negate: false
+    uuid: 225bd9d4-ac2e-49ec-a23b-98ab8ced8120
     context_mapping:
       node: node
-    uuid: 225bd9d4-ac2e-49ec-a23b-98ab8ced8120
+    bundles:
+      external_link: external_link
 selection_logic: and
 weight: -5
 relationships: {  }

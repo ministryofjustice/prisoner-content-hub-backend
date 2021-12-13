@@ -2,11 +2,11 @@ uuid: 792973a0-b235-452a-a211-1705dab79732
 langcode: en
 status: true
 dependencies:
-  enforced:
-    - moj_radio_item
   module:
     - menu_ui
     - scheduler
+  enforced:
+    - moj_radio_item
 third_party_settings:
   menu_ui:
     available_menus: {  }

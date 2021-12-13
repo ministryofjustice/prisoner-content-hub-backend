@@ -23,29 +23,29 @@ third_party_settings:
       children:
         - field_prisons
         - group_exclude_from_prison
+      label: 'Where would you like this content to appear?'
+      region: content
       parent_name: ''
       weight: 6
       format_type: fieldset
-      region: content
       format_settings:
+        classes: ''
+        id: ''
         description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
         required_fields: true
-        id: ''
-        classes: ''
-      label: 'Where would you like this content to appear?'
     group_exclude_from_prison:
       children:
         - field_exclude_from_prison
+      label: 'Exclude from prison'
+      region: content
       parent_name: group_prison_categories
       weight: 10
       format_type: details_open_non_empty
-      region: content
       format_settings:
         description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
         required_fields: '1'
         id: ''
         classes: ''
-      label: 'Exclude from prison'
 id: taxonomy_term.tags.default
 targetEntityType: taxonomy_term
 bundle: tags
@@ -56,62 +56,62 @@ content:
     weight: 1
     region: content
     settings:
-      placeholder: ''
       rows: 5
+      placeholder: ''
     third_party_settings: {  }
   field_exclude_feedback:
+    type: boolean_checkbox
     weight: 7
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_exclude_from_prison:
-    weight: 10
-    settings:
-      leaves_only: true
-      cascading_selection: 0
-      max_depth: 0
-      start_minimized: false
-      select_parents: false
-      cascading_selection_enforce: false
-    third_party_settings: {  }
     type: term_reference_tree
+    weight: 10
     region: content
+    settings:
+      start_minimized: false
+      leaves_only: true
+      select_parents: false
+      cascading_selection: 0
+      cascading_selection_enforce: false
+      max_depth: 0
+    third_party_settings: {  }
   field_featured_image:
+    type: image_image
     weight: 4
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
-    region: content
   field_moj_category_featured_item:
+    type: boolean_checkbox
     weight: 5
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_moj_promoted:
+    type: boolean_checkbox
     weight: 3
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_prisons:
+    type: term_reference_tree
     weight: 9
+    region: content
     settings:
-      cascading_selection: 1
-      cascading_selection_enforce: true
-      max_depth: 0
       start_minimized: false
       leaves_only: false
       select_parents: false
+      cascading_selection: 1
+      cascading_selection_enforce: true
+      max_depth: 0
     third_party_settings: {  }
-    type: term_reference_tree
-    region: content
   name:
     type: string_textfield
     weight: 0
@@ -128,9 +128,9 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 8
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
 hidden: {  }

@@ -12,14 +12,14 @@ pattern: 'tags/[term:tid]'
 selection_criteria:
   bf4f87bc-d123-41f5-863c-347b68858e94:
     id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: bf4f87bc-d123-41f5-863c-347b68858e94
+    context_mapping:
+      taxonomy_term: taxonomy_term
     bundles:
       moj_categories: moj_categories
       series: series
       tags: tags
-    negate: false
-    context_mapping:
-      taxonomy_term: taxonomy_term
-    uuid: bf4f87bc-d123-41f5-863c-347b68858e94
 selection_logic: and
 weight: -5
 relationships: {  }

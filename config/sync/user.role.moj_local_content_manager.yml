@@ -1,7 +1,22 @@
 uuid: 9aa0c281-14af-4910-8306-ff843e6e742c
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.full_html
+    - node.type.featured_articles
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+  module:
+    - actions_permissions
+    - filter
+    - node
+    - raven
+    - scheduler
+    - toolbar
+    - view_unpublished
 id: moj_local_content_manager
 label: 'Local Content Manager'
 weight: -8
@@ -10,34 +25,19 @@ permissions:
   - 'access content overview'
   - 'access toolbar'
   - 'administer nodes'
-  - 'create moj_news_item content'
   - 'create moj_pdf_item content'
   - 'create moj_radio_item content'
   - 'create moj_video_item content'
   - 'create page content'
-  - 'delete any moj_news_item content'
-  - 'delete own moj_news_item content'
-  - 'delete terms in moj_pdf_categories'
-  - 'delete terms in moj_radio_categories'
-  - 'delete terms in moj_video_categories'
   - 'edit any featured_articles content'
-  - 'edit any moj_news_item content'
   - 'edit own featured_articles content'
-  - 'edit own moj_news_item content'
   - 'edit own moj_pdf_item content'
   - 'edit own moj_radio_item content'
   - 'edit own moj_video_item content'
   - 'edit own page content'
-  - 'edit terms in moj_pdf_categories'
-  - 'edit terms in moj_radio_categories'
-  - 'edit terms in moj_video_categories'
   - 'execute entity:publish_action node'
   - 'execute entity:unpublish_action node'
-  - 'execute node_publish_action node'
-  - 'execute node_unpublish_action node'
   - 'revert featured_articles revisions'
-  - 'revert landing_page revisions'
-  - 'revert moj_hub_item revisions'
   - 'revert moj_pdf_item revisions'
   - 'revert moj_radio_item revisions'
   - 'revert moj_video_item revisions'
@@ -50,8 +50,6 @@ permissions:
   - 'view any unpublished moj_video_item content'
   - 'view any unpublished page content'
   - 'view featured_articles revisions'
-  - 'view landing_page revisions'
-  - 'view moj_hub_item revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
   - 'view moj_video_item revisions'

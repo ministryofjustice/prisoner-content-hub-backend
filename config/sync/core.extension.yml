@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 module:
   actions_permissions: 0
   admin_toolbar: 0
@@ -53,7 +55,6 @@ module:
   path_alias: 0
   prisoner_hub_cms_help: 0
   prisoner_hub_content_suggestions: 0
-  prisoner_hub_edit_only: 0
   prisoner_hub_featured_content: 0
   prisoner_hub_prison_access: 0
   prisoner_hub_prison_context: 0
@@ -98,6 +99,4 @@ theme:
   seven: 0
   prisconhub: 0
   claro: 0
-_core:
-  default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 profile: prisoner_content_hub_profile

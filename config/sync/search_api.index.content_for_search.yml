@@ -2,11 +2,6 @@ uuid: d8ff13f8-e399-4291-be54-3eb2d753b7db
 langcode: en
 status: true
 dependencies:
-  module:
-    - elasticsearch_connector
-    - taxonomy
-    - node
-    - search_api
   config:
     - field.storage.node.field_exclude_from_prison
     - field.storage.node.field_moj_description
@@ -16,6 +11,11 @@ dependencies:
     - field.storage.node.field_prisons
     - field.storage.node.field_moj_top_level_categories
     - search_api.server.elasticsearch
+  module:
+    - elasticsearch_connector
+    - taxonomy
+    - node
+    - search_api
 third_party_settings:
   elasticsearch_connector:
     ngram_filter_enabled: 0
@@ -140,6 +140,9 @@ processor_settings:
   aggregated_field: {  }
   entity_status: {  }
   ignorecase:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -48
     all_fields: true
     fields:
       - field_moj_description
@@ -150,12 +153,12 @@ processor_settings:
       - name
       - title
       - type
-    weights:
-      preprocess_index: -20
-      preprocess_query: -48
   language_with_fallback: {  }
   rendered_item: {  }
   stopwords:
+    weights:
+      preprocess_index: -5
+      preprocess_query: -42
     all_fields: true
     fields:
       - field_moj_description
@@ -201,13 +204,11 @@ processor_settings:
       - was
       - will
       - with
-    weights:
-      preprocess_index: -5
-      preprocess_query: -42
 tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
+  track_changes_in_references: true
 server: elasticsearch

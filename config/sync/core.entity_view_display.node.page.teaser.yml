@@ -30,10 +30,10 @@ bundle: page
 mode: teaser
 content:
   links:
-    weight: 101
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 101
+    region: content
 hidden:
   field_exclude_feedback: true
   field_exclude_from_prison: true
