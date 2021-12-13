@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}-cache-rebuild-cronjob
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "1 3 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          containers:
+          - name: drupal-cache-rebuild-cronjob
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["drush", "cache-rebuild"]
+          restartPolicy: OnFailure
