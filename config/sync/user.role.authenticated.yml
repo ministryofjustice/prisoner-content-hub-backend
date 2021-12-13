@@ -1,7 +1,15 @@
 uuid: 7212d13c-0d36-4030-8e28-938b5a6f9a5c
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_html
+  module:
+    - autocomplete_id
+    - filter
+    - flysystem_s3
+    - shortcut
+    - system
 _core:
   default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
 id: authenticated
@@ -9,13 +17,8 @@ label: 'Authenticated user'
 weight: -9
 is_admin: false
 permissions:
-  - 'access comments'
   - 'access content'
   - 'access shortcuts'
-  - 'access site-wide contact form'
-  - 'post comments'
-  - 'search content'
-  - 'skip comment approval'
   - 'use S3 CORS upload'
   - 'use text format basic_html'
   - 'view entity autocomplete id results'

@@ -30,9 +30,9 @@ bundle: page
 mode: search_result
 content:
   links:
-    weight: 101
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: content
 hidden:
   field_exclude_feedback: true

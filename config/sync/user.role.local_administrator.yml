@@ -1,7 +1,34 @@
 uuid: 9730164e-2539-4d50-8c95-7477d0eb0b1f
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.full_html
+    - node.type.external_link
+    - node.type.featured_articles
+    - node.type.help_page
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+    - taxonomy.vocabulary.moj_categories
+    - taxonomy.vocabulary.series
+    - taxonomy.vocabulary.step_by_step
+    - taxonomy.vocabulary.tags
+  module:
+    - actions_permissions
+    - book
+    - entity_clone
+    - field_ui
+    - filter
+    - node
+    - raven
+    - role_delegation
+    - scheduler
+    - system
+    - taxonomy
+    - toolbar
+    - view_unpublished
 _core:
   default_config_hash: w3gv4hBMp_vQx-dpzgOKpEZ0uNN5SSNFsYLbXwC7WZU
 id: local_administrator
@@ -11,7 +38,6 @@ is_admin: null
 permissions:
   - 'access administration pages'
   - 'access content overview'
-  - 'access in-place editing'
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'add content to books'
@@ -31,12 +57,8 @@ permissions:
   - 'create external_link content'
   - 'create featured_articles content'
   - 'create help_page content'
-  - 'create landing_page content'
-  - 'create moj_faq_item content'
-  - 'create moj_news_item content'
   - 'create moj_pdf_item content'
   - 'create moj_radio_item content'
-  - 'create moj_video_collection content'
   - 'create moj_video_item content'
   - 'create new books'
   - 'create page content'
@@ -46,19 +68,10 @@ permissions:
   - 'create terms in tags'
   - 'delete any external_link content'
   - 'delete any help_page content'
-  - 'delete any moj_faq_item content'
-  - 'delete any moj_news_item content'
-  - 'delete any moj_video_collection content'
   - 'delete external_link revisions'
   - 'delete help_page revisions'
-  - 'delete moj_faq_item revisions'
-  - 'delete moj_news_item revisions'
-  - 'delete moj_video_collection revisions'
   - 'delete own external_link content'
   - 'delete own help_page content'
-  - 'delete own moj_faq_item content'
-  - 'delete own moj_news_item content'
-  - 'delete own moj_video_collection content'
   - 'delete terms in moj_categories'
   - 'delete terms in series'
   - 'delete terms in step_by_step'
@@ -66,30 +79,21 @@ permissions:
   - 'edit any external_link content'
   - 'edit any featured_articles content'
   - 'edit any help_page content'
-  - 'edit any landing_page content'
-  - 'edit any moj_faq_item content'
-  - 'edit any moj_news_item content'
   - 'edit any moj_pdf_item content'
   - 'edit any moj_radio_item content'
-  - 'edit any moj_video_collection content'
   - 'edit any moj_video_item content'
   - 'edit any page content'
   - 'edit own external_link content'
   - 'edit own featured_articles content'
   - 'edit own help_page content'
-  - 'edit own landing_page content'
-  - 'edit own moj_faq_item content'
-  - 'edit own moj_news_item content'
   - 'edit own moj_pdf_item content'
   - 'edit own moj_radio_item content'
-  - 'edit own moj_video_collection content'
   - 'edit own moj_video_item content'
   - 'edit own page content'
   - 'edit terms in moj_categories'
   - 'edit terms in series'
   - 'edit terms in step_by_step'
   - 'edit terms in tags'
-  - 'execute comment_unpublish_by_keyword_action comment'
   - 'execute entity:publish_action node'
   - 'execute entity:publish_action taxonomy_term'
   - 'execute entity:save_action node'
@@ -98,10 +102,6 @@ permissions:
   - 'execute entity:unpublish_action node'
   - 'execute entity:unpublish_action taxonomy_term'
   - 'execute node_assign_owner_action node'
-  - 'execute node_delete_action all'
-  - 'execute node_publish_action node'
-  - 'execute node_save_action node'
-  - 'execute node_unpublish_action node'
   - 'execute node_unpublish_by_keyword_action node'
   - 'execute user_add_role_action user'
   - 'execute user_block_user_action user'
@@ -112,13 +112,8 @@ permissions:
   - 'revert external_link revisions'
   - 'revert featured_articles revisions'
   - 'revert help_page revisions'
-  - 'revert landing_page revisions'
-  - 'revert moj_faq_item revisions'
-  - 'revert moj_hub_item revisions'
-  - 'revert moj_news_item revisions'
   - 'revert moj_pdf_item revisions'
   - 'revert moj_radio_item revisions'
-  - 'revert moj_video_collection revisions'
   - 'revert moj_video_item revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
@@ -128,7 +123,6 @@ permissions:
   - 'use text format full_html'
   - 'view any unpublished external_link content'
   - 'view any unpublished help_page content'
-  - 'view any unpublished landing_page content'
   - 'view any unpublished moj_pdf_item content'
   - 'view any unpublished moj_radio_item content'
   - 'view any unpublished moj_video_item content'
@@ -136,13 +130,8 @@ permissions:
   - 'view external_link revisions'
   - 'view featured_articles revisions'
   - 'view help_page revisions'
-  - 'view landing_page revisions'
-  - 'view moj_faq_item revisions'
-  - 'view moj_hub_item revisions'
-  - 'view moj_news_item revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
-  - 'view moj_video_collection revisions'
   - 'view moj_video_item revisions'
   - 'view own unpublished content'
   - 'view page revisions'
