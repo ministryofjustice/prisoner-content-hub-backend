@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.prisons.field_prison_categories
     - taxonomy.vocabulary.prisons
   module:
     - text
@@ -13,20 +12,11 @@ bundle: prisons
 mode: default
 content:
   description:
-    label: hidden
     type: text_default
-    weight: 0
-    region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_prison_categories:
-    weight: 1
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
+    weight: 0
     region: content
 hidden:
-  langcode: true
   search_api_excerpt: true

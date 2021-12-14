@@ -6,8 +6,6 @@ dependencies:
     - field.field.node.featured_articles.field_exclude_from_prison
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
-    - field.field.node.featured_articles.field_moj_prisons
-    - field.field.node.featured_articles.field_prison_categories
     - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
   module:
@@ -21,29 +19,29 @@ third_party_settings:
       children:
         - field_prisons
         - group_exclude_from_prison
+      label: 'Where would you like this content to appear?'
+      region: content
       parent_name: ''
       weight: 6
       format_type: fieldset
-      region: content
       format_settings:
+        classes: ''
+        id: ''
         description: 'If your content is appropriate for a specific prison type, you should select the relevant prison category. For example, if your content is relevant for all adult male prisons and for all youth male prisons, select both Adult male and Youth male. You can also choose if your content appears in one prison only.'
         required_fields: true
-        id: ''
-        classes: ''
-      label: 'Where would you like this content to appear?'
     group_exclude_from_prison:
       children:
         - field_exclude_from_prison
+      label: 'Exclude from prison'
+      region: content
       parent_name: group_prison_categories
       weight: 17
       format_type: details_open_non_empty
-      region: content
       format_settings:
         description: 'Select prison(s) that this content should be excluded from.  This is normally used when a prison category has been selected above.'
         required_fields: '1'
         id: ''
         classes: ''
-      label: 'Exclude from prison'
 id: node.featured_articles.default
 targetEntityType: node
 bundle: featured_articles
@@ -56,49 +54,49 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_exclude_from_prison:
-    weight: 26
-    settings:
-      leaves_only: true
-      cascading_selection: 0
-      max_depth: 0
-      start_minimized: false
-      select_parents: false
-      cascading_selection_enforce: false
-    third_party_settings: {  }
     type: term_reference_tree
+    weight: 26
     region: content
-  field_moj_featured_tile_large:
-    weight: 4
     settings:
-      match_operator: CONTAINS
-      match_limit: 20
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_moj_featured_tile_small:
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      match_limit: 20
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_prisons:
-    weight: 16
-    settings:
-      cascading_selection: 1
-      cascading_selection_enforce: true
+      start_minimized: false
+      leaves_only: true
+      select_parents: false
+      cascading_selection: 0
+      cascading_selection_enforce: false
       max_depth: 0
+    third_party_settings: {  }
+  field_moj_featured_tile_large:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 20
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_moj_featured_tile_small:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 20
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_prisons:
+    type: term_reference_tree
+    weight: 16
+    region: content
+    settings:
       start_minimized: false
       leaves_only: false
       select_parents: false
+      cascading_selection: 1
+      cascading_selection_enforce: true
+      max_depth: 0
     third_party_settings: {  }
-    type: term_reference_tree
-    region: content
   path:
     type: path
     weight: 3
@@ -134,12 +132,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 1
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
@@ -148,7 +146,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_moj_prisons: true
-  field_prison_categories: true
   promote: true
   sticky: true

@@ -12,7 +12,7 @@
         "drupal/cer": "4.x-dev",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
-        "drupal/core-recommended": "~9.1.11",
+        "drupal/core-recommended": "~9.3",
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
@@ -132,7 +132,6 @@
             },
             "drupal/core": {
                 "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
-                "Issue #3036593 - Allow jsonapi filters to work with bundle types (see #3085486).": "patches/drupal-3036593-123.patch",
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #3057545 - ResourceTypeRepository wrongly assumes that all entity reference fields have the setting \"target_type\".": "patches/drupal-3057545-34.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch"
@@ -145,9 +144,6 @@
             },
             "drupal/dynamic_entity_reference": {
                 "Issue #3057556: Incompatibility with jsonapi relatable resource search": "patches/dynamic_entity_reference-3057556-4.patch"
-            },
-            "drupal/jsonapi_image_styles": {
-                "Issue #3232157: Image styles are generated for other types of file entites": "patches/jsonapi_image_styles-3232157-image-styles-are-generated-for-other-types-of-file-entities-2.patch"
             },
             "drupal/cer": {
                 "Issue #2846314: Add support for Dynamic Entity Reference fields": "patches/cer-2846711-add-support-for-dynamic-entity-reference-module-4.patch"

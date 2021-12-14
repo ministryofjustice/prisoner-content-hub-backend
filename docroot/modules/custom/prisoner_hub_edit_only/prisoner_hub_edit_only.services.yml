@@ -1,0 +1,5 @@
+services:
+  prisoner_hub_edit_only.route_subscriber:
+    class: Drupal\prisoner_hub_edit_only\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

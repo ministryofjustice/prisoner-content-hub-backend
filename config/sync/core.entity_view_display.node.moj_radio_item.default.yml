@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_category_featured_item
     - field.field.node.moj_radio_item.field_moj_description
     - field.field.node.moj_radio_item.field_moj_episode
-    - field.field.node.moj_radio_item.field_moj_prisons
     - field.field.node.moj_radio_item.field_moj_programme_code
     - field.field.node.moj_radio_item.field_moj_season
     - field.field.node.moj_radio_item.field_moj_secondary_tags
@@ -18,7 +17,6 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
     - field.field.node.moj_radio_item.field_not_in_series
-    - field.field.node.moj_radio_item.field_prison_categories
     - field.field.node.moj_radio_item.field_prisons
     - field.field.node.moj_radio_item.field_release_date
     - node.type.moj_radio_item
@@ -35,149 +33,133 @@ bundle: moj_radio_item
 mode: default
 content:
   field_exclude_feedback:
-    weight: 17
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 17
     region: content
   field_exclude_from_prison:
-    weight: 19
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 19
     region: content
   field_feature_on_category:
-    weight: 16
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 16
     region: content
   field_moj_category_featured_item:
-    weight: 12
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 12
     region: content
   field_moj_description:
     type: text_default
-    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 1
     region: content
   field_moj_episode:
-    weight: 6
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
-    region: content
-  field_moj_prisons:
-    weight: 9
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
+    weight: 6
     region: content
   field_moj_programme_code:
-    weight: 13
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 13
     region: content
   field_moj_season:
-    weight: 5
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 5
     region: content
   field_moj_secondary_tags:
-    weight: 14
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 14
     region: content
   field_moj_series:
-    weight: 4
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 4
     region: content
   field_moj_thumbnail_image:
     type: image
-    weight: 0
     label: hidden
     settings:
-      image_style: ''
       image_link: content
+      image_style: ''
     third_party_settings: {  }
+    weight: 0
     region: content
   field_moj_top_level_categories:
-    weight: 3
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 3
     region: content
   field_not_in_series:
-    weight: 16
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
-    region: content
-  field_prison_categories:
-    weight: 10
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
+    weight: 16
     region: content
   field_prisons:
-    weight: 18
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 18
     region: content
   field_release_date:
-    weight: 15
+    type: datetime_default
     label: above
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: medium
     third_party_settings: {  }
-    type: datetime_default
+    weight: 15
     region: content
 hidden:
   field_moj_audio: true
