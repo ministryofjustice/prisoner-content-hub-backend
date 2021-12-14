@@ -39,10 +39,12 @@ commands:
           command: |
             VERSION_TO_DEPLOY=$(cat /tmp/build-info/version-to-deploy.txt)
             sed -i "s/appVersion:.*/appVersion: \"${VERSION_TO_DEPLOY}\"/g" ~/git/helm_deploy/prisoner-content-hub-backend/Chart.yaml
+            kubectl -n ${KUBE_NAMESPACE} get secret ip-allowlist -o json | jq '{ ingress: { jsonapi: { allowed: .data |  map_values(@base64d) } } } ' | \
             helm upgrade ${HELM_BACKEND_RELEASE_NAME} ~/git/helm_deploy/prisoner-content-hub-backend \
               --install --wait --reset-values --timeout 1500s \
               --namespace=${KUBE_NAMESPACE} \
               --values ~/git/helm_deploy/prisoner-content-hub-backend/values.<< parameters.environment >>.yaml \
+              --values - \
               --set image.tag=${VERSION_TO_DEPLOY} \
               --set cronToken=${HELM_BACKEND_CRON_TOKEN} \
               --set application.sentry_dsn="${DRUPAL_SENTRY_DSN}" \

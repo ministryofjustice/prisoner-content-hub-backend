@@ -73,6 +73,8 @@ env:
     value: {{ quote .Values.application.sentry_release }}
   - name: TRUSTED_HOSTS
     value: {{ include "prisoner-content-hub-backend.trustedHosts" . }}
+  - name: TRUSTED_HOSTS_JSONAPI
+    value: {{ include "prisoner-content-hub-backend.trustedHostsJsonApi" . }}
   - name: REDIS_HOST
     valueFrom:
       secretKeyRef:
