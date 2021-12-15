@@ -2,10 +2,19 @@
 
 namespace Drupal\prisoner_hub_edit_only\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EntityViewOverride extends ControllerBase {
+class EntityViewOverride extends EntityViewController {
+
+  /**
+   * A list of excluded node types, that should not be redirected.
+   *
+   * @var string[]
+   */
+  static $excludedContentTypes = ['help_page'];
 
   /**
    * The view node handler.
@@ -20,8 +29,11 @@ class EntityViewOverride extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The redirect response, to take the user to the edit page.
    */
-  public function viewNode(EntityInterface $node) {
-    return $this->view($node);
+  public function viewNode(EntityInterface $node, $view_mode = 'full', $langcode = NULL) {
+    if (in_array($node->bundle(), self::$excludedContentTypes)) {
+      return parent::view($node, $view_mode);
+    }
+    return $this->redirectToEditForm($node);
   }
 
   /**
@@ -38,7 +50,7 @@ class EntityViewOverride extends ControllerBase {
    *   The redirect response, to take the user to the edit page.
    */
   public function viewTerm(EntityInterface $taxonomy_term) {
-    return $this->view($taxonomy_term);
+    return $this->redirectToEditForm($taxonomy_term);
   }
 
   /**
@@ -50,13 +62,14 @@ class EntityViewOverride extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The redirect response.
    */
-  protected function view(EntityInterface $entity) {
+  protected function redirectToEditForm(EntityInterface $entity) {
     $options = [];
     // Copy of destination parameter if it is in the request.
     if ($destination = \Drupal::request()->query->get('destination')) {
       $options['query']['destination'] = $destination;
       \Drupal::request()->query->remove('destination');
     }
-    return $this->redirect('entity.' . $entity->getEntityTypeId() . '.edit_form', [$entity->getEntityTypeId() => $entity->id()], $options);
+    $options['absolute'] = TRUE;
+    return new RedirectResponse(Url::fromRoute('entity.' . $entity->getEntityTypeId() . '.edit_form', [$entity->getEntityTypeId() => $entity->id()], $options)->toString());
   }
 }
