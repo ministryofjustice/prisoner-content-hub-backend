@@ -18,6 +18,13 @@ class EditOnlyTest extends ExistingSiteBase {
   protected $entitiesToTest;
 
   /**
+   * An array of entities to test.
+   *
+   * @var array.
+   */
+  protected $entitiesToTestExcluded;
+
+  /**
    * Create entities to test with.
    */
   protected function setup() :void {
@@ -27,6 +34,10 @@ class EditOnlyTest extends ExistingSiteBase {
     $this->entitiesToTest[] = $node;
     $vocab = $this->createVocabulary();
     $this->entitiesToTest[] = $this->createTerm($vocab);
+
+    $this->entitiesToTestExcluded = [];
+    $node = $this->createNode(['status' => NodeInterface::PUBLISHED, 'type' => 'help_page']);
+    $this->entitiesToTestExcluded[] = $node;
   }
 
   /**
@@ -47,6 +58,29 @@ class EditOnlyTest extends ExistingSiteBase {
       $this->visit('/' . $view_url->getInternalPath());
       $web_assert = $this->assertSession();
       $web_assert->addressEquals($edit_url->toString());
+    }
+  }
+
+  /**
+   * Test that viewing an entity results in the user being redirected to the edit page.
+   */
+  public function testExcludedContentTypes() {
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    foreach ($this->entitiesToTestExcluded as $entity) {
+      $view_url = $entity->toUrl();
+      $edit_url = $entity->toUrl('edit-form');
+
+      // Test alias paths like /content/123
+      $this->visit($view_url->toString());
+      $web_assert = $this->assertSession();
+      $web_assert->statusCodeEquals(200);
+      $web_assert->addressEquals($view_url->toString());
+
+      // Test internal paths like /node/123
+      $this->visit('/' . $view_url->getInternalPath());
+      $web_assert = $this->assertSession();
+      $web_assert->statusCodeEquals(200);
+      $web_assert->addressEquals('/' . $view_url->getInternalPath());
     }
   }
 }

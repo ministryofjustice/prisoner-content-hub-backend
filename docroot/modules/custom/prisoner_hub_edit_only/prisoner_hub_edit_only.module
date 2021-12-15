@@ -13,6 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_local_tasks_alter().
  *
  * Replace the "View" with the "Edit" tab.
+ * TODO: Re-instate the view tab, and point the url to frontend prison sites.
+ * Ensure that EntityViewOverride::$excludedContentTypes are excluded.
  */
 function prisoner_hub_edit_only_local_tasks_alter(&$local_tasks) {
   foreach (['node', 'taxonomy_term'] as $entity_type) {
@@ -20,7 +22,6 @@ function prisoner_hub_edit_only_local_tasks_alter(&$local_tasks) {
     $local_tasks['entity.' . $entity_type . '.canonical']['route_name'] = 'entity.' . $entity_type . '.edit_form';
     unset($local_tasks['entity.' . $entity_type . '.edit_form']);
   }
-
 }
 
 /**
