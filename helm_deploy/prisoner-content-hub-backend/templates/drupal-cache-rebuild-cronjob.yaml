@@ -17,5 +17,5 @@ spec:
           - name: drupal-cache-rebuild-cronjob
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             command: ["drush", "cache-rebuild"]
-{{ include "drupal-deployment.envs" . | nindent 10 }}
+{{ include "drupal-deployment.envs" . | nindent 12 }}
           restartPolicy: OnFailure
