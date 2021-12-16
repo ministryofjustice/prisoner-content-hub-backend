@@ -104,7 +104,8 @@ function prisoner_content_hub_profile_create_new_prison_categories(&$sandbox) {
 }
 
 /**
- * Add prison categories to $entity if there are more than 2 prisons within that category.
+ * Add prison categories to $entity if there are more than 2 prisons within
+ * that category.
  *
  * Note this is *not* a deploy hook.
  */
@@ -149,8 +150,35 @@ function prisoner_content_hub_profile_add_categories(ContentEntityInterface $ent
     }
     if (!$berwyn_included) {
       $entity->set('field_exclude_from_prison', [
-        ['target_id' => $berwyn_tid]
+        ['target_id' => $berwyn_tid],
       ]);
     }
+  }
+}
+
+/**
+ * Copy values from entity reference fields to the new dynamic entity reference fields.
+ */
+function prisoner_content_hub_profile_deploy_copy_homepage_tile_values() {
+  $result = \Drupal::entityQuery('node')
+    ->condition('type', 'featured_articles')
+    ->accessCheck(FALSE)
+    ->execute();
+  $nodes = Node::loadMultiple($result);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $tile_large_value = $node->get('field_moj_featured_tile_large')->getValue();
+    foreach ($tile_large_value as $k => $v) {
+      $tile_large_value[$k]['target_type'] = 'node';
+    }
+    $node->set('field_featured_tile_large', $tile_large_value);
+
+    $tile_small_value = $node->get('field_moj_featured_tile_small')->getValue();
+    foreach ($tile_small_value as $k => $v) {
+      $tile_small_value[$k]['target_type'] = 'node';
+    }
+    $node->set('field_featured_tile_small', $tile_small_value);
+    $node->save();
   }
 }
