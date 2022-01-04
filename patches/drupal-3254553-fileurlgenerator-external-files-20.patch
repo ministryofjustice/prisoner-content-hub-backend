@@ -1,75 +1,23 @@
-diff --git a/core/core.services.yml b/core/core.services.yml
-index 0fa5ab98a3..215e2404f8 100644
---- a/core/core.services.yml
-+++ b/core/core.services.yml
-@@ -394,7 +394,7 @@ services:
-     arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file']
-   file_url_generator:
-     class: Drupal\Core\File\FileUrlGenerator
--    arguments: ['@stream_wrapper_manager', '@request_stack', '@module_handler']
-+    arguments: ['@stream_wrapper_manager', '@request_stack', '@module_handler', '@router.request_context']
-   form_builder:
-     class: Drupal\Core\Form\FormBuilder
-     arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token']
 diff --git a/core/lib/Drupal/Core/File/FileUrlGenerator.php b/core/lib/Drupal/Core/File/FileUrlGenerator.php
-index dbfdb0d33b..71e330e624 100644
+index dbfdb0d33b..b3fdefea70 100644
 --- a/core/lib/Drupal/Core/File/FileUrlGenerator.php
 +++ b/core/lib/Drupal/Core/File/FileUrlGenerator.php
-@@ -5,6 +5,7 @@
- use Drupal\Component\Utility\UrlHelper;
- use Drupal\Core\Extension\ModuleHandlerInterface;
- use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-+use Drupal\Core\Routing\RequestContext;
- use Drupal\Core\StreamWrapper\StreamWrapperManager;
- use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
- use Drupal\Core\Url;
-@@ -36,6 +37,13 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
-    */
-   protected $moduleHandler;
-
-+  /**
-+   * The request context service.
-+   *
-+   * @var \Drupal\Core\Routing\RequestContext
-+   */
-+  protected $requestContext;
-+
-   /**
-    * Constructs a new file URL generator object.
-    *
-@@ -45,11 +53,18 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
-    *   The request stack.
-    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-    *   The module handler.
-+   * @param \Drupal\Core\Routing\RequestContext $request_context
-+   *   The request context service.
-    */
--  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, RequestStack $request_stack, ModuleHandlerInterface $module_handler) {
-+  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, RequestStack $request_stack, ModuleHandlerInterface $module_handler, RequestContext $request_context = NULL) {
-     $this->streamWrapperManager = $stream_wrapper_manager;
-     $this->requestStack = $request_stack;
-     $this->moduleHandler = $module_handler;
-+    if (!$request_context) {
-+      @trigger_error('Invoking the FileUrlGenerator constructor without the request_context service parameter is deprecated in drupal:9.4.0 and will no longer be supported in drupal:10.0.0. The request_context service parameter is now required in the FileUrlGenerator constructor. See https://www.drupal.org/node/3254553', E_USER_DEPRECATED);
-+      $request_context = \Drupal::service('router.request_context');
-+    }
-+    $this->requestContext = $request_context;
-   }
-
-   /**
-@@ -186,8 +201,15 @@ public function generate(string $uri): Url {
+@@ -186,8 +186,18 @@ public function generate(string $uri): Url {
        return Url::fromUri(urldecode($options['path']), $options);
      }
      elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
 -      // Attempt to return an external URL using the appropriate wrapper.
 -      return Url::fromUri('base:' . $this->transformRelative(urldecode($wrapper->getExternalUrl()), FALSE));
 +      $external_url = $wrapper->getExternalUrl();
-+      if (UrlHelper::externalIsLocal($external_url, $this->requestContext->getCompleteBaseUrl())) {
++      $options = UrlHelper::parse($external_url);
++
++      // @todo Switch to dependency injected request_context service after
++      // https://www.drupal.org/project/drupal/issues/3256884 is fixed.
++      if (UrlHelper::externalIsLocal($external_url, \Drupal::service('router.request_context')->getCompleteBaseUrl())) {
 +        // Attempt to return an external URL using the appropriate wrapper.
-+        return Url::fromUri('base:' . $this->transformRelative(urldecode($external_url), FALSE));
++        return Url::fromUri('base:' . $this->transformRelative(urldecode($options['path']), FALSE), $options);
 +      }
 +      else {
-+        $options = UrlHelper::parse($external_url);
 +        return Url::fromUri(urldecode($options['path']), $options);
 +      }
      }
@@ -247,13 +195,13 @@ index af8e25e9b5..a4a004c825 100644
 --- a/core/tests/Drupal/KernelTests/Core/File/FileUrlGeneratorTest.php
 +++ b/core/tests/Drupal/KernelTests/Core/File/FileUrlGeneratorTest.php
 @@ -188,7 +188,7 @@ public function testGenerateURI($filepath, $expected) {
-
+ 
      // No schema file.
      $url = $this->fileUrlGenerator->generate($filepath);
 -    $this->assertEquals($expected, $url->getUri());
 +    $this->assertEquals($expected, $url->toUriString());
    }
-
+ 
    /**
 @@ -251,6 +251,26 @@ public function providerGenerateURI() {
            'https://www.example.com/core/assets/vendor/jquery/jquery.min.js',
@@ -281,4 +229,4 @@ index af8e25e9b5..a4a004c825 100644
 +        ],
      ];
    }
-
+ 
