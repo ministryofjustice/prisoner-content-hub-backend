@@ -6,7 +6,6 @@ dependencies:
     - field.field.taxonomy_term.tags.field_exclude_feedback
     - field.field.taxonomy_term.tags.field_exclude_from_prison
     - field.field.taxonomy_term.tags.field_featured_image
-    - field.field.taxonomy_term.tags.field_moj_promoted
     - field.field.taxonomy_term.tags.field_prisons
     - taxonomy.vocabulary.tags
   module:
@@ -50,16 +49,6 @@ content:
       image_style: ''
     third_party_settings: {  }
     weight: 2
-    region: content
-  field_moj_promoted:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 1
     region: content
   field_prisons:
     type: entity_reference_label
