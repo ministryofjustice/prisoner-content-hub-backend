@@ -4,11 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.node.featured_articles.field_exclude_from_prison
+    - field.field.node.featured_articles.field_featured_tile_large
+    - field.field.node.featured_articles.field_featured_tile_small
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
     - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
   module:
+    - dynamic_entity_reference
     - user
 id: node.featured_articles.default
 targetEntityType: node
@@ -22,6 +25,22 @@ content:
       link: true
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_featured_tile_large:
+    type: dynamic_entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_featured_tile_small:
+    type: dynamic_entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 8
     region: content
   field_moj_featured_tile_large:
     type: entity_reference_label

@@ -1,0 +1,69 @@
+uuid: 30d1b966-6366-4f33-9210-7c88b80e8f85
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured_tile_small
+    - node.type.external_link
+    - node.type.featured_articles
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+    - taxonomy.vocabulary.series
+  module:
+    - dynamic_entity_reference
+id: node.featured_articles.field_featured_tile_small
+field_name: field_featured_tile_small
+entity_type: node
+bundle: featured_articles
+label: 'Small featured content'
+description: 'Featured content for the small tiles. <em>Search by title or ID.</em>'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  node:
+    handler: 'default:node'
+    handler_settings:
+      target_bundles:
+        moj_radio_item: moj_radio_item
+        page: page
+        external_link: external_link
+        moj_pdf_item: moj_pdf_item
+        moj_video_item: moj_video_item
+      sort:
+        field: _none
+        direction: ASC
+      auto_create: false
+      auto_create_bundle: moj_radio_item
+  taxonomy_term:
+    handler: 'default:taxonomy_term'
+    handler_settings:
+      target_bundles:
+        series: series
+      sort:
+        field: name
+        direction: asc
+      auto_create: false
+      auto_create_bundle: ''
+  menu_link_content:
+    handler: 'default:menu_link_content'
+    handler_settings: {  }
+  file:
+    handler: 'default:file'
+    handler_settings: {  }
+  search_api_task:
+    handler: 'default:search_api_task'
+    handler_settings: {  }
+  shortcut:
+    handler: 'default:shortcut'
+    handler_settings: {  }
+  path_alias:
+    handler: 'default:path_alias'
+    handler_settings: {  }
+  user:
+    handler: 'default:user'
+    handler_settings: {  }
+field_type: dynamic_entity_reference
