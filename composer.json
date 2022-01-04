@@ -139,7 +139,8 @@
                 "Issue #3254727 - File links with query parameters no longer work": "patches/drupal-3254727-file-links-with-query-parameters-2.patch"
             },
             "drupal/jsonapi_page_limit": {
-                "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch"
+                "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch",
+                "Fix incorrect pager links, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/2": "patches/jsonapi_page_limit_fix_pager_links.patch"
             },
             "drupal/views_ef_fieldset": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
