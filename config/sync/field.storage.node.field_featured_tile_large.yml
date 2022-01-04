@@ -1,0 +1,24 @@
+uuid: 95fd99dd-0f35-4885-a069-a77b5f27800b
+langcode: en
+status: true
+dependencies:
+  module:
+    - dynamic_entity_reference
+    - node
+    - taxonomy
+id: node.field_featured_tile_large
+field_name: field_featured_tile_large
+entity_type: node
+type: dynamic_entity_reference
+settings:
+  exclude_entity_types: false
+  entity_type_ids:
+    node: node
+    taxonomy_term: taxonomy_term
+module: dynamic_entity_reference
+locked: false
+cardinality: 2
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
