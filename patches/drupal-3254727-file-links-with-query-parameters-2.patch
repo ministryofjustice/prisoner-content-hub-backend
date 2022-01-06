@@ -1,0 +1,13 @@
+diff --git a/core/modules/file/file.module b/core/modules/file/file.module
+index 7300dd9c67..04e849466b 100644
+--- a/core/modules/file/file.module
++++ b/core/modules/file/file.module
+@@ -1527,7 +1527,7 @@ function template_preprocess_file_link(&$variables) {
+   $variables['attributes']->addClass($classes);
+   $variables['file_size'] = format_size($file->getSize() ?? 0);
+
+-  $variables['link'] = Link::fromTextAndUrl($link_text, $url->setOptions($options))->toRenderable();
++  $variables['link'] = Link::fromTextAndUrl($link_text, $url->mergeOptions($options))->toRenderable();
+ }
+
+ /**

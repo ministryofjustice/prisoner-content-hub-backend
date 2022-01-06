@@ -1,0 +1,232 @@
+diff --git a/core/lib/Drupal/Core/File/FileUrlGenerator.php b/core/lib/Drupal/Core/File/FileUrlGenerator.php
+index dbfdb0d33b..b3fdefea70 100644
+--- a/core/lib/Drupal/Core/File/FileUrlGenerator.php
++++ b/core/lib/Drupal/Core/File/FileUrlGenerator.php
+@@ -186,8 +186,18 @@ public function generate(string $uri): Url {
+       return Url::fromUri(urldecode($options['path']), $options);
+     }
+     elseif ($wrapper = $this->streamWrapperManager->getViaUri($uri)) {
+-      // Attempt to return an external URL using the appropriate wrapper.
+-      return Url::fromUri('base:' . $this->transformRelative(urldecode($wrapper->getExternalUrl()), FALSE));
++      $external_url = $wrapper->getExternalUrl();
++      $options = UrlHelper::parse($external_url);
++
++      // @todo Switch to dependency injected request_context service after
++      // https://www.drupal.org/project/drupal/issues/3256884 is fixed.
++      if (UrlHelper::externalIsLocal($external_url, \Drupal::service('router.request_context')->getCompleteBaseUrl())) {
++        // Attempt to return an external URL using the appropriate wrapper.
++        return Url::fromUri('base:' . $this->transformRelative(urldecode($options['path']), FALSE), $options);
++      }
++      else {
++        return Url::fromUri(urldecode($options['path']), $options);
++      }
+     }
+     throw new InvalidStreamWrapperException();
+   }
+diff --git a/core/modules/file/tests/file_test/file_test.services.yml b/core/modules/file/tests/file_test/file_test.services.yml
+index 1e05c26bff..51b048997a 100644
+--- a/core/modules/file/tests/file_test/file_test.services.yml
++++ b/core/modules/file/tests/file_test/file_test.services.yml
+@@ -11,3 +11,7 @@ services:
+     class: Drupal\file_test\StreamWrapper\DummyStreamWrapper
+     tags:
+       - { name: stream_wrapper, scheme: dummy }
++  stream_wrapper.dummy_external_readonly:
++    class: Drupal\file_test\StreamWrapper\DummyExternalReadOnlyWrapper
++    tags:
++      - { name: stream_wrapper, scheme: dummy-external-readonly }
+diff --git a/core/modules/file/tests/file_test/src/StreamWrapper/DummyExternalReadOnlyWrapper.php b/core/modules/file/tests/file_test/src/StreamWrapper/DummyExternalReadOnlyWrapper.php
+new file mode 100644
+index 0000000000..1727b7950a
+--- /dev/null
++++ b/core/modules/file/tests/file_test/src/StreamWrapper/DummyExternalReadOnlyWrapper.php
+@@ -0,0 +1,149 @@
++<?php
++
++namespace Drupal\file_test\StreamWrapper;
++
++use Drupal\Core\StreamWrapper\ReadOnlyStream;
++use Drupal\Core\StreamWrapper\StreamWrapperInterface;
++
++/**
++ * Helper class for testing the stream wrapper registry.
++ *
++ * Dummy external stream wrapper implementation (dummy-external-readonly://).
++ */
++class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
++
++  /**
++   * @inheritDoc
++   */
++  public static function getType() {
++    return StreamWrapperInterface::READ_VISIBLE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function getName() {
++    return t('Dummy external stream wrapper (readonly)');
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function getDescription() {
++    return t('Dummy external read-only stream wrapper for testing.');
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function getExternalUrl() {
++    [, $target] = explode('://', $this->uri, 2);
++    return 'https://www.dummy-external-readonly.com/' . $target;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function realpath() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function dirname($uri = NULL) {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function dir_closedir() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function dir_opendir($path, $options) {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function dir_readdir() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function dir_rewinddir() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_cast($cast_as) {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_close() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_eof() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_read($count) {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_seek($offset, $whence = SEEK_SET) {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_set_option($option, $arg1, $arg2) {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_stat() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function stream_tell() {
++    return FALSE;
++  }
++
++  /**
++   * @inheritDoc
++   */
++  public function url_stat($path, $flags) {
++    return FALSE;
++  }
++
++}
+diff --git a/core/tests/Drupal/KernelTests/Core/File/FileUrlGeneratorTest.php b/core/tests/Drupal/KernelTests/Core/File/FileUrlGeneratorTest.php
+index af8e25e9b5..a4a004c825 100644
+--- a/core/tests/Drupal/KernelTests/Core/File/FileUrlGeneratorTest.php
++++ b/core/tests/Drupal/KernelTests/Core/File/FileUrlGeneratorTest.php
+@@ -188,7 +188,7 @@ public function testGenerateURI($filepath, $expected) {
+ 
+     // No schema file.
+     $url = $this->fileUrlGenerator->generate($filepath);
+-    $this->assertEquals($expected, $url->getUri());
++    $this->assertEquals($expected, $url->toUriString());
+   }
+ 
+   /**
+@@ -251,6 +251,26 @@ public function providerGenerateURI() {
+           'https://www.example.com/core/assets/vendor/jquery/jquery.min.js',
+           'https://www.example.com/core/assets/vendor/jquery/jquery.min.js',
+         ],
++      'external stream wrapper' =>
++        [
++          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js',
++          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js',
++        ],
++      'external stream wrapper with query string' =>
++        [
++          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js?foo=bar',
++          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js?foo=bar',
++        ],
++      'external stream wrapper with hashes' =>
++        [
++          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js#whizz',
++          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js#whizz',
++        ],
++      'external stream wrapper with query string and hashes' =>
++        [
++          'dummy-external-readonly://core/assets/vendor/jquery/jquery.min.js?foo=bar#whizz',
++          'https://www.dummy-external-readonly.com/core/assets/vendor/jquery/jquery.min.js?foo=bar#whizz',
++        ],
+     ];
+   }
+ 
