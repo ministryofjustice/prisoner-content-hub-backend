@@ -1,0 +1,18 @@
+diff --git a/src/Controller/EntityResource.php b/src/Controller/EntityResource.php
+index d88bff3..e190b0b 100644
+--- a/src/Controller/EntityResource.php
++++ b/src/Controller/EntityResource.php
+@@ -43,7 +43,12 @@ class EntityResource extends \Drupal\jsonapi\Controller\EntityResource {
+   protected function getJsonApiParams(Request $request, ResourceType $resource_type) {
+     $params = parent::getJsonApiParams($request, $resource_type);
+     if ($request->query->has('page')) {
+-      $params[OffsetPage::KEY_NAME] = new OffsetPage(OffsetPage::DEFAULT_OFFSET, $this->getMax($request->query->get('page')));
++      $page_params = $request->query->get('page');
++      $offset = array_key_exists(OffsetPage::OFFSET_KEY, $page_params) ? (int) $page_params[OffsetPage::OFFSET_KEY] : OffsetPage::DEFAULT_OFFSET;
++      $params[OffsetPage::KEY_NAME] = new OffsetPage(
++        $offset,
++        $this->getMax($request->query->get('page'))
++      );
+     }
+     return $params;
+   }
