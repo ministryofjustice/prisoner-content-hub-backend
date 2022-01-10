@@ -1,0 +1,54 @@
+diff --git a/src/ElasticSearch/Parameters/Builder/SearchBuilder.php b/src/ElasticSearch/Parameters/Builder/SearchBuilder.php
+index 0129ea3..8f171f8 100644
+--- a/src/ElasticSearch/Parameters/Builder/SearchBuilder.php
++++ b/src/ElasticSearch/Parameters/Builder/SearchBuilder.php
+@@ -11,7 +11,7 @@ use Drupal\search_api\Query\ConditionGroupInterface;
+ use Drupal\search_api\Query\QueryInterface;
+ use Elasticsearch\Common\Exceptions\ElasticsearchException;
+ use MakinaCorpus\Lucene\Query;
+-use MakinaCorpus\Lucene\TermCollectionQuery;
++use MakinaCorpus\Lucene\CollectionQuery;
+ use MakinaCorpus\Lucene\TermQuery;
+ use Drupal\elasticsearch_connector\Event\PrepareSearchQueryEvent;
+ use Drupal\elasticsearch_connector\Event\BuildSearchParamsEvent;
+@@ -287,31 +287,27 @@ class SearchBuilder {
+    * @return \MakinaCorpus\Lucene\AbstractQuery
+    *   Return a lucene query object.
+    */
+-  protected function flattenKeys(array $keys, ParseModeInterface $parse_mode = NULL, $fuzzy = TRUE) {
++  protected function flattenKeys(array $keys, ParseModeInterface $parse_mode = NULL, $fuzzy = 'auto') {
+     // Grab the conjunction and negation properties if present.
+-    $conjunction = isset($keys['#conjunction']) ? $keys['#conjunction'] : 'AND';
++    $conjunction = $keys['#conjunction'] ?? 'AND';
+     $negation = !empty($keys['#negation']);
+
+-    // Create a top level query.
+-    $query = (new TermCollectionQuery())
++    // Create a CollectionQuery with the above values.
++    $query = (new CollectionQuery())
+       ->setOperator($conjunction);
+     if ($negation) {
+       $query->setExclusion(Query::OP_PROHIBIT);
+     }
+
+-    // Filter out top level properties beginning with '#'.
+-    $keys = array_filter($keys, function (string $key) {
+-      return $key[0] !== '#';
+-    }, ARRAY_FILTER_USE_KEY);
+-
+-    // Loop over the keys.
+-    foreach ($keys as $key) {
++    // Add a TermQuery for each key, recurse on arrays, and ignore keys
++    // whose name begins with #.
++    foreach ($keys as $name => $key) {
+       $element = NULL;
+
+       if (is_array($key)) {
+-        $element = $this->luceneFlattenKeys($key, $parse_mode);
++        $element = $this->flattenKeys($key, $parse_mode, $fuzzy);
+       }
+-      elseif (is_string($key)) {
++      elseif (is_string($key) && (((string) $name)[0] !== '#')) {
+         $element = (new TermQuery())
+           ->setValue($key);
+         if ($fuzzy) {
