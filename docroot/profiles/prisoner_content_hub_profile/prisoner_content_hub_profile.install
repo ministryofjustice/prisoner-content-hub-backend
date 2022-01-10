@@ -168,3 +168,14 @@ function prisoner_content_hub_profile_update_8016() {
   }
 
 }
+
+/**
+ * Remove old taxonomy terms (so that we can remove the taxonomy vocabularies).
+ */
+function prisoner_content_hub_profile_update_8017() {
+  $results = \Drupal::entityQuery('taxonomy_term')->condition('vid', ['step_by_step', 'location'], 'IN')->accessCheck(FALSE)->execute();
+  $terms = Term::loadMultiple($results);
+  foreach ($terms as $term) {
+    $term->delete();
+  }
+}
