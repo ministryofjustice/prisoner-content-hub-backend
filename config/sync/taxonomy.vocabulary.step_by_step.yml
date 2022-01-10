@@ -1,8 +1,0 @@
-uuid: 94fae547-3fe3-4d0a-9d36-7fcddd27aa84
-langcode: en
-status: true
-dependencies: {  }
-name: 'Step by step'
-vid: step_by_step
-description: 'Content that forms part of defined step by step pattern'
-weight: 0

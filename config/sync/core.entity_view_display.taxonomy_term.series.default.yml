@@ -9,7 +9,6 @@ dependencies:
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
-    - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
     - taxonomy.vocabulary.series
@@ -71,16 +70,6 @@ content:
       image_style: ''
     third_party_settings: {  }
     weight: 2
-    region: content
-  field_moj_category_featured_item:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 9
     region: content
   field_prisons:
     type: entity_reference_label
