@@ -1,0 +1,29 @@
+uuid: 388b1685-e01c-413c-a6a8-479513f807f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_prison_owner
+    - node.type.moj_video_item
+    - taxonomy.vocabulary.prisons
+id: node.moj_video_item.field_prison_owner
+field_name: field_prison_owner
+entity_type: node
+bundle: moj_video_item
+label: 'Prison owner'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prisons: prisons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -3,10 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.user.user.user_picture
-    - image.style.thumbnail
+    - field.field.user.user.field_prisons
   module:
-    - image
     - user
 _core:
   default_config_hash: L2mtwGWH_7wDRCMIR4r_Iu_jmvQ10DV1L8ht8iNZ5qY
@@ -15,19 +13,18 @@ targetEntityType: user
 bundle: user
 mode: default
 content:
+  field_prisons:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
   member_for:
     settings: {  }
     third_party_settings: {  }
     weight: 5
-    region: content
-  user_picture:
-    type: image
-    label: hidden
-    settings:
-      image_link: content
-      image_style: thumbnail
-    third_party_settings: {  }
-    weight: 0
     region: content
 hidden:
   search_api_excerpt: true

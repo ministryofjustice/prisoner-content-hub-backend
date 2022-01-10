@@ -28,7 +28,6 @@ dependencies:
     - system
     - taxonomy
     - toolbar
-    - view_unpublished
 _core:
   default_config_hash: w3gv4hBMp_vQx-dpzgOKpEZ0uNN5SSNFsYLbXwC7WZU
 id: local_administrator
@@ -121,12 +120,6 @@ permissions:
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
-  - 'view any unpublished external_link content'
-  - 'view any unpublished help_page content'
-  - 'view any unpublished moj_pdf_item content'
-  - 'view any unpublished moj_radio_item content'
-  - 'view any unpublished moj_video_item content'
-  - 'view any unpublished page content'
   - 'view external_link revisions'
   - 'view featured_articles revisions'
   - 'view help_page revisions'

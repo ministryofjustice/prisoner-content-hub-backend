@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
     - field.field.node.moj_video_item.field_not_in_series
+    - field.field.node.moj_video_item.field_prison_owner
     - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
     - field.field.node.moj_video_item.field_video
@@ -144,6 +145,14 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 19
+    region: content
+  field_prison_owner:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 23
     region: content
   field_prisons:
     type: entity_reference_label
