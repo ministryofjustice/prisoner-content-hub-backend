@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_prison_access_cms.module.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_entity_access().
+ */
+function prisoner_hub_prison_access_cms_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  if ($entity->getEntityTypeId() == 'taxonomy_term') {
+
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+  $field_definition = $context['items']->getFieldDefinition();
+
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = $context['items']->getEntity();
+
+  /** @var \Drupal\prisoner_hub_prison_access_cms\FieldPermissions $field_permission_service */
+  $field_permission_service = \Drupal::service('prisoner_hub_prison_access_cms.field_permissions');
+
+  if (!$field_permission_service->checkFieldAccess($field_definition, $entity)) {
+    $element['#disabled'] = TRUE;
+    \Drupal::messenger()->addWarning(t('You cannot make changes to this content, as it is owned by another prison.  You can set your own prison to be <a href="#edit-group-exclude-from-prison">excluded from the content.</a>'));
+  }
+  if ($field_definition->getName() == 'field_exclude_from_prison') {
+    $field_permission_service->setExcludeFromPrisonFieldAccess($element);
+  }
+  if ($field_definition->getName() == 'field_prison_owner') {
+    if ($entity->isNew()) {
+      $field_permission_service->setDefaultPrisonOwner($element);
+    }
+  }
+}
+
+function prisoner_hub_prison_access_cms_pre_render(&$element) {
+  $sopt = 1;
+  foreach (Element::children($element) as $key) {
+
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_group_form_process_alter().
+ *
+ * Make the exclude_from_prison field_group details element open (expanded), if
+ * this is the only field the user can access.
+ *
+ * This is a UX improvement.  By default the exclude_from_prison field group is
+ * closed (using the field_group_open_non_empty formatter).  If this is the only
+ * field a user can access, we want to always show as open.
+ */
+function prisoner_hub_prison_access_cms_field_group_form_process_alter(array &$element, &$group, &$complete_form) {
+  $exclude_from_prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
+  if (in_array($exclude_from_prison_field_name, $group->children)) {
+    $prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.prison_field_name');
+    // Open the exclude_from_prison field_group if the prison field has been
+    // set to disabled.
+    if (isset($complete_form[$prison_field_name]['widget']['#disabled']) && $complete_form[$prison_field_name]['widget']['#disabled']) {
+      $element['#open'] = TRUE;
+    }
+
+  }
+}
