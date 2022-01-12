@@ -70,10 +70,9 @@ $flysystem_schemes = [
 
       // Set to TRUE if CORS upload support is enabled for the bucket
       'cors' => TRUE,
-      'serve_js' => TRUE,
-      'serve_css' => TRUE,
     ],
-
+    'serve_js' => TRUE,
+    'serve_css' => TRUE,
     'cache' => TRUE, // Creates a metadata cache to speed up lookups
   ],
 ];
