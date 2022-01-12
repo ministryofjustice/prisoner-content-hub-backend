@@ -1,14 +1,14 @@
-uuid: a4176344-4a99-4d66-82ad-3918bc978ff1
+uuid: fe52e116-e73d-4bc1-9cf3-5c6509953c11
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_prisons
+    - field.storage.user.field_user_prisons
     - taxonomy.vocabulary.prisons
   module:
     - user
-id: user.user.field_prisons
-field_name: field_prisons
+id: user.user.field_user_prisons
+field_name: field_user_prisons
 entity_type: user
 bundle: user
 label: Prisons

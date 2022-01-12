@@ -27,12 +27,12 @@ class FieldPermissions implements TrustedCallbackInterface {
    * @param \Drupal\user\UserInterface $user
    *   The current user.
    */
-  public function __construct(AccountInterface $account, string $prison_owner_field_name, string $prison_field_name, string $exclude_from_prison_field_name) {
+  public function __construct(AccountInterface $account, string $prison_owner_field_name, string $user_prison_field_name, string $exclude_from_prison_field_name) {
     $this->user = User::load($account->id());
     $this->prisonOwnerFieldName = $prison_owner_field_name;
-    $this->prisonFieldName = $prison_field_name;
+    $this->userPrisonFieldName = $user_prison_field_name;
     $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
-    $this->userPrisons = $this->user->hasField($this->prisonFieldName) ? $this->user->get($this->prisonFieldName)->referencedEntities() : [];
+    $this->userPrisons = $this->user->hasField($this->userPrisonFieldName) ? $this->user->get($this->userPrisonFieldName)->referencedEntities() : [];
   }
 
   /**

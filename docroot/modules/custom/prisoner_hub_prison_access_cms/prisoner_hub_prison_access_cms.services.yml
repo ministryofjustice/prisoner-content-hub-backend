@@ -1,6 +1,7 @@
 parameters:
   prisoner_hub_prison_access_cms.prison_owner_field_name: field_prison_owner
+  prisoner_hub_prison_access_cms.user_prison_field_name: field_user_prisons
 services:
   prisoner_hub_prison_access_cms.field_permissions:
     class: Drupal\prisoner_hub_prison_access_cms\FieldPermissions
-    arguments: ['@current_user', '%prisoner_hub_prison_access_cms.prison_owner_field_name%', '%prisoner_hub_prison_access.prison_field_name%', '%prisoner_hub_prison_access.exclude_from_prison_field_name%']
+    arguments: ['@current_user', '%prisoner_hub_prison_access_cms.prison_owner_field_name%', '%prisoner_hub_prison_access_cms.user_prison_field_name%', '%prisoner_hub_prison_access.exclude_from_prison_field_name%']

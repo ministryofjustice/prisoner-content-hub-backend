@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.user.compact
-    - field.field.user.user.field_prisons
+    - field.field.user.user.field_user_prisons
   module:
     - user
 _core:
@@ -15,6 +15,6 @@ bundle: user
 mode: compact
 content: {  }
 hidden:
-  field_prisons: true
+  field_user_prisons: true
   member_for: true
   search_api_excerpt: true

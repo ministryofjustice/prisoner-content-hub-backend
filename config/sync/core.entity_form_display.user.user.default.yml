@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.user.user.field_prisons
+    - field.field.user.user.field_user_prisons
   module:
     - path
     - term_reference_tree
@@ -25,9 +25,9 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_prisons:
+  field_user_prisons:
     type: term_reference_tree
-    weight: 31
+    weight: 32
     region: content
     settings:
       start_minimized: false
