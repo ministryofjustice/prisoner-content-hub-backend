@@ -41,21 +41,21 @@ class PageCachePersist implements CacheBackendInterface {
     // Do nothing.
   }
 
-
-  /**
-   * Override invalidateAll() with nothing.
-   *
-   * This prevents the page cache from being cleared.
-   */
-  public function invalidateAll() {
-    // Do nothing.
-  }
-
   /**
    * Provide an alternative way to delete the entire page cache.
    */
   public function forceDeleteAll() {
     $this->cache->deleteAll();
+  }
+
+  /**
+   * We do not currently need to override invalidateAll().
+   *
+   * There is no where in Drupal core that calls this on the page cache.  So
+   * for now we will leave it working as normal.
+   */
+  public function invalidateAll() {
+    $this->cache->invalidateAll();
   }
 
   /**
