@@ -160,6 +160,9 @@
             "drupal/term_reference_tree": {
                 "Issue #2411667: \"Disabled\" state of the element is cleared.": "patches/term_reference_tree-2411667-disabled-state-of-element-is-cleared.patch",
                 "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection.patch"
+            },
+            "drupal/elasticsearch_connector": {
+                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
             }
         },
         "patches-ignore": {

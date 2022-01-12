@@ -9,7 +9,6 @@ dependencies:
     - field.field.taxonomy_term.series.field_feature_on_category
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
-    - field.field.taxonomy_term.series.field_moj_category_featured_item
     - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
     - image.style.thumbnail
@@ -147,5 +146,4 @@ content:
       display_label: true
     third_party_settings: {  }
 hidden:
-  field_moj_category_featured_item: true
   path: true
