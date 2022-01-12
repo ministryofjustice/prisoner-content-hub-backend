@@ -41,6 +41,16 @@ class PageCachePersist implements CacheBackendInterface {
     // Do nothing.
   }
 
+
+  /**
+   * Override invalidateAll() with nothing.
+   *
+   * This prevents the page cache from being cleared.
+   */
+  public function invalidateAll() {
+    // Do nothing.
+  }
+
   /**
    * Provide an alternative way to delete the entire page cache.
    */
@@ -102,13 +112,6 @@ class PageCachePersist implements CacheBackendInterface {
    */
   public function invalidateMultiple(array $cids) {
     $this->cache->invalidateMultiple($cids);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function invalidateAll() {
-    $this->cache->invalidateAll();
   }
 
   /**
