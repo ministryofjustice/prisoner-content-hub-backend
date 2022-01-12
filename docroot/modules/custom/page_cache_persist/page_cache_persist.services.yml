@@ -1,0 +1,13 @@
+services:
+  page_cache_persist.page_cache_override:
+    class: Drupal\page_cache_persist\Cache\PageCachePersist
+    decorates: cache.page
+    arguments: ['@page_cache_persist.page_cache_override.inner']
+  page_cache_persist.cache_router_rebuild_subscriber:
+    class: Drupal\page_cache_persist\EventSubscriber\CacheRouterRebuildSubscriber
+    decorates: cache_router_rebuild_subscriber
+  page_cache_persist.commands:
+    class: \Drupal\page_cache_persist\Commands\PageCachePersistCommands
+    arguments: ['@cache.page']
+    tags:
+      - { name: drush.command }
