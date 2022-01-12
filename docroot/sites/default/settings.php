@@ -69,7 +69,9 @@ $flysystem_schemes = [
       'expires' => strtotime('tomorrow +3 hours', $_SERVER['REQUEST_TIME']),
 
       // Set to TRUE if CORS upload support is enabled for the bucket
-       'cors' => TRUE,
+      'cors' => TRUE,
+      'serve_js' => TRUE,
+      'serve_css' => TRUE,
     ],
 
     'cache' => TRUE, // Creates a metadata cache to speed up lookups
@@ -119,7 +121,7 @@ if ($config['raven.settings']['environment'] != 'production') {
 
 // Do not load Redis during installation (required for CircleCI builds).
 // See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
-if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+if (FALSE && !InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   $settings['redis.connection']['interface'] = 'PhpRedis';
   if (getenv('REDIS_TLS_ENABLED', 'true') == 'true') {
     $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
