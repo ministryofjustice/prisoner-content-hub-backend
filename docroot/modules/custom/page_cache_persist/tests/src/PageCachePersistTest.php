@@ -39,7 +39,6 @@ class PageCachePersistTest extends ExistingSiteBase {
    * Test that the page cache is working correctly.
    */
   public function testPageCacheCreated() {
-    $cid_parts = [$this->nodeUrlString, ''];
     $cache = $this->getCacheItem();
     $this->assertNotFalse($cache);
     $this->assertNotEmpty($cache->data);
@@ -69,8 +68,17 @@ class PageCachePersistTest extends ExistingSiteBase {
   /**
    * Test that we can still clear the page cache using drush cache:force-clear-page.
    */
-  public function testDrushForceCacheClear() {
+  public function testDrushForceCacheClearPage() {
     $this->drush('cache:force-clear-page');
+    $cache = $this->getCacheItem();
+    $this->assertFalse($cache);
+  }
+
+  /**
+   * Test that we can still clear the page cache using drush cache:force-clear-page.
+   */
+  public function testDrushForceCacheClearAll() {
+    $this->drush('cache:force-clear-all');
     $cache = $this->getCacheItem();
     $this->assertFalse($cache);
   }

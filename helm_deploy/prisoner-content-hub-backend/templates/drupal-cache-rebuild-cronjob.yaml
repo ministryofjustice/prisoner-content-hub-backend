@@ -16,6 +16,6 @@ spec:
           containers:
           - name: drupal-cache-rebuild-cronjob
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            command: ["drush", "cache-rebuild"]
+            command: ["drush", "cache:force-clear-all"]
 {{ include "drupal-deployment.envs" . | nindent 12 }}
           restartPolicy: OnFailure
