@@ -33,7 +33,7 @@ application:
     secretName: drupal-s3
     region: eu-west-2
     cname: ''
-    cnameIsBucket: false
+    cnameIsBucket: true
   redisSecretName: drupal-redis
 
 volumes:
