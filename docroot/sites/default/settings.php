@@ -137,9 +137,12 @@ if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   // the config during site installation (which will result in an error).
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
 
-  // Allow the services to work before the Redis module itself is enabled.
-  // TODO: Remove this after Redis has been deployed.
-  $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+  // Set a prefix for Redis cache entries.  Otherwise the Redis module will
+  // generate one, via Settings::getApcuPrefix().  This can change over time
+  // (e.g. when updating Drupal versions) resulting in lots stale cache items
+  // in the cache.
+  $settings['cache_prefix'] = 'prisoner_content_hub_backend_';
+
 }
 
 $settings['config_sync_directory'] = '../config/sync';
