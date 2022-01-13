@@ -73,7 +73,7 @@ $flysystem_schemes = [
       'endpoint' =>  getenv('FLYSYSTEM_S3_ENDPOINT', TRUE) ?? NULL,
 
       // Optionally set to path style endpoint.  Used for localstack.
-      'use_path_style_endpoint' => getenv('FLYSYSTEM_S3_USE_PATH_STYLE_ENDPOINT', TRUE) ?? FALSE,
+      'use_path_style_endpoint' => getenv('FLYSYSTEM_S3_USE_PATH_STYLE_ENDPOINT', TRUE) === "true",
     ],
     'serve_js' => TRUE,
     'serve_css' => TRUE,
