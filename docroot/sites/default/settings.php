@@ -50,18 +50,15 @@ $flysystem_schemes = [
         'ACL' => 'private',
       ],
 
-      // Autodetected based on the current request if not provided
-      'protocol' => 'https',
-
       // Directory prefix for all viewed files
       // 'prefix' => 'an/optional/prefix',
 
       // A CNAME that resolves to your bucket. Used for URL generation
       'cname' => getenv('FLYSYSTEM_S3_CNAME', true),
 
-      // Set to FALSE if the CNAME does not resolve to a bucket and the bucket
-      // should be included in the path.
-      'cname_is_bucket' => getenv('FLYSYSTEM_S3_CNAME_IS_BUCKET', true),
+      // Since env variables are strings, we must check the value for "true" otherwise
+      // assume FALSE.
+      'cname_is_bucket' => getenv('FLYSYSTEM_S3_CNAME_IS_BUCKET', TRUE) === "true",
 
       // Set to TRUE to link to files using direct links
       'public' => TRUE,
@@ -69,9 +66,15 @@ $flysystem_schemes = [
       'expires' => strtotime('tomorrow +3 hours', $_SERVER['REQUEST_TIME']),
 
       // Set to TRUE if CORS upload support is enabled for the bucket
-       'cors' => TRUE,
-    ],
+      'cors' => TRUE,
 
+      // Optionally specify an alternative endpoint.  Used for localstack.
+      // If not set the default AWS endpoint is used.
+      'endpoint' =>  getenv('FLYSYSTEM_S3_ENDPOINT', TRUE) ?? NULL,
+
+      // Optionally set to path style endpoint.  Used for localstack.
+      'use_path_style_endpoint' => getenv('FLYSYSTEM_S3_USE_PATH_STYLE_ENDPOINT', TRUE) ?? FALSE,
+    ],
     'cache' => TRUE, // Creates a metadata cache to speed up lookups
   ],
 ];
