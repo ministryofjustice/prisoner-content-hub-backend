@@ -141,7 +141,7 @@ if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   // generate one, via Settings::getApcuPrefix().  This can change over time
   // (e.g. when updating Drupal versions) resulting in lots stale cache items
   // in the cache.
-  $settings['cache_prefix'] = 'prisoner_content_hub_backend_';
+  $settings['cache_prefix'] = 'prisoner_content_hub_backend';
 
 }
 
