@@ -59,7 +59,7 @@ services:
     ports:
       - "4566:4566"
     volumes:
-      - ./.localstack:/docker-entrypoint-initaws.d
+      - ./localstack:/docker-entrypoint-initaws.d
     networks:
       - circleci-prisoner_content_hub
 
