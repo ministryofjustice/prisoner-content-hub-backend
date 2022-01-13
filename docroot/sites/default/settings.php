@@ -70,7 +70,8 @@ $flysystem_schemes = [
 
       // Optionally specify an alternative endpoint.  Used for localstack.
       // If not set the default AWS endpoint is used.
-      'endpoint' =>  getenv('FLYSYSTEM_S3_ENDPOINT', TRUE) ?? NULL,
+      // This must be set to NULL if not being used.
+      'endpoint' =>  getenv('FLYSYSTEM_S3_ENDPOINT', TRUE) ? getenv('FLYSYSTEM_S3_ENDPOINT', TRUE) : NULL,
 
       // Optionally set to path style endpoint.  Used for localstack.
       'use_path_style_endpoint' => getenv('FLYSYSTEM_S3_USE_PATH_STYLE_ENDPOINT', TRUE) === "true",
