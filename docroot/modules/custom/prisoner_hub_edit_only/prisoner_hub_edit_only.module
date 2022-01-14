@@ -49,12 +49,12 @@ function prisoner_hub_edit_only_form_submit(&$form, FormStateInterface $form_sta
   if (empty(\Drupal::request()->query->get('destination'))) {
     $form_state->disableRedirect();
 
-    // Update the changed value on the reloaded form to be greater than that of
-    // the saved entity.  Otherwise, the form cannot be re-saved, as Drupal
+    // Update the changed value on the reloaded form.  Otherwise, the previous
+    // value will be used, which means the form cannot be re-saved, as Drupal
     // thinks the modifications came before the ones we previously saved.
     //
     // This issue only occurs when a user is shown the same edit form immediately
     // after saving.
-    $form['changed']['#value'] = $form_state->getFormObject()->getEntity()->getChangedTime() + 1;
+    $form['changed']['#value'] = \Drupal::time()->getRequestTime();
   }
 }
