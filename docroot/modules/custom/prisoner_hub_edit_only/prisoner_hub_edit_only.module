@@ -42,11 +42,19 @@ function prisoner_hub_edit_only_form_alter(&$form, FormStateInterface $form_stat
 }
 
 /**
- * Submit handler that removes the redirect on node edit forms.
+ * Submit handler for node edit forms.
  */
-function prisoner_hub_edit_only_form_submit($form, FormStateInterface $form_state) {
+function prisoner_hub_edit_only_form_submit(&$form, FormStateInterface $form_state) {
   // Only disable redirects if there is none specified in the url.
   if (empty(\Drupal::request()->query->get('destination'))) {
     $form_state->disableRedirect();
+
+    // Update the changed value on the reloaded form to be greater than that of
+    // the saved entity.  Otherwise, the form cannot be re-saved, as Drupal
+    // thinks the modifications came before the ones we previously saved.
+    //
+    // This issue only occurs when a user is shown the same edit form immediately
+    // after saving.
+    $form['changed']['#value'] = $form_state->getFormObject()->getEntity()->getChangedTime() + 1;
   }
 }
