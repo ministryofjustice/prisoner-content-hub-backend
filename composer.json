@@ -37,6 +37,7 @@
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^5.0",
         "drupal/monolog": "^2.0",
+        "drupal/node_edit_protection": "^1.0",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
         "drupal/raven": "^3.2",
