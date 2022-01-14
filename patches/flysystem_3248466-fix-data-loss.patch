@@ -9,26 +9,50 @@ index beb7a9d..8744431 100644
 -    arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file', '@flysystem_s3.file_system.inner']
 +    arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file', '@entity_type.manager', '@flysystem_s3.file_system.inner']
 diff --git a/src/Controller/S3CorsUploadAjaxController.php b/src/Controller/S3CorsUploadAjaxController.php
-index b01010e..f993336 100644
+index eaf9e13..d20f405 100644
 --- a/src/Controller/S3CorsUploadAjaxController.php
 +++ b/src/Controller/S3CorsUploadAjaxController.php
-@@ -84,7 +84,7 @@ class S3CorsUploadAjaxController extends ControllerBase {
+@@ -72,19 +72,16 @@ class S3CorsUploadAjaxController extends ControllerBase {
+
+     $client = $adapter->getClient();
+     $bucket = $adapter->getBucket();
+-    $destination = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($post['destination']));
++    $destination = $this->fileSystem->getDestinationFilename($post['destination'] . '/' . $post['filename'], FileSystemInterface::EXISTS_RENAME);
+
+-    // Retrieve the file name and build the URI.
+-    // Destination does not contain a prefix as it is applied by the fly system.
+-    $uri = \Drupal::service('file_system')->createFilename($post['filename'], $post['destination']);
+     // Apply the prefix to the URI and use it as a key in the POST request.
+-    $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($uri));
++    $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($destination));
+
+     // Create a temporary file to return with a file ID in the response.
      $file = File::create([
-       'uri' => $uri,
+-      'uri' => $uri,
++      'uri' => $destination,
        'filesize' => $post['filesize'],
 -      'filename' => $post['filename'],
-+      'filename' => \Drupal::service('file_system')->baseName($uri),
++      'filename' => $this->fileSystem->baseName($destination),
        'filemime' => $post['filemime'],
        'uid' => \Drupal::currentUser()->getAccount()->id(),
      ]);
+@@ -96,7 +93,7 @@ class S3CorsUploadAjaxController extends ControllerBase {
+     $options = [
+       ['acl' => $post['acl']],
+       ['bucket' => $bucket],
+-      ['starts-with', '$key', $destination . '/'],
++      ['starts-with', '$key', $post['key']],
+       ['starts-with', '$Content-Type', $post['Content-Type']],
+     ];
+
 diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
-index ed74c9b..da62fae 100644
+index 4107eb3..ef0e768 100644
 --- a/src/File/FlysystemS3FileSystem.php
 +++ b/src/File/FlysystemS3FileSystem.php
 @@ -2,12 +2,15 @@
- 
+
  namespace Drupal\flysystem_s3\File;
- 
+
 +use Drupal\Core\Entity\EntityTypeManagerInterface;
 +use Drupal\Core\File\Exception\FileException;
  use Drupal\Core\File\Exception\FileWriteException;
@@ -39,12 +63,12 @@ index ed74c9b..da62fae 100644
  use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 +use Drupal\file\Entity\File;
  use Psr\Log\LoggerInterface;
- 
+
  /**
-@@ -37,6 +40,13 @@ class FlysystemS3FileSystem extends FileSystem {
-    */
-   protected $streamWrapperManager;
- 
+@@ -15,6 +18,13 @@ use Psr\Log\LoggerInterface;
+  */
+ class FlysystemS3FileSystem extends FileSystem {
+
 +  /**
 +   * The entity type manager.
 +   *
@@ -52,34 +76,51 @@ index ed74c9b..da62fae 100644
 +   */
 +  protected $entityTypeManager;
 +
+
    /**
-    * The file system being decorated.
-    *
-@@ -56,10 +66,11 @@ class FlysystemS3FileSystem extends FileSystem {
-    * @param \Drupal\Core\File\FileSystemInterface $file_system
-    *   The file system being decorated.
-    */
--  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger, FileSystemInterface $file_system) {
-+  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system) {
+    * The site settings.
+@@ -60,6 +70,7 @@ class FlysystemS3FileSystem extends FileSystem {
      $this->streamWrapperManager = $stream_wrapper_manager;
      $this->settings = $settings;
      $this->logger = $logger;
 +    $this->entityTypeManager = $entity_type_manager;
      $this->fileSystem = $file_system;
    }
- 
-@@ -360,15 +371,65 @@ class FlysystemS3FileSystem extends FileSystem {
+
+@@ -357,20 +368,6 @@ class FlysystemS3FileSystem extends FileSystem {
+     }
+   }
+
+-  /**
+-   * {@inheritdoc}
+-   *
+-   * @codeCoverageIgnore
+-   */
+-  public function createFilename($basename, $directory) {
+-    if (method_exists($this->fileSystem, 'createFilename')) {
+-      return $this->fileSystem->createFilename($basename, $directory);
+-    }
+-    else {
+-      return file_create_filename($basename, $directory);
+-    }
+-  }
+-
    /**
-    * {@inheritdoc}
+    * Return if a scheme is a S3 scheme.
     *
+@@ -402,4 +399,69 @@ class FlysystemS3FileSystem extends FileSystem {
+       && $settings[$scheme]['config']['options']['ACL'] == 'private';
+   }
+
++  /**
++   * {@inheritdoc}
++   *
 +   * Override createFilename() as we also need to check files exist as entities.
 +   * This can happen if a CORS upload fails.
 +   *
-    * @codeCoverageIgnore
-    */
-   public function createFilename($basename, $directory) {
--    if (method_exists($this->fileSystem, 'createFilename')) {
--      return $this->fileSystem->createFilename($basename, $directory);
++   * @codeCoverageIgnore
++   */
++  public function createFilename($basename, $directory) {
 +    $original = $basename;
 +    // Strip control characters (ASCII value < 32). Though these are allowed in
 +    // some filesystems, not many applications handle them well.
@@ -95,11 +136,10 @@ index ed74c9b..da62fae 100644
 +    // A URI or path may already have a trailing slash or look like "public://".
 +    if (substr($directory, -1) == '/') {
 +      $separator = '';
-     }
-     else {
--      return file_create_filename($basename, $directory);
++    }
++    else {
 +      $separator = '/';
-     }
++    }
 +
 +    $destination = $directory . $separator . $basename;
 +
@@ -117,23 +157,24 @@ index ed74c9b..da62fae 100644
 +    $result = $this->entityTypeManager->getStorage('file')->getQuery()
 +      ->accessCheck(FALSE)
 +      ->condition('filename', $name, 'STARTS_WITH')
-+      ->condition('uri', $basename, 'STARTS_WITH')
++      ->condition('uri', $directory, 'STARTS_WITH')
 +      ->execute();
 +
 +    if (file_exists($destination) || !empty($result)) {
 +      $files = File::loadMultiple($result);
 +      $existing_filenames = [];
 +      foreach ($files as $file) {
-+        $existing_filenames[] = $file->filename;
++        $existing_filenames[] = $file->getFilename();
 +      }
 +
 +      $counter = 0;
 +      do {
-+        $destination = $directory . $separator . $name . '_' . $counter++ . $ext;
-+      } while (file_exists($destination) || in_array($destination, $existing_filenames));
++        $filename = $name . '_' . $counter++ . $ext;
++        $destination = $directory . $separator . $filename;
++      } while (file_exists($destination) || in_array($filename, $existing_filenames));
 +    }
 +
 +    return $destination;
-   }
- 
-   /**
++  }
++
+ }
