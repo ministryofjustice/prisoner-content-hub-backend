@@ -46,7 +46,7 @@ index eaf9e13..d20f405 100644
      ];
 
 diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
-index 4107eb3..ef0e768 100644
+index 4107eb3..feb0ee5 100644
 --- a/src/File/FlysystemS3FileSystem.php
 +++ b/src/File/FlysystemS3FileSystem.php
 @@ -2,12 +2,15 @@
@@ -65,9 +65,9 @@ index 4107eb3..ef0e768 100644
  use Psr\Log\LoggerInterface;
 
  /**
-@@ -15,6 +18,13 @@ use Psr\Log\LoggerInterface;
-  */
- class FlysystemS3FileSystem extends FileSystem {
+@@ -37,6 +40,13 @@ class FlysystemS3FileSystem extends FileSystem {
+    */
+   protected $streamWrapperManager;
 
 +  /**
 +   * The entity type manager.
@@ -76,10 +76,15 @@ index 4107eb3..ef0e768 100644
 +   */
 +  protected $entityTypeManager;
 +
-
    /**
-    * The site settings.
-@@ -60,6 +70,7 @@ class FlysystemS3FileSystem extends FileSystem {
+    * The file system being decorated.
+    *
+@@ -56,10 +66,11 @@ class FlysystemS3FileSystem extends FileSystem {
+    * @param \Drupal\Core\File\FileSystemInterface $file_system
+    *   The file system being decorated.
+    */
+-  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger, FileSystemInterface $file_system) {
++  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system) {
      $this->streamWrapperManager = $stream_wrapper_manager;
      $this->settings = $settings;
      $this->logger = $logger;
