@@ -1,0 +1,7 @@
+name: 'Page Cache Persist'
+type: module
+description: 'Prevents the internal page cache from being cleared when all caches are cleared (e.g. drush cr).  Provides an alternative method for clearing the page cache.'
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - drupal:page_cache

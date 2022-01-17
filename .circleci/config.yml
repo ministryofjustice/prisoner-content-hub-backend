@@ -78,6 +78,11 @@ jobs:
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> /bin/bash -c \
             'while ! mysqladmin ping -h"$HUB_DB_PORT_3306_TCP_ADDR" --silent; do sleep 1; done'
       - run:
+          name: Create S3 bucket in localstack
+          command: |
+            set -x
+            docker-compose -f << parameters.docker-compose-filename >> exec prisoner-content-hub-localstack awslocal s3 mb s3://localstack-s3
+      - run:
           name: Install Drupal and run tests
           command: |
             set -x

@@ -52,5 +52,15 @@ services:
     networks:
       - circleci-prisoner_content_hub
 
+  prisoner-content-hub-localstack:
+    image: localstack/localstack:0.13.3
+    environment:
+      - SERVICES=s3
+    ports:
+      - "4566:4566"
+    networks:
+      - circleci-prisoner_content_hub
+
+
 networks:
   circleci-prisoner_content_hub:
