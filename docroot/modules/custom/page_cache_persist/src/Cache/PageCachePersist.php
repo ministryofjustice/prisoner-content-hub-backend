@@ -49,6 +49,16 @@ class PageCachePersist implements CacheBackendInterface {
   }
 
   /**
+   * We do not currently need to override invalidateAll().
+   *
+   * There is no where in Drupal core that calls this on the page cache.  So
+   * for now we will leave it working as normal.
+   */
+  public function invalidateAll() {
+    $this->cache->invalidateAll();
+  }
+
+  /**
    * @inheritDoc
    */
   public function get($cid, $allow_invalid = FALSE) {
@@ -102,13 +112,6 @@ class PageCachePersist implements CacheBackendInterface {
    */
   public function invalidateMultiple(array $cids) {
     $this->cache->invalidateMultiple($cids);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function invalidateAll() {
-    $this->cache->invalidateAll();
   }
 
   /**

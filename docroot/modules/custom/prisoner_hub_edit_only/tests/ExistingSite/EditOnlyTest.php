@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\prisoner_hub_edit_only\ExistingSite;
 
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -83,4 +85,50 @@ class EditOnlyTest extends ExistingSiteBase {
       $web_assert->addressEquals('/' . $view_url->getInternalPath());
     }
   }
+
+  /**
+   * Test that entities can be saved, and
+   */
+  public function testEntityCanBeReSaved() {
+    // Create an admin user to perform the tests with.
+    $account = $this->createUser([], NULL, TRUE);
+    $this->drupalLogin($account);
+
+    /** @var ContentEntityInterface $entity */
+    foreach ($this->entitiesToTest as $entity) {
+      $edit_url = $entity->toUrl('edit-form');
+      $this->visit($edit_url->toString());
+
+      // "title" for node, "name" for taxonomy term.
+      $label_key = $entity->getEntityType()->getKey('label');
+
+      // Run through the changes twice.  This tests for the issue where
+      // content could not be re-saved. See https://trello.com/c/e6MQjFUu/587-fix-this-content-has-been-modified-by-another-user-issue
+      for ($counter = 1; $counter <= 2; $counter++) {
+        $this->submitForm([
+          $label_key . '[0][value]' => 'Label: ' . $counter,
+        ], 'Save');
+
+        $this->assertSession()->addressEquals($edit_url->toString());
+        $new_entity = $this->reloadEntity($entity);
+        $this->assertEquals($new_entity->label(), 'Label: ' . $counter);
+      }
+    }
+  }
+
+  /**
+   * Reloads the entity after clearing the static cache.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to reload.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The reloaded entity.
+   */
+  protected function reloadEntity(EntityInterface $entity) {
+    $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
+    $storage->resetCache([$entity->id()]);
+    return $storage->load($entity->id());
+  }
+
 }

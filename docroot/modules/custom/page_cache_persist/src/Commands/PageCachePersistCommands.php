@@ -28,10 +28,22 @@ class PageCachePersistCommands extends DrushCommands {
    *
    * @usage cache:force-clear-page
    *   Force clearing page cache.
-   *
-   * @aliases fcp
    */
-  public function forcecCacheClearPage() {
+  public function forceCacheClearPage() {
+    $this->pageCache->forceDeleteAll();
+  }
+
+  /**
+   * Force delete of all cache's including the page cache..
+   *
+   * @command cache:force-clear-all
+   *
+   * @usage cache:force-clear-all
+   *   Force clearing all cache's including the page cache.
+   *   Note this does not accept any arguments.  If you want to clear an individual cache use drush cache:clear
+   */
+  public function forceCacheClearAll() {
+    drush_cache_clear_all();
     $this->pageCache->forceDeleteAll();
   }
 
