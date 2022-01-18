@@ -45,16 +45,18 @@ function prisoner_hub_edit_only_form_alter(&$form, FormStateInterface $form_stat
  * Submit handler for node edit forms.
  */
 function prisoner_hub_edit_only_form_submit(&$form, FormStateInterface $form_state) {
-  // Only disable redirects if there is none specified in the url.
+  // Only modify the redirect if there is none specified in the url.
   if (empty(\Drupal::request()->query->get('destination'))) {
-    $form_state->disableRedirect();
-
-    // Update the changed value on the reloaded form.  Otherwise, the previous
-    // value will be used, which means the form cannot be re-saved, as Drupal
-    // thinks the modifications came before the ones we previously saved.
+    // Redirect back to the edit form (which would happen anyway as the default
+    // behaviour is to redirect to the canonical "view" page of the entity,
+    // which we are already redirecting to the edit form.  However, this skips
+    // the additional request).
     //
-    // This issue only occurs when a user is shown the same edit form immediately
-    // after saving.
-    $form['changed']['#value'] = \Drupal::time()->getRequestTime();
+    // But why are we redirecting to the same page the user is on?
+    // Because this ensures the form is properly rebuilt, retrieving all the
+    // correct values.  This includes things such as the changed time, and also
+    // any modified values by alter hooks etc.
+    $entity = $form_state->getFormObject()->getEntity();
+    $form_state->setRedirectUrl($entity->toUrl('edit-form'));
   }
 }
