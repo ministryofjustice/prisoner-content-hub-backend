@@ -70,9 +70,10 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
 function prisoner_hub_prison_access_cms_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
   $entity_edit_access = \Drupal::service('prisoner_hub_prison_access_cms.entity_edit_access');
 
-  // Only act on entities the user does not have access to.  Otherwise disabled
-  // states won't have been applied.
-  if ($entity instanceof ContentEntityInterface && !$entity_edit_access->hasEntityAccess($entity)) {
+  // Only act on entities with modifications (i.e. with an $entity->original).
+  // And entities the user does not have access to (otherwise disabled states
+  // won't have been applied).
+  if ($entity->original && $entity instanceof ContentEntityInterface && !$entity_edit_access->hasEntityAccess($entity)) {
     $exclude_from_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
     $original_field_value = $entity->original->get($exclude_from_field_name)->getValue();
     $submitted_field_value = $entity->get($exclude_from_field_name)->getValue();
