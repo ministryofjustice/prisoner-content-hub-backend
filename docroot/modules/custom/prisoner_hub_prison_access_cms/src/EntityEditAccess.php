@@ -4,15 +4,17 @@ namespace Drupal\prisoner_hub_prison_access_cms;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 
 /**
- * Class FieldPermissions.
+ * The EntityEditAccess service.
+ *
+ * This provides access checks to see whether the user has access to edit an
+ * entity.
  */
-class FieldPermissions implements TrustedCallbackInterface {
+class EntityEditAccess {
 
   /**
    * The current user.
@@ -22,10 +24,16 @@ class FieldPermissions implements TrustedCallbackInterface {
   protected $user;
 
   /**
-   * Constructs a new UserCacheContextBase class.
+   * EntityEditAccess constructor.
    *
-   * @param \Drupal\user\UserInterface $user
-   *   The current user.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user account.
+   * @param string $prison_owner_field_name
+   *   The field name of the prison owner field, added to ContentEntities.
+   * @param string $user_prison_field_name
+   *   The field name where the users prisons are stored, on the user entity.s
+   * @param string $exclude_from_prison_field_name
+   *   The field name of the excluded prisons, added to ContentEntities.
    */
   public function __construct(AccountInterface $account, string $prison_owner_field_name, string $user_prison_field_name, string $exclude_from_prison_field_name) {
     $this->user = User::load($account->id());
@@ -36,16 +44,17 @@ class FieldPermissions implements TrustedCallbackInterface {
   }
 
   /**
+   * Checks whether the current user has access to a specific field
+   *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinition
+   *   The field definition of the field to check.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to check the user has access to.
    *
    * @return bool
+   *   TRUE if the user can edit the field, otherwise FALSE.
    */
-  public function checkFieldAccess(FieldDefinitionInterface $fieldDefinition, ContentEntityInterface $entity) {
-    if ($this->user->hasPermission('bypass node access')) {
-      return TRUE;
-    }
-
+  public function hasFieldAccess(FieldDefinitionInterface $fieldDefinition, ContentEntityInterface $entity) {
     // If the entity is being created, then assume we have access to all of
     // the fields.  I.e. we only restrict access for existing entities (that are
     // potentially created by other users/prisons).
@@ -62,8 +71,24 @@ class FieldPermissions implements TrustedCallbackInterface {
       return TRUE;
     }
 
-    $content_prisons = $entity->hasField($this->prisonOwnerFieldName) ? $entity->get($this->prisonOwnerFieldName)->referencedEntities() : [];
+    return $this->hasEntityAccess($entity);
+  }
 
+  /**
+   * Check whether the user has edit access to the $entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to check.
+   *
+   * @return bool
+   *   TRUE if the user has edit access, otherwise FALSE.
+   */
+  public function hasEntityAccess(ContentEntityInterface $entity) {
+    if ($this->user->hasPermission('bypass node access')) {
+      return TRUE;
+    }
+
+    $content_prisons = $entity->hasField($this->prisonOwnerFieldName) ? $entity->get($this->prisonOwnerFieldName)->referencedEntities() : [];
     // If the content is not owned by any prison, then deny access.
     if (empty($content_prisons)) {
       return FALSE;
@@ -98,42 +123,42 @@ class FieldPermissions implements TrustedCallbackInterface {
     return FALSE;
   }
 
-  public function setExcludeFromPrisonFieldAccess(&$element) {
-    $element['#pre_render'][] = [$this, 'preRenderExcludeFromPrisonField'];
-  }
-
-  public static function trustedCallbacks() {
-    return ['preRenderExcludeFromPrisonField'];
-  }
-
-
-  public function preRenderExcludeFromPrisonField($element) {
-    foreach (Element::children($element) as $key) {
-      foreach ($this->userPrisons as $user_prison_term) {
-        if ($user_prison_term->id() == $key) {
-          break;
+  /**
+   * Check an individual prison $id to see if the user has access.
+   *
+   * This will also include prison categories, if a user has been assigned to a
+   * category and the $id is for a prison within this category, the result will
+   * be TRUE.
+   *
+   * @param int $id
+   *   The numerical taxonomy term id of the prison to check for.
+   *
+   * @return bool
+   *   TRUE if the user has access to the prison $id, otherwise FALSE.
+   */
+  public function hasPrisonTermAccess(int $id) {
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    /** @var TermInterface $user_prison_term */
+    foreach ($this->userPrisons as $user_prison_term) {
+      if ($user_prison_term->id() == $id) {
+        return TRUE;
+      }
+      foreach ($storage->getChildren($user_prison_term) as $child_term) {
+        if ($child_term->id() == $id) {
+          return TRUE;
         }
-        $element[$key]['#attributes']['disabled'] = 'disabled';
-      }
-//      if (!in_array($key, $this->userPrisons)) {
-//
-//      }
-      foreach (Element::children($element[$key]) as $child_key) {
-        $element[$key][$child_key] = $this->preRenderExcludeFromPrisonField($element[$key][$child_key]);
       }
     }
-    return $element;
+    return FALSE;
   }
 
-  public function excludeFromPrisonFieldSubmit($form, $form_state) {
-    $sopt = 1;
-  }
-
-  public function setDefaultPrisonOwner(&$element) {
-    /** @var \Drupal\taxonomy\TermInterface $user_prison */
-    foreach ($this->userPrisons as $user_prison) {
-      $element['#default_value'][]['target_id'] = $user_prison->id();
-    }
+  /**
+   * Get the current user prisons.
+   *
+   * @return array
+   */
+  public function getUserPrisons() {
+    return $this->userPrisons;
   }
 
 }
