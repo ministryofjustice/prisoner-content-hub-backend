@@ -73,13 +73,13 @@ function prisoner_hub_prison_access_cms_entity_presave(\Drupal\Core\Entity\Entit
 
   // Only act on
   // 1. entities with modifications (i.e. with an $entity->original).
-  // 2. entities with the field_exclude_from_prison
-  // 3. content entities
+  // 2. content entities (we don't want to deal with config entities)
+  // 3. entities with the field_exclude_from_prison
   // 4. entities the user does not have access to (otherwise disabled states
   // won't have been applied).
   if ($entity->original &&
-    $entity->hasField($exclude_from_field_name) &&
     $entity instanceof ContentEntityInterface &&
+    $entity->hasField($exclude_from_field_name) &&
     !$entity_edit_access->hasEntityAccess($entity)
   ) {
     $original_field_value = $entity->original->get($exclude_from_field_name)->getValue();
