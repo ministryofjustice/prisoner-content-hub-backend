@@ -98,11 +98,11 @@ trait PrisonerHubPrisonAccessTestTrait {
    * @return array
    *   An array of bundle ids.
    */
-  protected function getBundlesWithPrisonField(string $entityType) {
+  protected function getBundlesWithField(string $entityType, string $fileName) {
     // Get the list of content types with the prison field enabled.
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
     $entityFieldManager = $this->container->get('entity_field.manager');
     $entityFieldManager->getFieldMap();
-    return $entityFieldManager->getFieldMap()[$entityType][$this->prisonFieldName]['bundles'];
+    return $entityFieldManager->getFieldMap()[$entityType][$fileName]['bundles'];
   }
 }

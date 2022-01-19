@@ -32,7 +32,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   protected function setUp(): void {
     parent::setUp();
     foreach (self::$entityTypes as $entityType) {
-      $this->bundlesByEntityType[$entityType] = $this->getBundlesWithPrisonField($entityType);
+      $this->bundlesByEntityType[$entityType] = $this->getBundlesWithField($entityType, $this->prisonFieldName);
     }
   }
 

@@ -18,11 +18,11 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   static $role = 'moj_local_content_manager';
 
   /**
-   * The content types to test on.
+   * The content types to test on, an array of bundle ids.
    *
-   * @var string[]
+   * @var array
    */
-  static $contentTypes = ['moj_video_item'];
+  protected $contentTypes;
 
   /**
    * The generated user for testing.
@@ -37,8 +37,12 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   public function setUp(): void {
     parent::setUp();
     $this->createPrisonTaxonomyTerms();
+
+    $this->prisonOwnerFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
+    $this->userPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
+    $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
     $this->user = $this->createUser([], NULL, FALSE, [
-      'field_user_prisons' => [
+      $this->userPrisonFieldName => [
         ['target_id' => $this->prisonTerm->id()]
       ]
     ]);
@@ -51,7 +55,11 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * Test that the user can create new content.
    */
   public function testUserCanCreateNewContent() {
-    foreach (self::$contentTypes as $contentType) {
+    foreach ($this->contentTypes as $contentType) {
+      // Skip the homepage content type, as we do not have access to create these.
+      if ($contentType == 'featured_articles') {
+        continue;
+      }
       $this->visit('/node/add/' . $contentType);
 
       // Test that the default value for the prison owner field is the users current prison.
@@ -65,10 +73,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * Tests that a user can edit content that is created by another user but assigned to their prison.
    */
   public function testUserCanEditOwnPrisonContent() {
-    foreach (self::$contentTypes as $contentType) {
+    foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
-        'field_prison_owner' => [
+        $this->prisonOwnerFieldName => [
           ['target_id' => $this->prisonCategoryTerm->id()]
         ],
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
@@ -84,10 +92,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * Test user can edit content that is assigned to their prison category.
    */
   public function testUserCanEditContentAssignedToCategory() {
-    foreach (self::$contentTypes as $contentType) {
+    foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
-        'field_prison_owner' => [
+         $this->prisonOwnerFieldName => [
           ['target_id' => $this->prisonCategoryTerm->id()]
         ],
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
@@ -104,7 +112,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    */
   public function testUserCanEditContentInPrisonCategory() {
     // Assign a prison category to the user.
-    $this->user->set('field_user_prisons', [
+    $this->user->set($this->userPrisonFieldName, [
       ['target_id' => $this->prisonCategoryTerm->id()],
     ]);
     $this->user->save();
@@ -115,10 +123,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       ],
     ]);
 
-    foreach (self::$contentTypes as $contentType) {
+    foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
-        'field_prison_owner' => [
+        $this->prisonOwnerFieldName => [
           ['target_id' => $anotherPrisonInSameCategory->id()]
         ],
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
@@ -134,10 +142,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * Tests that a user cannot make changes to content owned by another prison.
    */
   public function testUserCannotEditOtherUserPrisonContent() {
-    foreach (self::$contentTypes as $contentType) {
+    foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
-        'field_prison_owner' => [
+        $this->prisonOwnerFieldName => [
           ['target_id' => $this->anotherPrisonTerm->id()]
         ],
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
@@ -147,7 +155,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
       // Test some fields are disabled, that appear on all content types.
       $this->assertSession()->fieldDisabled('Title');
-      $this->assertSession()->fieldDisabled('Description');
+      $this->assertSession()->fieldDisabled('Published');
 
       // Test that the user is not able to change the prisons the content is published to.
       $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
@@ -163,10 +171,15 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     }
   }
 
+  /**
+   * Asserts that the user can make edits to the current node edit form.
+   *
+   * Assumes we are already on the form url in the current session.
+   */
   protected function assertUserCanEditNode() {
     // Test some fields are enabled, that appear on all content types.
     $this->assertSession()->fieldEnabled('Title');
-    $this->assertSession()->fieldEnabled('Description');
+    $this->assertSession()->fieldEnabled('Published');
 
     // Test that the user is able to select prisons.
     $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
