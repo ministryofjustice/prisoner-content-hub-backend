@@ -7,6 +7,7 @@ dependencies:
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_top_level_categories
+    - field.storage.node.field_prison_owner
     - field.storage.node.field_prisons
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.prisons
@@ -490,6 +491,69 @@ display:
           admin_label: ''
           plugin_id: field
           label: Prisons
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_prison_owner:
+          id: field_prison_owner
+          table: node__field_prison_owner
+          field: field_prison_owner
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Prison owner'
           exclude: false
           alter:
             alter_text: false
@@ -1352,6 +1416,55 @@ display:
           hierarchy: true
           limit: true
           error_message: true
+        field_prison_owner_target_id:
+          id: field_prison_owner_target_id
+          table: node__field_prison_owner
+          field: field_prison_owner_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_prison_owner_target_id_op
+            label: 'Prison owner'
+            description: ''
+            use_operator: false
+            operator: field_prison_owner_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_prison_owner_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: prisons
+          type: select
+          hierarchy: true
+          limit: true
+          error_message: true
       filter_groups:
         operator: AND
         groups:
@@ -1478,6 +1591,7 @@ display:
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_series'
         - 'config:field.storage.node.field_moj_top_level_categories'
+        - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
   page_1:
     id: page_1
@@ -1506,7 +1620,7 @@ display:
                   title: General
                   description: ''
                   open: '1'
-                  weight: '-30'
+                  weight: '-31'
                   id: container-2
                   pid: root
                   depth: '1'
@@ -1546,7 +1660,7 @@ display:
                   title: Description
                   description: ''
                   open: '1'
-                  weight: '-29'
+                  weight: '-30'
                   id: container-6
                   pid: root
                   depth: '1'
@@ -1563,18 +1677,12 @@ display:
                   pid: container-6
                   depth: '2'
                   type: filter
-                reset:
-                  weight: '-28'
-                  id: reset
-                  pid: root
-                  depth: '1'
-                  type: buttons
                 container-1:
                   container_type: details
                   title: Taxonomy
                   description: ''
                   open: '1'
-                  weight: '-27'
+                  weight: '-29'
                   id: container-1
                   pid: root
                   depth: '1'
@@ -1608,7 +1716,7 @@ display:
                   title: Prisons
                   description: ''
                   open: '1'
-                  weight: '-26'
+                  weight: '-28'
                   id: container-0
                   pid: root
                   depth: '1'
@@ -1625,12 +1733,18 @@ display:
                   pid: container-0
                   depth: '2'
                   type: filter
+                field_prison_owner_target_id:
+                  weight: '-29'
+                  id: field_prison_owner_target_id
+                  pid: container-0
+                  depth: '2'
+                  type: filter
                 container-3:
                   container_type: container
                   title: ''
                   description: ''
                   open: '1'
-                  weight: '-24'
+                  weight: '-26'
                   id: container-3
                   pid: root
                   depth: '1'
@@ -1645,7 +1759,7 @@ display:
                   container_type: details
                   title: 'Prison categories'
                   description: ''
-                  weight: '-23'
+                  weight: '-25'
                   open: 0
                   id: container-5
                   pid: root
@@ -1655,7 +1769,7 @@ display:
                   container_type: details
                   title: 'Container 6'
                   description: ''
-                  weight: '-22'
+                  weight: '-24'
                   open: 0
                   id: container-4
                   pid: root
@@ -1665,7 +1779,7 @@ display:
                   container_type: details
                   title: 'Container 7'
                   description: ''
-                  weight: '-21'
+                  weight: '-23'
                   open: 0
                   id: container-7
                   pid: root
@@ -1675,7 +1789,7 @@ display:
                   container_type: details
                   title: 'Container 8'
                   description: ''
-                  weight: '-20'
+                  weight: '-22'
                   open: 0
                   id: container-8
                   pid: root
@@ -1685,7 +1799,7 @@ display:
                   container_type: details
                   title: 'Container 9'
                   description: ''
-                  weight: '-19'
+                  weight: '-21'
                   open: 0
                   id: container-9
                   pid: root
@@ -1695,7 +1809,7 @@ display:
                   container_type: details
                   title: 'Container 10'
                   description: ''
-                  weight: '-18'
+                  weight: '-20'
                   open: 0
                   id: container-10
                   pid: root
@@ -1705,7 +1819,7 @@ display:
                   container_type: details
                   title: 'Container 11'
                   description: ''
-                  weight: '-17'
+                  weight: '-19'
                   open: 0
                   id: container-11
                   pid: root
@@ -1715,7 +1829,7 @@ display:
                   container_type: details
                   title: 'Container 12'
                   description: ''
-                  weight: '-16'
+                  weight: '-18'
                   open: 0
                   id: container-12
                   pid: root
@@ -1725,7 +1839,7 @@ display:
                   container_type: details
                   title: 'Container 13'
                   description: ''
-                  weight: '-15'
+                  weight: '-17'
                   open: 0
                   id: container-13
                   pid: root
@@ -1735,7 +1849,7 @@ display:
                   container_type: details
                   title: 'Container 14'
                   description: ''
-                  weight: '-14'
+                  weight: '-16'
                   open: 0
                   id: container-14
                   pid: root
@@ -1770,4 +1884,5 @@ display:
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_series'
         - 'config:field.storage.node.field_moj_top_level_categories'
+        - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
