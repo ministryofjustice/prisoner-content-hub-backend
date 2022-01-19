@@ -1,19 +1,19 @@
-uuid: 388b1685-e01c-413c-a6a8-479513f807f4
+uuid: 380940bc-2a56-451c-808d-798b0b506627
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_prison_owner
-    - node.type.moj_video_item
+    - node.type.featured_articles
     - taxonomy.vocabulary.prisons
-id: node.moj_video_item.field_prison_owner
+id: node.featured_articles.field_prison_owner
 field_name: field_prison_owner
 entity_type: node
-bundle: moj_video_item
+bundle: featured_articles
 label: 'Prison owner'
 description: 'Select which prison(s) should <em>own</em> this content.  This will effect who has the ability to edit the content.'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

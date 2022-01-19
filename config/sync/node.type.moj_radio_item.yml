@@ -31,5 +31,5 @@ type: moj_radio_item
 description: 'Use <em>radio items</em> to represent radio content stored within the content library.'
 help: ''
 new_revision: true
-preview_mode: 1
+preview_mode: 0
 display_submitted: false

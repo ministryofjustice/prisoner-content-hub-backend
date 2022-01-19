@@ -29,5 +29,5 @@ type: moj_pdf_item
 description: 'Used to create PDF items within the content library. We should avoid PDFs where possible, because they aren''t an accessible format.'
 help: ''
 new_revision: true
-preview_mode: 1
+preview_mode: 0
 display_submitted: false

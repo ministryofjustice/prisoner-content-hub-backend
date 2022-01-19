@@ -41,7 +41,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 12
+      weight: 13
       format_type: fieldset
       format_settings:
         classes: ''
@@ -57,7 +57,7 @@ third_party_settings:
       label: 'Does this content fit into a Series?'
       region: content
       parent_name: ''
-      weight: 8
+      weight: 9
       format_type: fieldset
       format_settings:
         classes: ''
@@ -97,7 +97,7 @@ third_party_settings:
       label: Category
       region: content
       parent_name: ''
-      weight: 9
+      weight: 10
       format_type: fieldset
       format_settings:
         classes: ''
@@ -123,7 +123,7 @@ third_party_settings:
       label: 'Prison owner'
       region: content
       parent_name: ''
-      weight: 18
+      weight: 0
       format_type: details_sidebar
       format_settings:
         classes: ''
@@ -142,13 +142,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 2
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
-    weight: 13
+    weight: 14
     region: content
     settings:
       display_label: true
@@ -167,13 +167,13 @@ content:
     third_party_settings: {  }
   field_feature_on_category:
     type: options_buttons
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   field_moj_description:
     type: text_textarea_with_summary
-    weight: 4
+    weight: 5
     region: content
     settings:
       rows: 9
@@ -197,7 +197,7 @@ content:
     third_party_settings: {  }
   field_moj_secondary_tags:
     type: select2_entity_reference
-    weight: 10
+    weight: 11
     region: content
     settings:
       width: 100%
@@ -217,14 +217,14 @@ content:
     third_party_settings: {  }
   field_moj_subtitles:
     type: file_generic
-    weight: 7
+    weight: 8
     region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
-    weight: 6
+    weight: 7
     region: content
     settings:
       progress_indicator: throbber
@@ -277,38 +277,38 @@ content:
     third_party_settings: {  }
   field_video:
     type: file_generic
-    weight: 5
+    weight: 6
     region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
   path:
     type: path
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 17
+    weight: 18
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: 1
     region: content
     settings:
       size: 60
@@ -321,7 +321,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 1
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS
@@ -331,7 +331,7 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
