@@ -189,7 +189,11 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    */
   public function testUserWithByPassPermissionCanEditContent() {
     $this->drupalLogout();
-    $new_user = $this->createUser(['bypass prison ownership edit access'], NULL);
+    $new_user = $this->createUser([
+      'administer nodes',
+      'bypass node access',
+      'bypass prison ownership edit access',
+    ]);
     $new_user->save();
     $this->drupalLogin($new_user);
     foreach ($this->contentTypes as $contentType) {
