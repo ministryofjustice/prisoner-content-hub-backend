@@ -3,11 +3,28 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.user.user.user_picture
-    - image.style.thumbnail
+    - field.field.user.user.field_user_prisons
   module:
-    - image
+    - field_group
+    - term_reference_tree
     - user
+third_party_settings:
+  field_group:
+    group_prisons:
+      children:
+        - field_user_prisons
+      label: Prisons
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: true
+        description: "Select the prison(s) this user is associated with.</br>\r\nThis will determine the content the user can make changes to.</br>\r\nMultiple prisons can be selected, and if a prison category is selected the user will be able to make changes to all content owned by any prison within that category."
+        required_fields: true
 _core:
   default_config_hash: LLAieeozVsoZDb-2PbFxRJpQqnKmpR7-4OoRJnduz-U
 id: user.user.default
@@ -16,7 +33,7 @@ bundle: user
 mode: default
 content:
   account:
-    weight: -10
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -25,22 +42,19 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  language:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  timezone:
-    weight: 6
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  user_picture:
-    type: image_image
-    weight: -1
+  field_user_prisons:
+    type: term_reference_tree
+    weight: 5
     region: content
     settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
+      start_minimized: false
+      leaves_only: false
+      select_parents: false
+      cascading_selection: 1
+      cascading_selection_enforce: true
+      max_depth: 0
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  language: true
+  path: true
+  timezone: true
