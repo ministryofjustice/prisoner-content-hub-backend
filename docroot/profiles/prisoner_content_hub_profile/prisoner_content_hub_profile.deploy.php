@@ -157,7 +157,8 @@ function prisoner_content_hub_profile_add_categories(ContentEntityInterface $ent
 }
 
 /**
- * Copy values from entity reference fields to the new dynamic entity reference fields.
+ * Copy values from entity reference fields to the new dynamic entity reference
+ * fields.
  */
 function prisoner_content_hub_profile_deploy_copy_homepage_tile_values() {
   $result = \Drupal::entityQuery('node')
@@ -181,4 +182,41 @@ function prisoner_content_hub_profile_deploy_copy_homepage_tile_values() {
     $node->set('field_featured_tile_small', $tile_small_value);
     $node->save();
   }
+}
+
+/**
+ * Set the prison owner for content based on the authors prisons.
+ */
+function prisoner_content_hub_profile_deploy_set_prison_owner(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['result_nodes'] = \Drupal::entityQuery('node')
+      ->condition('type', ['help_page', 'external_link'], 'NOT IN')
+      ->accessCheck(FALSE)
+      ->execute();
+
+    $sandbox['progress'] = 0;
+  }
+  $nodes = Node::loadMultiple(array_slice($sandbox['result_nodes'], $sandbox['progress'], 50, TRUE));
+
+  foreach ($nodes as $node) {
+    /** @var \Drupal\user\UserInterface $author */
+    $author = $node->getOwner();
+    $prisons = $author->get('field_user_prisons')->getValue();
+    if (!empty($prisons)) {
+      $node->set('field_prison_owner', $prisons);
+      $node->setNewRevision(TRUE);
+      $node->revision_log = 'Automatically updating prison owner based on author of content.';
+      $node->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+
+      // Set the user to leon.
+      $node->setRevisionUserId(334);
+      $node->save();
+    }
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result_nodes']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['progress'];
+  }
+  return 'Processed nodes: ' . $sandbox['progress'];
 }
