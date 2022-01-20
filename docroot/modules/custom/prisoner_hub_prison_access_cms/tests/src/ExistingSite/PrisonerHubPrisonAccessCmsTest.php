@@ -43,7 +43,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
-        ['target_id' => $this->prisonTerm->id()]
+        ['target_id' => $this->prisonTerm->id()],
       ]
     ]);
     $this->user->addRole(self::$role);
@@ -128,6 +128,32 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'type' => $contentType,
         $this->prisonOwnerFieldName => [
           ['target_id' => $anotherPrisonInSameCategory->id()]
+        ],
+        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+      ]);
+
+      $edit_url = $node->toUrl('edit-form');
+      $this->visit($edit_url->toString());
+      $this->assertUserCanEditNode();
+    }
+  }
+
+  /**
+   * Test that a user with multiple prisons can edit content owned by one of those prisons.
+   */
+  public function testUserWithMultiplePrisonsCanEditContent() {
+    $new_prison = $this->createTerm( Vocabulary::load('prisons'));
+    $this->user->set($this->userPrisonFieldName, [
+      ['target_id' => $this->prisonTerm->id()],
+      ['target_id' => $new_prison->id()],
+    ]);
+    $this->user->save();
+
+    foreach ($this->contentTypes as $contentType) {
+      $node = $this->createNode([
+        'type' => $contentType,
+        $this->prisonOwnerFieldName => [
+          ['target_id' => $new_prison->id()]
         ],
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
