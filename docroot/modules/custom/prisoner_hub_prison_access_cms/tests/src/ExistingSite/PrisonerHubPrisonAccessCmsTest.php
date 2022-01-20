@@ -165,6 +165,49 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
+   * Test the a user can edit content that is owned by multiple prisons.
+   */
+  public function testUserCanEditContentInMultiplePrisons() {
+    foreach ($this->contentTypes as $contentType) {
+      $node = $this->createNode([
+        'type' => $contentType,
+        $this->prisonOwnerFieldName => [
+          ['target_id' => $this->prisonTerm->id()],
+          ['target_id' => $this->anotherPrisonTerm->id()],
+        ],
+        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+      ]);
+
+      $edit_url = $node->toUrl('edit-form');
+      $this->visit($edit_url->toString());
+      $this->assertUserCanEditNode();
+    }
+  }
+
+  /**
+   * Test that a user with 'bypass prison ownership edit access' can edit content.
+   */
+  public function testUserWithByPassPermissionCanEditContent() {
+    $this->drupalLogout();
+    $new_user = $this->createUser(['bypass prison ownership edit access'], NULL);
+    $new_user->save();
+    $this->drupalLogin($new_user);
+    foreach ($this->contentTypes as $contentType) {
+      $node = $this->createNode([
+        'type' => $contentType,
+        $this->prisonOwnerFieldName => [
+          ['target_id' => $this->prisonTerm->id()]
+        ],
+        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+      ]);
+
+      $edit_url = $node->toUrl('edit-form');
+      $this->visit($edit_url->toString());
+      $this->assertUserCanEditNode();
+    }
+  }
+
+  /**
    * Tests that a user cannot make changes to content owned by another prison.
    */
   public function testUserCannotEditOtherUserPrisonContent() {

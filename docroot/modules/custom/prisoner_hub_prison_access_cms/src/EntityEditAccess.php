@@ -84,7 +84,7 @@ class EntityEditAccess {
    *   TRUE if the user has edit access, otherwise FALSE.
    */
   public function hasEntityAccess(ContentEntityInterface $entity) {
-    if ($this->user->hasPermission('bypass node access')) {
+    if ($this->user->hasPermission('bypass prison ownership edit access')) {
       return TRUE;
     }
 

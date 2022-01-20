@@ -21,6 +21,7 @@ dependencies:
     - field_ui
     - filter
     - node
+    - prisoner_hub_prison_access_cms
     - raven
     - role_delegation
     - scheduler
@@ -50,6 +51,7 @@ permissions:
   - 'assign local_administrator role'
   - 'assign moj_local_content_manager role'
   - 'bypass node access'
+  - 'bypass prison ownership edit access'
   - 'clone node entity'
   - 'clone taxonomy_term entity'
   - 'create external_link content'
