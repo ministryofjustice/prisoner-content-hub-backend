@@ -94,6 +94,12 @@ class EntityEditAccess {
       return TRUE;
     }
 
+    // If the entity does not have the prison owner field, we allow editing.
+    // This could of course be restricted by other Drupal permissions.
+    if (!$entity->hasField($this->prisonOwnerFieldName)) {
+      return TRUE;
+    }
+
     $content_prisons = $entity->hasField($this->prisonOwnerFieldName) ? $entity->get($this->prisonOwnerFieldName)->referencedEntities() : [];
     // If the content is not owned by any prison, then deny access.
     if (empty($content_prisons)) {
