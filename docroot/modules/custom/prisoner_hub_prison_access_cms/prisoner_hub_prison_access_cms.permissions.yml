@@ -1,3 +1,6 @@
 bypass prison ownership edit access:
   title: 'Bypass prison ownership edit access'
   description: 'Skip checks for whether the user is associated with the same prison the content is owned by.'
+assign prisons to users:
+  title: 'Assign prisons to users'
+  description: 'To assign a prison to a user, they also need edit access to that user.'

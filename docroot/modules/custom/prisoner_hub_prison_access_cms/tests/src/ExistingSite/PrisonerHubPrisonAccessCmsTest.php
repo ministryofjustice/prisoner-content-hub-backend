@@ -261,6 +261,22 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
+   * Test that a user without the assign prisons to users cannot add prisons to a user.
+   */
+  public function testUserCannotEditUserPrisons() {
+    $user_edit_url = $this->user->toUrl('edit-form');
+    $this->visit($user_edit_url->toString());
+    $fieldUserPrisonsElement = $this->assertSession()->elementExists('css', '#edit-field-user-prisons');
+
+    // First check the user prison field is on the page. (I.e. there are some checkboxes).
+    $this->assertSession()->elementExists('css', 'input[type="checkbox"]', $fieldUserPrisonsElement);
+
+    // Check that they are all disabled, we don't want to find any checkboxes
+    // that do not have a disabled state.
+    $this->assertSession()->elementNotExists('css', 'input[type="checkbox"]:not([disabled])', $fieldUserPrisonsElement);
+  }
+
+  /**
    * Asserts that the user can make edits to the current node edit form.
    *
    * Assumes we are already on the form url in the current session.

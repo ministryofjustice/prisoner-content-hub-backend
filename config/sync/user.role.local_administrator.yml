@@ -50,6 +50,7 @@ permissions:
   - 'administer users'
   - 'assign local_administrator role'
   - 'assign moj_local_content_manager role'
+  - 'assign prisons to users'
   - 'bypass node access'
   - 'bypass prison ownership edit access'
   - 'clone node entity'

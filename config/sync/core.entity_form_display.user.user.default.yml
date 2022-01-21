@@ -5,26 +5,8 @@ dependencies:
   config:
     - field.field.user.user.field_user_prisons
   module:
-    - field_group
     - term_reference_tree
     - user
-third_party_settings:
-  field_group:
-    group_prisons:
-      children:
-        - field_user_prisons
-      label: Prisons
-      region: content
-      parent_name: ''
-      weight: 1
-      format_type: details
-      format_settings:
-        classes: ''
-        show_empty_fields: false
-        id: ''
-        open: true
-        description: "Select the prison(s) this user is associated with.</br>\r\nThis will determine the content the user can make changes to.</br>\r\nMultiple prisons can be selected, and if a prison category is selected the user will be able to make changes to all content owned by any prison within that category."
-        required_fields: true
 _core:
   default_config_hash: LLAieeozVsoZDb-2PbFxRJpQqnKmpR7-4OoRJnduz-U
 id: user.user.default
@@ -44,7 +26,7 @@ content:
     third_party_settings: {  }
   field_user_prisons:
     type: term_reference_tree
-    weight: 5
+    weight: 1
     region: content
     settings:
       start_minimized: false

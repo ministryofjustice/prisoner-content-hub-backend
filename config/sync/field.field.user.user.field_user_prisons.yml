@@ -12,7 +12,7 @@ field_name: field_user_prisons
 entity_type: user
 bundle: user
 label: Prisons
-description: ''
+description: "The prison(s) the user is associated with.</br>\r\nThis will determine what content a user can make changes to.</br>"
 required: false
 translatable: false
 default_value: {  }

@@ -57,6 +57,15 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
       }
     }
   }
+
+  // Set disabled state to the field_user_prisons if the user does not have
+  // the permission to edit them.
+  $user_prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
+  if ($field_definition->getName() == $user_prison_field_name && !\Drupal::currentUser()->hasPermission('assign prisons to users')) {
+    $element['#disabled'] = TRUE;
+    $element['#description'] .= '<p>' . t('You are unable to make changes to your prison.') . '</p>';
+  }
+
 }
 
 /**
