@@ -5,6 +5,7 @@ namespace Drupal\prisoner_hub_prison_access_cms;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 
@@ -85,6 +86,11 @@ class EntityEditAccess {
    */
   public function hasEntityAccess(ContentEntityInterface $entity) {
     if ($this->user->hasPermission('bypass prison ownership edit access')) {
+      return TRUE;
+    }
+
+    // Allow content authors to edit their own account, regardless of prison.
+    if ($entity instanceof NodeInterface && $entity->getOwnerId() == $this->user->id()) {
       return TRUE;
     }
 

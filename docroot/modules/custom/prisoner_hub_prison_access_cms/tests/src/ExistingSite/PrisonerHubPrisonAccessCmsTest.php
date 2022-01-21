@@ -212,6 +212,22 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
+   * Test the a user can edit their own content even if it's not owned by a prison.
+   */
+  public function testUserCanEditOwnAuthoredContent() {
+    foreach ($this->contentTypes as $contentType) {
+      $node = $this->createNode([
+        'type' => $contentType,
+        'uid' => $this->user->id(),
+      ]);
+
+      $edit_url = $node->toUrl('edit-form');
+      $this->visit($edit_url->toString());
+      $this->assertUserCanEditNode();
+    }
+  }
+
+  /**
    * Tests that a user cannot make changes to content owned by another prison.
    */
   public function testUserCannotEditOtherUserPrisonContent() {
