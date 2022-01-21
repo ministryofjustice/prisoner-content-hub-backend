@@ -3,7 +3,6 @@
 namespace Drupal\prisoner_hub_prison_access_cms;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
@@ -47,15 +46,15 @@ class EntityEditAccess {
   /**
    * Checks whether the current user has access to a specific field
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinition
-   *   The field definition of the field to check.
+   * @param string $fieldDefinition
+   *   The field name of the field to check.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity to check the user has access to.
    *
    * @return bool
    *   TRUE if the user can edit the field, otherwise FALSE.
    */
-  public function hasFieldAccess(FieldDefinitionInterface $fieldDefinition, ContentEntityInterface $entity) {
+  public function hasFieldAccess(string $fieldName, ContentEntityInterface $entity) {
     // If the entity is being created, then assume we have access to all of
     // the fields.  I.e. we only restrict access for existing entities (that are
     // potentially created by other users/prisons).
@@ -64,11 +63,11 @@ class EntityEditAccess {
     }
 
     // The exclude from prison field is always accessible.
-    if ($fieldDefinition->getName() == $this->excludeFromPrisonFieldName) {
+    if ($fieldName == $this->excludeFromPrisonFieldName) {
       return TRUE;
     }
 
-    if ($fieldDefinition->getName() == 'revision_log') {
+    if ($fieldName == 'revision_log') {
       return TRUE;
     }
 

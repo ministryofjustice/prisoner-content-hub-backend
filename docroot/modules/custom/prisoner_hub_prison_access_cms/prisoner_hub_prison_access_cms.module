@@ -15,16 +15,15 @@ use Drupal\prisoner_hub_prison_access_cms\ExcludedFromFieldPreRender;
  * edit form.  Based on the users prisons and level of access.
  */
 function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
-  /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
-  $field_definition = $context['items']->getFieldDefinition();
-
   /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $entity = $context['items']->getEntity();
 
   /** @var \Drupal\prisoner_hub_prison_access_cms\EntityEditAccess $entity_edit_access */
   $entity_edit_access = \Drupal::service('prisoner_hub_prison_access_cms.entity_edit_access');
 
-  if (!$entity_edit_access->hasFieldAccess($field_definition, $entity)) {
+  $field_name = $context['items']->getFieldDefinition()->getName();
+
+  if (!$entity_edit_access->hasFieldAccess($field_name, $entity)) {
     $element['#disabled'] = TRUE;
 
     // Only add a warning message if the form has no input (i.e. not been submitted).
@@ -41,7 +40,7 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
   // This must be done in a pre_render, after the term_reference_tree module
   // has built the list of taxonomy terms.
   $exclude_from_prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
-  if ($field_definition->getName() == $exclude_from_prison_field_name && $element['#type'] == 'checkbox_tree') {
+  if ($field_name == $exclude_from_prison_field_name && $element['#type'] == 'checkbox_tree') {
     if (!$entity->isNew() && !$entity_edit_access->hasEntityAccess($entity)) {
       $element['#pre_render'][] = [ExcludedFromFieldPreRender::class, 'preRenderExcludeFromPrisonField'];
     }
@@ -50,7 +49,7 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
   // Set the default value for the prison owner field to the users prisons.
   // On new content only (do not modify existing content).
   $prison_owner_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
-  if ($field_definition->getName() == $prison_owner_field_name) {
+  if ($field_name == $prison_owner_field_name) {
     if ($entity->isNew()) {
       foreach ($entity_edit_access->getUserPrisons() as $user_prison) {
         $element['#default_value'][] = $user_prison->id();
@@ -61,7 +60,7 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
   // Set disabled state to the field_user_prisons if the user does not have
   // the permission to edit them.
   $user_prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
-  if ($field_definition->getName() == $user_prison_field_name && !\Drupal::currentUser()->hasPermission('assign prisons to users')) {
+  if ($field_name == $user_prison_field_name && !\Drupal::currentUser()->hasPermission('assign prisons to users')) {
     $element['#disabled'] = TRUE;
     $element['#description'] .= '<p>' . t('You are unable to make changes to your prison.') . '</p>';
   }
