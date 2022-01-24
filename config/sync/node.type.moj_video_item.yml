@@ -7,9 +7,8 @@ dependencies:
     - scheduler
 third_party_settings:
   menu_ui:
-    available_menus:
-      - main
-    parent: 'main:'
+    available_menus: {  }
+    parent: ''
   scheduler:
     expand_fieldset: when_required
     fields_display_mode: fieldset
@@ -30,5 +29,5 @@ type: moj_video_item
 description: 'Use <em>video items</em> to represent video content stored within the content library.'
 help: ''
 new_revision: true
-preview_mode: 1
+preview_mode: 0
 display_submitted: false

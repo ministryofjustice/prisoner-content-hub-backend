@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.featured_articles.field_featured_tile_small
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
+    - field.field.node.featured_articles.field_prison_owner
     - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
   module:
@@ -29,5 +30,6 @@ hidden:
   field_featured_tile_small: true
   field_moj_featured_tile_large: true
   field_moj_featured_tile_small: true
+  field_prison_owner: true
   field_prisons: true
   search_api_excerpt: true

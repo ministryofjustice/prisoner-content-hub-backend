@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
+    - node.type.external_link
     - node.type.featured_articles
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
@@ -16,7 +17,6 @@ dependencies:
     - raven
     - scheduler
     - toolbar
-    - view_unpublished
 id: moj_local_content_manager
 label: 'Local Content Manager'
 weight: -8
@@ -29,7 +29,12 @@ permissions:
   - 'create moj_radio_item content'
   - 'create moj_video_item content'
   - 'create page content'
+  - 'edit any external_link content'
   - 'edit any featured_articles content'
+  - 'edit any moj_pdf_item content'
+  - 'edit any moj_radio_item content'
+  - 'edit any moj_video_item content'
+  - 'edit any page content'
   - 'edit own featured_articles content'
   - 'edit own moj_pdf_item content'
   - 'edit own moj_radio_item content'
@@ -37,18 +42,9 @@ permissions:
   - 'edit own page content'
   - 'execute entity:publish_action node'
   - 'execute entity:unpublish_action node'
-  - 'revert featured_articles revisions'
-  - 'revert moj_pdf_item revisions'
-  - 'revert moj_radio_item revisions'
-  - 'revert moj_video_item revisions'
-  - 'revert page revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'use text format full_html'
-  - 'view any unpublished moj_pdf_item content'
-  - 'view any unpublished moj_radio_item content'
-  - 'view any unpublished moj_video_item content'
-  - 'view any unpublished page content'
   - 'view featured_articles revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'

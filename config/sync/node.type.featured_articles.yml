@@ -7,9 +7,8 @@ dependencies:
     - scheduler
 third_party_settings:
   menu_ui:
-    available_menus:
-      - main
-    parent: 'main:'
+    available_menus: {  }
+    parent: ''
   scheduler:
     expand_fieldset: when_required
     fields_display_mode: fieldset
@@ -28,5 +27,5 @@ type: featured_articles
 description: 'Featured articles for the front page of the digital hub'
 help: ''
 new_revision: true
-preview_mode: 1
+preview_mode: 0
 display_submitted: true
