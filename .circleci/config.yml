@@ -14,7 +14,6 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  kubernetes: circleci/kubernetes@0.11.2
   hmpps: ministryofjustice/hmpps@3.11
 
 commands:
@@ -28,11 +27,7 @@ commands:
           path: ~/git
       - attach_workspace:
           at: /tmp/build-info
-      - hmpps/k8s_setup:
-          ca-cert: KUBE_CLUSTER_CERT
-          cluster-name: KUBE_CLUSTER_NAME
-          kube-namespace: KUBE_NAMESPACE
-          kube-token: KUBE_TOKEN
+      - hmpps/k8s_setup
       - hmpps/install_helm
       - run:
           name: Release to << parameters.environment >>
