@@ -48,6 +48,10 @@ class ContentSuggestions extends EntityQueryResourceBase {
     // Exclude the current node.
     $query->condition('nid', $node->id(), '<>');
 
+    // Exclude unpublished content as this isn't added by default to the query.
+    // See https://drupal.stackexchange.com/a/257370/4831
+    $query->condition('status', NodeInterface::PUBLISHED);
+
     // Exclude the current series.
     $series_value = $node->get('field_moj_series')->getValue();
     if (!empty($series_value)) {
