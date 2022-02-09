@@ -1,20 +1,19 @@
-uuid: fe52e116-e73d-4bc1-9cf3-5c6509953c11
+uuid: 86f74ef7-c453-46f5-a2dd-3618d0cfa770
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_user_prisons
+    - field.storage.node.field_prison_owner
+    - node.type.page
     - taxonomy.vocabulary.prisons
-  module:
-    - user
-id: user.user.field_user_prisons
-field_name: field_user_prisons
-entity_type: user
-bundle: user
-label: Prisons
-description: "The prison(s) the user is associated with.</br>\r\nThis will determine what content the user can change.</br>"
+id: node.page.field_prison_owner
+field_name: field_prison_owner
+entity_type: node
+bundle: page
+label: 'Prison owner'
+description: 'Select which prison(s) should <em>own</em> this content.  This will effect who has the ability to edit the content.'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

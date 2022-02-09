@@ -99,7 +99,7 @@ We isolate namespace credentials as "contexts" in CircleCI.
 
 Kubernetes cluster connection details. See [here](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/deploying-an-app/using-circleci-for-continuous-deployment.html#requirements) for steps to extract these from Cloud Platform.
 
-- `KUBE_CLUSTER_NAME=live-1.cloud-platform.service.justice.gov.uk`
+- `KUBE_CLUSTER_NAME=live.cloud-platform.service.justice.gov.uk`
 - `KUBE_NAMESPACE`
 - `KUBE_CLUSTER_CERT`
 - `KUBE_TOKEN`

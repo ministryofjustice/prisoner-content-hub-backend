@@ -13,6 +13,13 @@ use Drupal\Core\Url;
 class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTestBase {
 
   /**
+   * Entity types to test.
+   *
+   * @var string[]
+   */
+  static $entityTypes = ['node', 'taxonomy_term'];
+
+  /**
    * An array of bundles to check for, keyed by entity type.
    *
    * @var array
@@ -24,12 +31,9 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
    */
   protected function setUp(): void {
     parent::setUp();
-    // Get the list of content types with the prison field enabled.
-    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
-    $entityFieldManager = $this->container->get('entity_field.manager');
-    $entityFieldManager->getFieldMap();
-    $this->bundlesByEntityType['node'] = $entityFieldManager->getFieldMap()['node'][$this->prisonFieldName]['bundles'];
-    $this->bundlesByEntityType['taxonomy_term'] = $entityFieldManager->getFieldMap()['taxonomy_term'][$this->prisonFieldName]['bundles'];
+    foreach (self::$entityTypes as $entityType) {
+      $this->bundlesByEntityType[$entityType] = $this->getBundlesWithField($entityType, $this->prisonFieldName);
+    }
   }
 
   /**

@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.featured_articles.field_featured_tile_small
     - field.field.node.featured_articles.field_moj_featured_tile_large
     - field.field.node.featured_articles.field_moj_featured_tile_small
+    - field.field.node.featured_articles.field_prison_owner
     - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
   module:
@@ -57,6 +58,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_prison_owner:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 9
     region: content
   field_prisons:
     type: entity_reference_label
