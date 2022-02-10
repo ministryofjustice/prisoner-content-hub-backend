@@ -22,7 +22,7 @@ $settings['trusted_host_patterns'] = [
 /**
  * Flysystem S3 filesystem configuration
  */
-$flysystem_schemes = [
+$settings['flysystem'] = [
 
   'local-files' => [
     'driver' => 'local',
@@ -76,13 +76,22 @@ $flysystem_schemes = [
       // Optionally set to path style endpoint.  Used for localstack.
       'use_path_style_endpoint' => getenv('FLYSYSTEM_S3_USE_PATH_STYLE_ENDPOINT', TRUE) === "true",
     ],
-    'serve_js' => TRUE,
-    'serve_css' => TRUE,
     'cache' => TRUE, // Creates a metadata cache to speed up lookups
   ],
 ];
 
-$settings['flysystem'] = $flysystem_schemes;
+// Copy over our S3 config, and setup a new scheme that is used just for css/js.
+$settings['flysystem']['s3-css-js'] = $settings['flysystem']['s3'];
+$settings['flysystem']['s3-css-js']['serve_js'] = TRUE;
+$settings['flysystem']['s3-css-js']['serve_css'] = TRUE;
+
+// Set public to FALSE, so that files are downloaded through Drupal
+// (and not directly from S3).
+// This prevents us having to deal with S3 signatures.  Allowing css/js to be
+// cached in the users browser.
+// Also, serving JS from the same origin fixes an issue when opening dialog
+// windows in ckeditor (e.g. image upload). See https://trello.com/c/48w0up7I
+$settings['flysystem']['s3-css-js']['config']['public'] = FALSE;
 
 // Prevent file permission errors when image styles are generated.
 // @See https://www.drupal.org/project/flysystem_s3/issues/3058063#comment-14164774
