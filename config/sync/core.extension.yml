@@ -27,6 +27,7 @@ module:
   field_group_open_non_empty: 0
   field_ui: 0
   file: 0
+  file_download_expires_fix: 0
   filter: 0
   flood_unblock: 0
   flysystem: 0

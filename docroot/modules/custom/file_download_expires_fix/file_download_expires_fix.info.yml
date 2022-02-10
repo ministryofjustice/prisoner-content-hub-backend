@@ -1,0 +1,5 @@
+name: 'File Download Expires Fix'
+type: module
+description: 'Fixes an issue in Drupal/Symfony where file downloads are missing a max-age cache header.'
+package: 'Custom'
+core_version_requirement: ^9
