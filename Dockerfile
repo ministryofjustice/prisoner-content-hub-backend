@@ -80,6 +80,9 @@ RUN pecl install uploadprogress \
 RUN pecl install redis \
   && docker-php-ext-enable redis
 
+# Enable apache modules that are used in Drupal's htaccess.
+RUN a2enmod expires headers
+
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir=/bin --filename=composer --version=2.1.8 \
   && php -r "unlink('composer-setup.php');"
