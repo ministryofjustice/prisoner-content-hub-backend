@@ -23,7 +23,7 @@
         "drupal/field_group": "^3.1",
         "drupal/flood_unblock": "^2.0",
         "drupal/flysystem": "^2.0",
-        "drupal/flysystem_s3": "^2.0-rc1",
+        "drupal/flysystem_s3": "^2.0-rc3",
         "drupal/form_state_empty": "^1.0@alpha",
         "drupal/govuk_design_system": "^2.0",
         "drupal/govuk_inline_form_errors": "2.0.0-beta2",
@@ -121,12 +121,9 @@
         },
         "patches": {
             "drupal/flysystem_s3": {
-                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-private-files-image-styles.patch",
-                "Issue #2770263 - Amazon S3 CORS Upload like functionality.": "patches/flysystem_s3_cors_upload-2770263-60.patch",
-                "Issue #3219524 - CORS upload functionality doesn't work with Claro theme.": "patches/flysystem_s3-cors-upload-claro-theme-3219524-2.patch",
-                "Issue #3159928 - uriScheme() method missing after update to Drupal 9.": "patches/flysystem_replace-urischeme-method-3159928-with-2772847.patch",
+                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-57-presigned-urls.patch",
                 "Issue #3248466 - Duplicate file entities when uploaded through CORS [DATA LOSS]": "patches/flysystem_3248466-fix-data-loss.patch",
-                "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading.patch"
+                "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-3.patch"
             },
             "twistor/stream-util": {
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"

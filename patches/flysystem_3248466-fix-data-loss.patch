@@ -1,185 +1,233 @@
-diff --git a/flysystem_s3.services.yml b/flysystem_s3.services.yml
-index beb7a9d..8744431 100644
---- a/flysystem_s3.services.yml
-+++ b/flysystem_s3.services.yml
-@@ -3,4 +3,4 @@ services:
-     public: false
-     class: \Drupal\flysystem_s3\File\FlysystemS3FileSystem
-     decorates: file_system
--    arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file', '@flysystem_s3.file_system.inner']
-+    arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file', '@entity_type.manager', '@flysystem_s3.file_system.inner']
+From 54f0a51bf43f858929a7d736348cb0bfb0e1f929 Mon Sep 17 00:00:00 2001
+From: Leon Kessler <leon.kessler@digital.justice.gov.uk>
+Date: Fri, 11 Feb 2022 12:44:09 +0000
+Subject: [PATCH] Issue #3248466 by Leon Kessler: Duplicate file entities when
+ uploaded through CORS [DATA LOSS]
+
+---
+ flysystem_s3.js                               | 85 ++++++++++++++-----
+ flysystem_s3.routing.yml                      |  9 +-
+ src/Controller/S3CorsUploadAjaxController.php | 54 +++++++-----
+ 3 files changed, 104 insertions(+), 44 deletions(-)
+
+diff --git a/flysystem_s3.js b/flysystem_s3.js
+index dfebbae..fa41c33 100644
+--- a/flysystem_s3.js
++++ b/flysystem_s3.js
+@@ -69,25 +69,33 @@
+               // Set progress bar to 100% in case the upload was so fast.
+               Drupal.flysystemS3.setCorsUploadProgress($progressBar, 100, Drupal.t('Processing upload'));
+
+-              // Add the fid for this file to array.
+-              uploadedFileFid.push(signedFormData.fid);
+-
+-              // Post the results to Drupal if all files have been processed.
+-              var num_fids = uploadedFileFid.length;
+-
+-              if (num_fids == filelist.length) {
+-                // Set the file upload to an empty value to prevent the file from being uploaded to Drupal.
+-                $fileElement.val('');
+-                // Set the fid element to our provided fid so that the AJAX response will render our file.
+-                var $fidsElement = $fileElement.siblings('input[type="hidden"][name$="[fids]"]');
+-                // List all uploaded files fids to string.
+-                var uploadedFileFidString = uploadedFileFid.join(" ");
+-
+-                $fidsElement.val(uploadedFileFidString);
+-
++              Drupal.flysystemS3.saveFile(signedFormData.url, file_obj)
++              .fail(function() {
++                Drupal.flysystemS3.setCorsUploadProgress($progressBar, 1, Drupal.t('Signing request failed. Trying secondary upload method...'));
+                 // Trigger the submit button to let normal AJAX process the upload.
+                 Drupal.file.triggerUploadButton(event);
+-              }
++              })
++              .done(function(saveFileData) {
++                // Add the fid for this file to array.
++                uploadedFileFid.push(saveFileData.fid);
++
++                // Post the results to Drupal if all files have been processed.
++                var num_fids = uploadedFileFid.length;
++
++                if (num_fids == filelist.length) {
++                  // Set the file upload to an empty value to prevent the file from being uploaded to Drupal.
++                  $fileElement.val('');
++                  // Set the fid element to our provided fid so that the AJAX response will render our file.
++                  var $fidsElement = $fileElement.closest('.js-form-managed-file').find('input[type="hidden"][name$="[fids]"]');
++                  // List all uploaded files fids to string.
++                  var uploadedFileFidString = uploadedFileFid.join(" ");
++
++                  $fidsElement.val(uploadedFileFidString);
++
++                  // Trigger the submit button to let normal AJAX process the upload.
++                  Drupal.file.triggerUploadButton(event);
++                }
++              })
+             });
+         });
+       });
+@@ -133,15 +141,24 @@
+       }
+     },
+
++    /**
++     * Retrieves S3 signature for CORS upload, and a unique filename.
++     *
++     * @name Drupal.flysystemS3.requestSignature
++     *
++     * @param {jQuery} $fileElement
++     *   The file field element.
++     * @param file
++     *   The file object to be uploaded.
++     */
+     requestSignature: function($fileElement, file) {
+       // Use the file object and ask Drupal to generate the appropriate signed
+       // request for us.
+       var signingPostData = {
+-        filename: file.name,
+-        filesize: file.size,
+-        filemime: file.type,
+-        acl: $fileElement.attr('data-s3-acl'),
+-        destination: $fileElement.attr('data-s3-destination')
++        'filename': file.name,
++        'Content-Type': file.type,
++        'acl': $fileElement.attr('data-s3-acl'),
++        'destination': $fileElement.attr('data-s3-destination')
+       };
+
+       // POST to Drupal which will return the required parameters for signing
+@@ -153,6 +170,30 @@
+       });
+     },
+
++    /**
++     * Post file data to Drupal to genereate a file object.
++     *
++     * @param url
++     *   The full file url, including streamwrapper.
++     * @param file
++     *   The file object.
++     */
++    saveFile: function(url, file) {
++      var postData = {
++        url: url,
++        filename: file.name,
++        filesize: file.size,
++        filemime: file.type,
++      };
++
++      // POST to Drupal which will save the uploaded file to Drupal.
++      return $.ajax({
++        url: drupalSettings.path.baseUrl + 'flysystem-s3/cors-upload-save',
++        data: postData,
++        type: 'POST'
++      });
++    },
++
+     /**
+      * Update the CORS progress bar with a percent and an optional label.
+      *
+diff --git a/flysystem_s3.routing.yml b/flysystem_s3.routing.yml
+index fbfc28b..0bc1cb8 100644
+--- a/flysystem_s3.routing.yml
++++ b/flysystem_s3.routing.yml
+@@ -1,7 +1,14 @@
+-flysystem_s3.cors:
++flysystem_s3.cors_sign:
+   path: '/flysystem-s3/cors-upload-sign'
+   defaults:
+     _controller: 'Drupal\flysystem_s3\Controller\S3CorsUploadAjaxController::signRequest'
+   requirements:
+     _permission: 'use S3 CORS upload'
+     _method: 'POST'
++flysystem_s3.cors_save:
++  path: '/flysystem-s3/cors-upload-save'
++  defaults:
++    _controller: 'Drupal\flysystem_s3\Controller\S3CorsUploadAjaxController::saveFile'
++  requirements:
++    _permission: 'use S3 CORS upload'
++    _method: 'POST'
 diff --git a/src/Controller/S3CorsUploadAjaxController.php b/src/Controller/S3CorsUploadAjaxController.php
-index eaf9e13..d20f405 100644
+index fc8896a..2405c00 100644
 --- a/src/Controller/S3CorsUploadAjaxController.php
 +++ b/src/Controller/S3CorsUploadAjaxController.php
-@@ -72,19 +72,16 @@ class S3CorsUploadAjaxController extends ControllerBase {
+@@ -72,35 +72,21 @@ class S3CorsUploadAjaxController extends ControllerBase {
 
      $client = $adapter->getClient();
      $bucket = $adapter->getBucket();
 -    $destination = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($post['destination']));
 +    $destination = $this->fileSystem->getDestinationFilename($post['destination'] . '/' . $post['filename'], FileSystemInterface::EXISTS_RENAME);
-
--    // Retrieve the file name and build the URI.
--    // Destination does not contain a prefix as it is applied by the fly system.
--    $uri = \Drupal::service('file_system')->createFilename($post['filename'], $post['destination']);
-     // Apply the prefix to the URI and use it as a key in the POST request.
--    $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($uri));
++
++    // Apply the prefix to the URI and use it as a key in the POST request.
 +    $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($destination));
 
-     // Create a temporary file to return with a file ID in the response.
-     $file = File::create([
--      'uri' => $uri,
-+      'uri' => $destination,
-       'filesize' => $post['filesize'],
--      'filename' => $post['filename'],
-+      'filename' => $this->fileSystem->baseName($destination),
-       'filemime' => $post['filemime'],
-       'uid' => \Drupal::currentUser()->getAccount()->id(),
-     ]);
-@@ -96,7 +93,7 @@ class S3CorsUploadAjaxController extends ControllerBase {
      $options = [
        ['acl' => $post['acl']],
        ['bucket' => $bucket],
 -      ['starts-with', '$key', $destination . '/'],
 +      ['starts-with', '$key', $post['key']],
-       ['starts-with', '$Content-Type', $post['Content-Type']],
++      ['starts-with', '$Content-Type', $post['Content-Type']],
      ];
 
-diff --git a/src/File/FlysystemS3FileSystem.php b/src/File/FlysystemS3FileSystem.php
-index 4107eb3..feb0ee5 100644
---- a/src/File/FlysystemS3FileSystem.php
-+++ b/src/File/FlysystemS3FileSystem.php
-@@ -2,12 +2,15 @@
-
- namespace Drupal\flysystem_s3\File;
-
-+use Drupal\Core\Entity\EntityTypeManagerInterface;
-+use Drupal\Core\File\Exception\FileException;
- use Drupal\Core\File\Exception\FileWriteException;
- use Drupal\Core\File\FileSystem;
- use Drupal\Core\File\FileSystemInterface;
- use Drupal\Core\Site\Settings;
- use Drupal\Core\StreamWrapper\StreamWrapperManager;
- use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-+use Drupal\file\Entity\File;
- use Psr\Log\LoggerInterface;
-
- /**
-@@ -37,6 +40,13 @@ class FlysystemS3FileSystem extends FileSystem {
-    */
-   protected $streamWrapperManager;
-
-+  /**
-+   * The entity type manager.
-+   *
-+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-+   */
-+  protected $entityTypeManager;
-+
-   /**
-    * The file system being decorated.
-    *
-@@ -56,10 +66,11 @@ class FlysystemS3FileSystem extends FileSystem {
-    * @param \Drupal\Core\File\FileSystemInterface $file_system
-    *   The file system being decorated.
-    */
--  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger, FileSystemInterface $file_system) {
-+  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system) {
-     $this->streamWrapperManager = $stream_wrapper_manager;
-     $this->settings = $settings;
-     $this->logger = $logger;
-+    $this->entityTypeManager = $entity_type_manager;
-     $this->fileSystem = $file_system;
-   }
-
-@@ -357,20 +368,6 @@ class FlysystemS3FileSystem extends FileSystem {
-     }
-   }
-
--  /**
--   * {@inheritdoc}
--   *
--   * @codeCoverageIgnore
--   */
--  public function createFilename($basename, $directory) {
--    if (method_exists($this->fileSystem, 'createFilename')) {
--      return $this->fileSystem->createFilename($basename, $directory);
--    }
--    else {
--      return file_create_filename($basename, $directory);
--    }
--  }
+-    // Retrieve the file name and build the URI.
+-    // Destination does not contain a prefix as it is applied by the fly system.
+-    $uri = \Drupal::service('file_system')->createFilename($post['filename'], $post['destination']);
+-    // Apply the prefix to the URI and use it as a key in the POST request.
+-    $post['key'] = $adapter->applyPathPrefix(StreamWrapperManager::getTarget($uri));
 -
-   /**
-    * Return if a scheme is a S3 scheme.
-    *
-@@ -402,4 +399,69 @@ class FlysystemS3FileSystem extends FileSystem {
-       && $settings[$scheme]['config']['options']['ACL'] == 'private';
+-    // Create a temporary file to return with a file ID in the response.
+-    $file = File::create([
+-      'uri' => $post['key'],
+-      'filesize' => $post['filesize'],
+-      'filename' => $post['filename'],
+-      'filemime' => $post['filemime'],
+-      'uid' => \Drupal::currentUser()->getAccount()->id(),
+-    ]);
+-    $file->save();
+-
+     // Remove values not necessary for the request to Amazon.
+     unset($post['destination']);
+     unset($post['filename']);
+-    unset($post['filemime']);
+-    unset($post['filesize']);
+
+     // @todo Make this interval configurable.
+     $expiration = '+5 hours';
+@@ -110,9 +96,35 @@ class S3CorsUploadAjaxController extends ControllerBase {
+     $data['attributes'] = $postObject->getFormAttributes();
+     $data['inputs'] = $postObject->getFormInputs();
+     $data['options'] = $options;
+-    $data['fid'] = $file->id();
++    $data['url'] = $destination;
+
+     return new JsonResponse($data);
    }
 
 +  /**
-+   * {@inheritdoc}
++   * Request handler for /flysystem-s3/cors-upload-save.
 +   *
-+   * Override createFilename() as we also need to check files exist as entities.
-+   * This can happen if a CORS upload fails.
++   * Create a file object after the file has been successfuly uploaded to S3.
 +   *
-+   * @codeCoverageIgnore
++   * @param \Symfony\Component\HttpFoundation\Request $request
++   *   The current request.
++   *
++   * @return \Symfony\Component\HttpFoundation\JsonResponse
++   *   A JsonResponse with the newly created file id.
 +   */
-+  public function createFilename($basename, $directory) {
-+    $original = $basename;
-+    // Strip control characters (ASCII value < 32). Though these are allowed in
-+    // some filesystems, not many applications handle them well.
-+    $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
-+    if (preg_last_error() !== PREG_NO_ERROR) {
-+      throw new FileException(sprintf("Invalid filename '%s'", $original));
-+    }
-+    if (substr(PHP_OS, 0, 3) == 'WIN') {
-+      // These characters are not allowed in Windows filenames.
-+      $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
-+    }
++  public function saveFile(Request $request) {
++    $post = $request->request->all();
++    // Create a temporary file to return with a file ID in the response.
++    $file = File::create([
++      'uri' => $post['url'],
++      'filesize' => $post['filesize'],
++      'filename' => $this->fileSystem->baseName($post['url']),
++      'filemime' => $post['filemime'],
++      'uid' => \Drupal::currentUser()->getAccount()->id(),
++    ]);
++    $file->save();
 +
-+    // A URI or path may already have a trailing slash or look like "public://".
-+    if (substr($directory, -1) == '/') {
-+      $separator = '';
-+    }
-+    else {
-+      $separator = '/';
-+    }
-+
-+    $destination = $directory . $separator . $basename;
-+
-+    // Destination file already exists, generate an alternative.
-+    $pos = strrpos($basename, '.');
-+    if ($pos !== FALSE) {
-+      $name = substr($basename, 0, $pos);
-+      $ext = substr($basename, $pos);
-+    }
-+    else {
-+      $name = $basename;
-+      $ext = '';
-+    }
-+
-+    $result = $this->entityTypeManager->getStorage('file')->getQuery()
-+      ->accessCheck(FALSE)
-+      ->condition('filename', $name, 'STARTS_WITH')
-+      ->condition('uri', $directory, 'STARTS_WITH')
-+      ->execute();
-+
-+    if (file_exists($destination) || !empty($result)) {
-+      $files = File::loadMultiple($result);
-+      $existing_filenames = [];
-+      foreach ($files as $file) {
-+        $existing_filenames[] = $file->getFilename();
-+      }
-+
-+      $counter = 0;
-+      do {
-+        $filename = $name . '_' . $counter++ . $ext;
-+        $destination = $directory . $separator . $filename;
-+      } while (file_exists($destination) || in_array($filename, $existing_filenames));
-+    }
-+
-+    return $destination;
++    return new JsonResponse(['fid' => $file->id()]);
 +  }
 +
  }
+--
+GitLab
