@@ -7,7 +7,7 @@ index 09907ef..81640d3 100644
       * @param resource $stream The stream.
       *
 -     * @return int The size of the stream.
-+     * @return int|false The size of the stream, or false if it cannot be retrieved.
++     * @return int The size of the stream, or 0 if it cannot be retrieved.
       */
      public static function getSize($stream)
      {
@@ -19,16 +19,16 @@ index 09907ef..81640d3 100644
 +            case 'plainfile':
 +            case 'PHP':
 +                $stats = fstat($stream);
-+                return is_array($stats) && isset($stats['size']) ? $stats['size'] : false;
++                return is_array($stats) && isset($stats['size']) ? $stats['size'] : 0;
 +                break;
 +            case 'http':
 +                stream_context_set_default(['http' => ['method' => 'HEAD']]);
 +                $head = array_change_key_case(get_headers($stat['uri'], 1));
-+                return $head['content-length'] ?? false;
++                return $head['content-length'] ?? 0;
 +                break;
 +            //@todo:  Add logic for other wrapper types
 +            default:
-+                return false;
++                return 0;
 +        }
      }
 
