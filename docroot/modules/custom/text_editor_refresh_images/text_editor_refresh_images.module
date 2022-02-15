@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Contains text_editor_refresh_images.module.
+ */
+
+use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * Fix for S3 URL signatures being stored inside textarea fields.
+ *
+ * Drupal's text formats only apply when outputting text.  The input is always
+ * stored as it's original.  For images in S3, that use a url signature, the
+ * original signature (at the time of uploading) will be stored in the database.
+ * This never gets updated.
+ * To fix this, we apply the editor_file_reference output filter on the input
+ * text.  This refreshes the image urls (including signatures).
+ */
+function text_editor_refresh_images_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  if ($context['widget'] instanceof TextareaWidget && $element['#type'] == 'text_format') {
+    $filter_manager = \Drupal::service('plugin.manager.filter');
+    $filter = $filter_manager->createInstance('editor_file_reference');
+    /** @var \Drupal\filter\FilterProcessResult $text_with_updated_images */
+    $text_with_updated_images = $filter->process($element['#default_value'], 'en');
+    $element['#default_value'] = $text_with_updated_images->getProcessedText();
+  }
+}
