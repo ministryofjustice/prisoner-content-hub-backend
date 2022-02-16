@@ -93,11 +93,6 @@ $settings['flysystem']['s3-css-js']['serve_css'] = TRUE;
 // windows in ckeditor (e.g. image upload). See https://trello.com/c/48w0up7I
 $settings['flysystem']['s3-css-js']['config']['public'] = FALSE;
 
-// Prevent file permission errors when image styles are generated.
-// @See https://www.drupal.org/project/flysystem_s3/issues/3058063#comment-14164774
-$settings['file_chmod_directory'] = 0700;
-$settings['file_chmod_file'] = 0600;
-
 // Remove the ?itok parameter from image style urls, these interfere with the
 // aws signature.  The DDOS protection that the itok parameter brings is not
 // required (as the assets are hosted on s3).
