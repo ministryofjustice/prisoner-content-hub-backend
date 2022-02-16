@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_series_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_taxonomy_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
@@ -16,9 +16,9 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 /**
  * Test that series are accessible/inaccessible.
  *
- * @group prisoner_hub_series_access
+ * @group prisoner_hub_taxonomy_access
  */
-class PrisonerHubSeriesAccessTest extends ExistingSiteBase {
+class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
   use NodeCreationTrait;
