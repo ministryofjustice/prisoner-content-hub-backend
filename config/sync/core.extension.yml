@@ -82,6 +82,7 @@ module:
   taxonomy_machine_name: 0
   term_reference_tree: 0
   text: 0
+  text_editor_refresh_images: 0
   token: 0
   toolbar: 0
   tour: 0
