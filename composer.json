@@ -132,7 +132,6 @@
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #3057545 - ResourceTypeRepository wrongly assumes that all entity reference fields have the setting \"target_type\".": "patches/drupal-3057545-34.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
-                "Issue #3254553 - FileUrlGenerator::generate() does not work with externally hosted files using stream wrappers": "patches/drupal-3254553-fileurlgenerator-external-files-20.patch",
                 "Issue #3254727 - File links with query parameters no longer work": "patches/drupal-3254727-file-links-with-query-parameters-2.patch"
             },
             "drupal/jsonapi_page_limit": {
