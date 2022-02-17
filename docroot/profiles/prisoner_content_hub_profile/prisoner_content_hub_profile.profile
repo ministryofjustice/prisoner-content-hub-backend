@@ -10,7 +10,6 @@
  * don't belong to a particular module, and are global to the site.
  */
 
-
 /**
  * Implements hook_toolbar_alter().
  */
@@ -32,4 +31,21 @@ function prisoner_content_hub_profile_toolbar_alter(&$items) {
  */
 function prisoner_content_hub_profile_mail_alter(&$message) {
   $message['send'] = FALSE;
+}
+
+/**
+ * Implements hook_file_validate().
+ *
+ * Prevent 0 byte files from being uploaded.
+ *
+ * We have previously seen invalid video files being uploaded, that are 0 bytes.
+ * These pass validation, so the issue is not spotted until someone tries to
+ * play the video on the frontend.
+ */
+function prisoner_content_hub_profile_file_validate(\Drupal\file\FileInterface $file) {
+  $errors = [];
+  if (!$file->getSize()) {
+    $errors[] = t("The file is invalid.  Please check the file and try again.");
+  }
+  return $errors;
 }
