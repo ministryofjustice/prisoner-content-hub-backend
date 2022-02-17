@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\prisoner_hub_series_access\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_taxonomy_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
@@ -16,9 +16,9 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 /**
  * Test that series are accessible/inaccessible.
  *
- * @group prisoner_hub_series_access
+ * @group prisoner_hub_taxonomy_access
  */
-class PrisonerHubSeriesAccessTest extends ExistingSiteBase {
+class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
   use NodeCreationTrait;
@@ -54,6 +54,68 @@ class PrisonerHubSeriesAccessTest extends ExistingSiteBase {
       'status' => NodeInterface::PUBLISHED,
     ]);
     $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+  }
+
+  /**
+   * Test a category with no available content is a 403.
+   */
+  public function testCategoriesWithNoAvailableContent() {
+    $vocab_categories = Vocabulary::load('moj_categories');
+    $category = $this->createTerm($vocab_categories);
+    $this->createNode([
+      'field_moj_top_level_categories' => [
+        ['target_id' => $category->id()]
+      ],
+      'status' => NodeInterface::NOT_PUBLISHED,
+    ]);
+
+    $vocab_series = Vocabulary::load('series');
+    $series = $this->createTerm($vocab_series, [
+      'field_category' => [
+        'target_id' => $category->id(),
+      ],
+    ]);
+    $this->createNode([
+      'field_moj_series' => [
+        ['target_id' => $series->id()]
+      ],
+      'status' => NodeInterface::NOT_PUBLISHED,
+    ]);
+
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(403, $response->getStatusCode(), $url->toString() . ' returns a 403 response.');
+  }
+
+  /**
+   * Test a category with at least one available content is a 200.
+   */
+  public function testCategoriesWithAvailableContent() {
+    $vocab_categories = Vocabulary::load('moj_categories');
+    $category = $this->createTerm($vocab_categories);
+    $this->createNode([
+      'field_moj_top_level_categories' => [
+        ['target_id' => $category->id()]
+      ],
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+
+    $vocab_series = Vocabulary::load('series');
+    $series = $this->createTerm($vocab_series, [
+      'field_category' => [
+        'target_id' => $category->id(),
+      ],
+    ]);
+    $this->createNode([
+      'field_moj_series' => [
+        ['target_id' => $series->id()]
+      ],
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }
