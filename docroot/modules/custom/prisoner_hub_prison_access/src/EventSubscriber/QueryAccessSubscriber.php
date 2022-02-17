@@ -103,7 +103,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     // Note that only initial parents will be loaded (i.e. not parents of parents).
     // To load all parents, use:
     // $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($current_prison->id());
-    // Note that whilst this works, it finds parents via another another entity query,
+    // Whilst this works, it finds parents via another entity query,
     // and so will run through this query alter.  This could have unexpected
     // consequences.  (So for now, we just deal with one level of parents).
     foreach ($current_prison->get('parent') as $parent) {

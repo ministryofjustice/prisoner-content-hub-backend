@@ -56,12 +56,21 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         $vocabulary = Vocabulary::load($bundle);
         $term = $this->createTerm($vocabulary, $values);
 
-        // Series require available content to be accessible
-        // (via prisoner_hub_series_access module).
+        // Series and categories require available content to be accessible
+        // (via prisoner_hub_taxonomy_access module).
         // TODO: Refactor all tests across custom modules to use the same entity creation process.
         if ($bundle == 'series') {
           $this->createNode([
             'field_moj_series' => ['target_id' => $term->id()],
+            $this->prisonFieldName => [
+              ['target_id' => $this->prisonTerm->id()]
+            ],
+          ]);
+        }
+        elseif ($bundle == 'moj_categories') {
+          $this->createNode([
+            'field_not_in_series' => 1,
+            'field_moj_top_level_categories' => ['target_id' => $term->id()],
             $this->prisonFieldName => [
               ['target_id' => $this->prisonTerm->id()]
             ],
