@@ -17,13 +17,13 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:taxonomy_term'
+  handler: optgroup_taxonomy_select
   handler_settings:
     target_bundles:
-      moj_categories: moj_categories
+      - moj_categories
     sort:
       field: name
       direction: asc
-    auto_create: false
+    auto_create: 0
     auto_create_bundle: ''
 field_type: entity_reference

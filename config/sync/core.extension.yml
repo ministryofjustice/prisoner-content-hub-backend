@@ -51,6 +51,7 @@ module:
   monolog: 0
   node: 0
   node_edit_protection: 0
+  optgroup_taxonomy_select: 0
   options: 0
   page_cache: 0
   page_cache_persist: 0

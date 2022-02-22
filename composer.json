@@ -38,6 +38,7 @@
         "drupal/migrate_tools": "^5.0",
         "drupal/monolog": "^2.0",
         "drupal/node_edit_protection": "^1.0",
+        "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/pathauto": "^1.8",
         "drupal/profile_switcher": "1.0-alpha5",
         "drupal/raven": "^3.2",
@@ -159,6 +160,9 @@
             },
             "drupal/elasticsearch_connector": {
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
+            },
+            "drupal/optgroup_taxonomy_select": {
+                "Issue #3265853: Support other modules that provide their own field widget plugins (e.g. Select2).": "patches/optgroup_taxonomy_select-3265853-support-select2.patch"
             }
         },
         "patches-ignore": {
