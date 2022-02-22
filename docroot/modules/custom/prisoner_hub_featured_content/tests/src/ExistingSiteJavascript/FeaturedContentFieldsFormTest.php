@@ -200,7 +200,7 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
     $not_in_series_field->check();
     $category_field = $page->findField('Category');
     $category_field->setValue($this->categoryTerm->id());
-    $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField('-' . $this->categoryTerm->label());
+    $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField("-{$this->categoryTerm->label()}");
     self::assertTrue($feature_on_category_field->isVisible());
   }
 
