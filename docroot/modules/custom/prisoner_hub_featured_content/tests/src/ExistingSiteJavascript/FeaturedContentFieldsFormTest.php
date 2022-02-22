@@ -101,7 +101,12 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
 
     // Create categories.
     $categories_vocab = Vocabulary::load('moj_categories');
-    $this->categoryTerm = $this->createTerm($categories_vocab);
+    $parent_category_term = $this->createTerm($categories_vocab);
+    $this->categoryTerm = $this->createTerm($categories_vocab, [
+      'parent' => [
+        ['target_id' => $parent_category_term->id()]
+      ],
+    ]);
     $this->categoryTermForSeries = $this->createTerm($categories_vocab);
 
     // Create taxonomy terms with field_sort_by values.
