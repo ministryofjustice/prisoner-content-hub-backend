@@ -246,9 +246,11 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $this->assertSession()->fieldDisabled('Title');
       $this->assertSession()->fieldDisabled('Published');
 
-      // Test that the user is not able to change the prisons the content is published to.
       $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
-      $this->assertSession()->fieldDisabled($this->prisonTerm->label(), $fieldPrisonElement);
+
+      // Check user can add their own prison to the content.
+      $this->assertSession()->fieldEnabled($this->prisonTerm->label(), $fieldPrisonElement);
+      // Check user cannot modify other prisons from the content.
       $this->assertSession()->fieldDisabled($this->anotherPrisonTerm->label(), $fieldPrisonElement);
 
       $fieldExcludeFromPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-exclude-from-prison');
@@ -261,17 +263,20 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that a user making changes to the exclude from field does not wipe previous values.
+   * Test that a user making changes to prison fields does not wipe previous values.
    *
    * @covers prisoner_hub_prison_access_cms_entity_presave()
    */
-  public function testExcludedFromPrisonsDoNotGetRemoved() {
+  public function testOtherPrisonsDoNotGetRemoved() {
     $category_tern = $this->createTerm(Vocabulary::load('moj_categories'));
     $node = $this->createNode([
       // Only test on basic pages for now, as other content types have file fields
       // that we would need to fill out in our tests.
       'type' => 'page',
       'field_exclude_from_prison' => [
+        ['target_id' => $this->anotherPrisonTerm->id()],
+      ],
+      'field_prisons' => [
         ['target_id' => $this->anotherPrisonTerm->id()],
       ],
       'field_moj_description' => [
@@ -292,13 +297,23 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     ]);
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
+
+    // Update the the prison field.
+    $prisonFieldElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
+    $prisonFieldElement->checkField($this->prisonTerm->label());
+
+    // Update the exclude from prison field.
     $fieldExcludeFromPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-exclude-from-prison');
     $fieldExcludeFromPrisonElement->checkField($this->prisonTerm->label());
+
     $this->submitForm([], 'Save');
     $message = "Basic page ". $node->label() . " has been updated.";
     $this->assertSession()->pageTextContains($message);
 
+    $prisonFieldElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
     $fieldExcludeFromPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-exclude-from-prison');
+    $this->assertSession()->checkboxChecked($this->prisonTerm->label(), $prisonFieldElement);
+    $this->assertSession()->checkboxChecked($this->anotherPrisonTerm->label(), $prisonFieldElement);
     $this->assertSession()->checkboxChecked($this->prisonTerm->label(), $fieldExcludeFromPrisonElement);
     $this->assertSession()->checkboxChecked($this->anotherPrisonTerm->label(), $fieldExcludeFromPrisonElement);
   }

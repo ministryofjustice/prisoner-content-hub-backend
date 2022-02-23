@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\prisoner_hub_prison_access_cms\ExcludedFromFieldPreRender;
+use Drupal\prisoner_hub_prison_access_cms\PrisonFieldPreRender;
 
 /**
  * Implements hook_field_widget_form_alter().
@@ -39,10 +39,13 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
   // the user does not have access to.
   // This must be done in a pre_render, after the term_reference_tree module
   // has built the list of taxonomy terms.
-  $exclude_from_prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
-  if ($field_name == $exclude_from_prison_field_name && $element['#type'] == 'checkbox_tree') {
+  $prison_field_names = [
+    \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name'),
+    \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.prison_field_name'),
+  ];
+  if (in_array($field_name, $prison_field_names) && $element['#type'] == 'checkbox_tree') {
     if (!$entity->isNew() && !$entity_edit_access->hasEntityAccess($entity)) {
-      $element['#pre_render'][] = [ExcludedFromFieldPreRender::class, 'preRenderExcludeFromPrisonField'];
+      $element['#pre_render'][] = [PrisonFieldPreRender::class, 'preRenderPrisonField'];
     }
   }
 
@@ -70,39 +73,44 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
 /**
  * Implements hook_entity_presave().
  *
- * If we have set prisons to be "disabled" in field_exclude_from_prison, then
- * these are not sent through in the POST request, and so any previously saved
- * excluded prisons will be inadvertently removed.
+ * If we have set prison checkboxes to a "disabled" state, then these are not
+ * sent through in the POST request (even if checked).
+ * And so any previously saved prisons will be inadvertently removed.
  * This function checks to see if there are any that should be added back in.
  */
 function prisoner_hub_prison_access_cms_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
   $entity_edit_access = \Drupal::service('prisoner_hub_prison_access_cms.entity_edit_access');
-  $exclude_from_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
+  $prison_field_names = [
+    \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name'),
+    \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.prison_field_name'),
+  ];
 
   // Only act on
   // 1. entities with modifications (i.e. with an $entity->original).
   // 2. content entities (we don't want to deal with config entities)
-  // 3. entities with the field_exclude_from_prison
-  // 4. entities the user does not have access to (otherwise disabled states
+  // 3. entities the user does not have access to (otherwise disabled states
   // won't have been applied).
   if (isset($entity->original) &&
     $entity instanceof ContentEntityInterface &&
-    $entity->hasField($exclude_from_field_name) &&
     !$entity_edit_access->hasEntityAccess($entity)
   ) {
-    $original_field_value = $entity->original->get($exclude_from_field_name)->getValue();
-    $submitted_field_value = $entity->get($exclude_from_field_name)->getValue();
+    foreach ($prison_field_names as $prison_field_name) {
+      if ($entity->hasField($prison_field_name)) {
+        $original_field_value = $entity->original->get($prison_field_name)->getValue();
+        $submitted_field_value = $entity->get($prison_field_name)->getValue();
 
-    // Loop through the original field value (before modification), if there
-    // were any previously enabled prisons that the user does not have access to,
-    // add these back in (as they would have been set to disabled so not
-    // intentionally removed by the user).
-    foreach ($original_field_value as $value) {
-      if (!$entity_edit_access->hasPrisonTermAccess($value['target_id'])) {
-        $submitted_field_value[] = ['target_id' => $value['target_id']];
+        // Loop through the original field value (before modification), if there
+        // were any previously enabled prisons that the user does not have access to,
+        // add these back in (as they would have been set to disabled so not
+        // intentionally removed by the user).
+        foreach ($original_field_value as $value) {
+          if (!$entity_edit_access->hasPrisonTermAccess($value['target_id'])) {
+            $submitted_field_value[] = ['target_id' => $value['target_id']];
+          }
+        }
+        $entity->set($prison_field_name, $submitted_field_value);
       }
     }
-    $entity->set($exclude_from_field_name, $submitted_field_value);
   }
 }
 
@@ -120,9 +128,12 @@ function prisoner_hub_prison_access_cms_field_group_form_process_alter(array &$e
   $exclude_from_prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name');
   if (in_array($exclude_from_prison_field_name, $group->children)) {
     $prison_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.prison_field_name');
-    // Open the exclude_from_prison field_group if the prison field has been
-    // set to disabled.
-    if (isset($complete_form[$prison_field_name]['widget']['#disabled']) && $complete_form[$prison_field_name]['widget']['#disabled']) {
+
+    // Open the exclude_from_prison field_group if the status field has been
+    // set to disabled. (Unfortunately, as we do not have access here to the
+    // entity itself, we have to assume the user does not have access if the
+    // status field is disabled).
+    if (isset($complete_form['status']['widget']['#disabled']) && $complete_form['status']['widget']['#disabled']) {
       $element['#open'] = TRUE;
     }
   }
