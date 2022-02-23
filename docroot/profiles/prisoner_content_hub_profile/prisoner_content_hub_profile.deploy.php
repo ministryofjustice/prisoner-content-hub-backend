@@ -220,3 +220,36 @@ function prisoner_content_hub_profile_deploy_set_prison_owner(&$sandbox) {
   }
   return 'Processed nodes: ' . $sandbox['progress'];
 }
+
+/**
+ * Update series with missing images, copy over the most recent image from an episode in the series.
+ */
+function prisoner_content_hub_profile_deploy_update_series_images() {
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', 'series')
+    ->condition('field_featured_image', NULL,'IS NULL')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $terms = Term::loadMultiple($result);
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $result = \Drupal::entityQuery('node')
+      ->condition('field_moj_series', $term->id())
+      ->condition('field_moj_thumbnail_image', NULL, 'IS NOT NULL')
+      ->range(0, 1)
+      ->sort('created', 'DESC')
+      ->execute();
+    if (!empty($result)) {
+      $node = Node::load(reset($result));
+      $image_field_value = $node->get('field_moj_thumbnail_image')->getValue();
+      $term->set('field_featured_image', $image_field_value);
+      $term->save();
+      print 'Updated term id: ' . $term->id() . ' name: ' . $term->label() . PHP_EOL;
+    }
+    else {
+      print 'Unable to update (missing image)) term id: ' . $term->id() . ' name: ' . $term->label() . PHP_EOL;
+    }
+  }
+}
