@@ -111,8 +111,14 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
     // Create another parent category (that we will not use).
     // Because if there's just one category, the field output will be slightly
     // different, i.e. it won't be multiple select.
-    $this->createTerm($categories_vocab);
-    
+    $another_parent_term = $this->createTerm($categories_vocab);
+    $this->createTerm($categories_vocab, [
+      'parent' => [
+        ['target_id' => $another_parent_term->id()]
+      ],
+    ]);
+
+
     $this->categoryTermForSeries = $this->createTerm($categories_vocab);
 
     // Create taxonomy terms with field_sort_by values.
