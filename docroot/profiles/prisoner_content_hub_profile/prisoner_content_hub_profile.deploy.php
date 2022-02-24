@@ -253,3 +253,48 @@ function prisoner_content_hub_profile_deploy_update_series_images() {
     }
   }
 }
+
+/**
+ * Update content without a prison owner that is only assigned to one prison.
+ */
+function prisoner_content_hub_profile_deploy_update_prison_owners(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['result'] = \Drupal::entityQuery('node')
+      ->condition('field_prison_owner', NULL, 'IS NULL')
+      ->accessCheck(FALSE)
+      ->execute();
+
+    $sandbox['progress'] = 0;
+    $sandbox['updated'] = 0;
+  }
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 200, TRUE));
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $sandbox['progress']++;
+    if (!$node->hasField('field_prisons') || !$node->hasField('field_prison_owner')) {
+      continue;
+    }
+    $prisons = $node->get('field_prisons')->referencedEntities();
+    if (count($prisons) === 1) {
+      $prison = reset($prisons);
+      // Prison needs to have a parent, i.e. not be a prison category itself.
+      if ($prison->parent->target_id != "0") {
+        $node->set('field_prison_owner', [
+          ['target_id' => $prison->id()],
+        ]);
+        $node->setNewRevision(TRUE);
+        $node->revision_log = 'Bulk updating prison owner for content only available in one prison.';
+        $node->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+        $node->save();
+        $sandbox['updated']++;
+        print 'Updated node: ' . $node->id() . ' title: ' . $node->label() . PHP_EOL;
+      }
+    }
+  }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['updated'];
+  }
+  return 'Updated nodes: ' . $sandbox['progress'];
+}
