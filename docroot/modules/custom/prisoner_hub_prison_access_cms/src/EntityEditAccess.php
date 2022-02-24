@@ -35,10 +35,11 @@ class EntityEditAccess {
    * @param string $exclude_from_prison_field_name
    *   The field name of the excluded prisons, added to ContentEntities.
    */
-  public function __construct(AccountInterface $account, string $prison_owner_field_name, string $user_prison_field_name, string $exclude_from_prison_field_name) {
+  public function __construct(AccountInterface $account, string $prison_owner_field_name, string $user_prison_field_name, string $prison_field_name, string $exclude_from_prison_field_name) {
     $this->user = User::load($account->id());
     $this->prisonOwnerFieldName = $prison_owner_field_name;
     $this->userPrisonFieldName = $user_prison_field_name;
+    $this->prisonFieldName = $prison_field_name;
     $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
     $this->userPrisons = $this->user->hasField($this->userPrisonFieldName) ? $this->user->get($this->userPrisonFieldName)->referencedEntities() : [];
   }
@@ -59,6 +60,11 @@ class EntityEditAccess {
     // the fields.  I.e. we only restrict access for existing entities (that are
     // potentially created by other users/prisons).
     if ($entity->isNew()) {
+      return TRUE;
+    }
+
+    // The prison field is always accessible.
+    if ($fieldName == $this->prisonFieldName) {
       return TRUE;
     }
 
