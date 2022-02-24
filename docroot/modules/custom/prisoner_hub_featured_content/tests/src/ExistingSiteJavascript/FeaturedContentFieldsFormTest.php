@@ -101,7 +101,24 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
 
     // Create categories.
     $categories_vocab = Vocabulary::load('moj_categories');
-    $this->categoryTerm = $this->createTerm($categories_vocab);
+    $parent_category_term = $this->createTerm($categories_vocab);
+    $this->categoryTerm = $this->createTerm($categories_vocab, [
+      'parent' => [
+        ['target_id' => $parent_category_term->id()]
+      ],
+    ]);
+
+    // Create another parent category (that we will not use).
+    // Because if there's just one category, the field output will be slightly
+    // different, i.e. it won't be multiple select.
+    $another_parent_term = $this->createTerm($categories_vocab);
+    $this->createTerm($categories_vocab, [
+      'parent' => [
+        ['target_id' => $another_parent_term->id()]
+      ],
+    ]);
+
+
     $this->categoryTermForSeries = $this->createTerm($categories_vocab);
 
     // Create taxonomy terms with field_sort_by values.
@@ -195,7 +212,7 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
     $not_in_series_field->check();
     $category_field = $page->findField('Category');
     $category_field->setValue($this->categoryTerm->id());
-    $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField($this->categoryTerm->label());
+    $feature_on_category_field = $page->findById('edit-field-feature-on-category-wrapper')->findField("-{$this->categoryTerm->label()}");
     self::assertTrue($feature_on_category_field->isVisible());
   }
 
