@@ -1,0 +1,39 @@
+diff --git a/computed_breadcrumbs.info.yml b/computed_breadcrumbs.info.yml
+index e97011a..f981c9c 100644
+--- a/computed_breadcrumbs.info.yml
++++ b/computed_breadcrumbs.info.yml
+@@ -1,5 +1,5 @@
+ name: Computed Breadcrumbs
+-description: Provides breadcrumbs as computed fields in nodes.
++description: Provides breadcrumbs as computed fields for content entities.
+ type: module
+ core_version_requirement: ^8.8 || 9
+ dependencies:
+diff --git a/computed_breadcrumbs.module b/computed_breadcrumbs.module
+index d5c2459..bfae295 100644
+--- a/computed_breadcrumbs.module
++++ b/computed_breadcrumbs.module
+@@ -1,5 +1,6 @@
+ <?php
+ 
++use Drupal\Core\Entity\ContentEntityTypeInterface;
+ use Drupal\Core\Entity\EntityTypeInterface;
+ use Drupal\Core\Field\BaseFieldDefinition;
+ use Drupal\Core\Field\FieldStorageDefinitionInterface;
+@@ -9,7 +10,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
+  */
+ function computed_breadcrumbs_entity_base_field_info(EntityTypeInterface $entity_type) {
+   $fields = [];
+-  if ($entity_type->id() === 'node') {
++  if ($entity_type instanceof ContentEntityTypeInterface) {
+     $fields['breadcrumbs'] = BaseFieldDefinition::create('computed_breadcrumbs')
+       ->setName('breadcrumbs')
+       ->setLabel(t('Breadcrumbs'))
+@@ -19,6 +20,7 @@ function computed_breadcrumbs_entity_base_field_info(EntityTypeInterface $entity
+       ->setDisplayConfigurable('view', TRUE)
+       ->setDisplayOptions('view', [
+         'label' => 'hidden',
++        'region' => 'hidden',
+         'weight' => -5,
+       ]);
+   }
