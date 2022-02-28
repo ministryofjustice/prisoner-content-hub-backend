@@ -15,7 +15,7 @@ index d5c2459..bfae295 100644
 +++ b/computed_breadcrumbs.module
 @@ -1,5 +1,6 @@
  <?php
- 
+
 +use Drupal\Core\Entity\ContentEntityTypeInterface;
  use Drupal\Core\Entity\EntityTypeInterface;
  use Drupal\Core\Field\BaseFieldDefinition;
@@ -37,3 +37,16 @@ index d5c2459..bfae295 100644
          'weight' => -5,
        ]);
    }
+diff --git a/src/Field/ComputedBreadcrumbsItemList.php b/src/Field/ComputedBreadcrumbsItemList.php
+index 8761505..c2bcaf0 100644
+--- a/src/Field/ComputedBreadcrumbsItemList.php
++++ b/src/Field/ComputedBreadcrumbsItemList.php
+@@ -23,7 +23,7 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
+     $requestStack = \Drupal::service('request_stack');
+
+     $parent = $this->getEntity();
+-    if ($parent->isNew()) {
++    if ($parent->isNew() || !$parent->hasLinkTemplate('canonical')) {
+       return;
+     }
+     $url = $parent->toUrl();
