@@ -16,7 +16,7 @@
         .once()
         .on('change', function(e) {
           if ($(e.currentTarget).is(":visible")) {
-            filterCheckboxes($(e.currentTarget).val());
+            filterCheckboxes([$(e.currentTarget).val()]);
           }
         });
       // Trigger change event if value is not empty.
