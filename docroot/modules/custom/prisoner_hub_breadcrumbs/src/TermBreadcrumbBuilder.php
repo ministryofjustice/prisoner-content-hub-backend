@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -18,6 +18,7 @@ use Drupal\taxonomy\TermInterface;
  * @see \Drupal\prisoner_hub_breadcrumbs\TermBreadcrumbBuilder
  */
 class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
 
   /**
    * The entity repository manager.
