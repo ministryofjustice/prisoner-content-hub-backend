@@ -179,3 +179,44 @@ function prisoner_content_hub_profile_update_8017() {
     $term->delete();
   }
 }
+
+/**
+ * Update all content/series with more than one category.
+ */
+function prisoner_content_hub_profile_update_8018() {
+  $result = \Drupal::entityQuery('node')
+    ->accessCheck(FALSE)
+    ->condition('field_moj_top_level_categories' . '.%delta', 1)
+    ->execute();
+
+  $entities = array_values(Node::loadMultiple($result));
+
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->accessCheck(FALSE)
+    ->condition('field_category' . '.%delta', 1)
+    ->execute();
+
+  $entities = array_merge($entities, array_values(Term::loadMultiple($result)));
+
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  foreach ($entities as $entity) {
+    $new_category_value = [];
+    $field_name = $entity->getEntityTypeId() == 'node' ? 'field_moj_top_level_categories' : 'field_category';
+    $categories = $entity->get($field_name)->referencedEntities();
+    foreach ($categories as $category) {
+      if (!empty($category->get('parent')->getValue())) {
+        // Only include sub-categories, not tier 1 categories.
+        $new_category_value[] = ['target_id' => $category->id()];
+        break;
+      }
+    }
+    if ($entity->getEntityType()->isRevisionable()) {
+      $entity->setNewRevision(TRUE);
+      $entity->revision_log = 'Bulk updating content with more than one category.';
+      $entity->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+    }
+
+    $entity->set($field_name, $new_category_value);
+    $entity->save();
+  }
+}
