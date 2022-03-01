@@ -70,6 +70,12 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb->addCacheableDependency($term);
 
     $categories = $term->get('field_category')->referencedEntities();
+
+    // If no categories found, return the breadcrumb with just "Home" link.
+    if (empty($categories)) {
+      return $breadcrumb;
+    }
+    
     /** @var \Drupal\taxonomy\TermInterface $category */
     $category = reset($categories);
     $parents = $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($category->id());
