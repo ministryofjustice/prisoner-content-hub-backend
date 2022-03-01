@@ -51,11 +51,11 @@ class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    // Only apply to nodes that have either the category or series field.
+    // Only apply to nodes that have either a category or a series.
     if ($route_match->getRouteName() == 'entity.node.canonical') {
       $node = $route_match->getParameter('node');
-      if ($node instanceof NodeInterface) {
-        return $node->hasField('field_moj_top_level_categories') || $node->hasField('field_moj_series');
+      if ($node instanceof NodeInterface && $node->hasField('field_moj_top_level_categories') && $node->hasField('field_moj_series')) {
+        return !empty($node->get('field_moj_top_level_categories')->getValue()) || !empty($node->get('field_moj_series')->getValue());
       }
     }
     return FALSE;
@@ -81,6 +81,11 @@ class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
     else {
       $categories = $node->get('field_moj_top_level_categories')->referencedEntities();
+    }
+
+    // If no categories found, return the breadcrumb with just "Home" link.
+    if (empty($categories)) {
+      return $breadcrumb;
     }
 
     /** @var \Drupal\taxonomy\TermInterface $category */
