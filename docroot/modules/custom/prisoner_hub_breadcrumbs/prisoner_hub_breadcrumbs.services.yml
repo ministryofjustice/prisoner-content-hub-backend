@@ -1,0 +1,11 @@
+services:
+  prisoner_hub_breadcrumbs.node_breadcrumb_builder:
+    class: Drupal\prisoner_hub_breadcrumbs\NodeBreadcrumbBuilder
+    arguments: ['@entity_type.manager', '@entity.repository']
+    tags:
+      - { name: breadcrumb_builder, priority: 1003}
+  prisoner_hub_breadcrumbs.term_breadcrumb_builder:
+    class: Drupal\prisoner_hub_breadcrumbs\TermBreadcrumbBuilder
+    arguments: ['@entity_type.manager', '@entity.repository']
+    tags:
+      - { name: breadcrumb_builder, priority: 1003}
