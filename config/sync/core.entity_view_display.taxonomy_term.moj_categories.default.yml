@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.moj_categories.field_exclude_from_prison
+    - field.field.taxonomy_term.moj_categories.field_featured_image
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
     - field.field.taxonomy_term.moj_categories.field_prisons
     - taxonomy.vocabulary.moj_categories
   module:
     - dynamic_entity_reference
+    - image
     - text
 id: taxonomy_term.moj_categories.default
 targetEntityType: taxonomy_term
@@ -29,6 +31,15 @@ content:
       link: true
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_featured_image:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 7
     region: content
   field_featured_tiles:
     type: dynamic_entity_reference_label
