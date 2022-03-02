@@ -1,0 +1,10 @@
+name: 'Prisoner content hub breadcrumbs'
+type: module
+description: 'Provides breadcrumb implementation for the Prisoner content hub.'
+core_version_requirement: ^9
+package: 'Custom'
+dependencies:
+  - drupal:node
+  - drupal:taxonomy
+test_dependencies:
+  - computed_breadcrumbs:computed_breadcrumbs

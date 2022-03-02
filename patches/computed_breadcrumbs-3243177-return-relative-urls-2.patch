@@ -1,0 +1,130 @@
+diff --git a/computed_breadcrumbs.links.menu.yml b/computed_breadcrumbs.links.menu.yml
+new file mode 100644
+index 0000000..059df04
+--- /dev/null
++++ b/computed_breadcrumbs.links.menu.yml
+@@ -0,0 +1,5 @@
++computed_breadcrumbs.settings:
++  title: 'Computed breadcrumbs settings'
++  route_name: computed_breadcrumbs.settings
++  description: 'Computed breadcrumbs settings.'
++  parent: system.admin_config_ui
+diff --git a/computed_breadcrumbs.permissions.yml b/computed_breadcrumbs.permissions.yml
+new file mode 100644
+index 0000000..929287d
+--- /dev/null
++++ b/computed_breadcrumbs.permissions.yml
+@@ -0,0 +1,2 @@
++administer computed breadcrumbs:
++  title: 'Allow users to access module configuration form.'
+diff --git a/computed_breadcrumbs.routing.yml b/computed_breadcrumbs.routing.yml
+new file mode 100644
+index 0000000..4b2863a
+--- /dev/null
++++ b/computed_breadcrumbs.routing.yml
+@@ -0,0 +1,7 @@
++computed_breadcrumbs.settings:
++  path: '/admin/config/user-interface/computed-breadcrumbs'
++  defaults:
++    _form: '\Drupal\computed_breadcrumbs\Form\SettingsForm'
++    _title: 'Computed Breadcrumbs settings'
++  requirements:
++    _permission: 'administer computed breadcrumbs'
+diff --git a/config/install/computed_breadcrumbs.settings.yml b/config/install/computed_breadcrumbs.settings.yml
+new file mode 100644
+index 0000000..d02dd37
+--- /dev/null
++++ b/config/install/computed_breadcrumbs.settings.yml
+@@ -0,0 +1 @@
++use_relative_urls: false
+diff --git a/config/schema/computed_breadcrumbs.schema.yml b/config/schema/computed_breadcrumbs.schema.yml
+new file mode 100644
+index 0000000..a19185c
+--- /dev/null
++++ b/config/schema/computed_breadcrumbs.schema.yml
+@@ -0,0 +1,7 @@
++computed_breadcrumbs.settings:
++  type: config_object
++  label: 'Computed breadcrumbs settings'
++  mapping:
++    use_relative_urls:
++      type: boolean
++      label: 'Use relative urls'
+diff --git a/src/Field/ComputedBreadcrumbsItemList.php b/src/Field/ComputedBreadcrumbsItemList.php
+index 8761505..c2b5d2d 100644
+--- a/src/Field/ComputedBreadcrumbsItemList.php
++++ b/src/Field/ComputedBreadcrumbsItemList.php
+@@ -60,7 +60,11 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
+       $items = [];
+       \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($links, &$items) {
+         foreach ($links as $index => $link) {
+-          $uri = $link->getUrl()->setAbsolute()->toString();
++          $absolute = TRUE;
++          if (\Drupal::config('computed_breadcrumbs.settings')->get('use_relative_urls')) {
++            $absolute = FALSE;
++          }
++          $uri = $link->getUrl()->setAbsolute($absolute)->toString();
+           if (empty($uri)) {
+             $uri = 'internal:#';
+           }
+diff --git a/src/Form/SettingsForm.php b/src/Form/SettingsForm.php
+new file mode 100644
+index 0000000..01b0703
+--- /dev/null
++++ b/src/Form/SettingsForm.php
+@@ -0,0 +1,55 @@
++<?php
++
++namespace Drupal\computed_breadcrumbs\Form;
++
++use Drupal\Core\Form\ConfigFormBase;
++use Drupal\Core\Form\FormStateInterface;
++
++/**
++ * Computed Breadcrumbs settings form.
++ */
++class SettingsForm extends ConfigFormBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getFormId() {
++    return 'computed_breadcrumbs_settings_form';
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function getEditableConfigNames() {
++    return [
++      'computed_breadcrumbs.settings',
++    ];
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function buildForm(array $form, FormStateInterface $form_state) {
++    $form = parent::buildForm($form, $form_state);
++    $config = $this->config('computed_breadcrumbs.settings');
++    $form['use_relative_urls'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Use relative urls.'),
++      '#description' => $this->t('Enable to use relative urls, otherwise absolute urls will be used.'),
++      '#default_value' => $config->get('use_relative_urls'),
++    ];
++
++    return $form;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function submitForm(array &$form, FormStateInterface $form_state) {
++    $config = $this->config('computed_breadcrumbs.settings');
++    $config->set('use_relative_urls', $form_state->getValue('use_relative_urls'));
++    $config->save();
++    parent::submitForm($form, $form_state);
++  }
++
++}
