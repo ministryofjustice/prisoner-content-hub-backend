@@ -157,6 +157,34 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
   }
 
   /**
+   * Test a category with content assigned to a sub-sub-category.
+   */
+  public function testCategoryWithSubSubCategoryContent() {
+    $vocab_categories = Vocabulary::load('moj_categories');
+    $category = $this->createTerm($vocab_categories);
+    $sub_category = $this->createTerm($vocab_categories, [
+      'parent' => [
+        ['target_id' => $category->id()],
+      ]
+    ]);
+    $sub_sub_category = $this->createTerm($vocab_categories, [
+      'parent' => [
+        ['target_id' => $sub_category->id()],
+      ]
+    ]);
+    $this->createNode([
+      'field_moj_top_level_categories' => [
+        ['target_id' => $sub_sub_category->id()]
+      ],
+      'field_not_in_series' => 1,
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+  }
+
+  /**
    * Get a response from a JSON:API url.
    *
    * @param \Drupal\Core\Url $url

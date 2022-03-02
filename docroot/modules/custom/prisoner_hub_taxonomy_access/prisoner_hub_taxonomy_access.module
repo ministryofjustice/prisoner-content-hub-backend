@@ -37,9 +37,12 @@ function prisoner_hub_taxonomy_access_taxonomy_term_access(\Drupal\Core\Entity\E
   // AND content assigned to a series in that category.
   if ($entity->bundle() == 'moj_categories') {
 
+    $tids = [$entity->id()];
     // Check for subcategories.
-    $children = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadChildren($entity->id());
-    $tids = array_keys($children);
+    $children = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($entity->bundle(), $entity->id());
+    foreach ($children as $child) {
+      $tids[] = $child->tid;
+    }
     // Add the current category term.
     $tids[] = $entity->id();
 
