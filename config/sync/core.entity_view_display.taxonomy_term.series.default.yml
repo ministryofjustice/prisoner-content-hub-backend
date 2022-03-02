@@ -87,5 +87,6 @@ content:
     weight: 13
     region: content
 hidden:
+  breadcrumbs: true
   field_category: true
   search_api_excerpt: true
