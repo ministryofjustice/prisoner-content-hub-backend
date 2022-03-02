@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5afc4eb15f2fab275e82378d7dfcf40f",
+    "content-hash": "5df54a9f97618079ecea94642933a679",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1823,6 +1823,24 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/cer"
             }
+        },
+        {
+            "name": "drupal/computed_breadcrumbs",
+            "version": "dev-3243613-problem-requiring-module",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/issue/computed_breadcrumbs-3243613.git",
+                "reference": "3fd3972ce3f9fe2e7a7fd5a44260013d089e591a"
+            },
+            "require": {
+                "drupal/core": "^8.8.0 || ^9.0"
+            },
+            "type": "drupal-module",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Provides breadcrumbs as computed fields.",
+            "time": "2022-02-25T14:32:26+00:00"
         },
         {
             "name": "drupal/core",
@@ -17067,6 +17085,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/cer": 20,
+        "drupal/computed_breadcrumbs": 20,
         "drupal/entity_clone": 10,
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_image_styles": 10,

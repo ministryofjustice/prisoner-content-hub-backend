@@ -131,6 +131,7 @@ content:
     weight: 100
     region: content
 hidden:
+  breadcrumbs: true
   field_exclude_from_prison: true
   field_prisons: true
   search_api_excerpt: true
