@@ -1,6 +1,15 @@
 # Prisoner hub breadcrumbs
 
-This module provides custom breadcrumb integration for the Prisoner content hub.
+This module provides Drupal breadcrumb integration for the Prisoner content hub.
+
+By default, Drupal's breadcrumbs are path based (see Drupal\system\PathBasedBreadcrumbBuilder)
+and hierarchy based for taxonomy pages (see Drupal\taxonomy\TermBreadcrumbBuilder).
+
+The TermBreadcrumbBuilder works for our breadcrumbs on categories.  But for series and content a
+custom implementation is required.  This is provided in this module by two new BreadcrumbBuilder
+services.
+(See https://kporras07.medium.com/creating-breadcrumbs-in-drupal-8-3a5e6d888e5b for more info
+on creating BreadcrumbBuilder services).
 
 It does this using two BreadcrumbBuilder services:
 ### NodeBreadcrumbBuilder
@@ -13,16 +22,12 @@ e.g.
         - Content (node)
 
 ### TermBreadcrumbBuilder
-Builds breadcrumbs for taxonomy terms based on their assigned categories.
+Builds breadcrumbs for series taxonomy terms based on their assigned categories.
 e.g.
 - Tier 1 category
   - Sub-category
     - Sub-sub-category
       - Series
-
-Note this currently only applies to series, as the core TermBreadcrumbBuilder covers the requirements
-of categories themselves (which just use their own hierachy for breadcrumbs).  The tests in this module cover
-both series and categories.
 
 ### Dependencies
 - node module (drupal core)
