@@ -5,6 +5,8 @@
  * Primary hook implementations for Prisoner hub entity access module.
  */
 
+use Drupal\Core\Access\AccessResult;
+
 
 /**
  * Implements hook_search_api_query_alter().
@@ -18,4 +20,17 @@ function prisoner_hub_prison_access_search_api_query_alter(\Drupal\search_api\Qu
  */
 function prisoner_hub_prison_access_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
   return \Drupal::service('prisoner_hub_prison_access.entity_access_check')->checkAccess($entity);
+}
+
+/**
+ * Implements hook_jsonapi_entity_filter_access().
+ *
+ * Fix for empty results being returned when a OR condition group is used.
+ * @see https://www.drupal.org/project/drupal/issues/3072384#comment-14432203
+ */
+function prisoner_hub_prison_access_jsonapi_entity_filter_access(\Drupal\Core\Entity\EntityTypeInterface $entity_type, \Drupal\Core\Session\AccountInterface $account) {
+  if (\Drupal::routeMatch()->getParameter('prison')) {
+    return [JSONAPI_FILTER_AMONG_ALL => AccessResult::allowed()];
+  }
+  return [];
 }
