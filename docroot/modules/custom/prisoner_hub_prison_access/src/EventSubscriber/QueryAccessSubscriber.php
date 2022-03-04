@@ -117,6 +117,13 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     $condition_group = new ConditionGroup('AND');
     $condition_group->addCondition($prisons_condition_group);
     $condition_group->addCondition($exclude_from_prison_condition_group);
+
+    // Add status (i.e. published/unpublished) to the query, as this isn't
+    // automatically added by Drupal.
+    if ($entity_type->hasKey('status')) {
+      $condition_group->addCondition('status', 1);
+    }
+
     $conditions->addCondition($condition_group);
   }
 
