@@ -298,3 +298,23 @@ function prisoner_content_hub_profile_deploy_update_prison_owners(&$sandbox) {
   }
   return 'Updated nodes: ' . $sandbox['progress'];
 }
+
+
+/**
+ * Clear out the featured content field on categories.
+ */
+function prisoner_content_hub_profile_deploy_clear_featured_content() {
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->accessCheck(FALSE)
+    ->condition('vid', 'moj_categories')
+    ->condition('field_featured_tiles', NULL, 'IS NOT NULL')
+    ->execute();
+
+  $terms = Term::loadMultiple($result);
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $term->set('field_featured_tiles', []);
+    $term->save();
+  }
+}
