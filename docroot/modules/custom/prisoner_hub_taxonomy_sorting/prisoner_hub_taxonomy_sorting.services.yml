@@ -1,3 +1,0 @@
-services:
-  prisoner_hub_taxonomy_sorting.entity_presave:
-    class: Drupal\prisoner_hub_taxonomy_sorting\EntityPreSave
