@@ -1,5 +1,0 @@
-name: 'Prisoner Hub Series Access (to delete)'
-type: module
-description: 'This module was moved to prisoner_hub_taxonomy_access, we only need this file so that the new module name can be deployed.  After which this can be deleted.'
-core_version_requirement: ^8 || ^9
-package: 'Custom'

@@ -90,17 +90,30 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
   }
 
   /**
-   * Test a category with at least one available content is a 200.
+   * Test a category with content assigned to it.
    */
-  public function testCategoriesWithAvailableContent() {
+  public function testCategoryWithContent() {
     $vocab_categories = Vocabulary::load('moj_categories');
     $category = $this->createTerm($vocab_categories);
     $this->createNode([
       'field_moj_top_level_categories' => [
         ['target_id' => $category->id()]
       ],
+      'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
     ]);
+
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+  }
+
+  /**
+   * Test a category with content assigned to a series that is assigned to that category.
+   */
+  public function testCategoryWithSeriesContent() {
+    $vocab_categories = Vocabulary::load('moj_categories');
+    $category = $this->createTerm($vocab_categories);
 
     $vocab_series = Vocabulary::load('series');
     $series = $this->createTerm($vocab_series, [
@@ -115,6 +128,57 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'status' => NodeInterface::PUBLISHED,
     ]);
 
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+  }
+
+  /**
+   * Test a category with content assigned to a sub-category.
+   */
+  public function testCategoryWithSubCategoryContent() {
+    $vocab_categories = Vocabulary::load('moj_categories');
+    $category = $this->createTerm($vocab_categories);
+    $sub_category = $this->createTerm($vocab_categories, [
+      'parent' => [
+        ['target_id' => $category->id()],
+      ]
+    ]);
+    $this->createNode([
+      'field_moj_top_level_categories' => [
+        ['target_id' => $sub_category->id()]
+      ],
+      'field_not_in_series' => 1,
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+  }
+
+  /**
+   * Test a category with content assigned to a sub-sub-category.
+   */
+  public function testCategoryWithSubSubCategoryContent() {
+    $vocab_categories = Vocabulary::load('moj_categories');
+    $category = $this->createTerm($vocab_categories);
+    $sub_category = $this->createTerm($vocab_categories, [
+      'parent' => [
+        ['target_id' => $category->id()],
+      ]
+    ]);
+    $sub_sub_category = $this->createTerm($vocab_categories, [
+      'parent' => [
+        ['target_id' => $sub_category->id()],
+      ]
+    ]);
+    $this->createNode([
+      'field_moj_top_level_categories' => [
+        ['target_id' => $sub_sub_category->id()]
+      ],
+      'field_not_in_series' => 1,
+      'status' => NodeInterface::PUBLISHED,
+    ]);
     $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
