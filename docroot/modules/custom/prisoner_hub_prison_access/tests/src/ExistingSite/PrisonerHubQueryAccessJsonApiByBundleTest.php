@@ -169,7 +169,6 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
         'query' => ['filter' => $filter],
       ];
       $uri = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $options);
-      var_dump($uri->toString());
       $this->assertJsonApiListResponse($entities_to_check, $uri);
     }
   }
