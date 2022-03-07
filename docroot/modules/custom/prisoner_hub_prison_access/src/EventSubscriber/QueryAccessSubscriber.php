@@ -118,8 +118,9 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     $condition_group->addCondition($prisons_condition_group);
     $condition_group->addCondition($exclude_from_prison_condition_group);
 
-    // Add status (i.e. published/unpublished) to the query, as this isn't
-    // automatically added by Drupal.
+    // Add status (i.e. published/unpublished) to the query, this is no longer
+    // being added by jsonapi, since we have returned JSONAPI_FILTER_AMONG_ALL
+    // in prisoner_hub_prison_access_jsonapi_entity_filter_access().
     if ($entity_type->hasKey('status')) {
       $condition_group->addCondition('status', 1);
     }
