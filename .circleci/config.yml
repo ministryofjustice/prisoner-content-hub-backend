@@ -83,7 +83,6 @@ jobs:
             set -x
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make install-drupal
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make run-tests
-          no_output_timeout: 1500
       - run:
           name: Copy test results output
           command: |

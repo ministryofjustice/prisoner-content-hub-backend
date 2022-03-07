@@ -29,7 +29,7 @@ function prisoner_hub_prison_access_entity_access(\Drupal\Core\Entity\EntityInte
  */
 function prisoner_hub_prison_access_jsonapi_entity_filter_access(\Drupal\Core\Entity\EntityTypeInterface $entity_type, \Drupal\Core\Session\AccountInterface $account) {
   // We need to ensure our QueryAccessSubscriber will be applied to the query.
-  if (\Drupal::routeMatch()->getParameter('prison')) {
+  if (!\Drupal::routeMatch()->getParameter('prison')) {
     return [];
   }
 
