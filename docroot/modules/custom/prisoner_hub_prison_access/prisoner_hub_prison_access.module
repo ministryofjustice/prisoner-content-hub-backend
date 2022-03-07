@@ -5,7 +5,6 @@
  * Primary hook implementations for Prisoner hub entity access module.
  */
 
-use Drupal\Core\Access\AccessResult;
 
 /**
  * Implements hook_search_api_query_alter().
@@ -19,28 +18,4 @@ function prisoner_hub_prison_access_search_api_query_alter(\Drupal\search_api\Qu
  */
 function prisoner_hub_prison_access_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
   return \Drupal::service('prisoner_hub_prison_access.entity_access_check')->checkAccess($entity);
-}
-
-/**
- * Implements hook_jsonapi_entity_filter_access().
- *
- * Fix for incorrect results being returned when an OR condition group is used.
- * @see https://www.drupal.org/project/drupal/issues/3072384#comment-14432203
- */
-function prisoner_hub_prison_access_jsonapi_entity_filter_access(\Drupal\Core\Entity\EntityTypeInterface $entity_type, \Drupal\Core\Session\AccountInterface $account) {
-  // We need to ensure our QueryAccessSubscriber will be applied to the query.
-  if (!\Drupal::routeMatch()->getParameter('prison')) {
-    return [];
-  }
-
-  // Only apply to nodes and taxonomy terms.
-  // This ensures that Drupal\jsonapi\Access\TemporaryQueryGuard::secureQuery()
-  // is still run on other entity types, that we may have not necessarily "secured"
-  // in QueryAccessSubscriber.
-  // Note this may mean the issue #3072384 may still be present if other entity
-  // types are ever requested.
-  if (in_array($entity_type->id(), ['node', 'taxonomy_term'])) {
-    return [JSONAPI_FILTER_AMONG_ALL => AccessResult::allowed()];
-  }
-  return [];
 }
