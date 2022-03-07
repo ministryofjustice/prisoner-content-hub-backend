@@ -3,6 +3,7 @@
 namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 
 /**
  * Test that the JSON:API responses for taxonomy terms tagged with prisons and
@@ -42,8 +43,8 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
    * @return \Drupal\Core\Url
    *   The URL object to use for the JSON:API request.
    */
-  protected function getJsonApiUri(string $prison_name, string $entity_type_id, string $bundle) {
-    return Url::fromUri('internal:/jsonapi/prison/' . $prison_name . '/' . $entity_type_id . '/' . $bundle);
+  protected function getJsonApiUri(string $prison_name, string $entity_type_id, string $bundle, array $options = []) {
+    return Url::fromUri('internal:/jsonapi/prison/' . $prison_name . '/' . $entity_type_id . '/' . $bundle, $options);
   }
 
 
@@ -122,6 +123,53 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
         $entities_to_check = $this->setupEntitiesTaggedWithPrisonAndExcluded($entity_type_id, $bundle);
         $this->assertJsonApiListResponse($entities_to_check, $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle));
       }
+    }
+  }
+
+  /**
+   * Test that a group OR filter on two different entity reference fields works as expected.
+   *
+   * @covers prisoner_hub_prison_access_jsonapi_entity_filter_access().
+   * @see https://www.drupal.org/project/drupal/issues/3072384
+   */
+  public function testJsonApiGroupFilters() {
+    foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
+      $bundle = reset($bundles);
+      $entities_to_check = [];
+
+      // In order to test this core bug, we need to filter on two different
+      // entity reference fields.  For that we will use field_prisons and
+      // field_exclude_from_prison (as these fields are the only dependencies
+      // of this module).
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonCategoryTerm->id()], NodeInterface::PUBLISHED, [$this->anotherPrisonTerm->id()]);
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
+
+      // Create some additional entities that should not appear in the results.
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonCategoryTerm->id()]);
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id()]);
+
+      $filter = [
+        'or_group' => ['group' => ['conjunction' => 'OR']],
+        'filter_id_1' => [
+          'condition' => [
+            'path' => $this->excludeFromPrisonFieldName . '.id',
+            'value' => $this->anotherPrisonTerm->uuid(),
+            'memberOf' => 'or_group',
+          ],
+        ],
+        'filter_id_2' => [
+          'condition' => [
+            'path' => $this->prisonFieldName . '.id',
+            'value' => $this->prisonTerm->uuid(),
+            'memberOf' => 'or_group',
+          ],
+        ],
+      ];
+      $options = [
+        'query' => ['filter' => $filter],
+      ];
+      $uri = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $options);
+      $this->assertJsonApiListResponse($entities_to_check, $uri);
     }
   }
 }
