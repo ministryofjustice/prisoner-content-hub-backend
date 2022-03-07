@@ -37,7 +37,7 @@ function prisoner_hub_taxonomy_sorting_update_9003(&$sandbox) {
 
     $sandbox['progress'] = 0;
   }
-  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['result'], 50, TRUE));
+  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 50, TRUE));
 
   /** @var \Drupal\taxonomy\TermInterface $term */
   foreach ($terms as $term) {
