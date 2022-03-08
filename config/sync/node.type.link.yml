@@ -1,0 +1,31 @@
+uuid: 176c94c4-c53f-4672-a3e1-24a29232a347
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+name: Link
+type: link
+description: 'Use <em>link</em> for creating a content tile that links to either an externally hosted website, or another page on the Hub.  Externally hosted websites must have gone through a security process, and have been allowlisted by the Digital Prisons Network team.'
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false

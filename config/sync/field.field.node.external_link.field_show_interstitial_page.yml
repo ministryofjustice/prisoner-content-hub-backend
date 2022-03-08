@@ -1,0 +1,23 @@
+uuid: 3d82c910-90bd-4af5-838b-b55474cbd7db
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_show_interstitial_page
+    - node.type.external_link
+id: node.external_link.field_show_interstitial_page
+field_name: field_show_interstitial_page
+entity_type: node
+bundle: external_link
+label: 'Show interstitial page'
+description: 'Enable the "You are leaving the Hub" page.  This is normally used for external links.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,48 @@
+uuid: 36ae18a4-b0e0-4295-9fb2-db297695d56d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.link.field_display_url
+    - field.field.node.link.field_exclude_from_prison
+    - field.field.node.link.field_feature_on_category
+    - field.field.node.link.field_moj_episode
+    - field.field.node.link.field_moj_season
+    - field.field.node.link.field_moj_series
+    - field.field.node.link.field_moj_thumbnail_image
+    - field.field.node.link.field_moj_top_level_categories
+    - field.field.node.link.field_not_in_series
+    - field.field.node.link.field_prisons
+    - field.field.node.link.field_release_date
+    - field.field.node.link.field_summary
+    - field.field.node.link.field_url
+    - node.type.link
+  module:
+    - user
+id: node.link.teaser
+targetEntityType: node
+bundle: link
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  breadcrumbs: true
+  field_display_url: true
+  field_exclude_from_prison: true
+  field_feature_on_category: true
+  field_moj_episode: true
+  field_moj_season: true
+  field_moj_series: true
+  field_moj_thumbnail_image: true
+  field_moj_top_level_categories: true
+  field_not_in_series: true
+  field_prisons: true
+  field_release_date: true
+  field_summary: true
+  field_url: true
+  search_api_excerpt: true

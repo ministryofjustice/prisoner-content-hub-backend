@@ -1,31 +1,30 @@
-uuid: 19bf6371-5038-48ed-93e6-becc0a6e1ac0
+uuid: 1e4da77a-fb99-41e5-a9d8-93537a90dfa7
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.external_link.field_display_url
-    - field.field.node.external_link.field_exclude_from_prison
-    - field.field.node.external_link.field_external_url
-    - field.field.node.external_link.field_feature_on_category
-    - field.field.node.external_link.field_moj_episode
-    - field.field.node.external_link.field_moj_season
-    - field.field.node.external_link.field_moj_series
-    - field.field.node.external_link.field_moj_thumbnail_image
-    - field.field.node.external_link.field_moj_top_level_categories
-    - field.field.node.external_link.field_not_in_series
-    - field.field.node.external_link.field_prisons
-    - field.field.node.external_link.field_release_date
-    - field.field.node.external_link.field_show_interstitial_page
-    - field.field.node.external_link.field_summary
-    - node.type.external_link
+    - field.field.node.link.field_display_url
+    - field.field.node.link.field_exclude_from_prison
+    - field.field.node.link.field_feature_on_category
+    - field.field.node.link.field_moj_episode
+    - field.field.node.link.field_moj_season
+    - field.field.node.link.field_moj_series
+    - field.field.node.link.field_moj_thumbnail_image
+    - field.field.node.link.field_moj_top_level_categories
+    - field.field.node.link.field_not_in_series
+    - field.field.node.link.field_prisons
+    - field.field.node.link.field_release_date
+    - field.field.node.link.field_summary
+    - field.field.node.link.field_url
+    - node.type.link
   module:
     - datetime
     - image
     - link
     - user
-id: node.external_link.default
+id: node.link.default
 targetEntityType: node
-bundle: external_link
+bundle: link
 mode: default
 content:
   field_display_url:
@@ -35,18 +34,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 104
-    region: content
-  field_external_url:
-    type: link
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 115
     region: content
   field_feature_on_category:
     type: entity_reference_label
@@ -118,16 +105,6 @@ content:
     third_party_settings: {  }
     weight: 108
     region: content
-  field_show_interstitial_page:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 116
-    region: content
   field_summary:
     type: string
     label: above
@@ -135,6 +112,18 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 114
+    region: content
+  field_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 116
     region: content
   links:
     settings: {  }
