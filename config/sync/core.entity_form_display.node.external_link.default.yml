@@ -15,7 +15,6 @@ dependencies:
     - field.field.node.external_link.field_not_in_series
     - field.field.node.external_link.field_prisons
     - field.field.node.external_link.field_release_date
-    - field.field.node.external_link.field_show_interstitial_page
     - field.field.node.external_link.field_summary
     - image.style.thumbnail
     - node.type.external_link
@@ -224,13 +223,6 @@ content:
     weight: 18
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_show_interstitial_page:
-    type: boolean_checkbox
-    weight: 5
-    region: content
-    settings:
-      display_label: true
     third_party_settings: {  }
   field_summary:
     type: string_textfield

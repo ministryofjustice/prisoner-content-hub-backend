@@ -16,7 +16,6 @@ dependencies:
     - field.field.node.external_link.field_not_in_series
     - field.field.node.external_link.field_prisons
     - field.field.node.external_link.field_release_date
-    - field.field.node.external_link.field_show_interstitial_page
     - field.field.node.external_link.field_summary
     - node.type.external_link
   module:
@@ -45,6 +44,5 @@ hidden:
   field_not_in_series: true
   field_prisons: true
   field_release_date: true
-  field_show_interstitial_page: true
   field_summary: true
   search_api_excerpt: true

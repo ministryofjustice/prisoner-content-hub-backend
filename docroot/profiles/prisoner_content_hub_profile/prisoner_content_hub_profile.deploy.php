@@ -317,11 +317,12 @@ function prisoner_content_hub_profile_deploy_copy_link_content_type() {
     unset($node_values['nid']);
     unset($node_values['uuid']);
     unset($node_values['vid']);
+    unset($node_values['path']);
 
     $node_values['field_url'] = $node_values['field_external_url'];
     unset($node_values['field_external_url']);
 
-    $node_values['field_show_interstitial_page'] = ['value' => 1];
+    $node_values['field_show_interstitial_page'] = 1;
 
     $new_node = Node::create($node_values);
     $new_node->save();
