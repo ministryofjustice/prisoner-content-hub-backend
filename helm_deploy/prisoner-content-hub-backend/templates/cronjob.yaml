@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "prisoner-content-hub-backend.fullname" . }}-search-indexing
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}-drupal-cron
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
@@ -14,11 +14,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
-          - name: drupal-search-indexing-job
-            {{- with .Values.cron.image }}
-            image: "{{ .repository }}:{{ .tag }}"
-            {{- end }}
-            args:
-            - -s
-            - {{ include "prisoner-content-hub-backend.internalHost" . }}/cron/{{ .Values.cronToken }}
+          - name: drupal-cron-job
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["drush", "cron"]
+{{ include "drupal-deployment.envs" . | nindent 12 }}
           restartPolicy: OnFailure
