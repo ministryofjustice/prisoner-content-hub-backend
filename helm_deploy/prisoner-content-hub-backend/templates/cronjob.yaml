@@ -15,7 +15,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
           - name: drupal-cron-job
-            {{- with .Values.cron.image }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             command: ["drush", "cron"]
 {{ include "drupal-deployment.envs" . | nindent 12 }}
