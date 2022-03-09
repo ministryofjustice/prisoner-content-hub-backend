@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_featured_tile_large
-    - node.type.external_link
     - node.type.featured_articles
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
@@ -30,7 +29,6 @@ settings:
       target_bundles:
         moj_radio_item: moj_radio_item
         page: page
-        external_link: external_link
         moj_pdf_item: moj_pdf_item
         moj_video_item: moj_video_item
       sort:
