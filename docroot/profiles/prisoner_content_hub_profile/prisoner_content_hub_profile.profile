@@ -10,6 +10,9 @@
  * don't belong to a particular module, and are global to the site.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
 /**
  * Implements hook_toolbar_alter().
  */
@@ -48,4 +51,21 @@ function prisoner_content_hub_profile_file_validate(\Drupal\file\FileInterface $
     $errors[] = t("The file is invalid.  Please check the file and try again.");
   }
   return $errors;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function prisoner_content_hub_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'user_login_form') {
+    $form['#submit'][] = 'prisoner_content_hub_profile_submit_handler';
+  }
+}
+
+/**
+ * Custom submit handler for login form.
+ */
+function prisoner_content_hub_profile_submit_handler($form, FormStateInterface $form_state) {
+  $url = Url::fromUserInput('/admin/content');
+  $form_state->setRedirectUrl($url);
 }
