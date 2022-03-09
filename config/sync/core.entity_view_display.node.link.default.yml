@@ -21,7 +21,6 @@ dependencies:
   module:
     - datetime
     - image
-    - link
     - user
 id: node.link.default
 targetEntityType: node
@@ -125,16 +124,12 @@ content:
     weight: 114
     region: content
   field_url:
-    type: link
+    type: string
     label: above
     settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
+      link_to_entity: false
     third_party_settings: {  }
-    weight: 116
+    weight: 118
     region: content
   links:
     settings: {  }

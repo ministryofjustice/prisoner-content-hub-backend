@@ -23,7 +23,6 @@ dependencies:
     - datetime
     - field_group
     - image
-    - link
     - path
     - scheduler
     - select2
@@ -233,12 +232,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_url:
-    type: link_default
+    type: string_textfield
     weight: 3
     region: content
     settings:
-      placeholder_url: ''
-      placeholder_title: ''
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   path:
     type: path

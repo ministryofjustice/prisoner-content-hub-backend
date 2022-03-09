@@ -10,7 +10,7 @@ field_name: field_display_url
 entity_type: node
 bundle: link
 label: 'Display URL'
-description: 'Set the display url, to show to users.  This should be a smaller version of the full url.   E.g. for <em>https://www.example.com</em>, you may wish to use <em>www.example.com</em>.'
+description: "Set the display url, to show to users.  This should be a smaller version of the full url.   E.g. for <em>https://www.example.com</em>, you may wish to use <em>www.example.com</em>. <br/>\r\nLeave blank to show no url."
 required: false
 translatable: false
 default_value: {  }

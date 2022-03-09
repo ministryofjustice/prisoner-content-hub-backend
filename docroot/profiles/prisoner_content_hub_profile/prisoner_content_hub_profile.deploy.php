@@ -319,7 +319,9 @@ function prisoner_content_hub_profile_deploy_copy_link_content_type() {
     unset($node_values['vid']);
     unset($node_values['path']);
 
-    $node_values['field_url'] = $node_values['field_external_url'];
+    $node_values['field_url'] = [
+      ['value' => $node_values['field_external_url'][0]['uri']]
+    ];
     unset($node_values['field_external_url']);
 
     $node_values['field_show_interstitial_page'] = 1;
