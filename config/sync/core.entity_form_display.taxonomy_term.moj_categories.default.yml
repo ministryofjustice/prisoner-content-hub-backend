@@ -25,7 +25,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 3
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: ''
@@ -38,7 +38,7 @@ third_party_settings:
       label: 'Featured tiles'
       region: content
       parent_name: ''
-      weight: 2
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
@@ -85,7 +85,7 @@ content:
     third_party_settings: {  }
   field_featured_image:
     type: image_image
-    weight: 9
+    weight: 2
     region: content
     settings:
       progress_indicator: throbber
@@ -123,13 +123,13 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 5
+    weight: 6
     region: content
     settings:
       display_label: true
