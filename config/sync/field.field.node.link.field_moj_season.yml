@@ -1,0 +1,23 @@
+uuid: 3c23c175-d797-40f4-abfa-35c974ef60b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_season
+    - node.type.link
+id: node.link.field_moj_season
+field_name: field_moj_season
+entity_type: node
+bundle: link
+label: Season
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 999
+  prefix: ''
+  suffix: ''
+field_type: integer

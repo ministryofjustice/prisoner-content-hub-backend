@@ -1,28 +1,28 @@
-uuid: 38d6ae76-861b-4ec4-a532-7061afbad285
+uuid: 31509ba5-c4be-424a-b8bb-2a07497c7ef3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.external_link.field_display_url
-    - field.field.node.external_link.field_exclude_from_prison
-    - field.field.node.external_link.field_external_url
-    - field.field.node.external_link.field_feature_on_category
-    - field.field.node.external_link.field_moj_episode
-    - field.field.node.external_link.field_moj_season
-    - field.field.node.external_link.field_moj_series
-    - field.field.node.external_link.field_moj_thumbnail_image
-    - field.field.node.external_link.field_moj_top_level_categories
-    - field.field.node.external_link.field_not_in_series
-    - field.field.node.external_link.field_prisons
-    - field.field.node.external_link.field_release_date
-    - field.field.node.external_link.field_summary
+    - field.field.node.link.field_display_url
+    - field.field.node.link.field_exclude_from_prison
+    - field.field.node.link.field_feature_on_category
+    - field.field.node.link.field_moj_episode
+    - field.field.node.link.field_moj_season
+    - field.field.node.link.field_moj_series
+    - field.field.node.link.field_moj_thumbnail_image
+    - field.field.node.link.field_moj_top_level_categories
+    - field.field.node.link.field_not_in_series
+    - field.field.node.link.field_prisons
+    - field.field.node.link.field_release_date
+    - field.field.node.link.field_show_interstitial_page
+    - field.field.node.link.field_summary
+    - field.field.node.link.field_url
     - image.style.thumbnail
-    - node.type.external_link
+    - node.type.link
   module:
     - datetime
     - field_group
     - image
-    - link
     - path
     - scheduler
     - select2
@@ -112,9 +112,9 @@ third_party_settings:
         required_fields: '1'
         id: ''
         classes: ''
-id: node.external_link.default
+id: node.link.default
 targetEntityType: node
-bundle: external_link
+bundle: link
 mode: default
 content:
   created:
@@ -142,14 +142,6 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
-    third_party_settings: {  }
-  field_external_url:
-    type: link_default
-    weight: 3
-    region: content
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
     third_party_settings: {  }
   field_feature_on_category:
     type: options_buttons
@@ -224,9 +216,24 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_show_interstitial_page:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_summary:
     type: string_textfield
     weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_url:
+    type: string_textfield
+    weight: 3
     region: content
     settings:
       size: 60
