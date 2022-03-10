@@ -61,7 +61,7 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
    *
    * @var string[]
    */
-  protected static $studioAdminContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item', 'external_link'];
+  protected static $studioAdminContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item', 'link'];
 
   /**
    * Content types to test on for local content managers.

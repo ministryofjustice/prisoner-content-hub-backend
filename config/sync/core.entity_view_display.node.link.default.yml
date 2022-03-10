@@ -1,0 +1,143 @@
+uuid: 1e4da77a-fb99-41e5-a9d8-93537a90dfa7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.link.field_display_url
+    - field.field.node.link.field_exclude_from_prison
+    - field.field.node.link.field_feature_on_category
+    - field.field.node.link.field_moj_episode
+    - field.field.node.link.field_moj_season
+    - field.field.node.link.field_moj_series
+    - field.field.node.link.field_moj_thumbnail_image
+    - field.field.node.link.field_moj_top_level_categories
+    - field.field.node.link.field_not_in_series
+    - field.field.node.link.field_prisons
+    - field.field.node.link.field_release_date
+    - field.field.node.link.field_show_interstitial_page
+    - field.field.node.link.field_summary
+    - field.field.node.link.field_url
+    - node.type.link
+  module:
+    - datetime
+    - image
+    - user
+id: node.link.default
+targetEntityType: node
+bundle: link
+mode: default
+content:
+  field_display_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_feature_on_category:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 113
+    region: content
+  field_moj_episode:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_moj_season:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_moj_series:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_moj_thumbnail_image:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_moj_top_level_categories:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_not_in_series:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_release_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_show_interstitial_page:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 117
+    region: content
+  field_summary:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 114
+    region: content
+  field_url:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 118
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  breadcrumbs: true
+  field_exclude_from_prison: true
+  field_prisons: true
+  search_api_excerpt: true

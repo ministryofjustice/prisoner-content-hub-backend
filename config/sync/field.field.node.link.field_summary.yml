@@ -1,0 +1,19 @@
+uuid: 95ed6458-6f73-4d95-898a-e60a4d717ba9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_summary
+    - node.type.link
+id: node.link.field_summary
+field_name: field_summary
+entity_type: node
+bundle: link
+label: Summary
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
