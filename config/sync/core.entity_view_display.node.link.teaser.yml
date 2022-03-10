@@ -6,7 +6,6 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.link.field_display_url
     - field.field.node.link.field_exclude_from_prison
-    - field.field.node.link.field_feature_on_category
     - field.field.node.link.field_moj_episode
     - field.field.node.link.field_moj_season
     - field.field.node.link.field_moj_series
@@ -35,7 +34,6 @@ hidden:
   breadcrumbs: true
   field_display_url: true
   field_exclude_from_prison: true
-  field_feature_on_category: true
   field_moj_episode: true
   field_moj_season: true
   field_moj_series: true

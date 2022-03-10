@@ -150,12 +150,6 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_feature_on_category:
-    type: options_buttons
-    weight: 8
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_moj_episode:
     type: number
     weight: 17

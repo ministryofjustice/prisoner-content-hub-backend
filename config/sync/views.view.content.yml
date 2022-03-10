@@ -1436,7 +1436,6 @@ display:
             name: name
             status: status
             field_moj_top_level_categories: field_moj_top_level_categories
-            field_feature_on_category: field_feature_on_category
             field_moj_secondary_tags: field_moj_secondary_tags
             field_moj_series: field_moj_series
             field_prisons: field_prisons
@@ -1482,11 +1481,6 @@ display:
               empty_column: false
               responsive: ''
             field_moj_top_level_categories:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_feature_on_category:
               align: ''
               separator: ''
               empty_column: false
