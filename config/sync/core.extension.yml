@@ -12,6 +12,7 @@ module:
   cer: 0
   ckeditor: 0
   computed_breadcrumbs: 0
+  computed_taxonomy_child_count: 0
   config: 0
   contextual: 0
   ctools: 0
