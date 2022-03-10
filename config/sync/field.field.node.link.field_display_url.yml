@@ -1,0 +1,19 @@
+uuid: 84457073-2a12-4ffc-8d31-caca29ac21a2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_display_url
+    - node.type.link
+id: node.link.field_display_url
+field_name: field_display_url
+entity_type: node
+bundle: link
+label: 'Display URL'
+description: "Set the display url, to show to users.  This should be a smaller version of the full url.   E.g. for <em>https://www.example.com</em>, you may wish to use <em>www.example.com</em>. <br/>\r\nLeave blank to show no url."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,23 @@
+uuid: 7b3d6105-2c6d-42d9-8ca8-0899015e17a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_moj_episode
+    - node.type.link
+id: node.link.field_moj_episode
+field_name: field_moj_episode
+entity_type: node
+bundle: link
+label: Episode
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: 999
+  prefix: ''
+  suffix: ''
+field_type: integer

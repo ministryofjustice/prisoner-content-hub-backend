@@ -11,7 +11,7 @@ id: taxonomy_term.series.field_featured_image
 field_name: field_featured_image
 entity_type: taxonomy_term
 bundle: series
-label: 'Featured Image'
+label: Image
 description: ''
 required: false
 translatable: false

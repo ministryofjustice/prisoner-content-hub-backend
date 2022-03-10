@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Add the series_sort_value field to the node entity type.
@@ -14,4 +15,49 @@ function prisoner_hub_taxonomy_sorting_update_9001(&$sandbox) {
   $definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node')['series_sort_value'];
   \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($definition);
 
+}
+
+/**
+ * Add the content_updated field to the taxonomy term entity type.
+ */
+function prisoner_hub_taxonomy_sorting_update_9002(&$sandbox) {
+  $definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('taxonomy_term')['content_updated'];
+  \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($definition);
+
+}
+
+/**
+ * Update existing taxonomy terms with values for content_updated.
+ */
+function prisoner_hub_taxonomy_sorting_update_9003(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['result'] = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', ['series', 'moj_categories'],'IN')
+      ->execute();
+
+    $sandbox['progress'] = 0;
+  }
+  $terms = Term::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 50, TRUE));
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $result = \Drupal::entityQuery('node', 'OR')
+      ->condition('field_moj_top_level_categories', $term->id())
+      ->condition('field_moj_series', $term->id())
+      ->sort('changed', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $nodes = Node::loadMultiple($result);
+    if (!empty($nodes)) {
+      $node = reset($nodes);
+      $term->set('content_updated', $node->get('changed')->value);
+      $term->save();
+    }
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['progress'];
+  }
+  return 'Processed taxonomy terms: ' . $sandbox['progress'];
 }
