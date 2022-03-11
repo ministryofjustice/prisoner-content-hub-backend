@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\computed_taxonomy_child_count\ExistingSite;
+namespace Drupal\Tests\prisoner_hub_taxonomy_child_count\ExistingSite;
 
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * @group computed_taxonomy_child_count
+ * @group prisoner_hub_taxonomy_child_count
  */
 class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
 
@@ -32,8 +32,8 @@ class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
       ]
     ]);
 
-    $this->assertEquals($parent_1->get('child_term_count')->getValue()[0]['value'], 2);
-    $this->assertEquals($parent_2->get('child_term_count')->getValue()[0]['value'], 0);
+    $this->assertEquals($parent_1->get('child_term_count')->getValue()[0]['sub_categories_count'], 2);
+    $this->assertEquals($parent_2->get('child_term_count')->getValue()[0]['sub_categories_count'], 0);
   }
 
 }
