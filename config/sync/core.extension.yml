@@ -65,6 +65,7 @@ module:
   prisoner_hub_prison_access_cms: 0
   prisoner_hub_prison_context: 0
   prisoner_hub_taxonomy_access: 0
+  prisoner_hub_taxonomy_child_count: 0
   prisoner_hub_taxonomy_field_ux: 0
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
