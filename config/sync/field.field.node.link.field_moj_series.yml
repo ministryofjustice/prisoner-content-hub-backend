@@ -1,26 +1,26 @@
-uuid: c060fbe5-2cbf-43a8-b0b0-d285219ab0dc
+uuid: 87e756e6-7e5d-4ad8-bd96-3f6229de8874
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_feature_on_category
-    - taxonomy.vocabulary.moj_categories
+    - field.storage.node.field_moj_series
+    - node.type.link
     - taxonomy.vocabulary.series
-id: taxonomy_term.series.field_feature_on_category
-field_name: field_feature_on_category
-entity_type: taxonomy_term
-bundle: series
-label: 'Feature on category'
+id: node.link.field_moj_series
+field_name: field_moj_series
+entity_type: node
+bundle: link
+label: Series
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      moj_categories: moj_categories
+      series: series
     sort:
       field: name
       direction: asc

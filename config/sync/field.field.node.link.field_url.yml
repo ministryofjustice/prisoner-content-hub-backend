@@ -1,0 +1,19 @@
+uuid: 9c81ee76-4ee4-46aa-95db-6d53ffac8115
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_url
+    - node.type.link
+id: node.link.field_url
+field_name: field_url
+entity_type: node
+bundle: link
+label: Url
+description: 'You can enter either an external url, e.g. https://www.example.com (please include the https:// part) or an internal one, such as /profile.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

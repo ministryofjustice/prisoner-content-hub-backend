@@ -298,3 +298,55 @@ function prisoner_content_hub_profile_deploy_update_prison_owners(&$sandbox) {
   }
   return 'Updated nodes: ' . $sandbox['progress'];
 }
+
+/**
+ * Copy over content from "external_link" to "link" content type.
+ */
+function prisoner_content_hub_profile_deploy_copy_link_content_type() {
+  $result = \Drupal::entityQuery('node')
+    ->accessCheck(FALSE)
+    ->condition('type', 'external_link')
+    ->execute();
+
+  $nodes = Node::loadMultiple($result);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $node_values = $node->toArray();
+    $node_values['type'] = 'link';
+    unset($node_values['nid']);
+    unset($node_values['uuid']);
+    unset($node_values['vid']);
+    unset($node_values['path']);
+
+    $node_values['field_url'] = [
+      ['value' => $node_values['field_external_url'][0]['uri']]
+    ];
+    unset($node_values['field_external_url']);
+
+    $node_values['field_show_interstitial_page'] = 1;
+
+    $new_node = Node::create($node_values);
+    $new_node->save();
+  }
+}
+
+
+/**
+ * Clear out the featured content field on categories.
+ */
+function prisoner_content_hub_profile_deploy_clear_featured_content() {
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->accessCheck(FALSE)
+    ->condition('vid', 'moj_categories')
+    ->condition('field_featured_tiles', NULL, 'IS NOT NULL')
+    ->execute();
+
+  $terms = Term::loadMultiple($result);
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $term->set('field_featured_tiles', []);
+    $term->save();
+  }
+}

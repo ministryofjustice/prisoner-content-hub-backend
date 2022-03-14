@@ -1,11 +1,11 @@
-uuid: 2a59dbc7-5648-4ea6-af1c-12c0ef540cc3
+uuid: 870d4265-5bc2-4557-9a4a-d8a2e4537cb5
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_moj_category_featured_item
-field_name: field_moj_category_featured_item
+id: node.field_show_interstitial_page
+field_name: field_show_interstitial_page
 entity_type: node
 type: boolean
 settings: {  }
