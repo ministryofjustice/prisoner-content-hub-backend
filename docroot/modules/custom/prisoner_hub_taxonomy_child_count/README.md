@@ -12,7 +12,7 @@ Example JSON:API output of the field:
   }
   ..
 ```
-`sub_categories` show the number of child taxonomy terms within the same vocabulary.
+`sub_categories_count` show the number of child taxonomy terms within the same vocabulary.
 `sub_series_count` show the number of series referencing the category via `field_category`.
 
 ## Why?

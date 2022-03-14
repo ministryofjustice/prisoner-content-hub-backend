@@ -6,6 +6,9 @@ use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 
+/**
+ * Represents the computed child_term_count field.
+ */
 class ComputedTaxonomyChildCount extends FieldItemList implements FieldItemListInterface {
   use ComputedItemListTrait;
 
