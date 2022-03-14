@@ -5,7 +5,7 @@
   Drupal.behaviors.prisonerHubFeaturedContent = {
     attach: function(context) {
       const $checkboxes = $('[name^="field_feature_on_category"]'); // Use name^ to account for multiple checkbox fields.
-      const $categoryField = $('[name="field_moj_top_level_categories[]"], [name="field_category[]"]');
+      const $categoryField = $('[name^="field_moj_top_level_categories"], [name^="field_category"]');
       const $seriesField = $('[name="field_moj_series"]');
       const $notInSeries = $('[name="field_not_in_series[value]"]');
 
@@ -16,7 +16,7 @@
         .once()
         .on('change', function(e) {
           if ($(e.currentTarget).is(":visible")) {
-            filterCheckboxes($(e.currentTarget).val());
+            filterCheckboxes([$(e.currentTarget).val()]);
           }
         });
       // Trigger change event if value is not empty.
