@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\prisoner_hub_taxonomy_child_count\Field;
+namespace Drupal\prisoner_hub_taxonomy_child_count\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Field\FieldItemListInterface;

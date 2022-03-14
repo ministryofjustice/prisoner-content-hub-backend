@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\prisoner_hub_taxonomy_child_count\Field\ComputedTaxonomyChildCount;
 
 /**
  * Implements hook_entity_base_field_info().
@@ -16,12 +15,12 @@ use Drupal\prisoner_hub_taxonomy_child_count\Field\ComputedTaxonomyChildCount;
 function prisoner_hub_taxonomy_child_count_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() == 'taxonomy_term') {
-    $fields['child_term_count'] = BaseFieldDefinition::create('integer')
+    $fields['child_term_count'] = BaseFieldDefinition::create('child_term_count')
       ->setLabel(t('Child term count'))
       ->setDescription(t('A count of the amount of child taxonomy terms.'))
       ->setReadOnly(TRUE)
       ->setComputed(TRUE)
-      ->setClass(ComputedTaxonomyChildCount::class);
+      ->setCardinality(1);
   }
   return $fields;
 }
