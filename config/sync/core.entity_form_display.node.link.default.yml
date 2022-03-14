@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.field.node.link.field_display_url
     - field.field.node.link.field_exclude_from_prison
-    - field.field.node.link.field_feature_on_category
     - field.field.node.link.field_moj_episode
     - field.field.node.link.field_moj_season
     - field.field.node.link.field_moj_series
@@ -142,12 +141,6 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
-    third_party_settings: {  }
-  field_feature_on_category:
-    type: options_buttons
-    weight: 8
-    region: content
-    settings: {  }
     third_party_settings: {  }
   field_moj_episode:
     type: number

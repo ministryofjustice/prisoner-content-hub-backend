@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.field.node.moj_video_item.field_exclude_feedback
     - field.field.node.moj_video_item.field_exclude_from_prison
-    - field.field.node.moj_video_item.field_feature_on_category
-    - field.field.node.moj_video_item.field_moj_category_featured_item
     - field.field.node.moj_video_item.field_moj_description
     - field.field.node.moj_video_item.field_moj_episode
     - field.field.node.moj_video_item.field_moj_season
@@ -164,12 +162,6 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
-    third_party_settings: {  }
-  field_feature_on_category:
-    type: options_buttons
-    weight: 12
-    region: content
-    settings: {  }
     third_party_settings: {  }
   field_moj_description:
     type: text_textarea_with_summary
@@ -337,6 +329,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
-  field_moj_category_featured_item: true
   promote: true
   sticky: true
