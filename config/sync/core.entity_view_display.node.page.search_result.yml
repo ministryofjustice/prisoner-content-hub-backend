@@ -6,8 +6,6 @@ dependencies:
     - core.entity_view_mode.node.search_result
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
-    - field.field.node.page.field_feature_on_category
-    - field.field.node.page.field_moj_category_featured_item
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
@@ -36,10 +34,9 @@ content:
     weight: 101
     region: content
 hidden:
+  breadcrumbs: true
   field_exclude_feedback: true
   field_exclude_from_prison: true
-  field_feature_on_category: true
-  field_moj_category_featured_item: true
   field_moj_description: true
   field_moj_episode: true
   field_moj_season: true
