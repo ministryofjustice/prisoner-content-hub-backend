@@ -79,6 +79,8 @@ class FeaturedContentFieldsFormTest extends ExistingSiteWebDriverTestBase {
    * @TODO: Move this all into a base class.
    */
   public function setUp(): void {
+    $this->markTestSkipped('All tests in this file are inactive as the module is no longer installed.');
+    
     parent::setUp();
 
     $this->studioAdministrator = User::create([

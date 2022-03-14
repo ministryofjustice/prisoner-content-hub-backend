@@ -5,9 +5,7 @@ dependencies:
   config:
     - field.field.node.moj_radio_item.field_exclude_feedback
     - field.field.node.moj_radio_item.field_exclude_from_prison
-    - field.field.node.moj_radio_item.field_feature_on_category
     - field.field.node.moj_radio_item.field_moj_audio
-    - field.field.node.moj_radio_item.field_moj_category_featured_item
     - field.field.node.moj_radio_item.field_moj_description
     - field.field.node.moj_radio_item.field_moj_episode
     - field.field.node.moj_radio_item.field_moj_programme_code
@@ -50,24 +48,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 19
-    region: content
-  field_feature_on_category:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 16
-    region: content
-  field_moj_category_featured_item:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 12
     region: content
   field_moj_description:
     type: text_default

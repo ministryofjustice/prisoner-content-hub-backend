@@ -6,7 +6,6 @@ dependencies:
     - field.field.node.external_link.field_display_url
     - field.field.node.external_link.field_exclude_from_prison
     - field.field.node.external_link.field_external_url
-    - field.field.node.external_link.field_feature_on_category
     - field.field.node.external_link.field_moj_episode
     - field.field.node.external_link.field_moj_season
     - field.field.node.external_link.field_moj_series
@@ -46,14 +45,6 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 115
-    region: content
-  field_feature_on_category:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 113
     region: content
   field_moj_episode:
     type: number_integer

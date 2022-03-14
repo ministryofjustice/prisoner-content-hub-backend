@@ -1,10 +1,9 @@
 uuid: 7a3006aa-ffbc-4f27-a058-1cd80885d22c
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.storage.node.field_moj_category_featured_item
     - field.storage.node.field_moj_top_level_categories
   module:
     - node
@@ -344,71 +343,6 @@ display:
           settings:
             link: true
           group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_moj_category_featured_item:
-          id: field_moj_category_featured_item
-          table: node__field_moj_category_featured_item
-          field: field_moj_category_featured_item
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: 'Feature for Category'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: boolean
-          settings:
-            format: default
-            format_custom_false: ''
-            format_custom_true: ''
-          group_column: value
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -938,7 +872,6 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_top_level_categories'
   embed_1:
     id: embed_1
@@ -958,5 +891,4 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_moj_category_featured_item'
         - 'config:field.storage.node.field_moj_top_level_categories'
