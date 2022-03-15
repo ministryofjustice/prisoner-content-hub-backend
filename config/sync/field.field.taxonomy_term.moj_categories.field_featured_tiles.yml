@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_featured_tiles
-    - node.type.external_link
+    - node.type.link
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
@@ -30,7 +30,7 @@ settings:
       target_bundles:
         moj_radio_item: moj_radio_item
         page: page
-        external_link: external_link
+        link: link
         moj_pdf_item: moj_pdf_item
         moj_video_item: moj_video_item
       sort:
