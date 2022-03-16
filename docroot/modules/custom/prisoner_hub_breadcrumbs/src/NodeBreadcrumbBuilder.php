@@ -91,10 +91,11 @@ class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     /** @var \Drupal\taxonomy\TermInterface $category */
     $category = reset($categories);
     $parents = $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($category->id());
+    $breadcrumb_terms = array_reverse($parents);
     if ($series) {
-      $parents[] = $series;
+      $breadcrumb_terms[] = $series;
     }
-    foreach (array_reverse($parents) as $term) {
+    foreach ($breadcrumb_terms as $term) {
       $term = $this->entityRepository->getTranslationFromContext($term);
       $breadcrumb->addCacheableDependency($term);
       $breadcrumb->addLink(Link::createFromRoute($term->getName(), 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]));
