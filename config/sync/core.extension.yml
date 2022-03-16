@@ -40,6 +40,7 @@ module:
   jsonapi: 0
   jsonapi_cross_bundles: 0
   jsonapi_image_styles: 0
+  jsonapi_menu_items: 0
   jsonapi_page_limit: 0
   jsonapi_resources: 0
   jsonapi_search_api: 0
