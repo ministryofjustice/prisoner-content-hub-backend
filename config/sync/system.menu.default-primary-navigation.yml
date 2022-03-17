@@ -1,0 +1,8 @@
+uuid: cdd2dde0-7f21-43bb-bb97-fa1be3569d0c
+langcode: en
+status: true
+dependencies: {  }
+id: default-primary-navigation
+label: 'Default primary navigation'
+description: 'Acts as the default menu for prisons that do not explicitly set a menu.'
+locked: true
