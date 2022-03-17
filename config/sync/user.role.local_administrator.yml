@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
-    - node.type.external_link
     - node.type.featured_articles
     - node.type.help_page
     - node.type.link
@@ -56,7 +55,6 @@ permissions:
   - 'bypass prison ownership edit access'
   - 'clone node entity'
   - 'clone taxonomy_term entity'
-  - 'create external_link content'
   - 'create featured_articles content'
   - 'create help_page content'
   - 'create link content'
@@ -68,19 +66,15 @@ permissions:
   - 'create terms in moj_categories'
   - 'create terms in series'
   - 'create terms in tags'
-  - 'delete any external_link content'
   - 'delete any help_page content'
   - 'delete any link content'
-  - 'delete external_link revisions'
   - 'delete help_page revisions'
   - 'delete link revisions'
-  - 'delete own external_link content'
   - 'delete own help_page content'
   - 'delete own link content'
   - 'delete terms in moj_categories'
   - 'delete terms in series'
   - 'delete terms in tags'
-  - 'edit any external_link content'
   - 'edit any featured_articles content'
   - 'edit any help_page content'
   - 'edit any link content'
@@ -88,7 +82,6 @@ permissions:
   - 'edit any moj_radio_item content'
   - 'edit any moj_video_item content'
   - 'edit any page content'
-  - 'edit own external_link content'
   - 'edit own featured_articles content'
   - 'edit own help_page content'
   - 'edit own link content'
@@ -114,7 +107,6 @@ permissions:
   - 'execute user_unblock_user_action user'
   - 'execute vbo_cancel_user_action user'
   - 'execute views_bulk_edit all'
-  - 'revert external_link revisions'
   - 'revert featured_articles revisions'
   - 'revert help_page revisions'
   - 'revert link revisions'
@@ -127,7 +119,6 @@ permissions:
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
-  - 'view external_link revisions'
   - 'view featured_articles revisions'
   - 'view help_page revisions'
   - 'view link revisions'
