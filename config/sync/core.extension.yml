@@ -12,6 +12,8 @@ module:
   ckeditor: 0
   computed_breadcrumbs: 0
   config: 0
+  config_filter: 0
+  config_ignore: 0
   contextual: 0
   ctools: 0
   datetime: 0
@@ -62,6 +64,7 @@ module:
   prisoner_hub_cms_help: 0
   prisoner_hub_content_suggestions: 0
   prisoner_hub_edit_only: 0
+  prisoner_hub_primary_nav: 0
   prisoner_hub_prison_access: 0
   prisoner_hub_prison_access_cms: 0
   prisoner_hub_prison_context: 0

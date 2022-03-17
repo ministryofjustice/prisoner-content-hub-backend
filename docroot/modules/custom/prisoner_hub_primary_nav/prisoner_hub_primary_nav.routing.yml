@@ -1,0 +1,6 @@
+prisoner_hub_primary_nav.jsonapi.get_primary_nav:
+  path: '/%jsonapi%/primary_navigation'
+  defaults:
+    _jsonapi_resource: Drupal\prisoner_hub_primary_nav\Resource\PrimaryMenuResource
+  requirements:
+    _permission: 'access content'
