@@ -1,2 +1,4 @@
 parameters:
-
+  prisoner_hub_primary_nav:
+    primary_nav_field_name: field_primary_navigation
+    default_menu: default-primary-navigation
