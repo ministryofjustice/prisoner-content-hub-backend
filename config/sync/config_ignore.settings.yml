@@ -1,3 +1,7 @@
 _core:
   default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk
-ignored_config_entities: {  }
+ignored_config_entities:
+  - 'system.menu.*'
+  - ~system.menu.account
+  - ~system.menu.admin
+  - ~system.menu.default-primary-navigation
