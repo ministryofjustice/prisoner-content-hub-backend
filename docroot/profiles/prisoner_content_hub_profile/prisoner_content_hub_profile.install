@@ -220,3 +220,17 @@ function prisoner_content_hub_profile_update_8018() {
     $entity->save();
   }
 }
+
+/**
+ * Remove old external links (so that we can remove the content type).
+ */
+function prisoner_content_hub_profile_update_8019() {
+  $results = \Drupal::entityQuery('node')
+    ->condition('type', 'external_link')
+    ->accessCheck(FALSE)
+    ->execute();
+  $nodes = Node::loadMultiple($results);
+  foreach ($nodes as $node) {
+    $node->delete();
+  }
+}

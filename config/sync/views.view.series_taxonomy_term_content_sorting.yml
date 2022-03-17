@@ -1,19 +1,15 @@
 uuid: a63353b1-b3a4-4cd4-9f80-56ec7e747b34
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.external_link.field_moj_episode
-    - field.field.node.external_link.field_moj_season
-    - field.field.node.external_link.field_release_date
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_top_level_categories
   module:
     - node
     - taxonomy
     - user
-    - views_entity_form_field
 _core:
   default_config_hash: YY-QIsPmXCITvYjAnlCzaqASCB1Telev3U0IKOztZkc
 id: series_taxonomy_term_content_sorting
@@ -552,176 +548,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        form_field_field_moj_season:
-          id: form_field_field_moj_season
-          table: node_field_data
-          field: form_field_field_moj_season
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          plugin_id: entity_form_field
-          label: Season
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin:
-            hide_title: 1
-            hide_description: 1
-            type: number
-            settings:
-              placeholder: ''
-            third_party_settings: {  }
-        form_field_field_moj_episode:
-          id: form_field_field_moj_episode
-          table: node_field_data
-          field: form_field_field_moj_episode
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          plugin_id: entity_form_field
-          label: Episode
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin:
-            hide_title: 1
-            hide_description: 1
-            type: number
-            settings:
-              placeholder: ''
-            third_party_settings: {  }
-        form_field_field_release_date:
-          id: form_field_field_release_date
-          table: node_field_data
-          field: form_field_field_release_date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          plugin_id: entity_form_field
-          label: 'Release date'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          plugin:
-            hide_title: 1
-            hide_description: 1
-            type: datetime_default
-            settings: {  }
-            third_party_settings: {  }
         operations:
           id: operations
           table: node
@@ -1048,18 +874,11 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.field.node.external_link.field_moj_episode'
-        - 'config:field.field.node.external_link.field_moj_season'
-        - 'config:field.field.node.external_link.field_release_date'
-        - 'config:field.storage.node.field_moj_episode'
-        - 'config:field.storage.node.field_moj_season'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_top_level_categories'
-        - 'config:field.storage.node.field_release_date'
   embed_1:
     id: embed_1
     display_title: 'All sorting options/directions'
@@ -1075,15 +894,8 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.field.node.external_link.field_moj_episode'
-        - 'config:field.field.node.external_link.field_moj_season'
-        - 'config:field.field.node.external_link.field_release_date'
-        - 'config:field.storage.node.field_moj_episode'
-        - 'config:field.storage.node.field_moj_season'
         - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_top_level_categories'
-        - 'config:field.storage.node.field_release_date'
