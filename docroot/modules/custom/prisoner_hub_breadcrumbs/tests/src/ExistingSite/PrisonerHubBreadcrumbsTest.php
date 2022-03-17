@@ -49,18 +49,23 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     $this->secondaryTagTerm = $this->createTerm($vocab_secondary_tags);
 
     $vocab_categories = Vocabulary::load('moj_categories');
-    $parentTerm = $this->createTerm($vocab_categories);
+    $parentTerm = $this->createTerm($vocab_categories, [
+      'name' => 'Parent category term'
+    ]);
     $subCategoryTerm = $this->createTerm($vocab_categories, [
+      'name' => 'Sub category term',
       'parent' => [
         ['target_id' => $parentTerm->id()],
       ],
     ]);
     $subSubCategoryTerm = $this->createTerm($vocab_categories, [
+      'name' => 'Sub sub category term',
       'parent' => [
         ['target_id' => $subCategoryTerm->id(),],
       ],
     ]);
     $this->createNode([
+      'name' => 'Series term',
       'field_moj_top_level_categories' => [
         ['target_id' => $subSubCategoryTerm->id()]
       ],
@@ -71,6 +76,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
 
     $vocab_series = Vocabulary::load('series');
     $this->seriesTerm = $this->createTerm($vocab_series, [
+      'name' => 'Series term',
       'field_category' =>
         ['target_id' => $subSubCategoryTerm->id()],
     ]);
@@ -104,7 +110,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
   /**
    * Test content assigned to a category has the correct breadcrumbs.
    */
-  public function testContentWithCategoryBreadcumb() {
+  public function testContentWithCategoryBreadcrumb() {
     $categories = $this->categoryTerms;
     $category = end($categories);
     $node = $this->createNode([
@@ -119,7 +125,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
   /**
    * Test content assigned to a series has the corret breadcrumbs.
    */
-  public function testContentWithSeriesBreadcumb() {
+  public function testContentWithSeriesBreadcrumb() {
     $node = $this->createNode([
       'field_moj_series' => [
         ['target_id' => $this->seriesTerm->id()],
@@ -166,7 +172,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
           'options' => [],
         ];
       }
-      $this->assertEqualsCanonicalizing($breadcrumbs, $response_document['data']['attributes']['breadcrumbs'], $message);
+      $this->assertEquals($breadcrumbs, $response_document['data']['attributes']['breadcrumbs'], $message);
     }
   }
 
