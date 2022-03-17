@@ -220,3 +220,133 @@ function prisoner_content_hub_profile_update_8018() {
     $entity->save();
   }
 }
+
+/**
+ * Convert series into sub-categories.
+ */
+function prisoner_content_hub_profile_update_8019(&$sandbox) {
+
+  // [Series id => destination parent category id]
+  $series_to_sub_cats_map = [
+    [1275 => 644],
+    [1313 => 644],
+    [849 => 1297],
+    [916 => 1290],
+    [918 => 1286],
+    [920 => 1286],
+    [921 => 1286],
+    [922 => 1286],
+    [923 => 1286],
+    [925 => 1290],
+    [929 => 1286],
+    [932 => 1286],
+    [941 => 1283],
+    [942 => 1286],
+    [944 => 1290],
+    [953 => 1290],
+    [1049 => 1283],
+    [1054 => 1286],
+    [1106 => 1283],
+    [1174 => 1284],
+    [1181 => 1297],
+    [875 => 1310],
+    [931 => 1286],
+    [1271 => 644],
+    [1196 => 1310],
+    [810 => 1310],
+    [1183 => 1283],
+    [1316 => 1283],
+    [911 => 1283],
+    [1007 => 644],
+    [1045 => 1283],
+    [1146 => 1283],
+    [1162 => 644],
+    [1210 => 1283],
+    [1211 => 1283],
+    [1173 => 1310],
+    [1108 => 1283],
+    [912 => 1282],
+    [1259 => 1282],
+    [1260 => 1282],
+    [1261 => 1282],
+    [1263 => 1282],
+    [1265 => 1282],
+    [1267 => 1310],
+    [1226 => 1297],
+    [1247 => 644],
+    [1028 => 1307],
+    [1107 => 1283],
+    [1148 => 644],
+    [1239 => 1283],
+    [1240 => 1283],
+    [1241 => 1283],
+    [1242 => 1283],
+    [1243 => 1283],
+    [1244 => 1283],
+    [1245 => 1283],
+    [1246 => 1283],
+    [1252 => 1285],
+    [1228 => 1283],
+    [1229 => 1283],
+    [1230 => 1283],
+    [1231 => 1283],
+    [1232 => 1283],
+    [1233 => 1283],
+    [1234 => 1283],
+    [1235 => 1283],
+    [1236 => 1283],
+    [1237 => 1283],
+    [1238 => 1283],
+    [1352 => 1283],
+    [948 => 1283],
+    [1155 => 1284],
+    [1189 => 1283],
+    [1257 => 1283],
+    [1258 => 1283],
+    [1323 => 644],
+    [1324 => 1300],
+    [1353 => 1283],
+    [1087 => 1283],
+    [1342 => 1341],
+    [917 => 1286],
+  ];
+
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+  }
+
+  $series_to_sub_cats_slice = array_slice($series_to_sub_cats_map, $sandbox['progress'], 10, TRUE);
+
+  foreach ($series_to_sub_cats_slice as $value) {
+    $series_id = key($value);
+    $parent_id = reset($value);
+    $series_term = Term::load($series_id);
+    $new_category_term = Term::create([
+      'name' => $series_term->getName(),
+      'vid' => 'moj_categories',
+      'parent' => [
+        'target_id' => $parent_id,
+      ],
+    ]);
+    $new_category_term->save();
+
+    $result = \Drupal::entityQuery('node')
+      ->condition('field_moj_series', $series_id)
+      ->accessCheck(FALSE)
+      ->execute();
+    $nodes = Node::loadMultiple($result);
+    /** @var \Drupal\node\NodeInterface $node */
+    foreach ($nodes as $node) {
+      $node->set('field_moj_series', NULL);
+      $node->set('field_not_in_series', 1);
+      $node->set('field_moj_top_level_categories', $new_category_term->id());
+      $node->save();
+    }
+    $series_term->delete();
+    print 'Converted ' . $new_category_term->getName() . ' to sub-category';
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = isset($series_to_sub_cats_map[$sandbox['progress']]) == FALSE;
+  return 'Processed terms: ' . $sandbox['progress'];
+
+}
