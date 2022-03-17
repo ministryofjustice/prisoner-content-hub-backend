@@ -5,3 +5,4 @@ ignored_config_entities:
   - ~system.menu.account
   - ~system.menu.admin
   - ~system.menu.default-primary-navigation
+enable_export_filtering: true
