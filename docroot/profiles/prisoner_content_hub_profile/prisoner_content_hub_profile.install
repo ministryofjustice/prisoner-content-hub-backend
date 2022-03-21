@@ -220,3 +220,95 @@ function prisoner_content_hub_profile_update_8018() {
     $entity->save();
   }
 }
+
+/**
+ * Remove old external links (so that we can remove the content type).
+ */
+function prisoner_content_hub_profile_update_8019() {
+  $results = \Drupal::entityQuery('node')
+    ->condition('type', 'external_link')
+    ->accessCheck(FALSE)
+    ->execute();
+  $nodes = Node::loadMultiple($results);
+  foreach ($nodes as $node) {
+    $node->delete();
+  }
+}
+
+/**
+ * Convert series into sub-categories.
+ */
+function prisoner_content_hub_profile_update_8020(&$sandbox) {
+
+  // [Series id => destination parent category id]
+  $series_to_sub_cats_map = [
+    [849 => 1297],
+    [1049 => 1283],
+    [1174 => 1284],
+    [1181 => 1297],
+    [810 => 1310],
+    [911 => 1283],
+    [1007 => 644],
+    [1045 => 1283],
+    [1146 => 1283],
+    [1162 => 644],
+    [912 => 1282],
+    [1259 => 1282],
+    [1260 => 1282],
+    [1261 => 1282],
+    [1263 => 1282],
+    [1265 => 1282],
+    [1267 => 1310],
+    [1148 => 644],
+    [1252 => 1285],
+    [1155 => 1284],
+    [1257 => 1283],
+    [1258 => 1283],
+  ];
+
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+  }
+
+  $series_to_sub_cats_slice = array_slice($series_to_sub_cats_map, $sandbox['progress'], 5, TRUE);
+
+  foreach ($series_to_sub_cats_slice as $value) {
+    $series_id = key($value);
+    $parent_id = reset($value);
+    $series_term = Term::load($series_id);
+    $new_category_term = Term::create([
+      'name' => $series_term->getName(),
+      'vid' => 'moj_categories',
+      'parent' => [
+        'target_id' => $parent_id,
+      ],
+      'description' => $series_term->getDescription(),
+      'published' => $series_term->isPublished(),
+    ]);
+    $new_category_term->set('field_prisons', $series_term->get('field_prisons')->getValue());
+    $new_category_term->set('field_exclude_from_prison', $series_term->get('field_exclude_from_prison')->getValue());
+    $new_category_term->set('field_featured_image', $series_term->get('field_featured_image')->getValue());
+    $new_category_term->save();
+
+    $result = \Drupal::entityQuery('node')
+      ->condition('field_moj_series', $series_id)
+      ->accessCheck(FALSE)
+      ->execute();
+    $nodes = Node::loadMultiple($result);
+    /** @var \Drupal\node\NodeInterface $node */
+    foreach ($nodes as $node) {
+      $node->set('field_moj_series', NULL);
+      $node->set('field_not_in_series', 1);
+      $node->set('field_moj_top_level_categories', $new_category_term->id());
+      $node->setNewRevision(TRUE);
+      $node->revision_log = 'Bulk converting series to categories, re-assiging content.';
+      $node->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+      $node->save();
+    }
+    $series_term->delete();
+    $sandbox['progress']++;
+  }
+  $sandbox['#finished'] = isset($series_to_sub_cats_map[$sandbox['progress']]) == FALSE;
+  return 'Processed terms: ' . $sandbox['progress'];
+
+}

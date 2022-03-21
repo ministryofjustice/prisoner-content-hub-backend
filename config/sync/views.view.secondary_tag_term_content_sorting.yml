@@ -1,6 +1,6 @@
 uuid: 7a3006aa-ffbc-4f27-a058-1cd80885d22c
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser

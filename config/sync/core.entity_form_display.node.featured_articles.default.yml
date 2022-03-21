@@ -6,8 +6,6 @@ dependencies:
     - field.field.node.featured_articles.field_exclude_from_prison
     - field.field.node.featured_articles.field_featured_tile_large
     - field.field.node.featured_articles.field_featured_tile_small
-    - field.field.node.featured_articles.field_moj_featured_tile_large
-    - field.field.node.featured_articles.field_moj_featured_tile_small
     - field.field.node.featured_articles.field_prison_owner
     - field.field.node.featured_articles.field_prisons
     - node.type.featured_articles
@@ -177,7 +175,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_moj_featured_tile_large: true
-  field_moj_featured_tile_small: true
   promote: true
   sticky: true
