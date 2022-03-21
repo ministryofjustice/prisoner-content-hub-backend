@@ -137,6 +137,29 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     $this->assertJsonApiBreadcrumbResponse($node, $breadcrumbs);
   }
 
+  public function testTopicsBreadcrumb() {
+    $vocab = Vocabulary::load('tags');
+    $term = $this->createTerm($vocab);
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/tags/' . $term->uuid());
+    $response = $this->getJsonApiResponse($url);
+    $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
+    $response_document = Json::decode((string) $response->getBody());
+    $message = 'JSON response returns the correct results on url: ' . $url->toString();
+    $expected_breadcrumbs = [
+      [
+        'uri' => '/',
+        'title' => 'Home',
+        'options' => [],
+      ],
+      [
+        'uri' => '/topics',
+        'title' => 'Browse all topics',
+        'options' => [],
+      ]
+    ];
+    $this->assertSame($expected_breadcrumbs, $response_document['data']['attributes']['breadcrumbs']);
+  }
+
   /**
    * Helper function to assert that a jsonapi response returns the expected
    * entities.

@@ -12,12 +12,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\TermInterface;
 
 /**
- * Class TermBreadcrumbBuilder.
+ * Class SeriesTermBreadcrumbBuilder.
  *
- * Build breadcrumbs for taxonomy terms.
- * @see \Drupal\prisoner_hub_breadcrumbs\TermBreadcrumbBuilder
+ * Build breadcrumbs for series taxonomy terms.
  */
-class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+class SeriesTermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
 
   /**
@@ -35,7 +34,7 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $entityTypeManager;
 
   /**
-   * Constructs the TermBreadcrumbBuilder.
+   * Constructs the SeriesTermBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -75,7 +74,7 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     if (empty($categories)) {
       return $breadcrumb;
     }
-    
+
     /** @var \Drupal\taxonomy\TermInterface $category */
     $category = reset($categories);
     $parents = $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($category->id());
