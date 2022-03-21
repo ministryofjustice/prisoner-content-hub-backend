@@ -114,6 +114,8 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
     else {
       /** @var \Drupal\Core\Menu\MenuLinkInterface $menu_item */
       foreach (array_reverse($menu_items_to_check) as $menu_item) {
+        // We run the check from the last breadcrumb and work backwards,
+        // this allows us to use a menu with existing links in.
         $last_menu_item_in_response = array_pop($response_document['data']);
         $this->assertSame($menu_item->getTitle(), $last_menu_item_in_response['attributes']['title']);
         $this->assertSame($menu_item->getUrlObject()->toString(), $last_menu_item_in_response['attributes']['url']);
