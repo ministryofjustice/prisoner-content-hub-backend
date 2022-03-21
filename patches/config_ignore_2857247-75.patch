@@ -1,0 +1,169 @@
+diff --git a/config/install/config_ignore.settings.yml b/config/install/config_ignore.settings.yml
+index 629b342..5ff861b 100644
+--- a/config/install/config_ignore.settings.yml
++++ b/config/install/config_ignore.settings.yml
+@@ -1 +1,2 @@
+ ignored_config_entities: { }
++enable_export_filtering: false
+diff --git a/config/schema/config_ignore.schema.yml b/config/schema/config_ignore.schema.yml
+index 9930f0d..cc03b6e 100644
+--- a/config/schema/config_ignore.schema.yml
++++ b/config/schema/config_ignore.schema.yml
+@@ -7,3 +7,6 @@ config_ignore.settings:
+       label: 'List of ignored configurations'
+       sequence:
+         type: string
++    enable_export_filtering:
++      type: boolean
++      label: 'Enable export filtering'
+diff --git a/src/Form/Settings.php b/src/Form/Settings.php
+index 16f05fd..44684a4 100644
+--- a/src/Form/Settings.php
++++ b/src/Form/Settings.php
+@@ -54,6 +54,13 @@ Examples: <ul>
+       '#default_value' => implode(PHP_EOL, $config_ignore_settings->get('ignored_config_entities')),
+       '#size' => 60,
+     ];
++
++    $form['enable_export_filtering'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Enable export filtering'),
++      '#description' => $this->t('By default, configuration values are ignored on import only. Enable to also ignore changes during configuration export operations.'),
++      '#default_value' => $config_ignore_settings->get('enable_export_filtering'),
++    ];
+     return parent::buildForm($form, $form_state);
+   }
+
+@@ -67,6 +74,7 @@ Examples: <ul>
+     $config_ignore_settings_array = array_filter($config_ignore_settings_array);
+     $config_ignore_settings_array = array_values($config_ignore_settings_array);
+     $config_ignore_settings->set('ignored_config_entities', $config_ignore_settings_array);
++    $config_ignore_settings->set('enable_export_filtering', $values['enable_export_filtering']);
+     $config_ignore_settings->save();
+     parent::submitForm($form, $form_state);
+
+diff --git a/src/Plugin/ConfigFilter/IgnoreFilter.php b/src/Plugin/ConfigFilter/IgnoreFilter.php
+index 3823e92..357ccff 100644
+--- a/src/Plugin/ConfigFilter/IgnoreFilter.php
++++ b/src/Plugin/ConfigFilter/IgnoreFilter.php
+@@ -57,6 +57,7 @@ class IgnoreFilter extends ConfigFilterBase implements ContainerFactoryPluginInt
+     $container->get('module_handler')->invokeAll('config_ignore_settings_alter', [&$ignored]);
+     // Set the list in the plugin configuration.
+     $configuration['ignored'] = $ignored;
++    $configuration['enable_export_filtering'] = (bool) $container->get('config.factory')->get('config_ignore.settings')->get('enable_export_filtering');
+
+     return new static(
+       $configuration,
+@@ -174,12 +175,72 @@ class IgnoreFilter extends ConfigFilterBase implements ContainerFactoryPluginInt
+       if (!array_key_exists($name, $data)) {
+         $data[$name] = [];
+       }
+-      $filtered_data[$name] = $this->activeRead($name, $data[$name]);
++      $name_data = isset($data[$name]) ? $data[$name] : [];
++      $filtered_data[$name] = $this->activeRead($name, $name_data);
+     }
+
+     return array_filter($filtered_data);
+   }
+
++  /**
++   * Write from the source configuration.
++   *
++   * This method will write the configuration from the source config store.
++   * But rather than just straight up returning the value it will check if
++   * a nested config key is set to be ignored and set only that value on the
++   * data to be filtered.
++   *
++   * @param string $name
++   *   The name of the configuration to write.
++   * @param mixed $data
++   *   The data to be filtered.
++   *
++   * @return mixed
++   *   The data filtered or written from the source storage.
++   */
++  protected function sourceWrite($name, $data) {
++    $keys = [];
++    foreach ($this->configuration['ignored'] as $ignored) {
++      // Split the ignore settings so that we can ignore individual keys.
++      $ignored = explode(':', $ignored);
++      if (self::wildcardMatch($ignored[0], $name)) {
++        if (count($ignored) == 1) {
++          // If one of the definitions does not have keys ignore the
++          // whole config.
++          return $this->source->read($name);
++        }
++        else {
++          // Add the sub parts to ignore to the keys.
++          $keys[] = $ignored[1];
++        }
++      }
++
++    }
++
++    $source = $this->source->read($name);
++    if ($source !== FALSE) {
++      foreach ($keys as $key) {
++          $parts = explode('.', $key);
++
++          if (count($parts) == 1 && isset($source[$key])) {
++            $data[$key] = $source[$key];
++          }
++          else {
++            $value = NestedArray::getValue($source, $parts, $key_exists);
++            if ($key_exists) {
++              // Enforce the value if it existed in the active config.
++              NestedArray::setValue($data, $parts, $value, TRUE);
++            }
++            else {
++              NestedArray::unsetValue($data, $parts);
++            }
++          }
++      }
++    }
++
++    return $data;
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -192,6 +253,38 @@ class IgnoreFilter extends ConfigFilterBase implements ContainerFactoryPluginInt
+     return $data;
+   }
+
++  /**
++   * {@inheritdoc}
++   */
++  public function filterWrite($name, array $data) {
++    // Write from the file storage when the name is in the ignored list.
++    if ($this->configuration['enable_export_filtering'] && $this->matchConfigName($name)) {
++      return $this->sourceWrite($name, $data);
++    }
++
++    return $data;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function filterDeleteAll($prefix, $delete) {
++    if (empty($prefix)) {
++      return FALSE;
++    }
++    return parent::filterDeleteAll($prefix, $delete);
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function filterDelete($name, $delete) {
++    if ($this->configuration['enable_export_filtering'] && $this->matchConfigName($name)) {
++      return FALSE;
++    }
++    return parent::filterDelete($name, $delete);
++  }
++
+   /**
+    * {@inheritdoc}
+    */

@@ -1,0 +1,20 @@
+uuid: a35924dc-df38-480d-a42b-3f4aec375497
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - taxonomy
+id: taxonomy_term.field_primary_navigation
+field_name: field_primary_navigation
+entity_type: taxonomy_term
+type: entity_reference
+settings:
+  target_type: menu
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,23 @@
+uuid: c9d00bc5-483e-4700-b0f1-2034efa3b0e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_primary_navigation
+    - taxonomy.vocabulary.prisons
+id: taxonomy_term.prisons.field_primary_navigation
+field_name: field_primary_navigation
+entity_type: taxonomy_term
+bundle: prisons
+label: 'Primary navigation'
+description: '(Optional) Select a <a href="/admin/structure/menu">menu</a> to use for the primary navigation for this prison.  If none selected, the <a href="/admin/structure/menu/manage/default-primary-navigation">default primary navigation menu</a> will be used.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:menu'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: entity_reference

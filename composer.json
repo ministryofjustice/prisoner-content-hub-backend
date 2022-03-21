@@ -11,6 +11,7 @@
         "drupal/book_blocks": "^1.6",
         "drupal/cer": "4.x-dev",
         "drupal/computed_breadcrumbs": "dev-3243613-problem-requiring-module",
+        "drupal/config_ignore": "^2.3",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
         "drupal/core-recommended": "~9.3",
@@ -32,6 +33,7 @@
         "drupal/image_style_warmer": "^1.1",
         "drupal/jsonapi_cross_bundles": "^1.0",
         "drupal/jsonapi_image_styles": "^2.0@beta",
+        "drupal/jsonapi_menu_items": "^1.2",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
         "drupal/maintenance_exempt": "1.x-dev",
@@ -168,6 +170,12 @@
             "drupal/computed_breadcrumbs": {
                 "Issue #3266585: Support other entity types.": "patches/computed_breadcrumbs-3266585-support-other-entity-types-3.patch",
                 "Issue #3243177: Allow return relative URLs.": "patches/computed_breadcrumbs-3243177-return-relative-urls-2.patch"
+            },
+            "drupal/jsonapi_menu_items": {
+                "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/jsonapi_menu_items-3270141-allow-other-modules-to-extend-2.patch"
+            },
+            "drupal/config_ignore": {
+                "Issue #2857247:Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
             }
         },
         "patches-ignore": {

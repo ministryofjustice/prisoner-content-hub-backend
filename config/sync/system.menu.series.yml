@@ -1,8 +1,0 @@
-uuid: ef92818e-f51b-410d-a8c7-707f2021d33b
-langcode: en
-status: true
-dependencies: {  }
-id: series
-label: series
-description: 'Series Menu'
-locked: false
