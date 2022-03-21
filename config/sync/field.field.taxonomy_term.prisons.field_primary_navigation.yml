@@ -10,7 +10,7 @@ field_name: field_primary_navigation
 entity_type: taxonomy_term
 bundle: prisons
 label: 'Primary navigation'
-description: ''
+description: '(Optional) Select a <a href="/admin/structure/menu">menu</a> to use for the primary navigation for this prison.  If none selected, the <a href="/admin/structure/menu/manage/default-primary-navigation">default primary navigation menu</a> will be used.'
 required: false
 translatable: false
 default_value: {  }
