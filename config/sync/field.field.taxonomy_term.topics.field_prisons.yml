@@ -1,0 +1,29 @@
+uuid: cb121ed4-6458-47db-8f8f-a32b1b02051f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_prisons
+    - taxonomy.vocabulary.prisons
+    - taxonomy.vocabulary.topics
+id: taxonomy_term.topics.field_prisons
+field_name: field_prisons
+entity_type: taxonomy_term
+bundle: topics
+label: Prisons
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prisons: prisons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

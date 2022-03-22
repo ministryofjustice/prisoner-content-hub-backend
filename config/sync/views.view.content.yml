@@ -3,15 +3,15 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_top_level_categories
     - field.storage.node.field_prison_owner
     - field.storage.node.field_prisons
+    - field.storage.node.field_topics
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.prisons
     - taxonomy.vocabulary.series
-    - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.topics
   module:
     - node
     - taxonomy
@@ -292,15 +292,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_moj_secondary_tags:
-          id: field_moj_secondary_tags
-          table: node__field_moj_secondary_tags
-          field: field_moj_secondary_tags
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: 'Secondary tags'
+          label: Topics
           exclude: false
           alter:
             alter_text: false
@@ -1062,10 +1062,10 @@ display:
           hierarchy: false
           limit: true
           error_message: true
-        field_moj_secondary_tags_target_id:
-          id: field_moj_secondary_tags_target_id
-          table: node__field_moj_secondary_tags
-          field: field_moj_secondary_tags_target_id
+        field_topics_target_id:
+          id: field_topics_target_id
+          table: node__field_topics
+          field: field_topics_target_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -1075,28 +1075,23 @@ display:
           group: 1
           exposed: true
           expose:
-            operator_id: field_moj_secondary_tags_target_id_op
-            label: 'Secondary tags'
+            operator_id: field_topics_target_id_op
+            label: Topics
             description: ''
             use_operator: false
-            operator: field_moj_secondary_tags_target_id_op
+            operator: field_topics_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_moj_secondary_tags_target_id
+            identifier: field_topics_target_id
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
               anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
               moj_local_content_manager: '0'
-              moj_prison_officer: '0'
+              local_administrator: '0'
+              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1110,8 +1105,8 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: true
-          vid: tags
+          reduce_duplicates: false
+          vid: topics
           type: textfield
           hierarchy: false
           limit: true
@@ -1571,11 +1566,11 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_series'
         - 'config:field.storage.node.field_moj_top_level_categories'
         - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
+        - 'config:field.storage.node.field_topics'
   page_1:
     id: page_1
     display_title: Page
@@ -1671,20 +1666,20 @@ display:
                   depth: '1'
                   type: container
                 field_moj_top_level_categories_target_id:
-                  weight: '-33'
+                  weight: '-29'
                   id: field_moj_top_level_categories_target_id
                   pid: container-1
                   depth: '2'
                   type: filter
-                field_moj_secondary_tags_target_id:
-                  weight: '-31'
-                  id: field_moj_secondary_tags_target_id
+                field_moj_series_target_id:
+                  weight: '-28'
+                  id: field_moj_series_target_id
                   pid: container-1
                   depth: '2'
                   type: filter
-                field_moj_series_target_id:
-                  weight: '-30'
-                  id: field_moj_series_target_id
+                field_topics_target_id:
+                  weight: '-27'
+                  id: field_topics_target_id
                   pid: container-1
                   depth: '2'
                   type: filter
@@ -1729,12 +1724,6 @@ display:
                 submit:
                   weight: '-31'
                   id: submit
-                  pid: container-3
-                  depth: '2'
-                  type: buttons
-                reset:
-                  weight: '-30'
-                  id: reset
                   pid: container-3
                   depth: '2'
                   type: buttons
@@ -1828,16 +1817,6 @@ display:
                   pid: root
                   depth: '1'
                   type: container
-                container-14:
-                  container_type: details
-                  title: 'Container 14'
-                  description: ''
-                  weight: '-12'
-                  open: 0
-                  id: container-14
-                  pid: root
-                  depth: '1'
-                  type: container
       path: admin/content/node
       menu:
         type: 'default tab'
@@ -1863,8 +1842,8 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_moj_secondary_tags'
         - 'config:field.storage.node.field_moj_series'
         - 'config:field.storage.node.field_moj_top_level_categories'
         - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
+        - 'config:field.storage.node.field_topics'

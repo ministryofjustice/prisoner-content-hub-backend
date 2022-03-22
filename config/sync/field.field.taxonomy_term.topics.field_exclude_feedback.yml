@@ -1,0 +1,23 @@
+uuid: f0c09464-1353-4bfc-95aa-07e4b399718d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_exclude_feedback
+    - taxonomy.vocabulary.topics
+id: taxonomy_term.topics.field_exclude_feedback
+field_name: field_exclude_feedback
+entity_type: taxonomy_term
+bundle: topics
+label: 'Exclude feedback'
+description: 'Select to hide the feedback form when viewing this secondary tag.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

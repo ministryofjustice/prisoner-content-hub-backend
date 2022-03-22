@@ -1,0 +1,29 @@
+uuid: c0b46ca0-0939-4cb7-b15d-2854c73826ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.moj_video_item
+    - taxonomy.vocabulary.topics
+id: node.moj_video_item.field_topics
+field_name: field_topics
+entity_type: node
+bundle: moj_video_item
+label: Topics
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

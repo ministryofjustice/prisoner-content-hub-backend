@@ -1,4 +1,4 @@
-uuid: 7a3006aa-ffbc-4f27-a058-1cd80885d22c
+uuid: f37d2493-4809-48eb-89be-8f0b7e711c52
 langcode: en
 status: true
 dependencies:
@@ -12,8 +12,8 @@ dependencies:
     - views_entity_form_field
 _core:
   default_config_hash: YY-QIsPmXCITvYjAnlCzaqASCB1Telev3U0IKOztZkc
-id: secondary_tag_term_content_sorting
-label: 'Secondary tag term content sorting'
+id: topics_term_content_sorting
+label: 'Topics term content sorting'
 module: taxonomy
 description: 'Content belonging to a certain taxonomy term.'
 tag: default
@@ -636,7 +636,7 @@ display:
           id: tid_1
           table: taxonomy_term_field_data
           field: tid
-          relationship: field_moj_secondary_tags
+          relationship: field_topics
           group_type: group
           admin_label: ''
           entity_type: taxonomy_term
@@ -848,13 +848,13 @@ display:
           replica: false
           query_tags: {  }
       relationships:
-        field_moj_secondary_tags:
-          id: field_moj_secondary_tags
-          table: node__field_moj_secondary_tags
-          field: field_moj_secondary_tags
+        field_topics:
+          id: field_topics
+          table: node__field_topics
+          field: field_topics
           relationship: none
           group_type: group
-          admin_label: 'field_moj_secondary_tags: Taxonomy term'
+          admin_label: 'field_topics: Taxonomy term'
           plugin_id: standard
           required: true
       link_display: page_1
