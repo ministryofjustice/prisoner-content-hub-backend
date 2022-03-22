@@ -15,7 +15,7 @@ use Drupal\node\NodeInterface;
  * Class NodeBreadcrumbBuilder.
  *
  * Build breadcrumbs for nodes.
- * @see \Drupal\prisoner_hub_breadcrumbs\TermBreadcrumbBuilder
+ * @see \Drupal\prisoner_hub_breadcrumbs\SeriesTermBreadcrumbBuilder
  */
 class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
