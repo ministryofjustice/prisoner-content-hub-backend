@@ -43,7 +43,7 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
     \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name'),
     \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.prison_field_name'),
   ];
-  if (in_array($field_name, $prison_field_names) && $element['#type'] == 'checkbox_tree') {
+  if (in_array($field_name, $prison_field_names) && isset($element['#type']) && $element['#type'] == 'checkbox_tree') {
     if (!$entity->isNew() && !$entity_edit_access->hasEntityAccess($entity)) {
       $element['#pre_render'][] = [PrisonFieldPreRender::class, 'preRenderPrisonField'];
     }

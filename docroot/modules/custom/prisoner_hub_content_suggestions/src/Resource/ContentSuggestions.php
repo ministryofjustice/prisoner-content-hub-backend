@@ -70,14 +70,14 @@ class ContentSuggestions extends EntityQueryResourceBase {
     $query->condition($condition_group);
     $data = [];
 
-    $secondary_tags = array_column($node->get('field_moj_secondary_tags')->getValue(), 'target_id');
-    if (!empty($secondary_tags)) {
-      $condition_group->condition('field_moj_secondary_tags', $secondary_tags, 'IN');
+    $topics = array_column($node->get('field_topics')->getValue(), 'target_id');
+    if (!empty($topics)) {
+      $condition_group->condition('field_topics', $topics, 'IN');
       $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
       $query->addMetaData('sort_by_random_processed', TRUE);
     }
 
-    // Only apply category condition if the secondary tags will bring back
+    // Only apply category condition if the secondary topics will bring back
     // less than the requested number of results.
     if ((empty($data) || count($data->getData()) < $page_size)) {
       // Get categories from series, or directly from $node.

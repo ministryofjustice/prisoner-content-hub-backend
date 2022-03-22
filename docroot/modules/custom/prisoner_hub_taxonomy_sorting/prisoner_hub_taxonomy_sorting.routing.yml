@@ -14,8 +14,8 @@ prisoner_hub_taxonomy_sorting.change_episode_order:
 prisoner_hub_taxonomy_sorting.change_content_order:
   path: '/taxonomy/term/{taxonomy_term}/change-content-order'
   defaults:
-    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SecondaryTagPageController::renderPage'
-    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SecondaryTagPageController::titleCallback'
+    _controller: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\TopicsPageController::renderPage'
+    _title_callback: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\TopicsPageController::titleCallback'
   options:
     parameters:
       taxonomy_term:
@@ -23,4 +23,4 @@ prisoner_hub_taxonomy_sorting.change_content_order:
   requirements:
     _entity_access: 'taxonomy_term.update'
     taxonomy_term: \d+
-    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\SecondaryTagPageController::access'
+    _custom_access: '\Drupal\prisoner_hub_taxonomy_sorting\Controller\TopicsPageController::access'
