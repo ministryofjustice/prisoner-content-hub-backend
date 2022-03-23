@@ -24,7 +24,7 @@ class TopicsTermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function applies(RouteMatchInterface $route_match) {
     if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical') {
       $term = $route_match->getParameter('taxonomy_term');
-      return $term instanceof TermInterface && $term->bundle() == 'tags';
+      return $term instanceof TermInterface && $term->bundle() == 'topics';
     }
     return FALSE;
   }
