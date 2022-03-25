@@ -61,6 +61,7 @@
         "drupal/views_bulk_operations": "^3.10",
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
+        "drupal/views_filters_populate": "^2.0",
         "drush/drush": "^10.3",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
