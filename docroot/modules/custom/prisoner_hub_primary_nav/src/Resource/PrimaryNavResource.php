@@ -2,6 +2,7 @@
 
 namespace Drupal\prisoner_hub_primary_nav\Resource;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_menu_items\Resource\MenuItemsResource;
 use Drupal\system\Entity\Menu;
@@ -30,9 +31,12 @@ class PrimaryNavResource extends MenuItemsResource {
    *   that this class is still compatible with \Drupal\jsonapi_menu_items\Resource\MenuItemsResource.
    */
   public function process(Request $request, MenuInterface $menu = NULL): ResourceResponse {
+    $cacheability = new CacheableMetadata();
+
     if (is_null($menu)) {
       $prison = \Drupal::routeMatch()->getParameter('prison');
       if ($prison instanceof TermInterface) {
+        $cacheability->addCacheableDependency($prison);
         $entities = $prison->get(\Drupal::getContainer()->getParameter('prisoner_hub_primary_nav.primary_nav_field_name'))->referencedEntities();
         if (!empty($entities)) {
           $menu = reset($entities);
@@ -42,7 +46,9 @@ class PrimaryNavResource extends MenuItemsResource {
     if (is_null($menu)) {
       $menu = Menu::load(\Drupal::getContainer()->getParameter('prisoner_hub_primary_nav.default_menu'));
     }
-    return parent::process($request, $menu);
+    $response = parent::process($request, $menu);
+    $response->addCacheableDependency($cacheability);
+    return $response;
   }
 
 }
