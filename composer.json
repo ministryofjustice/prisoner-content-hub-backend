@@ -127,7 +127,8 @@
         "patches": {
             "drupal/flysystem_s3": {
                 "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-58-presigned-urls.patch",
-                "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-3.patch"
+                "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-3.patch",
+                "Issue #3271681 - Improve performance when generating image style urls": "patches/flysystem_s3-3271681-improve-performance-when-generating-image-style-urls-2.patch"
             },
             "twistor/stream-util": {
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
