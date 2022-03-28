@@ -1,0 +1,21 @@
+diff --git a/src/ImageStylesWarmer.php b/src/ImageStylesWarmer.php
+index 4ca17bf..a638847 100644
+--- a/src/ImageStylesWarmer.php
++++ b/src/ImageStylesWarmer.php
+@@ -144,12 +144,10 @@ class ImageStylesWarmer implements ImageStylesWarmerInterface {
+    * {@inheritdoc}
+    */
+   public function validateImage(FileInterface $file) {
+-    if ($file->isPermanent()) {
+-      $image = $this->image->get($file->getFileUri());
+-      $extensions = implode(' ', $image->getToolkit()->getSupportedExtensions());
+-      if ($image->isValid() && empty(file_validate_extensions($file, $extensions))) {
+-        return TRUE;
+-      }
++    $image = $this->image->get($file->getFileUri());
++    $extensions = implode(' ', $image->getToolkit()->getSupportedExtensions());
++    if ($image->isValid() && empty(file_validate_extensions($file, $extensions))) {
++      return TRUE;
+     }
+     return FALSE;
+   }
