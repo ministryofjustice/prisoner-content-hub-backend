@@ -93,12 +93,6 @@ $settings['flysystem']['s3-css-js']['serve_css'] = TRUE;
 // windows in ckeditor (e.g. image upload). See https://trello.com/c/48w0up7I
 $settings['flysystem']['s3-css-js']['config']['public'] = FALSE;
 
-// Remove the ?itok parameter from image style urls, these interfere with the
-// aws signature.  The DDOS protection that the itok parameter brings is not
-// required (as the assets are hosted on s3).
-// See https://www.drupal.org/project/flysystem_s3/issues/2772847#comment-14156598
-$config['image.settings']['suppress_itok_output'] = TRUE;
-
 $settings['hash_salt'] = getenv('HASH_SALT', true);
 $settings['update_free_access'] = FALSE;
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
