@@ -1,0 +1,37 @@
+diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
+index 7a07c87..b80d759 100644
+--- a/src/Flysystem/S3.php
++++ b/src/Flysystem/S3.php
+@@ -196,7 +196,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+ 
+     $target = $this->getTarget($uri);
+ 
+-    if (strpos($target, 'styles/') === 0 && !file_exists($uri)) {
++    if (strpos($target, 'styles/') === 0 && !$this->isUsingImageStyleWarmer($target) && !file_exists($uri)) {
+       $this->generateImageStyle($target);
+     }
+ 
+@@ -267,4 +267,23 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+     return $protocol . '://' . $cname . $bucket . $prefix;
+   }
+ 
++  /**
++   * Checks whether the image_style_warmer module has been used for $target.
++   *
++   * @param string $target
++   *   The target url, containing the image style name.
++   *
++   * @return bool
++   *   TRUE if image_style_warmer is configured to generate styles for $target,
++   *   otherwise FALSE.
++   */
++  protected function isUsingImageStyleWarmer($target) {
++    if (!\Drupal::moduleHandler()->moduleExists('image_style_warmer')) {
++      return FALSE;
++    }
++    $initialImageStyles = \Drupal::config('image_style_warmer.settings')->get('initial_image_styles');
++    [, $imageStyle] = explode('/', $target, 4);
++    return isset($initialImageStyles[$imageStyle]);
++  }
++
+ }
