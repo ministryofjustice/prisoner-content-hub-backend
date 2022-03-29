@@ -177,9 +177,6 @@
             },
             "drupal/config_ignore": {
                 "Issue #2857247: Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
-            },
-            "drupal/image_style_warmer": {
-                "Issue #3117806: Allow processing of temporary files.": "patches/image_style_warmer-3117806-1.1-4.patch"
             }
         },
         "patches-ignore": {
