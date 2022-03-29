@@ -93,6 +93,15 @@ $settings['flysystem']['s3-css-js']['serve_css'] = TRUE;
 // windows in ckeditor (e.g. image upload). See https://trello.com/c/48w0up7I
 $settings['flysystem']['s3-css-js']['config']['public'] = FALSE;
 
+// Remove the ?itok parameter from image style urls, these interfere with the
+// aws signature.  The itok param is related to DDoS protection: SA-CORE-2013-002
+// However the protection itself is actually handled by a different setting:
+// `allow_insecure_derivatives` which we leave as FALSE.
+//  I.e. there is no vulnerability in using `suppress_itok_output = TRUE`.
+// @see \Drupal\image\Entity\ImageStyle::buildUrl().
+// @see \Drupal\image\Controller\ImageStyleDownloadController::deliver().
+$config['image.settings']['suppress_itok_output'] = TRUE;
+
 $settings['hash_salt'] = getenv('HASH_SALT', true);
 $settings['update_free_access'] = FALSE;
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
