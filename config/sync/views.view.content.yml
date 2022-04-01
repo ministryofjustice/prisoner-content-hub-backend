@@ -90,19 +90,29 @@ display:
           buttons: false
           action_title: Action
           clear_on_exposed: true
+          force_selection_info: false
           selected_actions:
-            1:
+            0:
               action_id: node_assign_owner_action
-            2:
-              action_id: node_delete_action
-            5:
-              action_id: node_publish_action
-            9:
-              action_id: node_unpublish_action
-            11:
+              preconfiguration:
+                add_confirmation: 0
+            6:
               action_id: views_bulk_edit
               preconfiguration:
+                add_confirmation: 0
                 get_bundles_from_results: 1
+            7:
+              action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                label_override: 'Delete content'
+            8:
+              action_id: 'entity:publish_action:node'
+              preconfiguration:
+                add_confirmation: 1
+            10:
+              action_id: 'entity:unpublish_action:node'
+              preconfiguration:
+                add_confirmation: 1
         title:
           id: title
           table: node_field_data

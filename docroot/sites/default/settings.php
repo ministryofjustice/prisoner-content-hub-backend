@@ -94,9 +94,12 @@ $settings['flysystem']['s3-css-js']['serve_css'] = TRUE;
 $settings['flysystem']['s3-css-js']['config']['public'] = FALSE;
 
 // Remove the ?itok parameter from image style urls, these interfere with the
-// aws signature.  The DDOS protection that the itok parameter brings is not
-// required (as the assets are hosted on s3).
-// See https://www.drupal.org/project/flysystem_s3/issues/2772847#comment-14156598
+// aws signature.  The itok param is related to DDoS protection: SA-CORE-2013-002
+// However the protection itself is actually handled by a different setting:
+// `allow_insecure_derivatives` which we leave as FALSE.
+//  I.e. there is no vulnerability in using `suppress_itok_output = TRUE`.
+// @see \Drupal\image\Entity\ImageStyle::buildUrl().
+// @see \Drupal\image\Controller\ImageStyleDownloadController::deliver().
 $config['image.settings']['suppress_itok_output'] = TRUE;
 
 $settings['hash_salt'] = getenv('HASH_SALT', true);
