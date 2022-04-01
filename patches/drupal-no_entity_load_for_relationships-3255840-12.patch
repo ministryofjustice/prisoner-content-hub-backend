@@ -1,0 +1,54 @@
+diff --git a/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php b/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
+index ca8b6e4427..9114a2a39c 100644
+--- a/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
++++ b/core/modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
+@@ -281,14 +281,37 @@ public static function areResourceIdentifiersUnique(array $resource_identifiers)
+    */
+   public static function toResourceIdentifier(EntityReferenceItem $item, $arity = NULL) {
+     $property_name = static::getDataReferencePropertyName($item);
+-    $target = $item->get($property_name)->getValue();
++    $target = $item->get('target_id')->getValue();
+     if ($target === NULL) {
+       return static::getVirtualOrMissingResourceIdentifier($item);
+     }
+-    assert($target instanceof EntityInterface);
++
++    $entityTypeId = $item->getDataDefinition()->getSetting('target_type');
++    $entityType = \Drupal::entityTypeManager()->getStorage($entityTypeId)->getEntityType();
++    $bundleKey = $entityType->getKey('bundle');
++    $uuidKey = $entityType->getKey('uuid');
++
++    if ($entityType->getBaseTable()) {
++      $fields = [
++        $uuidKey,
++      ];
++      if ($bundleKey) {
++        $fields[] = $bundleKey;
++      }
++
++      $entityInfo = \Drupal::database()->select($entityType->getBaseTable(), 't')
++        ->condition($entityType->getKey('id'), $target)
++        ->fields('t', $fields)->execute()->fetch();
++    }
++
++    if (empty($entityInfo)) {
++      return static::getVirtualOrMissingResourceIdentifier($item);
++    }
++
+     /** @var \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository */
+     $resource_type_repository = \Drupal::service('jsonapi.resource_type.repository');
+-    $resource_type = $resource_type_repository->get($target->getEntityTypeId(), $target->bundle());
++    $resource_type = $resource_type_repository->get($entityTypeId, $entityInfo->{$bundleKey} ?? $entityTypeId);
++
+     // Remove unwanted properties from the meta value, usually 'entity'
+     // and 'target_id'.
+     $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
+@@ -298,7 +321,7 @@ public static function toResourceIdentifier(EntityReferenceItem $item, $arity =
+       $meta[static::ARITY_KEY] = $arity;
+     }
+     $meta["drupal_internal__$main_property_name"] = $properties[$main_property_name];
+-    return new static($resource_type, $target->uuid(), $meta);
++    return new static($resource_type, $entityInfo->uuid, $meta);
+   }
+ 
+   /**

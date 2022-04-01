@@ -70,3 +70,33 @@ function prisoner_hub_taxonomy_access_taxonomy_term_access(\Drupal\Core\Entity\E
   });
   return AccessResult::forbiddenIf(count($results) == 0);
 }
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * Improve JSON:API performance.
+ * @see https://www.drupal.org/project/drupal/issues/3255840#comment-14463507
+ * @todo move to own module.
+ */
+function prisoner_hub_taxonomy_access_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
+  if ($operation === 'view' && $account->isAnonymous()) {
+    $excludedFields = [
+      'uid',
+      'vid',
+      'langcode',
+      'revision_uid',
+      'revision_timestamp',
+      'revision_log',
+      'publish_on',
+      'type',
+      'paragraph_type',
+      'field_prisons',
+      'field_exclude_from_prison',
+      'field_prison_owner',
+    ];
+    return AccessResult::forbiddenIf(in_array($field_definition->getName(), $excludedFields))
+      ->cachePerPermissions();
+  }
+
+  return AccessResult::neutral();
+}
