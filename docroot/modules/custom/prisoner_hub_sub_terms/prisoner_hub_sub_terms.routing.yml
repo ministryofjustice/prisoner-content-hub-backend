@@ -1,0 +1,12 @@
+prisoner_hub_sub_terms.jsonapi.get_sub_terms:
+  path: '/%jsonapi%/taxonomy_term/{resource_type}/{taxonomy_term}/sub_terms'
+  defaults:
+    _jsonapi_resource: Drupal\prisoner_hub_sub_terms\Resource\SubTerms
+    _jsonapi_resource_types: ['taxonomy_term--moj_categories']
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      taxonomy_term:
+        type: entity:taxonomy_term
+        converter: paramconverter.jsonapi.entity_uuid
