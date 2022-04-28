@@ -42,7 +42,6 @@ permissions:
   - 'add content to books'
   - 'administer book outlines'
   - 'administer content types'
-  - 'administer menu'
   - 'administer nodes'
   - 'administer taxonomy'
   - 'administer taxonomy_term display'

@@ -15,7 +15,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the breadcrumb suggestions JSON:API resource works correctly
+ * Test the breadcrumb suggestions JSON:API resource works correctly
  *
  * @group prisoner_hub_breadcrumbs
  */
@@ -44,9 +44,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $vocab_secondary_tags = Vocabulary::load('tags');
-    $this->secondaryTagTerm = $this->createTerm($vocab_secondary_tags);
 
     $vocab_categories = Vocabulary::load('moj_categories');
     $parentTerm = $this->createTerm($vocab_categories, [
@@ -137,10 +134,13 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     $this->assertJsonApiBreadcrumbResponse($node, $breadcrumbs);
   }
 
+  /**
+   * Test that a topic has the correct breadcrumbs.
+   */
   public function testTopicsBreadcrumb() {
-    $vocab = Vocabulary::load('tags');
+    $vocab = Vocabulary::load('topics');
     $term = $this->createTerm($vocab);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/tags/' . $term->uuid());
+    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/topics/' . $term->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());
@@ -157,7 +157,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
         'options' => [],
       ]
     ];
-    $this->assertSame($expected_breadcrumbs, $response_document['data']['attributes']['breadcrumbs']);
+    $this->assertSame($expected_breadcrumbs, $response_document['data']['attributes']['breadcrumbs'],$message);
   }
 
   /**

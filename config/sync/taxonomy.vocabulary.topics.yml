@@ -1,0 +1,8 @@
+uuid: 50ef3536-2a17-4078-999c-787a2f77e8ad
+langcode: en
+status: true
+dependencies: {  }
+name: Topics
+vid: topics
+description: 'A <em>topic</em> groups content from different categories which all relate to one cohesive topic.'
+weight: 0

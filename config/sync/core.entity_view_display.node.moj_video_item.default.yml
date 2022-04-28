@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.moj_video_item.field_prison_owner
     - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
+    - field.field.node.moj_video_item.field_topics
     - field.field.node.moj_video_item.field_video
     - node.type.moj_video_item
   module:
@@ -150,6 +151,14 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 18
+    region: content
+  field_topics:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_video:
     type: file_default

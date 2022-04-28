@@ -9,7 +9,7 @@ use Drupal\views\Views;
 /**
  * Provides route responses for the prisoner_hub_taxonomy_sorting module.
  */
-class SecondaryTagPageController extends ControllerBase {
+class TopicsPageController extends ControllerBase {
 
   /**
    * Returns a View to display on the page.
@@ -18,7 +18,7 @@ class SecondaryTagPageController extends ControllerBase {
    *   A simple renderable array.
    */
   public function renderPage(TermInterface $taxonomy_term) {
-    $view_name = 'secondary_tag_term_content_sorting';
+    $view_name = 'topics_term_content_sorting';
     $view_display_id = 'embed_1';
     $view = Views::getView($view_name);
     return $view->buildRenderable($view_display_id, [$taxonomy_term->id()]);
@@ -35,6 +35,6 @@ class SecondaryTagPageController extends ControllerBase {
    * Hide the content sorting tab on Taxonomy terms where we don't apply it.
    */
   public function access(TermInterface $taxonomy_term) {
-    return AccessResult::allowedIf($taxonomy_term->bundle() === 'tags');
+    return AccessResult::allowedIf($taxonomy_term->bundle() === 'topics');
   }
 }

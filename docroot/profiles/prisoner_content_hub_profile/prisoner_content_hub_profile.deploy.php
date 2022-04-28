@@ -222,7 +222,8 @@ function prisoner_content_hub_profile_deploy_set_prison_owner(&$sandbox) {
 }
 
 /**
- * Update series with missing images, copy over the most recent image from an episode in the series.
+ * Update series with missing images, copy over the most recent image from an
+ * episode in the series.
  */
 function prisoner_content_hub_profile_deploy_update_series_images() {
   $result = \Drupal::entityQuery('taxonomy_term')
@@ -320,7 +321,7 @@ function prisoner_content_hub_profile_deploy_copy_link_content_type() {
     unset($node_values['path']);
 
     $node_values['field_url'] = [
-      ['value' => $node_values['field_external_url'][0]['uri']]
+      ['value' => $node_values['field_external_url'][0]['uri']],
     ];
     unset($node_values['field_external_url']);
 
@@ -331,3 +332,32 @@ function prisoner_content_hub_profile_deploy_copy_link_content_type() {
   }
 }
 
+
+/**
+ * Convert secondary tags to topics.
+ */
+function prisoner_content_hub_profile_deploy_copy_secondary_tags() {
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', 'tags')
+    ->accessCheck(FALSE)
+    ->execute();
+
+
+  $terms = Term::loadMultiple($result);
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $term->set('vid', 'topics');
+    $term->save();
+  }
+}
+
+
+/**
+ * Copy over field data for sec tags to topics.
+ */
+function prisoner_content_hub_profile_deploy_copy_secondary_tag_field_data() {
+  // Do this with a direct db query so we don't need to update 3k+ items of
+  // content (resulting in a large cache flush).
+  \Drupal::database()->query('INSERT INTO node__field_topics SELECT * FROM node__field_moj_secondary_tags');
+  \Drupal::database()->query('INSERT INTO node_revision__field_topics SELECT * FROM node_revision__field_moj_secondary_tags');
+}

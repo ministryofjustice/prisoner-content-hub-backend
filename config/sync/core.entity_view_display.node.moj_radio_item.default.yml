@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_prison_owner
     - field.field.node.moj_radio_item.field_prisons
     - field.field.node.moj_radio_item.field_release_date
+    - field.field.node.moj_radio_item.field_topics
     - node.type.moj_radio_item
   module:
     - datetime
@@ -149,6 +150,14 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 15
+    region: content
+  field_topics:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 21
     region: content
 hidden:
   breadcrumbs: true

@@ -24,11 +24,11 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   use TaxonomyCreationTrait;
 
   /**
-   * A generated secondary tag term.
+   * A generated topics term.
    *
    * @var \Drupal\taxonomy\Entity\Term
    */
-  protected $secondaryTagTerm;
+  protected $topicsTerm;
 
   /**
    * A generated category term.
@@ -52,11 +52,11 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   protected $anotherSeriesTerm;
 
   /**
-   * The uuid of a generated node that references $this->secondaryTagTerm.
+   * The uuid of a generated node that references $this->topicsTerm.
    *
    * @var string
    */
-  protected $nodeWithTag;
+  protected $nodeWithTopic;
 
   /**
    * The uuid of a generated node that references $this->seriesTerm.
@@ -78,8 +78,8 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $vocab_secondary_tags = Vocabulary::load('tags');
-    $this->secondaryTagTerm = $this->createTerm($vocab_secondary_tags);
+    $vocab_topics = Vocabulary::load('topics');
+    $this->topicsTerm = $this->createTerm($vocab_topics);
 
     $vocab_categories = Vocabulary::load('moj_categories');
     $this->categoryTerm = $this->createTerm($vocab_categories);
@@ -89,8 +89,8 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     $this->anotherSeriesTerm = $this->createTerm($vocab_series, ['field_category' => ['target_id' => $this->categoryTerm->id()]]);
 
     // Create some content for each.
-    $this->nodeWithTag = $this->createNode([
-      'field_moj_secondary_tags' => $this->secondaryTagTerm->id(),
+    $this->nodeWithTopic = $this->createNode([
+      'field_topics' => $this->topicsTerm->id(),
     ])->uuid();
 
     $this->nodeWithSeries = $this->createNode([
@@ -104,7 +104,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that content with no tag or category returns an empty result.
+   * Test that content with no topic or category returns an empty result.
    */
   public function testContentWithNoTagOrCategory() {
     $node = $this->createNode([]);
@@ -112,19 +112,19 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that content with tag but no category returns content with the same tag.
+   * Test that content with topic but no category returns content with the same topic.
    */
-  public function testContentWithTagButNoCategory() {
+  public function testContentWithTopicButNoCategory() {
     $node = $this->createNode([
-      'field_moj_secondary_tags' => [
-        ['target_id' => $this->secondaryTagTerm->id()]
+      'field_topics' => [
+        ['target_id' => $this->topicsTerm->id()]
       ]
     ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithTag], $node);
+    $this->assertJsonApiSuggestionsResponse([$this->nodeWithTopic], $node);
   }
 
   /**
-   * Test that content with series but no tag returns content from the same
+   * Test that content with series but no topic returns content from the same
    * category (but *not* the same series).
    */
   public function testContentWithSeriesButNoTag() {
@@ -137,7 +137,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that content with a category but no tag returns content from the same
+   * Test that content with a category but no topic returns content from the same
    * category.
    */
   public function testContentWithCategoryButNoTag() {
@@ -151,37 +151,37 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that content with tag and series returns content with the same tag
+   * Test that content with topic and series returns content with the same topic
    * and the same category as the series (but *not* content in the same series).
    */
   public function testContentWithTagAndSeries() {
     $node = $this->createNode([
-      'field_moj_secondary_tags' => [
-        ['target_id' => $this->secondaryTagTerm->id()]
+      'field_topics' => [
+        ['target_id' => $this->topicsTerm->id()]
       ],
       'field_moj_series' => [
         ['target_id' => $this->anotherSeriesTerm->id()]
       ],
     ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithSeries, $this->nodeWithTag], $node);
+    $this->assertJsonApiSuggestionsResponse([$this->nodeWithSeries, $this->nodeWithTopic], $node);
   }
 
 
   /**
-   * Test that content with tag and a category returns content with the same
-   * tag and category.
+   * Test that content with topic and a category returns content with the same
+   * topic and category.
    */
   public function testContentWithTagAndCategory() {
     $node = $this->createNode([
-      'field_moj_secondary_tags' => [
-        ['target_id' => $this->secondaryTagTerm->id()]
+      'field_topics' => [
+        ['target_id' => $this->topicsTerm->id()]
       ],
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()]
       ],
       'field_not_in_series' => TRUE,
     ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTag], $node);
+    $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTopic], $node);
   }
 
 

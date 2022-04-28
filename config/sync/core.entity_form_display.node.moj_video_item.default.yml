@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.moj_video_item.field_prison_owner
     - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
+    - field.field.node.moj_video_item.field_topics
     - field.field.node.moj_video_item.field_video
     - image.style.thumbnail
     - node.type.moj_video_item
@@ -39,7 +40,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 13
+      weight: 12
       format_type: fieldset
       format_settings:
         classes: ''
@@ -55,7 +56,7 @@ third_party_settings:
       label: 'Does this content fit into a Series?'
       region: content
       parent_name: ''
-      weight: 9
+      weight: 10
       format_type: fieldset
       format_settings:
         classes: ''
@@ -95,7 +96,7 @@ third_party_settings:
       label: Category
       region: content
       parent_name: ''
-      weight: 10
+      weight: 11
       format_type: fieldset
       format_settings:
         classes: ''
@@ -146,7 +147,7 @@ content:
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
-    weight: 14
+    weight: 13
     region: content
     settings:
       display_label: true
@@ -186,16 +187,6 @@ content:
     region: content
     settings:
       placeholder: ''
-    third_party_settings: {  }
-  field_moj_secondary_tags:
-    type: select2_entity_reference
-    weight: 11
-    region: content
-    settings:
-      width: 100%
-      autocomplete: false
-      match_operator: CONTAINS
-      match_limit: 10
     third_party_settings: {  }
   field_moj_series:
     type: select2_entity_reference
@@ -267,6 +258,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_topics:
+    type: select2_entity_reference
+    weight: 9
+    region: content
+    settings:
+      width: 100%
+      autocomplete: false
+      match_operator: CONTAINS
+      match_limit: 10
+    third_party_settings: {  }
   field_video:
     type: file_generic
     weight: 6
@@ -282,18 +283,18 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 15
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 18
+    weight: 17
     region: content
     settings:
       display_label: true
@@ -323,11 +324,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
+  field_moj_secondary_tags: true
   promote: true
   sticky: true
