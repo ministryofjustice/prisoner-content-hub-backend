@@ -116,4 +116,13 @@ class SubTerms extends EntityQueryResourceBase {
     return parent::loadResourceObjectsByEntityIds('taxonomy_term', $filtered_ids, $load_latest_revisions, $check_access);
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * This tells jsonapi_resources module that our resource works with all
+   * taxonomy types.
+   */
+  public function getRouteResourceTypes(Route $route, string $route_name): array {
+    return $this->getResourceTypesByEntityTypeId('taxonomy_term');
+  }
 }
