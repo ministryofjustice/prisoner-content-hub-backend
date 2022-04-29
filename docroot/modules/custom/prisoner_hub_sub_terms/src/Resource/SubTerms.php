@@ -86,12 +86,17 @@ class SubTerms extends EntityQueryResourceBase {
     $paginator->applyToQuery($query, $cacheability);
 
     // Use the standard entity query executor from jsonapi_resources module.
-    // This handles things like pagination for us.
+    // This handles things like pagination, and cacheability for us.
     // This calls loadResourceObjectsByEntityIds() which we override below.
     $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
 
+    // Add the current taxonomy term as a cacheable dependency, as this won't
+    // be returned as part of the query.
+    $cacheability->addCacheableDependency($taxonomy_term);
+
     $pagination_links = $paginator->getPaginationLinks($query, $cacheability, TRUE);
     $response = $this->createJsonapiResponse($data, $request, 200, [], $pagination_links);
+    $response->addCacheableDependency($cacheability);
     return $response;
 
   }
