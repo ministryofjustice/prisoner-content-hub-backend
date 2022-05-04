@@ -104,6 +104,7 @@ module:
   menu_link_content: 1
   pathauto: 1
   views: 10
+  publication_date: 99
   prisoner_content_hub_profile: 1000
 theme:
   stable: 0
