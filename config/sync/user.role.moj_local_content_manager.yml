@@ -16,6 +16,7 @@ dependencies:
     - raven
     - scheduler
     - toolbar
+    - view_unpublished
 id: moj_local_content_manager
 label: 'Local Content Manager'
 weight: -8
@@ -43,6 +44,12 @@ permissions:
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'use text format full_html'
+  - 'view any unpublished featured_articles content'
+  - 'view any unpublished link content'
+  - 'view any unpublished moj_pdf_item content'
+  - 'view any unpublished moj_radio_item content'
+  - 'view any unpublished moj_video_item content'
+  - 'view any unpublished page content'
   - 'view featured_articles revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
