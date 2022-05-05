@@ -3,6 +3,8 @@
 namespace Drupal\prisoner_hub_sub_terms\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_resources\Resource\EntityQueryResourceBase;
@@ -100,21 +102,48 @@ class SubTerms extends EntityQueryResourceBase {
   /**
    * {@inheritdoc}
    *
-   * Override parent method so that we load in the correct entities.
-   * As our original entity query was for nodes, but we actually want to load in
-   * taxonomy terms from the entity reference field values.
-   *
-   * Overriding this method is a bit of a workaround, so that we can still call
-   * $this->loadResourceObjectDataFromEntityQuery().
-   * We would have otherwise used $this->entityQueryExecutor directly, but it's
-   * private.
+   * Override the parent function, as we need to convert the results to
+   * taxonomy ids.
    */
-  protected function loadResourceObjectsByEntityIds($entity_type_id, array $ids, $load_latest_revisions = FALSE, $check_access = TRUE): ResourceObjectData {
-    $filtered_ids = array_map(static function ($item) {
+  protected function loadResourceObjectDataFromEntityQuery(QueryInterface $entity_query, CacheableMetadata $cacheable_metadata, $load_latest_revisions = FALSE, $check_access = TRUE): ResourceObjectData {
+    $results = \Drupal::service('jsonapi_resources.entity_query_executor')->executeQueryAndCaptureCacheability($entity_query, $cacheable_metadata);
+    $taxonomy_ids = $this->getTaxonomyIdsFromQueryResults($results);
+    return $this->loadResourceObjectsByEntityIds('taxonomy_term', $taxonomy_ids, $load_latest_revisions, $check_access);
+  }
+
+  /**
+   * Take aggregated entity results from nodes and convert them to taxonomy ids.
+   *
+   * @param array $results
+   *   The $results array from an \Drupal\Core\Entity\Query\QueryAggregateInterface
+   *   Should contain fields field_moj_top_level_categories and field_moj_series.
+   *
+   * @return array
+   *   An array of taxonomy ids.
+   */
+  protected function getTaxonomyIdsFromQueryResults($results) {
+    return array_map(static function ($item) {
       // Return either category id or series id, first non NULL value.
       return $item['field_moj_top_level_categories_target_id'] ?? $item['field_moj_series_target_id'];
-    }, $ids);
-    return parent::loadResourceObjectsByEntityIds('taxonomy_term', $filtered_ids, $load_latest_revisions, $check_access);
+    }, $results);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * This is a private function in the subclass, so we cannot call it directly.
+   * Therefore the entire function has been copied over to this class.
+   */
+  protected function loadResourceObjectsByEntityIds($entity_type_id, array $ids, $load_latest_revisions = FALSE, $check_access = TRUE): ResourceObjectData {
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+    if ($load_latest_revisions) {
+      assert($storage instanceof RevisionableStorageInterface);
+      $entities = $storage->loadMultipleRevisions(array_keys($ids));
+    }
+    else {
+      $entities = $storage->loadMultiple($ids);
+    }
+    return $this->createCollectionDataFromEntities($entities, $check_access);
   }
 
   /**
