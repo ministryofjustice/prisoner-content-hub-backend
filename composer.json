@@ -180,7 +180,7 @@
                 "Issue #2857247: Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
             },
             "drupal/publication_date": {
-                "Issue #2983348: Published on empty for existing nodes.": "patches/publication_date-fill_published_at-2983348-56-without-infoyml.patch"
+                "Issue #2983348: Published on empty for existing nodes.": "patches/publication_date-fill_published_at-2983348-60-for-composer.patch"
             }
         },
         "patches-ignore": {
