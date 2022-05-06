@@ -10,7 +10,6 @@ dependencies:
     - node.type.moj_video_item
     - node.type.page
   module:
-    - actions_permissions
     - filter
     - node
     - raven
@@ -39,8 +38,6 @@ permissions:
   - 'edit own moj_radio_item content'
   - 'edit own moj_video_item content'
   - 'edit own page content'
-  - 'execute entity:publish_action node'
-  - 'execute entity:unpublish_action node'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'use text format full_html'
