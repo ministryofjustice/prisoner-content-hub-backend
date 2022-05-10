@@ -312,3 +312,11 @@ function prisoner_content_hub_profile_update_8020(&$sandbox) {
   return 'Processed terms: ' . $sandbox['progress'];
 
 }
+
+/**
+ * Fix failed publication_date module install.
+ */
+function prisoner_content_hub_profile_update_8021(&$sandbox) {
+  $definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node')['published_at'];
+  \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($definition);
+}
