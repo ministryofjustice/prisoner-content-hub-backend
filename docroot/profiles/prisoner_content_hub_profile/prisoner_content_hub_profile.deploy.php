@@ -361,3 +361,12 @@ function prisoner_content_hub_profile_deploy_copy_secondary_tag_field_data() {
   \Drupal::database()->query('INSERT INTO node__field_topics SELECT * FROM node__field_moj_secondary_tags');
   \Drupal::database()->query('INSERT INTO node_revision__field_topics SELECT * FROM node_revision__field_moj_secondary_tags');
 }
+
+/**
+ * Copy over field data for taxonomy image field.
+ */
+function prisoner_content_hub_profile_deploy_copy_thumbnail_image_field_data() {
+  // Do this with a direct db query so we don't need to update 3k+ items of
+  // content (resulting in a large cache flush).
+  \Drupal::database()->query('INSERT INTO taxonomy_term__field_moj_thumbnail_image SELECT * FROM taxonomy_term__field_featured_image');
+}
