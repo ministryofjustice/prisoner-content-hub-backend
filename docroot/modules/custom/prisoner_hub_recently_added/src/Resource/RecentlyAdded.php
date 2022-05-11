@@ -123,11 +123,12 @@ class RecentlyAdded extends EntityResourceBase {
     // See \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
     $query->condition('status', NodeInterface::PUBLISHED);
 
-    // If timestamps are already set, ensure we only query for newer content.
-    // (This avoids having to unnecessarily load entities).
-    if (!empty($published_at_timestamps)) {
+    // If already have enough entities set, ensure we only query for newer
+    // content. (This avoids having to unnecessarily load entities).
+    if (count($entities) >= $size) {
       $query->condition('published_at', min($published_at_timestamps), '>');
     }
+
     $query->range(0, $size);
     $results = $this->executeQueryInRenderContext($query);
     foreach ($results as $result) {
@@ -164,11 +165,12 @@ class RecentlyAdded extends EntityResourceBase {
     // See \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
     $query->condition('status', NodeInterface::PUBLISHED);
 
-    // If timestamps are already set, ensure we only query for newer content.
-    // (This avoids having to unnecessarily load entities).
-    if (!empty($published_at_timestamps)) {
+    // If already have enough entities set, ensure we only query for newer
+    // content. (This avoids having to unnecessarily load entities).
+    if (count($entities) >= $size) {
       $query->condition('published_at', min($published_at_timestamps), '>');
     }
+
     $query->sort('published_at', 'DESC');
     $query->range(0, $size);
     $result = $this->executeQueryInRenderContext($query);
