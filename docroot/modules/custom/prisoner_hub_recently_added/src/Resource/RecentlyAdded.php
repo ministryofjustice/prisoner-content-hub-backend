@@ -140,7 +140,7 @@ class RecentlyAdded extends EntityResourceBase {
   }
 
   /**
-   * Load content entities that are no in a series.
+   * Load content entities that are not in a series.
    *
    * @param array $entities
    *   The array of content entities, passed in by reference, to be appended to.
