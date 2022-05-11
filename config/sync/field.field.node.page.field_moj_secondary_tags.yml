@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_moj_secondary_tags
     - node.type.page
-    - taxonomy.vocabulary.tags
 id: node.page.field_moj_secondary_tags
 field_name: field_moj_secondary_tags
 entity_type: node
@@ -19,8 +18,7 @@ default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'
   handler_settings:
-    target_bundles:
-      tags: tags
+    target_bundles: {  }
     sort:
       field: name
       direction: asc
