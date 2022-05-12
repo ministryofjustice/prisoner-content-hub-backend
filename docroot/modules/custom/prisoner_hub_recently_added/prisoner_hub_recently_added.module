@@ -35,7 +35,7 @@ function prisoner_hub_recently_added_node_insert(NodeInterface $entity) {
  * @param \Drupal\node\NodeInterface $entity
  */
 function prisoner_hub_recently_added_clear_cache_tags(NodeInterface $entity) {
-  $cache_tag = 'prisoner_hub:homepage:recently_added';
+  $cache_tag = 'prisoner_hub_recently_added';
   $tags = [$cache_tag];
 
   // Loop through all prisons and clear cache tags for each one.

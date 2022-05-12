@@ -50,7 +50,7 @@ class RecentlyAdded extends EntityResourceBase {
     $cacheability->addCacheContexts(['url.path']);
 
     // This is a custom cache tag that is invalidated in prisoner_hub_recently_added_node_update().
-    $cache_tag = 'prisoner_hub:homepage:recently_added';
+    $cache_tag = 'prisoner_hub_recently_added';
     $prison = \Drupal::routeMatch()->getParameter('prison');
     if ($prison) {
       $cache_tag .= ':' . $prison->get('machine_name')->getString();
