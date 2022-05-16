@@ -173,7 +173,7 @@ class SubTerms extends EntityResourceBase {
   }
 
   /**
-   * Take a list of ids and find the highest level, underneath $top_parent_id.
+   * Take a taxonomy id and find the highest level, underneath $top_parent_id.
    *
    * This function is called recursively, so that it works on multiple levels
    * of taxonomy.
