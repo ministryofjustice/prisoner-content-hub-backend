@@ -400,25 +400,4 @@ class SubTerms extends EntityResourceBase {
     return Url::fromUri($uri_without_query_string)->setOption('query', $query);
   }
 
-  /**
-   * {@inheritdoc}
-   *
-   * This is a private function in the subclass, so we cannot call it directly.
-   * Therefore the entire function has been copied over to this class.
-   */
-  protected function loadResourceObjectsByEntityIds($entity_type_id, array $ids, $load_latest_revisions = FALSE, $check_access = TRUE): ResourceObjectData {
-    $storage = $this->entityTypeManager->getStorage($entity_type_id);
-    if ($load_latest_revisions) {
-      assert($storage instanceof RevisionableStorageInterface);
-      $entities = $storage->loadMultipleRevisions(array_keys($ids));
-    }
-    else {
-      $entities = $storage->loadMultiple($ids);
-    }
-    foreach ($entities as $entity) {
-
-    }
-    return $this->createCollectionDataFromEntities($entities, $check_access);
-  }
-
 }
