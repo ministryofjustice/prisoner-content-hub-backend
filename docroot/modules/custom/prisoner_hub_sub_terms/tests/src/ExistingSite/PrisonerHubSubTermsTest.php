@@ -72,6 +72,8 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $vocab_categories = Vocabulary::load('moj_categories');
     $vocab_series = Vocabulary::load('series');
 
+    // Create a subcategory with content inside it, and check that the
+    // subcategory is shown.
     $first_term = $this->createTerm($vocab_categories, [
       'parent' => [
         'target_id' => $this->categoryTerm->id(),
@@ -83,6 +85,8 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'changed' => time(),
     ]);
 
+    // Create another subcategory, and create content that is _very old_,
+    // ensure this is displayed last.
     $last_term = $this->createTerm($vocab_categories, [
       'parent' => [
         'target_id' => $this->categoryTerm->id(),
@@ -94,7 +98,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'changed' => strtotime('-2 years'),
     ]);
 
-    // Also create some unpublished content to ensure this doesn't effect
+    // Create some unpublished content to ensure this doesn't effect
     // sorting.
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
@@ -103,16 +107,25 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'status' => 0,
     ]);
 
-    $second_term = $this->createTerm($vocab_series, [
+    // Create another sub-category with a series inside it.
+    // And check for the sub-category appearing (not the series).
+    $second_term = $this->createTerm($vocab_categories, [
+      'parent' => [
+        'target_id' => $this->categoryTerm->id(),
+      ],
+    ]);
+    $second_series = $this->createTerm($vocab_series, [
       'field_category' => [
-        'target_id' => $this->subCategoryTerm->id()
+        'target_id' => $second_term->id()
       ]
     ]);
     $this->createNode([
-      'field_moj_series' => [['target_id' => $second_term->id()]],
+      'field_moj_series' => [['target_id' => $second_series->id()]],
       'changed' => strtotime('-10 minutes'),
     ]);
 
+    // Create a subcategory with some content, and ensure it's displayed
+    // in the correct position.
     $third_term = $this->createTerm($vocab_categories, [
       'parent' => [
         'target_id' => $this->categoryTerm->id(),
@@ -124,6 +137,8 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'changed' => strtotime('-1 week'),
     ]);
 
+    // Create a series inside the current category, with some content in it.
+    // Ensure it is displayed in the correct position.
     $fourth_term = $this->createTerm($vocab_series, [
       'field_category' => [
         'target_id' => $this->categoryTerm->id()
@@ -134,13 +149,26 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'changed' => strtotime('-6 months'),
     ]);
 
-    $fifth_term = $this->createTerm($vocab_series, [
-      'field_category' => [
-        'target_id' => $this->subCategoryTerm->id()
+    // Create a three new sub-categories (going three levels down), and ensure
+    // the highest level sub-category is shown.
+    $fifth_term = $this->createTerm($vocab_categories, [
+      'parent' => [
+        'target_id' => $this->categoryTerm->id(),
+      ],
+    ]);
+    $fifth_subcategory = $this->createTerm($vocab_categories, [
+      'parent' => [
+        'target_id' => $fifth_term->id()
+      ]
+    ]);
+    $fifth_subsubcategory = $this->createTerm($vocab_categories, [
+      'parent' => [
+        'target_id' => $fifth_subcategory->id()
       ]
     ]);
     $this->createNode([
-      'field_moj_series' => [['target_id' => $fifth_term->id()]],
+      'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
+      'field_not_in_series' => 1,
       'changed' => strtotime('-7 months'),
     ]);
 
@@ -198,6 +226,4 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       }, $response_document['data']));
     }
   }
-
-
 }
