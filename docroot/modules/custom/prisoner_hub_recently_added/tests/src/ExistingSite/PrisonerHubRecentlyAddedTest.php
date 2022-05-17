@@ -95,8 +95,7 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
     // Ensure we get a cache HIT on the second time we make a request.
     $response = $this->request('GET', $this->jsonApiUrl, $request_options);
     $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
-    print_r($response->getHeaders());
-    $this->assertStringContainsString('prisoner_hub_recently_added', $response->getHeader('X-Drupal-Cache-Tags')[0]);
+
     $new_entity = $this->createNode([
       'field_not_in_series' => 1,
       'published_at' => strtotime('+1 second'),
