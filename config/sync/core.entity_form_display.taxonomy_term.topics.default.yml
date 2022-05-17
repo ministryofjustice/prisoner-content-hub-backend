@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.field.taxonomy_term.topics.field_exclude_feedback
     - field.field.taxonomy_term.topics.field_exclude_from_prison
-    - field.field.taxonomy_term.topics.field_featured_image
     - field.field.taxonomy_term.topics.field_moj_thumbnail_image
     - field.field.taxonomy_term.topics.field_prisons
     - image.style.thumbnail
@@ -121,5 +120,4 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-hidden:
-  field_featured_image: true
+hidden: {  }
