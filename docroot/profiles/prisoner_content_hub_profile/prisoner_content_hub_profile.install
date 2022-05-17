@@ -320,3 +320,49 @@ function prisoner_content_hub_profile_update_8021(&$sandbox) {
   $definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node')['published_at'];
   \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($definition);
 }
+
+/**
+ * Delete old "left-over" tables.
+ *
+ * These db tables have not been used for a long time.  Someone previously must
+ * have either manually created them (i.e. the "old_*" tables), or deleted a
+ * field directly in the db.
+ */
+function prisoner_content_hub_profile_update_8022() {
+  \Drupal::database()->delete('old_453ca8taxonomy_term__0c5d518a58');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__4b0f937144');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__6be009d48c');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__field_content_summary');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__field_featured_audio');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__field_featured_image');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__field_featured_video');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__field_moj_promoted');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__field_promoted_feature');
+  \Drupal::database()->delete('old_453ca8taxonomy_term__parent');
+  \Drupal::database()->delete('old_453ca8taxonomy_term_data');
+  \Drupal::database()->delete('old_453ca8taxonomy_term_field_data');
+  \Drupal::database()->delete('taxonomy_term__field_channel_landing_page_video');
+  \Drupal::database()->delete('taxonomy_term__field_info');
+  \Drupal::database()->delete('taxonomy_term__field_landing_page_exists');
+  \Drupal::database()->delete('taxonomy_term__field_moj_back_link_url');
+  \Drupal::database()->delete('taxonomy_term__field_moj_left_tab_text');
+  \Drupal::database()->delete('taxonomy_term__field_moj_pdf_additional_desc');
+  \Drupal::database()->delete('taxonomy_term__field_moj_pdf_cat_description');
+  \Drupal::database()->delete('taxonomy_term__field_moj_right_tab_text');
+  \Drupal::database()->delete('taxonomy_term__field_pdf_category_banner');
+  \Drupal::database()->delete('taxonomy_term__field_radio_category_banner');
+  \Drupal::database()->delete('taxonomy_term__field_radio_category_profile');
+  \Drupal::database()->delete('taxonomy_term__field_video_channel_thumbnail');
+}
+
+/**
+ * Update bundle column on secondary tags fields, to ensure no data loss when switching to topics.
+ */
+function prisoner_content_hub_profile_update_8023() {
+  \Drupal::database()->query("UPDATE taxonomy_term__field_prisons SET bundle = 'topics' WHERE bundle = 'tags'");
+  \Drupal::database()->query("UPDATE taxonomy_term_revision__field_prisons SET bundle = 'topics' WHERE bundle = 'tags'");
+  \Drupal::database()->query("UPDATE taxonomy_term__field_exclude_feedback SET bundle = 'topics' WHERE bundle = 'tags'");
+  \Drupal::database()->query("UPDATE taxonomy_term_revision__field_exclude_feedback SET bundle = 'topics' WHERE bundle = 'tags'");
+  \Drupal::database()->query("UPDATE taxonomy_term__field_featured_image SET bundle = 'topics' WHERE bundle = 'tags'");
+  \Drupal::database()->query("UPDATE taxonomy_term_revision__field_featured_image SET bundle = 'topics' WHERE bundle = 'tags'");
+}
