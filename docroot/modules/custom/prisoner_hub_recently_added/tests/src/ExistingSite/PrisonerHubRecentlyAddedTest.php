@@ -46,26 +46,27 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
 
     $vocab_series = Vocabulary::load('series');
 
+    $current_time = time();
     $first_entity = $this->createNode([
       'field_not_in_series' => 1,
-      'published_at' => time(),
+      'published_at' => $current_time,
     ]);
 
     $third_entity = $this->createTerm($vocab_series);
     $this->createNode([
       'field_moj_series' => [['target_id' => $third_entity->id()]],
-      'published_at' => strtotime('-5 seconds'),
+      'published_at' => strtotime('-5 seconds', $current_time),
     ]);
 
     $second_entity = $this->createTerm($vocab_series);
     $this->createNode([
       'field_moj_series' => [['target_id' => $second_entity->id()]],
-      'published_at' => strtotime('-1 second'),
+      'published_at' => strtotime('-1 second', $current_time),
     ]);
 
     $fourth_entity = $this->createNode([
       'field_not_in_series' => 1,
-      'published_at' => strtotime('-7 seconds'),
+      'published_at' => strtotime('-7 seconds', $current_time),
     ]);
 
     $this->correctOrderUuids = [
