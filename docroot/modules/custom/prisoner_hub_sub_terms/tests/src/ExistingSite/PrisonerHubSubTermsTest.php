@@ -156,12 +156,12 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
         'target_id' => $this->categoryTerm->id(),
       ],
     ]);
-    $fifth_subcategory = $this->createTerm($vocab_series, [
+    $fifth_subcategory = $this->createTerm($vocab_categories, [
       'parent' => [
         'target_id' => $fifth_term->id()
       ]
     ]);
-    $fifth_subsubcategory = $this->createTerm($vocab_series, [
+    $fifth_subsubcategory = $this->createTerm($vocab_categories, [
       'parent' => [
         'target_id' => $fifth_subcategory->id()
       ]
