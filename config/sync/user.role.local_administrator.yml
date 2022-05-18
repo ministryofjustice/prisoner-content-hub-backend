@@ -13,7 +13,6 @@ dependencies:
     - node.type.page
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.series
-    - taxonomy.vocabulary.tags
   module:
     - actions_permissions
     - book
@@ -28,6 +27,7 @@ dependencies:
     - system
     - taxonomy
     - toolbar
+    - view_unpublished
 _core:
   default_config_hash: w3gv4hBMp_vQx-dpzgOKpEZ0uNN5SSNFsYLbXwC7WZU
 id: local_administrator
@@ -65,7 +65,6 @@ permissions:
   - 'create page content'
   - 'create terms in moj_categories'
   - 'create terms in series'
-  - 'create terms in tags'
   - 'delete any help_page content'
   - 'delete any link content'
   - 'delete help_page revisions'
@@ -74,7 +73,6 @@ permissions:
   - 'delete own link content'
   - 'delete terms in moj_categories'
   - 'delete terms in series'
-  - 'delete terms in tags'
   - 'edit any featured_articles content'
   - 'edit any help_page content'
   - 'edit any link content'
@@ -91,7 +89,6 @@ permissions:
   - 'edit own page content'
   - 'edit terms in moj_categories'
   - 'edit terms in series'
-  - 'edit terms in tags'
   - 'execute entity:publish_action node'
   - 'execute entity:publish_action taxonomy_term'
   - 'execute entity:save_action node'
@@ -119,6 +116,7 @@ permissions:
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
+  - 'view any unpublished content'
   - 'view featured_articles revisions'
   - 'view help_page revisions'
   - 'view link revisions'

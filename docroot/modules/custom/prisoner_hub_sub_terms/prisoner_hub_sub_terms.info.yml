@@ -1,0 +1,7 @@
+name: 'Prisoner hub sub terms'
+type: module
+description: 'Provides a custom jsonapi resource to retrieve a categories sub-terms.'
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - jsonapi_resources:jsonapi_resources

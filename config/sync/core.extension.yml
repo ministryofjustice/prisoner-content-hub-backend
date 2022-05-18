@@ -68,6 +68,7 @@ module:
   prisoner_hub_prison_access: 0
   prisoner_hub_prison_access_cms: 0
   prisoner_hub_prison_context: 0
+  prisoner_hub_sub_terms: 0
   prisoner_hub_taxonomy_access: 0
   prisoner_hub_taxonomy_child_count: 0
   prisoner_hub_taxonomy_field_ux: 0
@@ -94,6 +95,7 @@ module:
   tour: 0
   update: 0
   user: 0
+  view_unpublished: 0
   views_bulk_edit: 0
   views_bulk_operations: 0
   views_ef_fieldset: 0
@@ -103,6 +105,7 @@ module:
   menu_link_content: 1
   pathauto: 1
   views: 10
+  publication_date: 99
   prisoner_content_hub_profile: 1000
 theme:
   stable: 0
