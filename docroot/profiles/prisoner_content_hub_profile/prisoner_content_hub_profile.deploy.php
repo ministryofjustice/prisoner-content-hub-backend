@@ -380,7 +380,7 @@ function prisoner_content_hub_profile_deploy_copy_homepage_data() {
       'field_prisons' => $node->get('field_prisons')->getValue(),
       'field_exclude_from_prison' => $node->get('field_exclude_from_prison')->getValue(),
       'field_prison_owner' => $node->get('field_prison_owner')->getValue(),
-      'uid' => 334,
+      'uid' => 1,
     ]);
     $new_homepage->setNewRevision(TRUE);
     $node->revision_log = 'Automatically created new homepage, with featured tiles values taken from previous existing "Featured articles" page.';
