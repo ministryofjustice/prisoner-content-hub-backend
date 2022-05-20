@@ -57,7 +57,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   public function testUserCanCreateNewContent() {
     foreach ($this->contentTypes as $contentType) {
       // Skip the homepage content type, as we do not have access to create these.
-      if ($contentType == 'featured_articles') {
+      if (in_array($contentType, ['featured_articles', 'homepage'])config/sync/user.role.local_administrator.yml) {
         continue;
       }
       $this->visit('/node/add/' . $contentType);
