@@ -5,6 +5,7 @@ dependencies:
   config:
     - filter.format.full_html
     - node.type.featured_articles
+    - node.type.homepage
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
@@ -29,11 +30,13 @@ permissions:
   - 'create moj_video_item content'
   - 'create page content'
   - 'edit any featured_articles content'
+  - 'edit any homepage content'
   - 'edit any moj_pdf_item content'
   - 'edit any moj_radio_item content'
   - 'edit any moj_video_item content'
   - 'edit any page content'
   - 'edit own featured_articles content'
+  - 'edit own homepage content'
   - 'edit own moj_pdf_item content'
   - 'edit own moj_radio_item content'
   - 'edit own moj_video_item content'
@@ -48,6 +51,7 @@ permissions:
   - 'view any unpublished moj_video_item content'
   - 'view any unpublished page content'
   - 'view featured_articles revisions'
+  - 'view homepage revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
   - 'view moj_video_item revisions'
