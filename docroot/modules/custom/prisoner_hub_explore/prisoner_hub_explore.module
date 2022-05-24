@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains prisoner_hub_explore.module.
+ */
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Apply random sorting via query tag.
+ */
+function prisoner_hub_content_suggestions_query_prisoner_hub_explore_sort_by_random_alter(&$query) {
+  $query->orderRandom();
+}
