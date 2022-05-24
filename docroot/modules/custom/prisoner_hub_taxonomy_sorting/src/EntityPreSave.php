@@ -77,24 +77,4 @@ class EntityPreSave {
     $entity->set('series_sort_value', $calculated_sort_value);
   }
 
-  /**
-   * Update 'content_updated' value for associated taxonomy terms.
-   *
-   * @param \Drupal\node\NodeInterface $entity
-   */
-  public function updateTaxonomyContentUpdatedValue(NodeInterface $entity) {
-    $taxonomy_terms_to_update = [];
-    if ($entity->hasField('field_moj_top_level_categories')) {
-      $taxonomy_terms_to_update += $entity->get('field_moj_top_level_categories')->referencedEntities();
-    }
-    if ($entity->hasField('field_moj_series')) {
-      $taxonomy_terms_to_update += $entity->get('field_moj_series')->referencedEntities();
-    }
-    /** @var \Drupal\taxonomy\TermInterface $term */
-    foreach ($taxonomy_terms_to_update as $term) {
-      $term->set('content_updated', \Drupal::time()->getRequestTime());
-      $term->save();
-    }
-  }
-
 }
