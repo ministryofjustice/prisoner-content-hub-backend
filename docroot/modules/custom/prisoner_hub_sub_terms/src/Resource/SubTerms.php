@@ -49,6 +49,12 @@ class SubTerms extends EntityResourceBase {
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheContexts(['url.path']);
 
+    // Add the current term (i.e parent category) as a cache dependency.
+    // As this term won't be loaded in the response, so it won't get
+    // automatically added.
+    // Without this, new categories will not automatically appear in the
+    // response.
+    $cacheability->addCacheableDependency($taxonomy_term);
     $tids = [$taxonomy_term->id()];
 
     // Check content also assigned to any sub-category (multiple levels) of the
