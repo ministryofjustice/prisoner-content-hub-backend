@@ -4,13 +4,11 @@ namespace Drupal\prisoner_hub_sub_terms\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
-use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_resources\Resource\EntityResourceBase;
@@ -19,7 +17,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-
 
 /**
  * Processes a request for sub terms.
@@ -49,12 +46,9 @@ class SubTerms extends EntityResourceBase {
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheContexts(['url.path']);
 
-    // Add the current term (i.e parent category) as a cache dependency.
-    // As this term won't be loaded in the response, so it won't get
-    // automatically added.
-    // Without this, new categories will not automatically appear in the
-    // response.
-    $cacheability->addCacheableDependency($taxonomy_term);
+    // Add our own custom cache tag that is cleared whenever content is updated.
+    $cacheability->addCacheTags(['prisoner_hub_sub_terms:' . $taxonomy_term->id()]);
+
     $tids = [$taxonomy_term->id()];
 
     // Check content also assigned to any sub-category (multiple levels) of the
