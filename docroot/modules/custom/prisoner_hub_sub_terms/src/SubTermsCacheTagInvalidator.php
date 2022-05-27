@@ -57,8 +57,8 @@ class SubTermsCacheTagInvalidator {
   /**
    * Check whether the $entity is published.
    *
-   * If the $entity is being updated, then we check whether either the previous
-   * version was published, _or_ the current version.
+   * If the $entity is being updated, then we check both the previous and
+   * current versions (if one of those is published then we return TRUE).
    *
    * @param \Drupal\Core\Entity\EntityPublishedInterface $entity
    *   The $entity to check.
@@ -66,7 +66,8 @@ class SubTermsCacheTagInvalidator {
    *   TRUE if $entity is being inserted, otherwise FALSE.
    *
    * @return bool
-   *   TRUE if $entity is published, otherwise FALSE.
+   *   TRUE if $entity (either current or previous version) is published,
+   *   otherwise FALSE.
    */
   protected function checkEntityIsPublished(EntityPublishedInterface $entity, bool $insert) {
     // Ignore if we are inserting an unpublished entity.
@@ -74,7 +75,7 @@ class SubTermsCacheTagInvalidator {
       return FALSE;
     }
     // Ignore if we are updating an unpublished entity.
-    if (isset($entity->original) && ($entity->original->isPublished() || $entity->isPublished())) {
+    if (isset($entity->original) && !$entity->original->isPublished() && !$entity->isPublished()) {
       return FALSE;
     }
     return TRUE;
