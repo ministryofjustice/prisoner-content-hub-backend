@@ -4,7 +4,6 @@ namespace Drupal\Tests\prisoner_hub_sub_terms\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use GuzzleHttp\RequestOptions;
@@ -43,6 +42,13 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
    * @var \Drupal\taxonomy\Entity\Term
    */
   protected $seriesTerm;
+
+  /**
+   * The JSON:API url.
+   *
+   * @var \Drupal\Core\Url
+   */
+  protected $jsonApiUrl;
 
   /**
    * Set up taxonomy terms to test with.
@@ -116,7 +122,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $second_series = $this->createTerm($vocab_series, [
       'field_category' => [
-        'target_id' => $second_term->id()
+        'target_id' => $second_term->id(),
       ]
     ]);
     $this->createNode([
@@ -215,9 +221,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'field_not_in_series' => 1,
     ]);
 
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $response = $this->request('GET', $this->jsonApiUrl, $request_options);
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
     $this->assertSame(200, $response->getStatusCode());
     $response_document = Json::decode((string) $response->getBody());
     foreach ($response_document['data'] as $item) {
@@ -225,5 +229,50 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
         return $data['id'];
       }, $response_document['data']));
     }
+  }
+
+  /**
+   * Test that the correct cache tags are invalidated.
+   */
+  public function testCacheTagInvalidation() {
+    // Create some content in the new subCategory, and ensure we get a cache HIT.
+    $this->createNode([
+      'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
+      'field_not_in_series' => 1,
+    ]);
+    // Run the request twice, so the first one generates a cache.
+    $this->getJsonApiResponse($this->jsonApiUrl);
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
+    $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+
+    // We should have one cachetag invalidation, as we created one peice of content.
+    $cachetag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
+    $this->assertSame(1, $invalidation_count, 'Cachetag has been cleared exactly one time.');
+
+    // Create a new node, and check for a MISS.
+    $this->createNode([
+      'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
+      'field_not_in_series' => 1,
+    ]);
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
+    $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
+    $this->assertSame(2, $invalidation_count, 'Cachetag has been cleared exactly two times.');
+  }
+
+  /**
+   * Get a response from a JSON:API url.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The url object to use for the JSON:API request.
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The response object.
+   */
+  function getJsonApiResponse(Url $url) {
+    $request_options = [];
+    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
+    return $this->request('GET', $url, $request_options);
   }
 }
