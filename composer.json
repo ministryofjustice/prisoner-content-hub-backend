@@ -14,7 +14,7 @@
         "drupal/config_ignore": "^2.3",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
-        "drupal/core-recommended": "~9.3",
+        "drupal/core-recommended": "~9.3.14",
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
