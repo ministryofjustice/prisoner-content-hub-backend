@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\prisoner_hub_prison_access_cms\ExistingSite;
 
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\prisoner_hub_prison_access\ExistingSite\PrisonerHubPrisonAccessTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
@@ -41,6 +42,13 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->prisonOwnerFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
     $this->userPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
+
+    // Temporarily remove homepage content type, as this is not yet accessible
+    // local content managers.
+    // TODO: Remove these lines (re-instate tests) for homepage content type.
+    $key = array_search('homepage', $this->contentTypes);
+    unset($this->contentTypes[$key]);
+
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
         ['target_id' => $this->prisonTerm->id()],
@@ -65,7 +73,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       // Test that the default value for the prison owner field is the users current prison.
       $this->assertSession()->elementAttributeExists('css', 'select[name="field_prison_owner[]"] option[value="' . $this->prisonTerm->id() . '"]', 'selected');
 
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNodeOnCurrentPage($contentType);
     }
   }
 
@@ -82,9 +90,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -101,9 +107,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -132,9 +136,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -158,9 +160,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -178,9 +178,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -205,9 +203,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -221,9 +217,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => $this->user->id(),
       ]);
 
-      $edit_url = $node->toUrl('edit-form');
-      $this->visit($edit_url->toString());
-      $this->assertUserCanEditNode();
+      $this->assertUserCanEditNode($node);
     }
   }
 
@@ -335,18 +329,42 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Asserts that the user can make edits to the current node edit form.
+   * Asserts that the user can make edits to the $node.
    *
-   * Assumes we are already on the form url in the current session.
+   * @param \Drupal\node\NodeInterface $node
    */
-  protected function assertUserCanEditNode() {
-    // Test some fields are enabled, that appear on all content types.
-    $this->assertSession()->fieldEnabled('Title');
-    $this->assertSession()->fieldEnabled('Published');
+  protected function assertUserCanEditNode(NodeInterface $node) {
+    $edit_url = $node->toUrl('edit-form');
+    $this->visit($edit_url->toString());
+    $this->assertUserCanEditNodeOnCurrentPage($node->getType());
+  }
 
-    // Test that the user is able to select prisons.
-    $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
-    $this->assertSession()->fieldEnabled($this->prisonTerm->label(), $fieldPrisonElement);
-    $this->assertSession()->fieldEnabled($this->anotherPrisonTerm->label(), $fieldPrisonElement);
+  /**
+   * Asserts that the user can edit the node on the current page.
+   *
+   * Assumes the page is already in the current session.
+   *
+   * @param string $contentType
+   *   The content type of the current page.
+   */
+  protected function assertUserCanEditNodeOnCurrentPage(string $contentType) {
+    // Test some fields are enabled, that appear on all content types.
+    try {
+      $this->assertSession()->fieldEnabled('Title');
+      $this->assertSession()->fieldEnabled('Published');
+    }
+    catch (\Exception $e) {
+      $this->fail("Unable to edit the $contentType content type. Error message: " . $e->getMessage());
+    }
+
+    try {
+      // Test that the user is able to select prisons.
+      $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
+      $this->assertSession()->fieldEnabled($this->prisonTerm->label(), $fieldPrisonElement);
+      $this->assertSession()->fieldEnabled($this->anotherPrisonTerm->label(), $fieldPrisonElement);
+    }
+    catch (\Exception $e) {
+      $this->fail("Unable to use prison fields on the $contentType content type. Error message: " . $e->getMessage());
+    }
   }
 }
