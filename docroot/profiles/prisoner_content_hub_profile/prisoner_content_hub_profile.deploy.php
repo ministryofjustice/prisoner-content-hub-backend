@@ -363,6 +363,34 @@ function prisoner_content_hub_profile_deploy_copy_secondary_tag_field_data() {
 }
 
 /**
+ * Create new homepages and copy over featured tiles.
+ */
+function prisoner_content_hub_profile_deploy_copy_homepage_data() {
+  $results = \Drupal::entityQuery('node')
+    ->condition('type', 'featured_articles')
+    ->execute();
+  $nodes = Node::loadMultiple($results);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $new_homepage = Node::create([
+      'type' => 'homepage',
+      'title' => $node->label(),
+      'field_featured_tiles' => $node->get('field_featured_tile_small')->getValue(),
+      'field_prisons' => $node->get('field_prisons')->getValue(),
+      'field_exclude_from_prison' => $node->get('field_exclude_from_prison')->getValue(),
+      'field_prison_owner' => $node->get('field_prison_owner')->getValue(),
+      'uid' => 1,
+    ]);
+    $new_homepage->setNewRevision(TRUE);
+    $node->revision_log = 'Automatically created new homepage, with featured tiles values taken from previous existing "Featured articles" page.';
+    $node->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+    $node->setRevisionUserId(334);
+    $new_homepage->save();
+  }
+}
+
+/**
  * Copy over field data for taxonomy image field.
  */
 function prisoner_content_hub_profile_deploy_copy_thumbnail_image_field_data() {
