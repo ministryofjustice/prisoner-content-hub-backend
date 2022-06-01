@@ -8,6 +8,13 @@ dependencies:
     - field.storage.node.field_prison_owner
     - field.storage.node.field_prisons
     - field.storage.node.field_topics
+    - node.type.featured_articles
+    - node.type.help_page
+    - node.type.link
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.prisons
     - taxonomy.vocabulary.series
@@ -943,7 +950,14 @@ display:
           entity_field: type
           plugin_id: bundle
           operator: in
-          value: {  }
+          value:
+            moj_radio_item: moj_radio_item
+            page: page
+            featured_articles: featured_articles
+            help_page: help_page
+            link: link
+            moj_pdf_item: moj_pdf_item
+            moj_video_item: moj_video_item
           group: 1
           exposed: true
           expose:
@@ -961,8 +975,10 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
               administrator: '0'
-            reduce: false
+            reduce: true
           is_grouped: false
           group_info:
             label: ''
