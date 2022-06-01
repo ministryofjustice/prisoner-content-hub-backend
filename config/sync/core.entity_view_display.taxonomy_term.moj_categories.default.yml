@@ -6,6 +6,7 @@ dependencies:
     - field.field.taxonomy_term.moj_categories.field_exclude_from_prison
     - field.field.taxonomy_term.moj_categories.field_featured_image
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
+    - field.field.taxonomy_term.moj_categories.field_is_homepage_updates
     - field.field.taxonomy_term.moj_categories.field_prisons
     - taxonomy.vocabulary.moj_categories
   module:
@@ -48,6 +49,16 @@ content:
       link: true
     third_party_settings: {  }
     weight: 4
+    region: content
+  field_is_homepage_updates:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 8
     region: content
   field_prisons:
     type: entity_reference_label

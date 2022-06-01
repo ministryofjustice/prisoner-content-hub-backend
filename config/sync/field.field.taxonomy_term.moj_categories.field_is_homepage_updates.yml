@@ -1,0 +1,23 @@
+uuid: f4df8547-e62d-4089-b16d-a0e5e6b81595
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_is_homepage_updates
+    - taxonomy.vocabulary.moj_categories
+id: taxonomy_term.moj_categories.field_is_homepage_updates
+field_name: field_is_homepage_updates
+entity_type: taxonomy_term
+bundle: moj_categories
+label: 'Include in homepage updates'
+description: 'Select to include the content from this category in the <em>homepage updates</em> component.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,23 @@
+uuid: 773b46b4-71e6-4d9c-8ecd-29612b72bb57
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_is_homepage_updates
+    - taxonomy.vocabulary.series
+id: taxonomy_term.series.field_is_homepage_updates
+field_name: field_is_homepage_updates
+entity_type: taxonomy_term
+bundle: series
+label: 'Include in homepage updates'
+description: 'Select to include the content from this series in the <em>homepage updates</em> component.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
