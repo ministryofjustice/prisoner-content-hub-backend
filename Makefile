@@ -1,12 +1,5 @@
-build-deps:
-	composer clear-cache
-	composer install --no-dev --no-ansi --no-scripts --prefer-dist --ignore-platform-reqs --no-interaction --no-autoloader
-
 build:
 	docker build -t prisoner-content-hub-backend .
-
-clean:
-	rm -rf modules/contrib
 
 push:
 	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
@@ -28,3 +21,13 @@ run-tests:
 	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose
 	echo "Running Javascript tests on existing site"
 	vendor/bin/phpunit --testsuite=existing-site-javascript --log-junit ~/phpunit/junit-existing-site-javascript.xml --verbose
+
+deploy:
+  echo "Enabling maintenance and readonly mode"
+  drush state-set readonlymode_active 1
+  drush state-set system.maintenance_mode 1
+  echo "Running deploy commands"
+  drush deploy
+  echo "Disabling maintenance and readonly mode"
+  drush state-set readonlymode_active 0
+  drush state-set system.maintenance_mode 0
