@@ -1,0 +1,53 @@
+<?php
+
+use Drupal\Core\Cache\Cache;
+use Drupal\node\NodeInterface;
+use Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded;
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function prisoner_hub_recently_added_node_update(NodeInterface $entity) {
+  if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$content_types)) {
+    // Clear cache if the previous version was not published, or a change has
+    // been made to the published date.
+    if (!$entity->original->isPublished() || $entity->original->get('published_at')->value != $entity->get('published_at')->value) {
+      prisoner_hub_recently_added_clear_cache_tags($entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function prisoner_hub_recently_added_node_insert(NodeInterface $entity) {
+  if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$content_types)) {
+    prisoner_hub_recently_added_clear_cache_tags($entity);
+  }
+}
+
+/**
+ * Clear custom cache tags.
+ *
+ * These are set in are set in \Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded::process()
+ * and include the current prison context.
+ *
+ * @param \Drupal\node\NodeInterface $entity
+ */
+function prisoner_hub_recently_added_clear_cache_tags(NodeInterface $entity) {
+  $cache_tag = 'prisoner_hub_recently_added';
+  $tags = [$cache_tag];
+
+  // Loop through all prisons and clear cache tags for each one.
+  $prisons = $entity->get('field_prisons')->referencedEntities();
+  foreach ($prisons as $prison) {
+    $children = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadChildren($prison->id());
+    if (empty($children)) {
+      $tags[] = $cache_tag . ':' . $prison->get('machine_name')->getString();
+    }
+    foreach ($children as $child) {
+      $tags[] = $cache_tag . ':' . $child->get('machine_name')->getString();
+    }
+  }
+  Cache::invalidateTags($tags);
+}

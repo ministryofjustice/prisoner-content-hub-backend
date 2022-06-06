@@ -1,0 +1,6 @@
+prisoner_hub_recently_added.jsonapi.get_recently_added:
+  path: '/%jsonapi%/recently-added'
+  defaults:
+    _jsonapi_resource: Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded
+  requirements:
+    _permission: 'access content'
