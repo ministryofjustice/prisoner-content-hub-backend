@@ -8,6 +8,7 @@ dependencies:
     - autocomplete_id
     - filter
     - flysystem_s3
+    - readonlymode
     - shortcut
     - system
 _core:
@@ -19,6 +20,7 @@ is_admin: false
 permissions:
   - 'access content'
   - 'access shortcuts'
+  - 'see readonlymode warning'
   - 'use S3 CORS upload'
   - 'use text format basic_html'
   - 'view entity autocomplete id results'
