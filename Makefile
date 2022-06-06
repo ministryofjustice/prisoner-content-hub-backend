@@ -23,11 +23,11 @@ run-tests:
 	vendor/bin/phpunit --testsuite=existing-site-javascript --log-junit ~/phpunit/junit-existing-site-javascript.xml --verbose
 
 deploy:
-  echo "Enabling maintenance and readonly mode"
-  drush state-set readonlymode_active 1
-  drush state-set system.maintenance_mode 1
-  echo "Running deploy commands"
-  drush deploy
-  echo "Disabling maintenance and readonly mode"
-  drush state-set readonlymode_active 0
-  drush state-set system.maintenance_mode 0
+	echo "Enabling maintenance and readonly mode"
+	drush state-set readonlymode_active 1
+	drush state-set system.maintenance_mode 1
+	echo "Running deploy commands"
+	drush deploy
+	echo "Disabling maintenance and readonly mode"
+	drush state-set readonlymode_active 0
+	drush state-set system.maintenance_mode 0
