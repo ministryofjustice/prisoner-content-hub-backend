@@ -10,15 +10,15 @@ clean:
 
 push:
 	@docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-	docker tag prisoner-content-hub-backend hmpps/prisoner-content-hub-backend:$(APP_VERSION)
-	docker tag prisoner-content-hub-backend hmpps/prisoner-content-hub-backend:latest
-	docker push hmpps/prisoner-content-hub-backend:$(APP_VERSION)
-	docker push hmpps/prisoner-content-hub-backend:latest
+	docker tag prisoner-content-hub-backend quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker tag prisoner-content-hub-backend quay.io/hmpps/prisoner-content-hub-backend:latest
+	docker push quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker push quay.io/hmpps/prisoner-content-hub-backend:latest
 
 push-preview:
 	@docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-	docker tag prisoner-content-hub-backend hmpps/prisoner-content-hub-backend:$(APP_VERSION)
-	docker push hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker tag prisoner-content-hub-backend quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker push quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
 
 install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y
