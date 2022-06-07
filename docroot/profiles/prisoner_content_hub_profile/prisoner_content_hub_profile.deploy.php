@@ -389,3 +389,12 @@ function prisoner_content_hub_profile_deploy_copy_homepage_data() {
     $new_homepage->save();
   }
 }
+
+/**
+ * Copy over field data for taxonomy image field.
+ */
+function prisoner_content_hub_profile_deploy_copy_thumbnail_image_field_data() {
+  // Do this with a direct db query so we don't need to update 3k+ items of
+  // content (resulting in a large cache flush).
+  \Drupal::database()->query('INSERT INTO taxonomy_term__field_moj_thumbnail_image SELECT * FROM taxonomy_term__field_featured_image');
+}

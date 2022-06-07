@@ -6,6 +6,7 @@ dependencies:
     - field.field.taxonomy_term.topics.field_exclude_feedback
     - field.field.taxonomy_term.topics.field_exclude_from_prison
     - field.field.taxonomy_term.topics.field_featured_image
+    - field.field.taxonomy_term.topics.field_moj_thumbnail_image
     - field.field.taxonomy_term.topics.field_prisons
     - image.style.thumbnail
     - taxonomy.vocabulary.topics
@@ -24,7 +25,7 @@ third_party_settings:
       label: "\tWhere would you like this content to appear?"
       region: content
       parent_name: ''
-      weight: 4
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
@@ -62,7 +63,7 @@ content:
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
-    weight: 6
+    weight: 5
     region: content
     settings:
       display_label: true
@@ -79,7 +80,7 @@ content:
       cascading_selection_enforce: false
       max_depth: 0
     third_party_settings: {  }
-  field_featured_image:
+  field_moj_thumbnail_image:
     type: image_image
     weight: 2
     region: content
@@ -109,15 +110,16 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 3
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_featured_image: true

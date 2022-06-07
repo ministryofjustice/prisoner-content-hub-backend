@@ -8,6 +8,7 @@ dependencies:
     - field.field.taxonomy_term.series.field_exclude_from_prison
     - field.field.taxonomy_term.series.field_feature_programme_code
     - field.field.taxonomy_term.series.field_featured_image
+    - field.field.taxonomy_term.series.field_moj_thumbnail_image
     - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
     - image.style.thumbnail
@@ -27,7 +28,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 7
+      weight: 6
       format_type: fieldset
       format_settings:
         classes: ''
@@ -72,7 +73,7 @@ content:
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
-    weight: 8
+    weight: 7
     region: content
     settings:
       display_label: true
@@ -91,13 +92,13 @@ content:
     third_party_settings: {  }
   field_feature_programme_code:
     type: string_textfield
-    weight: 6
+    weight: 4
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_featured_image:
+  field_moj_thumbnail_image:
     type: image_image
     weight: 5
     region: content
@@ -133,10 +134,11 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 9
+    weight: 8
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
 hidden:
+  field_featured_image: true
   path: true
