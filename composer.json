@@ -46,6 +46,7 @@
         "drupal/profile_switcher": "1.0-alpha5",
         "drupal/publication_date": "^2.0@beta",
         "drupal/raven": "^3.2",
+        "drupal/readonlymode": "2.0.x-dev",
         "drupal/redis": "^1.5",
         "drupal/rest_menu_items": "^2.6",
         "drupal/restui": "^1.18",

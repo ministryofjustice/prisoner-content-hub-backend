@@ -76,6 +76,7 @@ module:
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
   rdf: 0
+  readonlymode: 0
   redis: 0
   role_delegation: 0
   scheduler: 0
