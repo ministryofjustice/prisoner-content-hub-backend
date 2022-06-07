@@ -32,7 +32,7 @@ class PrisonerHubExploreTest extends ExistingSiteBase {
     for ($i = 1; $i <= $limit; $i++) {
       $this->createNode();
     }
-    $url = Url::fromUri('internal:/jsonapi/node/explore', ['query' => ['page[limit]' => $limit]]);
+    $url = Url::fromUri('internal:/jsonapi/explore/node', ['query' => ['page[limit]' => $limit]]);
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());

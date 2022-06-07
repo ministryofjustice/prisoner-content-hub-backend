@@ -1,5 +1,5 @@
 prisoner_hub_explore.jsonapi.get_explore_items:
-  path: '/%jsonapi%/node/explore'
+  path: '/%jsonapi%/explore/node'
   defaults:
     _jsonapi_resource: Drupal\prisoner_hub_explore\Resource\Explore
   requirements:

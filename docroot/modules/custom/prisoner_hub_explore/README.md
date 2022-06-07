@@ -3,7 +3,7 @@
 Provides a JSON:API resource for "exploring" content.
 Currently, this means the content is ordered by random.
 ```
-/jsonapi/node/explore
+/jsonapi/explore/node
 ```
 
 ## Why not use a url parameter for random sorting?
