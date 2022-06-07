@@ -61,3 +61,12 @@ function prisoner_hub_taxonomy_sorting_update_9003(&$sandbox) {
   }
   return 'Processed taxonomy terms: ' . $sandbox['progress'];
 }
+
+/**
+ * Remove the content_updated field (now being handled in prisoner_hub_sub_terms).
+ */
+function prisoner_hub_taxonomy_sorting_update_9004(&$sandbox) {
+  $definition = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('taxonomy_term')['content_updated'];
+  \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($definition);
+
+}

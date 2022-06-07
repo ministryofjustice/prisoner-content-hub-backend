@@ -4,13 +4,11 @@ namespace Drupal\prisoner_hub_sub_terms\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
-use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_resources\Resource\EntityResourceBase;
@@ -19,7 +17,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-
 
 /**
  * Processes a request for sub terms.
@@ -48,6 +45,9 @@ class SubTerms extends EntityResourceBase {
   public function process(Request $request, TermInterface $taxonomy_term): ResourceResponse {
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheContexts(['url.path']);
+
+    // Add our own custom cache tag that is cleared whenever content is updated.
+    $cacheability->addCacheTags(['prisoner_hub_sub_terms:' . $taxonomy_term->id()]);
 
     $tids = [$taxonomy_term->id()];
 

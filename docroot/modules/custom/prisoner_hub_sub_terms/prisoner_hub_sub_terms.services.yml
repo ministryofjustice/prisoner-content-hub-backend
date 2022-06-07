@@ -1,0 +1,4 @@
+services:
+  prisoner_hub_sub_terms.cachetag_invalidator:
+    class: Drupal\prisoner_hub_sub_terms\SubTermsCacheTagInvalidator
+    arguments: ['@cache_tags.invalidator', '@entity_type.manager']
