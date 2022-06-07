@@ -1,0 +1,38 @@
+uuid: dda1b9de-7173-4df6-aec8-7824b81985f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_moj_thumbnail_image
+    - taxonomy.vocabulary.topics
+  module:
+    - image
+id: taxonomy_term.topics.field_moj_thumbnail_image
+field_name: field_moj_thumbnail_image
+entity_type: taxonomy_term
+bundle: topics
+label: Image
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+field_type: image
