@@ -1,0 +1,5 @@
+_core:
+  default_config_hash: hqSQdVJi4YZZ3d8diPQZeEhGvCoFqQuvDwL0LpOC4uI
+messages:
+  default: 'During this maintenance it is not possible to change site content.  The maintenance should take no longer than 10 mins.  Please look out for announcements on Microsoft Teams should there be any further issues.'
+  not_saved: 'Changes not saved. Please wait until after the current maintenance has completed and try again.'
