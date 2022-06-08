@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.field.taxonomy_term.topics.field_exclude_feedback
     - field.field.taxonomy_term.topics.field_exclude_from_prison
-    - field.field.taxonomy_term.topics.field_featured_image
+    - field.field.taxonomy_term.topics.field_moj_thumbnail_image
     - field.field.taxonomy_term.topics.field_prisons
     - taxonomy.vocabulary.topics
   module:
@@ -41,14 +41,14 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_featured_image:
+  field_moj_thumbnail_image:
     type: image
     label: above
     settings:
       image_link: ''
       image_style: ''
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_prisons:
     type: entity_reference_label

@@ -1,4 +1,4 @@
-uuid: 5345cac1-1307-4983-8ef2-e2195dccb07f
+uuid: bb996a77-3617-4877-99ae-99fec3a7e661
 langcode: en
 status: true
 dependencies:
@@ -6,8 +6,8 @@ dependencies:
     - file
     - image
     - taxonomy
-id: taxonomy_term.field_featured_image
-field_name: field_featured_image
+id: taxonomy_term.field_moj_thumbnail_image
+field_name: field_moj_thumbnail_image
 entity_type: taxonomy_term
 type: image
 settings:

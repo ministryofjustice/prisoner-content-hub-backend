@@ -1,14 +1,14 @@
-uuid: 41799365-61e3-4cca-b6d3-b21524c26720
+uuid: dda1b9de-7173-4df6-aec8-7824b81985f1
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_featured_image
+    - field.storage.taxonomy_term.field_moj_thumbnail_image
     - taxonomy.vocabulary.topics
   module:
     - image
-id: taxonomy_term.topics.field_featured_image
-field_name: field_featured_image
+id: taxonomy_term.topics.field_moj_thumbnail_image
+field_name: field_moj_thumbnail_image
 entity_type: taxonomy_term
 bundle: topics
 label: Image

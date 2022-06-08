@@ -1,20 +1,20 @@
-uuid: 9b628fb8-0cc7-4396-836f-fdf06bb056e9
+uuid: 0fb06104-3cfe-4ab8-aa1c-d1878088a60a
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_featured_image
-    - taxonomy.vocabulary.moj_categories
+    - field.storage.taxonomy_term.field_moj_thumbnail_image
+    - taxonomy.vocabulary.series
   module:
     - image
-id: taxonomy_term.moj_categories.field_featured_image
-field_name: field_featured_image
+id: taxonomy_term.series.field_moj_thumbnail_image
+field_name: field_moj_thumbnail_image
 entity_type: taxonomy_term
-bundle: moj_categories
+bundle: series
 label: Image
 description: ''
-required: false
-translatable: true
+required: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
