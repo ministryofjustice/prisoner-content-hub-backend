@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.moj_categories.field_exclude_from_prison
-    - field.field.taxonomy_term.moj_categories.field_featured_image
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
     - field.field.taxonomy_term.moj_categories.field_moj_thumbnail_image
     - field.field.taxonomy_term.moj_categories.field_prisons
