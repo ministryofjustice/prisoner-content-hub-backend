@@ -64,6 +64,7 @@ module:
   prisoner_hub_cms_help: 0
   prisoner_hub_content_suggestions: 0
   prisoner_hub_edit_only: 0
+  prisoner_hub_explore: 0
   prisoner_hub_primary_nav: 0
   prisoner_hub_prison_access: 0
   prisoner_hub_prison_access_cms: 0
@@ -76,6 +77,7 @@ module:
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
   rdf: 0
+  readonlymode: 0
   redis: 0
   role_delegation: 0
   scheduler: 0

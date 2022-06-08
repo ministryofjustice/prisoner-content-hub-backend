@@ -2,7 +2,7 @@ version: "3"
 
 services:
   prisoner-content-hub-backend-db:
-    image: mariadb
+    image: mariadb:10.4
     env_file:
       - prisoner-content-hub-backend-db.circleci.env
     ports:

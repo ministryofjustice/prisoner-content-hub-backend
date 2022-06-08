@@ -14,6 +14,7 @@ dependencies:
     - node
     - raven
     - scheduler
+    - system
     - toolbar
     - view_unpublished
 id: moj_local_content_manager
@@ -22,6 +23,7 @@ weight: -8
 is_admin: null
 permissions:
   - 'access content overview'
+  - 'access site in maintenance mode'
   - 'access toolbar'
   - 'administer nodes'
   - 'create moj_pdf_item content'
