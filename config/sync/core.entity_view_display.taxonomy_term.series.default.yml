@@ -54,15 +54,6 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
-  field_moj_thumbnail_image:
-    type: image
-    label: above
-    settings:
-      image_link: ''
-      image_style: ''
-    third_party_settings: {  }
-    weight: 2
-    region: content
   field_is_homepage_updates:
     type: boolean
     label: above
@@ -72,6 +63,15 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 19
+    region: content
+  field_moj_thumbnail_image:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 2
     region: content
   field_prisons:
     type: entity_reference_label
