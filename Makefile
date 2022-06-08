@@ -2,16 +2,16 @@ build:
 	docker build -t prisoner-content-hub-backend .
 
 push:
-	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:$(APP_VERSION)
-	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:latest
-	docker push mojdigitalstudio/prisoner-content-hub-backend:$(APP_VERSION)
-	docker push mojdigitalstudio/prisoner-content-hub-backend:latest
+	@docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+	docker tag prisoner-content-hub-backend quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker tag prisoner-content-hub-backend quay.io/hmpps/prisoner-content-hub-backend:latest
+	docker push quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker push quay.io/hmpps/prisoner-content-hub-backend:latest
 
 push-preview:
-	@docker login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-	docker tag prisoner-content-hub-backend mojdigitalstudio/prisoner-content-hub-backend:$(APP_VERSION)
-	docker push mojdigitalstudio/prisoner-content-hub-backend:$(APP_VERSION)
+	@docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+	docker tag prisoner-content-hub-backend quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
+	docker push quay.io/hmpps/prisoner-content-hub-backend:$(APP_VERSION)
 
 install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y
