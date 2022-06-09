@@ -5,7 +5,7 @@ replicaCount: 3
 maxReplicaCount: 6
 
 image:
-  repository: hmpps/prisoner-content-hub-backend
+  repository: quay.io/hmpps/prisoner-content-hub-backend
   pullPolicy: IfNotPresent
   tag: latest
 
