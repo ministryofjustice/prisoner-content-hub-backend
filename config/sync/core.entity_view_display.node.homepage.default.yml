@@ -5,8 +5,10 @@ dependencies:
   config:
     - field.field.node.homepage.field_exclude_from_prison
     - field.field.node.homepage.field_featured_tiles
+    - field.field.node.homepage.field_featured_update
     - field.field.node.homepage.field_prison_owner
     - field.field.node.homepage.field_prisons
+    - field.field.node.homepage.field_static_updates_tiles
     - node.type.homepage
   module:
     - dynamic_entity_reference
@@ -32,6 +34,14 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
+  field_featured_update:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 11
+    region: content
   field_prison_owner:
     type: entity_reference_label
     label: above
@@ -47,6 +57,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 5
+    region: content
+  field_static_updates_tiles:
+    type: dynamic_entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 12
     region: content
   links:
     settings: {  }

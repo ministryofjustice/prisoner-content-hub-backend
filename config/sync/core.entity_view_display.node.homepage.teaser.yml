@@ -6,8 +6,10 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.homepage.field_exclude_from_prison
     - field.field.node.homepage.field_featured_tiles
+    - field.field.node.homepage.field_featured_update
     - field.field.node.homepage.field_prison_owner
     - field.field.node.homepage.field_prisons
+    - field.field.node.homepage.field_static_updates_tiles
     - node.type.homepage
   module:
     - user
@@ -25,7 +27,9 @@ hidden:
   breadcrumbs: true
   field_exclude_from_prison: true
   field_featured_tiles: true
+  field_featured_update: true
   field_prison_owner: true
   field_prisons: true
+  field_static_updates_tiles: true
   published_at: true
   search_api_excerpt: true

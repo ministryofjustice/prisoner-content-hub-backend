@@ -1,0 +1,37 @@
+uuid: 07e30ffd-766c-4f36-833a-698641b319f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured_update
+    - node.type.homepage
+    - node.type.link
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+id: node.homepage.field_featured_update
+field_name: field_featured_update
+entity_type: node
+bundle: homepage
+label: 'Featured update'
+description: 'Optionally specify content to appear as the featured tile in the <strong>Updates</strong> section. '
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      moj_radio_item: moj_radio_item
+      page: page
+      link: link
+      moj_pdf_item: moj_pdf_item
+      moj_video_item: moj_video_item
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: moj_radio_item
+field_type: entity_reference
