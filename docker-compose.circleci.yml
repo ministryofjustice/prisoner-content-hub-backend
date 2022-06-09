@@ -11,7 +11,7 @@ services:
       - circleci-prisoner_content_hub
 
   prisoner-content-hub-backend:
-    image: mojdigitalstudio/prisoner-content-hub-backend
+    image: quay.io/hmpps/prisoner-content-hub-backend
     build:
       context: .
       target: test
