@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.taxonomy_term.moj_categories.field_exclude_from_prison
     - field.field.taxonomy_term.moj_categories.field_featured_tiles
+    - field.field.taxonomy_term.moj_categories.field_is_homepage_updates
     - field.field.taxonomy_term.moj_categories.field_moj_thumbnail_image
     - field.field.taxonomy_term.moj_categories.field_prisons
     - image.style.thumbnail
@@ -25,7 +26,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 4
+      weight: 5
       format_type: fieldset
       format_settings:
         classes: ''
@@ -38,7 +39,7 @@ third_party_settings:
       label: 'Featured tiles'
       region: content
       parent_name: ''
-      weight: 3
+      weight: 4
       format_type: fieldset
       format_settings:
         classes: ''
@@ -93,6 +94,13 @@ content:
       size: 40
       placeholder: ''
     third_party_settings: {  }
+  field_is_homepage_updates:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
     weight: 2
@@ -123,16 +131,15 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 6
+    weight: 7
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
-hidden:
-  field_featured_image: true
+hidden: {  }

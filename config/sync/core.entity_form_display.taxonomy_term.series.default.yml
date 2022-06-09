@@ -7,6 +7,7 @@ dependencies:
     - field.field.taxonomy_term.series.field_exclude_feedback
     - field.field.taxonomy_term.series.field_exclude_from_prison
     - field.field.taxonomy_term.series.field_feature_programme_code
+    - field.field.taxonomy_term.series.field_is_homepage_updates
     - field.field.taxonomy_term.series.field_moj_thumbnail_image
     - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
@@ -97,9 +98,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_is_homepage_updates:
+    type: boolean_checkbox
+    weight: 6
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
-    weight: 5
+    weight: 4
     region: content
     settings:
       progress_indicator: throbber
