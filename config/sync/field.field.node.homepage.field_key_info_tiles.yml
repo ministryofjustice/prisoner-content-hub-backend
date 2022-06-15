@@ -1,11 +1,10 @@
-uuid: 59a1a16c-5413-4c77-862b-48d61bd0729f
+uuid: 38300413-ae9f-499c-9c59-d276e3a27fb1
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_static_updates_tiles
+    - field.storage.node.field_key_info_tiles
     - node.type.homepage
-    - node.type.link
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
@@ -15,11 +14,11 @@ dependencies:
     - taxonomy.vocabulary.topics
   module:
     - dynamic_entity_reference
-id: node.homepage.field_static_updates_tiles
-field_name: field_static_updates_tiles
+id: node.homepage.field_key_info_tiles
+field_name: field_key_info_tiles
 entity_type: node
 bundle: homepage
-label: 'Static tiles'
+label: 'Key info tiles'
 description: 'Select upto 4 tiles to appear on the right-hand side of the <strong>Updates</strong> section.'
 required: false
 translatable: false
@@ -32,7 +31,6 @@ settings:
       target_bundles:
         moj_radio_item: moj_radio_item
         page: page
-        link: link
         moj_pdf_item: moj_pdf_item
         moj_video_item: moj_video_item
       sort:

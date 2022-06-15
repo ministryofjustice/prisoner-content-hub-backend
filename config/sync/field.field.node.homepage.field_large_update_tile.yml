@@ -1,21 +1,21 @@
-uuid: 07e30ffd-766c-4f36-833a-698641b319f4
+uuid: c68a1ea2-bd32-43c3-9d0e-8f629149eb3f
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_featured_update
+    - field.storage.node.field_large_update_tile
     - node.type.homepage
     - node.type.link
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
     - node.type.page
-id: node.homepage.field_featured_update
-field_name: field_featured_update
+id: node.homepage.field_large_update_tile
+field_name: field_large_update_tile
 entity_type: node
 bundle: homepage
-label: 'Featured update'
-description: 'Optionally specify content to appear as the featured tile in the <strong>Updates</strong> section. '
+label: 'Large update tile'
+description: '<a href="/content/10221" target="_blank">How does this work?</a>'
 required: false
 translatable: false
 default_value: {  }
