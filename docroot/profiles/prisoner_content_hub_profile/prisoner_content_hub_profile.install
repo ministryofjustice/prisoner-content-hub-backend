@@ -356,7 +356,8 @@ function prisoner_content_hub_profile_update_8022() {
 }
 
 /**
- * Update bundle column on secondary tags fields, to ensure no data loss when switching to topics.
+ * Update bundle column on secondary tags fields, to ensure no data loss when
+ * switching to topics.
  */
 function prisoner_content_hub_profile_update_8023() {
   \Drupal::database()->query("UPDATE taxonomy_term__field_prisons SET bundle = 'topics' WHERE bundle = 'tags'");
@@ -365,4 +366,26 @@ function prisoner_content_hub_profile_update_8023() {
   \Drupal::database()->query("UPDATE taxonomy_term_revision__field_exclude_feedback SET bundle = 'topics' WHERE bundle = 'tags'");
   \Drupal::database()->query("UPDATE taxonomy_term__field_featured_image SET bundle = 'topics' WHERE bundle = 'tags'");
   \Drupal::database()->query("UPDATE taxonomy_term_revision__field_featured_image SET bundle = 'topics' WHERE bundle = 'tags'");
+}
+
+
+/**
+ * Update missing file usage for taxonomy terms.
+ *
+ * See https://trello.com/c/MkSRxdWQ/1025-thumbnail-images
+ */
+function prisoner_content_hub_profile_update_8024() {
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->exists('field_moj_thumbnail_image')
+    ->execute();
+
+  $terms = Term::loadMultiple($result);
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $files = $term->get('field_moj_thumbnail_image')->referencedEntities();
+    if (!empty($files)) {
+      $file = $files[0];
+      \Drupal::service('file.usage')->add($file, 'file', 'taxonomy_term', $term->id());
+    }
+  }
 }
