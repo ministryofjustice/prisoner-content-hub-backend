@@ -1,0 +1,71 @@
+uuid: 38300413-ae9f-499c-9c59-d276e3a27fb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_key_info_tiles
+    - node.type.homepage
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+    - taxonomy.vocabulary.moj_categories
+    - taxonomy.vocabulary.series
+    - taxonomy.vocabulary.topics
+  module:
+    - dynamic_entity_reference
+id: node.homepage.field_key_info_tiles
+field_name: field_key_info_tiles
+entity_type: node
+bundle: homepage
+label: 'Key info tiles'
+description: 'Select upto 4 tiles to appear on the right-hand side of the <strong>Updates</strong> section.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  node:
+    handler: 'default:node'
+    handler_settings:
+      target_bundles:
+        moj_radio_item: moj_radio_item
+        page: page
+        moj_pdf_item: moj_pdf_item
+        moj_video_item: moj_video_item
+      sort:
+        field: _none
+        direction: ASC
+      auto_create: false
+      auto_create_bundle: moj_radio_item
+  taxonomy_term:
+    handler: 'default:taxonomy_term'
+    handler_settings:
+      target_bundles:
+        moj_categories: moj_categories
+        series: series
+        topics: topics
+      sort:
+        field: name
+        direction: asc
+      auto_create: false
+      auto_create_bundle: moj_categories
+  menu_link_content:
+    handler: 'default:menu_link_content'
+    handler_settings: {  }
+  file:
+    handler: 'default:file'
+    handler_settings: {  }
+  search_api_task:
+    handler: 'default:search_api_task'
+    handler_settings: {  }
+  shortcut:
+    handler: 'default:shortcut'
+    handler_settings: {  }
+  path_alias:
+    handler: 'default:path_alias'
+    handler_settings: {  }
+  user:
+    handler: 'default:user'
+    handler_settings: {  }
+field_type: dynamic_entity_reference

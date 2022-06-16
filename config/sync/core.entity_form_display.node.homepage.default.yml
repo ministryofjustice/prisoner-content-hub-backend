@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.field.node.homepage.field_exclude_from_prison
     - field.field.node.homepage.field_featured_tiles
+    - field.field.node.homepage.field_key_info_tiles
+    - field.field.node.homepage.field_large_update_tile
     - field.field.node.homepage.field_prison_owner
     - field.field.node.homepage.field_prisons
     - node.type.homepage
@@ -25,7 +27,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 6
+      weight: 7
       format_type: fieldset
       format_settings:
         classes: ''
@@ -51,7 +53,7 @@ third_party_settings:
       label: 'Prison owner'
       region: content
       parent_name: ''
-      weight: 0
+      weight: 1
       format_type: details_sidebar
       format_settings:
         classes: ''
@@ -61,6 +63,23 @@ third_party_settings:
         description: ''
         required_fields: true
         weight: 0
+    group_updates_section:
+      children:
+        - field_large_update_tile
+        - field_featured_update
+        - field_key_info_tiles
+      label: 'Updates section'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: true
+        description: ''
+        required_fields: true
 id: node.homepage.default
 targetEntityType: node
 bundle: homepage
@@ -68,7 +87,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -86,12 +105,32 @@ content:
     third_party_settings: {  }
   field_featured_tiles:
     type: dynamic_entity_reference_default
-    weight: 2
+    weight: 3
     region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 40
+      placeholder: ''
+    third_party_settings: {  }
+  field_key_info_tiles:
+    type: dynamic_entity_reference_default
+    weight: 29
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 40
+      placeholder: ''
+    third_party_settings: {  }
+  field_large_update_tile:
+    type: entity_reference_autocomplete
+    weight: 27
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_prison_owner:
@@ -118,19 +157,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -141,14 +180,14 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 1
+    weight: 0
     region: content
     settings:
       size: 60
@@ -156,7 +195,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS
@@ -166,7 +205,7 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
