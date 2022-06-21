@@ -5,6 +5,9 @@
  * Primary hook implementations for Prisoner hub sub terms module.
  */
 
+use Drupal\taxonomy\TermInterface;
+use Drupal\views\ViewExecutable;
+
 /**
  * Implements hook_entity_update().
  */
@@ -17,4 +20,36 @@ function prisoner_hub_sub_terms_entity_update(\Drupal\Core\Entity\EntityInterfac
  */
 function prisoner_hub_sub_terms_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
   \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity, TRUE);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Modify the options for the Subcategory exposed filter, to only include
+ * categories that are children of the current category.
+ *
+ * @TODO: We could look at using facets for this instead.
+ */
+function prisoner_hub_sub_terms_form_views_exposed_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $view = $form_state->getStorage('view');
+  $view = $view['view'];
+  if ($view instanceof ViewExecutable && $view->id() == 'content_in_a_category') {
+
+    if (isset($form['field_moj_top_level_categories_target_id'])) {
+      $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
+      if (!$term instanceof TermInterface) {
+        return;
+      }
+      $children = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($term->bundle(), $term->id());
+      $child_tids = [];
+      foreach ($children as $child) {
+        $child_tids[] = $child->tid;
+      }
+      foreach ($form['field_moj_top_level_categories_target_id']['#options'] as $key => $option) {
+        if (isset($option->option) && !in_array(array_key_first($option->option), $child_tids)) {
+          unset($form['field_moj_top_level_categories_target_id']['#options'][$key]);
+        }
+      }
+    }
+  }
 }
