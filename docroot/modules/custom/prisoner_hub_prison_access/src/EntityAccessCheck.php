@@ -69,6 +69,10 @@ class EntityAccessCheck {
    *   fields
    */
   public function checkAccess(EntityInterface $entity, AccountInterface $account) {
+    $entity_types = ['node', 'taxonomy_term'];
+    if (!in_array($entity->getEntityTypeId(), $entity_types)) {
+      return AccessResult::neutral();
+    }
     /** @var \Drupal\taxonomy\TermInterface $current_prison */
     $current_prison = $this->routeMatch->getParameter('prison');
     if (!$current_prison) {
