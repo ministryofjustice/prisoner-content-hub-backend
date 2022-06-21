@@ -25,6 +25,22 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
   use TaxonomyCreationTrait;
 
   /**
+   * Generated prison taxonomy term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected $prison;
+
+  /**
+   * Setup entities that all tests will need.
+   */
+  public function setUp(): void {
+    $vocab_prisons = Vocabulary::load('prisons');
+    $this->prison = $this->createTerm($vocab_prisons);
+    parent::setUp();
+  }
+
+  /**
    * Test a series with no available content is a 403.
    */
   public function testSeriesWithNoAvailableContent() {
@@ -36,7 +52,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       ],
       'status' => NodeInterface::NOT_PUBLISHED,
     ]);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(403, $response->getStatusCode(), $url->toString() . ' returns a 403 response.');
   }
@@ -53,7 +69,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       ],
       'status' => NodeInterface::PUBLISHED,
     ]);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $series->bundle() . '/' . $series->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }
@@ -84,7 +100,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'status' => NodeInterface::NOT_PUBLISHED,
     ]);
 
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(403, $response->getStatusCode(), $url->toString() . ' returns a 403 response.');
   }
@@ -103,7 +119,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'status' => NodeInterface::PUBLISHED,
     ]);
 
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }
@@ -128,7 +144,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'status' => NodeInterface::PUBLISHED,
     ]);
 
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }
@@ -151,7 +167,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
     ]);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }
@@ -179,7 +195,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
     ]);
-    $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
+    $url = Url::fromUri('internal:/jsonapi/prison/' . $this->prison->get('machine_name')->value . '/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
   }

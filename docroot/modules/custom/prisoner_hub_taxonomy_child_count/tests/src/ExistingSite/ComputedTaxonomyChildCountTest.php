@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\prisoner_hub_taxonomy_child_count\ExistingSite;
 
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -31,6 +33,8 @@ class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
         'target_id' => $parent_1->id(),
       ]
     ]);
+    $role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $this->grantPermissions($role, ['view entity without prison context']);
 
     $this->assertEquals($parent_1->get('child_term_count')->getValue()[0]['sub_categories_count'], 2);
     $this->assertEquals($parent_2->get('child_term_count')->getValue()[0]['sub_categories_count'], 0);
