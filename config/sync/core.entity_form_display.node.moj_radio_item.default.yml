@@ -27,6 +27,7 @@ dependencies:
     - file
     - image
     - path
+    - publication_date
     - scheduler
     - select2
     - term_reference_tree
@@ -204,14 +205,10 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_moj_series:
-    type: select2_entity_reference
+    type: options_buttons
     weight: 11
     region: content
-    settings:
-      width: 100%
-      autocomplete: false
-      match_operator: CONTAINS
-      match_limit: 10
+    settings: {  }
     third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
@@ -285,6 +282,12 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

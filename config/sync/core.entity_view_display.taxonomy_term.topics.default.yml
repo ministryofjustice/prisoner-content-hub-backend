@@ -8,9 +8,38 @@ dependencies:
     - field.field.taxonomy_term.topics.field_moj_thumbnail_image
     - field.field.taxonomy_term.topics.field_prisons
     - taxonomy.vocabulary.topics
+    - views.view.topics_term_content_sorting
   module:
     - image
+    - layout_builder
+    - layout_discovery
     - text
+    - views
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: 'Main section'
+          context_mapping: {  }
+        components:
+          3c1d1c9d-c7fb-4e74-8ad0-5620101cf3d8:
+            uuid: 3c1d1c9d-c7fb-4e74-8ad0-5620101cf3d8
+            region: content
+            configuration:
+              id: 'views_block:topics_term_content_sorting-block_1'
+              label: ''
+              label_display: '0'
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
 id: taxonomy_term.topics.default
 targetEntityType: taxonomy_term
 bundle: topics

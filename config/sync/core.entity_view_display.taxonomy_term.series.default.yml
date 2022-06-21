@@ -12,10 +12,39 @@ dependencies:
     - field.field.taxonomy_term.series.field_prisons
     - field.field.taxonomy_term.series.field_sort_by
     - taxonomy.vocabulary.series
+    - views.view.series_taxonomy_term_content_sorting
   module:
     - image
+    - layout_builder
+    - layout_discovery
     - options
     - text
+    - views
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: 'Main section'
+          context_mapping: {  }
+        components:
+          2c095225-5b9f-4961-bf39-c103c3ca4de5:
+            uuid: 2c095225-5b9f-4961-bf39-c103c3ca4de5
+            region: content
+            configuration:
+              id: 'views_block:series_taxonomy_term_content_sorting-block_1'
+              label: ''
+              label_display: visible
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
 id: taxonomy_term.series.default
 targetEntityType: taxonomy_term
 bundle: series
