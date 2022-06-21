@@ -8,6 +8,7 @@ dependencies:
     - autocomplete_id
     - filter
     - flysystem_s3
+    - prisoner_hub_prison_access
     - readonlymode
     - shortcut
     - system
@@ -24,3 +25,4 @@ permissions:
   - 'use S3 CORS upload'
   - 'use text format basic_html'
   - 'view entity autocomplete id results'
+  - 'view entity without prison context'

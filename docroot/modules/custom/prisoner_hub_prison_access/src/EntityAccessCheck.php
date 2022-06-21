@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\taxonomy\Entity\Term;
 
@@ -67,12 +68,13 @@ class EntityAccessCheck {
    *   The AccessResult, determined by the entities prison and prison category
    *   fields
    */
-  public function checkAccess(EntityInterface $entity) {
+  public function checkAccess(EntityInterface $entity, AccountInterface $account) {
     /** @var \Drupal\taxonomy\TermInterface $current_prison */
     $current_prison = $this->routeMatch->getParameter('prison');
-    // Only handle requests where there is a prison in the url.
     if (!$current_prison) {
-      return AccessResult::neutral();
+      // If no prison context in the url, check if the user has permission to
+      // to view without one.  If so, return neutral, otherwise return forbidden.
+      return AccessResult::forbiddenIf($account->hasPermission('view entity without prison context') == FALSE);
     }
 
     if ($entity instanceof ContentEntityInterface) {
