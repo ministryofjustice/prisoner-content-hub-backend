@@ -9,6 +9,9 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_entity_base_field_info().
@@ -63,6 +66,41 @@ function prisoner_hub_taxonomy_sorting_entity_update(Drupal\Core\Entity\EntityIn
         // Resave the node to invoke hook_entity_presave().
         $node->save();
       }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_views_pre_build().
+ *
+ * Remove either the release date _or_ season+episode number fields from the
+ * Series taxonomy term content sorting view.
+ */
+function prisoner_hub_taxonomy_sorting_views_pre_build(ViewExecutable $view) {
+  if ($view->id() == 'series_taxonomy_term_content_sorting') {
+    $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
+    if (!$term) {
+      return;
+    }
+    $fields_to_remove = [];
+
+    switch ($term->get('field_sort_by')->getString()) {
+      case 'season_and_episode_asc':
+      case 'season_and_episode_desc':
+        $fields_to_remove[] ='form_field_field_release_date';
+        break;
+
+      case 'release_date_asc':
+      case 'release_date_desc':
+      $fields_to_remove[] = 'form_field_field_moj_season';
+      $fields_to_remove[] = 'form_field_field_moj_episode';
+    }
+
+    // @See https://stackoverflow.com/a/9895991
+    foreach ($fields_to_remove as $field_name) {
+      unset($view->field[$field_name]);
+      unset($view->display_handler->handlers['field'][$field_name]);
     }
   }
 }
