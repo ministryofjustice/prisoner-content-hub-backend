@@ -9,7 +9,9 @@
  * detailed comparison.
  */
 
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 
@@ -399,3 +401,23 @@ function prisoner_content_hub_profile_deploy_copy_homepage_data() {
   }
 }
 
+
+/**
+ * Re-import the layout builder config, as for some reason this gets altered
+ * when it is first enabled.
+ */
+function prisoner_content_hub_profile_deploy_reimport_layout_builder_config() {
+  $config_path = Settings::get('config_sync_directory');
+  $source = new FileStorage($config_path);
+
+  $config_storage = \Drupal::service('config.storage');
+
+  $configs = [
+    'core.entity_form_display.taxonomy_term.moj_categories.default',
+    'core.entity_form_display.taxonomy_term.series.default',
+    'core.entity_form_display.taxonomy_term.topics.default',
+  ];
+  foreach ($configs as $config) {
+    $config_storage->write($config, $source->read($config));
+  }
+}
