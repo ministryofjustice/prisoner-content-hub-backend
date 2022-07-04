@@ -9,10 +9,38 @@ dependencies:
     - field.field.taxonomy_term.moj_categories.field_moj_thumbnail_image
     - field.field.taxonomy_term.moj_categories.field_prisons
     - taxonomy.vocabulary.moj_categories
+    - views.view.content_in_a_category
   module:
     - dynamic_entity_reference
     - image
+    - layout_builder
+    - layout_discovery
     - text
+    - views
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          90dc11c3-61b9-4db9-b228-7f21b1678a53:
+            uuid: 90dc11c3-61b9-4db9-b228-7f21b1678a53
+            region: content
+            configuration:
+              id: 'views_block:content_in_a_category-block_1'
+              label: ''
+              label_display: '0'
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
 id: taxonomy_term.moj_categories.default
 targetEntityType: taxonomy_term
 bundle: moj_categories

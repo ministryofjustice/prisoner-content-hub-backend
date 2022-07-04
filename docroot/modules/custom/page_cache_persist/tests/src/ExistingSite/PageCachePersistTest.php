@@ -3,6 +3,8 @@
 namespace Drupal\Tests\page_cache_persist\ExistingSite;
 
 use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drush\TestTraits\DrushTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -27,6 +29,14 @@ class PageCachePersistTest extends ExistingSiteBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Allow anonymous user to access entities without prison context.
+    // As we're not testing the prison context part, this is unnecessary.
+    // @TODO: Remove this when tests are refactored, and a single way of
+    // creating entities (that includes adding relevant prisons) is used across
+    // our tests.
+    $role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $this->grantPermissions($role, ['view entity without prison context']);
+
     $node = $this->createNode();
     $url = Url::fromRoute('jsonapi.node.individual', ['entity' => $node->uuid()]);
     $url->setAbsolute(TRUE);

@@ -1,0 +1,2 @@
+view entity without prison context:
+  title: 'Allow users to view an entity when a prison context is empty'

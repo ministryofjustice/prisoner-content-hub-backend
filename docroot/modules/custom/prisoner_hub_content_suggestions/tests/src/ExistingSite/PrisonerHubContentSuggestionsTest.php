@@ -7,6 +7,8 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
@@ -101,6 +103,14 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => $this->categoryTerm->id(),
       'field_not_in_series' => TRUE,
     ])->uuid();
+
+    // Allow anonymous user to access entities without prison context.
+    // As we're not testing the prison context part, this is unnecessary.
+    // @TODO: Remove this when tests are refactored, and a single way of
+    // creating entities (that includes adding relevant prisons) is used across
+    // our tests.
+    $role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $this->grantPermissions($role, ['view entity without prison context']);
   }
 
   /**

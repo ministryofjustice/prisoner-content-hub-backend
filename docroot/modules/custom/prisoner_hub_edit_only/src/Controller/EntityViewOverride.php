@@ -37,23 +37,6 @@ class EntityViewOverride extends EntityViewController {
   }
 
   /**
-   * The view term handler.
-   *
-   * This must be in its own function, as Drupal uses a reflector class to
-   * extract the variable names, i.e. $taxonomy_term.
-   * @see \Drupal\Core\Entity->setParametersFromReflection();
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $taxonomy_term
-   *   The taxonomy term object.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   The redirect response, to take the user to the edit page.
-   */
-  public function viewTerm(EntityInterface $taxonomy_term) {
-    return $this->redirectToEditForm($taxonomy_term);
-  }
-
-  /**
    * Redirect users to the edit page.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity

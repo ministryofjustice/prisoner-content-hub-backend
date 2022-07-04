@@ -17,7 +17,9 @@ use Drupal\Core\Form\FormStateInterface;
  * Ensure that EntityViewOverride::$excludedContentTypes are excluded.
  */
 function prisoner_hub_edit_only_local_tasks_alter(&$local_tasks) {
-  foreach (['node', 'taxonomy_term'] as $entity_type) {
+  // We only work with nodes for now.
+  $entity_types = ['node'];
+  foreach ($entity_types as $entity_type) {
     $local_tasks['entity.' . $entity_type . '.canonical']['title'] = 'Edit';
     $local_tasks['entity.' . $entity_type . '.canonical']['route_name'] = 'entity.' . $entity_type . '.edit_form';
     unset($local_tasks['entity.' . $entity_type . '.edit_form']);

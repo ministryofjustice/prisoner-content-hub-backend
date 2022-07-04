@@ -20,8 +20,5 @@ class RouteSubscriber extends RouteSubscriberBase {
     if ($node_view_route = $collection->get('entity.node.canonical')) {
       $node_view_route->setDefault('_controller', '\Drupal\prisoner_hub_edit_only\Controller\EntityViewOverride::viewNode');
     }
-    if ($term_view_route = $collection->get('entity.taxonomy_term.canonical')) {
-      $term_view_route->setDefault('_controller', '\Drupal\prisoner_hub_edit_only\Controller\EntityViewOverride::viewTerm');
-    }
   }
 }
