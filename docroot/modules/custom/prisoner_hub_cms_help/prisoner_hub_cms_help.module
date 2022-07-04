@@ -63,3 +63,32 @@ function prisoner_hub_cms_help_preprocess_page_title(&$vars) {
     $vars['title'] = new HtmlEscapedText('');
   }
 }
+
+/**
+ * Implements hook_preprocess_form_element().
+ *
+ * Set help page links for single value form elements.  These are rendered via
+ * the theme.
+ * @see prisconhub_preprocess_form_element().
+ */
+function prisoner_hub_cms_help_preprocess_form_element(&$variables) {
+  if ($variables['element']['#name'] == 'field_large_update_tile[0][target_id]') {
+    $variables['#help_page_url'] = Url::fromUserInput('/content/16897', ['fragment' => 'large-update-tile']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_field_multiple_value_form().
+ *
+ * Set help page links for multiple value form elements.  These are rendered via
+ * the theme.
+ * @see prisconhub_preprocess_field_multiple_value_form().
+ */
+function prisoner_hub_cms_help_preprocess_field_multiple_value_form(&$variables) {
+  if ($variables['element']['#field_name'] == 'field_key_info_tiles') {
+    $variables['#help_page_url'] = Url::fromUserInput('/content/16897', ['fragment' => 'key-info-tiles']);
+  }
+  if ($variables['element']['#field_name'] == 'field_featured_tiles') {
+    $variables['#help_page_url'] = Url::fromUserInput('/content/16897', ['fragment' => 'featured-tiles']);
+  }
+}

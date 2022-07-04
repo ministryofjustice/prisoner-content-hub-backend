@@ -64,3 +64,16 @@ a[href="/admin/help"].toolbar-icon:before {
 .field-group-fieldset .form-wrapper legend {
   font-weight: bold;
 }
+
+.form-item__help-page-link {
+  font-weight: normal;
+  font-size: 0.79rem;
+  display: block;
+}
+
+/**
+ * Hide the "Show row heights" text
+ */
+.tabledrag-toggle-weight {
+  display: none;
+}
