@@ -4,7 +4,11 @@ status: true
 dependencies:
   config:
     - system.menu.admin
+    - taxonomy.vocabulary.moj_categories
+    - taxonomy.vocabulary.series
+    - taxonomy.vocabulary.topics
   module:
+    - better_exposed_filters
     - taxonomy
     - user
     - views_bulk_operations
@@ -23,7 +27,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Taxonomy overview'
+      title: Taxonomy
       fields:
         parent_target_id:
           id: parent_target_id
@@ -284,7 +288,7 @@ display:
           entity_type: taxonomy_term
           entity_field: vid
           plugin_id: field
-          label: Vocabulary
+          label: Type
           exclude: false
           alter:
             alter_text: false
@@ -388,6 +392,73 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: false
+        status:
+          id: status
+          table: taxonomy_term_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: status
+          plugin_id: field
+          label: Status
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: boolean
+          settings:
+            format: custom
+            format_custom_false: Unpublished
+            format_custom_true: Published
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         changed:
           id: changed
           table: taxonomy_term_field_revision
@@ -530,7 +601,7 @@ display:
             offset_label: Offset
           quantity: 9
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
           reset_button: false
@@ -539,10 +610,57 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: false
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_hide: false
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              name:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  is_secondary: false
+              populate:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              field_is_homepage_updates_value:
+                plugin_id: bef_single
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+              vid:
+                plugin_id: bef
+                advanced:
+                  sort_options: false
+                  rewrite:
+                    filter_rewrite_values: ''
+                  collapsible: false
+                  is_secondary: false
+                select_all_none: false
+                select_all_none_nested: false
+                display_inline: false
       access:
         type: perm
         options:
-          perm: 'access taxonomy overview'
+          perm: 'access content overview'
       cache:
         type: tag
         options: {  }
@@ -567,7 +685,7 @@ display:
           expose:
             operator_id: name_op
             label: Name
-            description: 'The name of the taxonomy term.<br/>Case intensive. '
+            description: 'The name of the taxonomy term.<br/>Case insensitive. '
             use_operator: false
             operator: name_op
             operator_limit_selection: false
@@ -609,8 +727,8 @@ display:
           exposed: true
           expose:
             operator_id: ''
-            label: 'Parent category'
-            description: 'Either the parent category or the category for the series.<br/>Case insensitive.'
+            label: 'Parent category name'
+            description: 'The name of the parent category.<br/>Case insensitive. '
             use_operator: false
             operator: populate_op
             operator_limit_selection: false
@@ -642,29 +760,30 @@ display:
             name_3: name_3
             name_4: name_4
             name_2: name_2
-        vid:
-          id: vid
-          table: taxonomy_term_field_data
-          field: vid
+            name_5: name_5
+            name_6: name_6
+            name_7: name_7
+        field_is_homepage_updates_value:
+          id: field_is_homepage_updates_value
+          table: taxonomy_term__field_is_homepage_updates
+          field: field_is_homepage_updates_value
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: taxonomy_term
-          entity_field: vid
-          plugin_id: bundle
-          operator: in
-          value: {  }
+          plugin_id: boolean
+          operator: '='
+          value: All
           group: 1
           exposed: true
           expose:
-            operator_id: vid_op
-            label: Vocabulary
-            description: ''
+            operator_id: ''
+            label: 'Include in homepage updates'
+            description: 'Whether or not the content for a taxonomy has been selected to be included in the <em>homepage updates</em> section.'
             use_operator: false
-            operator: vid_op
+            operator: field_is_homepage_updates_value_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: vid
+            identifier: field_is_homepage_updates_value
             required: false
             remember: false
             multiple: false
@@ -674,7 +793,6 @@ display:
               moj_local_content_manager: '0'
               local_administrator: '0'
               administrator: '0'
-            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -687,38 +805,86 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        status:
-          id: status
+        vid:
+          id: vid
           table: taxonomy_term_field_data
-          field: status
+          field: vid
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: taxonomy_term
-          entity_field: status
-          plugin_id: boolean
-          operator: '='
-          value: All
+          entity_field: vid
+          plugin_id: bundle
+          operator: in
+          value:
+            moj_categories: moj_categories
+            series: series
+            topics: topics
           group: 1
           exposed: true
           expose:
-            operator_id: ''
-            label: Published
+            operator_id: vid_op
+            label: Type
             description: ''
             use_operator: false
-            operator: status_op
+            operator: vid_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: status
+            identifier: vid
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
               moj_local_content_manager: '0'
               local_administrator: '0'
               administrator: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        vid_1:
+          id: vid_1
+          table: taxonomy_term_field_data
+          field: vid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: vid
+          plugin_id: bundle
+          operator: in
+          value:
+            moj_categories: moj_categories
+            series: series
+            topics: topics
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -899,6 +1065,129 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        name_5:
+          id: name_5
+          table: taxonomy_term_field_data
+          field: name
+          relationship: parent_target_id_3
+          group_type: group
+          admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: name
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        name_6:
+          id: name_6
+          table: taxonomy_term_field_data
+          field: name
+          relationship: parent_target_id_4
+          group_type: group
+          admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: name
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        name_7:
+          id: name_7
+          table: taxonomy_term_field_data
+          field: name
+          relationship: parent_target_id_5
+          group_type: group
+          admin_label: ''
+          entity_type: taxonomy_term
+          entity_field: name
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
@@ -911,14 +1200,22 @@ display:
           row_class: ''
           default_row_class: true
           columns:
+            parent_target_id: parent_target_id
             views_bulk_operations_bulk_form: views_bulk_operations_bulk_form
             name: name
-            parent_target_id: parent_target_id
+            name_1: name_1
             vid: vid
+            nothing: nothing
             changed: changed
             edit_taxonomy_term: edit_taxonomy_term
+            status: status
           default: name
           info:
+            parent_target_id:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             views_bulk_operations_bulk_form:
               align: ''
               separator: ''
@@ -931,7 +1228,9 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            parent_target_id:
+            name_1:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -939,6 +1238,11 @@ display:
             vid:
               sortable: true
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing:
               align: ''
               separator: ''
               empty_column: false
@@ -952,6 +1256,13 @@ display:
               responsive: ''
             edit_taxonomy_term:
               sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            status:
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
@@ -985,15 +1296,6 @@ display:
           entity_field: parent
           plugin_id: standard
           required: false
-        field_category:
-          id: field_category
-          table: taxonomy_term__field_category
-          field: field_category
-          relationship: none
-          group_type: group
-          admin_label: 'Category from series'
-          plugin_id: standard
-          required: false
         parent_target_id_1:
           id: parent_target_id_1
           table: taxonomy_term__parent
@@ -1012,6 +1314,48 @@ display:
           relationship: parent_target_id_1
           group_type: group
           admin_label: 'Parents parents parent'
+          entity_type: taxonomy_term
+          entity_field: parent
+          plugin_id: standard
+          required: false
+        field_category:
+          id: field_category
+          table: taxonomy_term__field_category
+          field: field_category
+          relationship: none
+          group_type: group
+          admin_label: 'Category from series'
+          plugin_id: standard
+          required: false
+        parent_target_id_3:
+          id: parent_target_id_3
+          table: taxonomy_term__parent
+          field: parent_target_id
+          relationship: field_category
+          group_type: group
+          admin_label: 'Category from series parent'
+          entity_type: taxonomy_term
+          entity_field: parent
+          plugin_id: standard
+          required: false
+        parent_target_id_4:
+          id: parent_target_id_4
+          table: taxonomy_term__parent
+          field: parent_target_id
+          relationship: parent_target_id_3
+          group_type: group
+          admin_label: 'Category from series parents parent'
+          entity_type: taxonomy_term
+          entity_field: parent
+          plugin_id: standard
+          required: false
+        parent_target_id_5:
+          id: parent_target_id_5
+          table: taxonomy_term__parent
+          field: parent_target_id
+          relationship: parent_target_id_4
+          group_type: group
+          admin_label: 'Category from series parents parent parent'
           entity_type: taxonomy_term
           entity_field: parent
           plugin_id: standard
@@ -1035,7 +1379,101 @@ display:
     position: 1
     display_options:
       display_extenders:
-        views_ef_fieldset: {  }
+        views_ef_fieldset:
+          views_ef_fieldset:
+            enabled: 1
+            options:
+              sort:
+                root:
+                  container_type: details
+                  title: Filters
+                  description: ''
+                  open: '1'
+                  weight: '0'
+                  id: root
+                  pid: ''
+                  depth: '0'
+                  type: container
+                container-1:
+                  container_type: details
+                  title: Search
+                  description: ''
+                  open: '1'
+                  weight: '-13'
+                  id: container-1
+                  pid: root
+                  depth: '1'
+                  type: container
+                name:
+                  weight: '-13'
+                  id: name
+                  pid: container-1
+                  depth: '2'
+                  type: filter
+                populate:
+                  weight: '-12'
+                  id: populate
+                  pid: container-1
+                  depth: '2'
+                  type: filter
+                container-0:
+                  container_type: details
+                  title: Type
+                  description: ''
+                  open: '1'
+                  weight: '-12'
+                  id: container-0
+                  pid: root
+                  depth: '1'
+                  type: container
+                vid:
+                  weight: '-13'
+                  id: vid
+                  pid: container-0
+                  depth: '2'
+                  type: filter
+                container-3:
+                  container_type: details
+                  title: Other
+                  description: ''
+                  open: '1'
+                  weight: '-11'
+                  id: container-3
+                  pid: root
+                  depth: '1'
+                  type: container
+                field_is_homepage_updates_value:
+                  weight: '-13'
+                  id: field_is_homepage_updates_value
+                  pid: container-3
+                  depth: '2'
+                  type: filter
+                container-4:
+                  container_type: container
+                  title: ''
+                  description: ''
+                  open: '1'
+                  weight: '-10'
+                  id: container-4
+                  pid: root
+                  depth: '1'
+                  type: container
+                submit:
+                  weight: '-13'
+                  id: submit
+                  pid: container-4
+                  depth: '2'
+                  type: buttons
+                container-2:
+                  container_type: details
+                  title: ''
+                  description: ''
+                  open: '1'
+                  weight: '-9'
+                  id: container-2
+                  pid: root
+                  depth: '1'
+                  type: container
       path: admin/content/taxonomy
       menu:
         type: normal
