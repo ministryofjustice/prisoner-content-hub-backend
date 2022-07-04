@@ -10,6 +10,10 @@
  * don't belong to a particular module, and are global to the site.
  */
 
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceFieldItemList;
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldWidget\DynamicEntityReferenceWidget;
+use Drupal\taxonomy\Entity\Vocabulary;
+
 /**
  * Implements hook_toolbar_alter().
  */
@@ -49,3 +53,38 @@ function prisoner_content_hub_profile_file_validate(\Drupal\file\FileInterface $
   }
   return $errors;
 }
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * For dynamic_entity_reference fields, change the select option "Taxonomy term"
+ * to be a comma separated list of Taxonomy vocabularies.
+ */
+function prisoner_content_hub_profile_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  if ($context['widget'] instanceof DynamicEntityReferenceWidget) {
+    if (isset($element['target_type']['#options']['taxonomy_term'])) {
+      $target_bundle_labels = [];
+      foreach ($context['items']->getFieldDefinition()->getSetting('taxonomy_term')['handler_settings']['target_bundles'] as $bundle) {
+        if ($bundle == 'moj_categories') {
+          // A bit of custom tweaking here.
+          // The Vocabulary is called "Categories" but we only ever allow users
+          // to select child categories.  So we instead refer to it as
+          // "Subcategories".
+          $target_bundle_labels[] = 'Subcategories';
+        }
+        else {
+          $vocab = Vocabulary::load($bundle);
+          $target_bundle_labels[] = $vocab->label();
+        }
+      }
+      $last = array_pop($target_bundle_labels);
+      $string = implode(', ', $target_bundle_labels);
+      if ($string) {
+        $string .= ' or ';
+      }
+      $string .= $last;
+      $element['target_type']['#options']['taxonomy_term'] = $string;
+    }
+  }
+}
+
