@@ -31,7 +31,14 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, \Drup
     // setting this message on a different page, if the form redirects to
     // another url after submit.
     if (empty($form_state->getUserInput())) {
-      \Drupal::messenger()->addWarning(t('You cannot make changes to this content, as it is owned by another prison.  However, you <strong>can</strong> set your own prison to be <a href="#edit-group-exclude-from-prison">excluded from the content.</a>'));
+      // Set a different message when using views_entity_form_field.
+      if (substr($form_state->getFormObject()->getFormId(), 0, strlen('views_form')) == 'views_form') {
+        \Drupal::messenger()->addWarning(t('You cannot update values for some of the content on this page, as they are owned by another prison.'));
+      }
+      else {
+        \Drupal::messenger()->addWarning(t('You cannot make changes to this content, as it is owned by another prison.  However, you <strong>can</strong> set your own prison to be <a href="#edit-group-exclude-from-prison">excluded from the content.</a>'));
+      }
+
     }
   }
 

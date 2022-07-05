@@ -140,7 +140,8 @@
                 "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #3057545 - ResourceTypeRepository wrongly assumes that all entity reference fields have the setting \"target_type\".": "patches/drupal-3057545-40.patch",
-                "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch"
+                "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
+                "Issue #3114365 - Vocabulary name not shown in View for Anonymous Users": "patches/drupal-3114365-17.patch"
             },
             "drupal/jsonapi_page_limit": {
                 "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch",
