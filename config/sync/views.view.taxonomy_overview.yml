@@ -351,7 +351,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: custom
-          label: 'Parent categories'
+          label: 'Parent category'
           exclude: false
           alter:
             alter_text: true
@@ -526,16 +526,16 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        edit_taxonomy_term:
-          id: edit_taxonomy_term
+        operations:
+          id: operations
           table: taxonomy_term_data
-          field: edit_taxonomy_term
+          field: operations
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: taxonomy_term
-          plugin_id: entity_link_edit
-          label: Edit
+          plugin_id: entity_operations
+          label: Operations
           exclude: false
           alter:
             alter_text: false
@@ -576,9 +576,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: edit
-          output_url_as_text: false
-          absolute: false
+          destination: false
       pager:
         type: full
         options:
@@ -1206,9 +1204,10 @@ display:
             name_1: name_1
             vid: vid
             nothing: nothing
-            changed: changed
-            edit_taxonomy_term: edit_taxonomy_term
             status: status
+            changed: changed
+            operations: operations
+            edit_taxonomy_term: edit_taxonomy_term
           default: name
           info:
             parent_target_id:
@@ -1247,6 +1246,13 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            status:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             changed:
               sortable: true
               default_sort_order: asc
@@ -1254,19 +1260,17 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            operations:
+              align: ''
+              separator: ''
+              empty_column: true
+              responsive: ''
             edit_taxonomy_term:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: false
-              responsive: ''
-            status:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
+              empty_column: true
               responsive: ''
           override: true
           sticky: false
