@@ -15,7 +15,7 @@ field_name: field_large_update_tile
 entity_type: node
 bundle: homepage
 label: 'Large update tile'
-description: '<a href="/content/10221" target="_blank">How does this work?</a>'
+description: "<strong>When to use?</strong><br>\r\nUse this tile to highlight the most important newsworthy information of the day/week for your prison"
 required: false
 translatable: false
 default_value: {  }

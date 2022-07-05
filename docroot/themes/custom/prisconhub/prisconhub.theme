@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Prisconhub custom theme.
+ */
+
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_preprocess_form_element().
+ *
+ * Render #help_page_url attributes as links.
+ * @see prisoner_hub_cms_help_preprocess_form_element().
+ */
+function prisconhub_preprocess_form_element(&$variables) {
+  if (isset($variables['#help_page_url'])) {
+    $link = Link::fromTextAndUrl(t('How does this work?'), $variables['#help_page_url']);
+    $build = $link->toRenderable();
+    $build['#attributes']['target'] = '_blank';
+    $build['#attributes']['class'] = ['form-item__help-page-link'];
+    $variables['prefix'] = \Drupal::service('renderer')->render($build);
+  }
+}
+
+/**
+ * Implements hook_preprocess_field_multiple_value_form().
+ *
+ * Render #help_page_url attributes as links.
+ * @see prisoner_hub_cms_help_preprocess_field_multiple_value_form().
+ */
+function prisconhub_preprocess_field_multiple_value_form(&$variables) {
+  if (isset($variables['#help_page_url'])) {
+    $link = Link::fromTextAndUrl(t('How does this work?'), $variables['#help_page_url']);
+    $build = $link->toRenderable();
+    $build['#attributes']['target'] = '_blank';
+    $build['#attributes']['class'] = ['form-item__help-page-link'];
+    $variables['table']['#header'][0]['data']['#suffix'] = \Drupal::service('renderer')->render($build);
+  }
+}

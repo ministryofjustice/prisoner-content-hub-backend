@@ -20,7 +20,7 @@ field_name: field_featured_tiles
 entity_type: node
 bundle: homepage
 label: 'Featured tiles'
-description: 'Feature either content, series, categories or topics as a tile on the homepage.'
+description: 'Feature either content, series, subcategories or topics as a tile on the homepage.'
 required: false
 translatable: false
 default_value: {  }
