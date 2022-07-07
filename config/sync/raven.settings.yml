@@ -24,7 +24,7 @@ public_dsn: 'https://7e038c55ab3547be95934595b77723f5@o345774.ingest.sentry.io/5
 ssl: verify_ssl
 ca_cert: ''
 ignored_channels: {  }
-send_user_data: true
+send_user_data: false
 rate_limit: null
 send_request_body: true
 request_tracing: false
