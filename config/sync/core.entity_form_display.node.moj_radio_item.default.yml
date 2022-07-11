@@ -205,10 +205,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_moj_series:
-    type: options_buttons
+    type: select2_entity_reference
     weight: 11
     region: content
-    settings: {  }
+    settings:
+      width: 100%
+      autocomplete: false
+      match_operator: CONTAINS
+      match_limit: 10
     third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
