@@ -24,13 +24,19 @@ public_dsn: 'https://7e038c55ab3547be95934595b77723f5@o345774.ingest.sentry.io/5
 ssl: verify_ssl
 ca_cert: ''
 ignored_channels: {  }
-send_user_data: true
+send_user_data: false
 rate_limit: null
 send_request_body: true
-request_tracing: false
-traces_sample_rate: 0.25
+request_tracing: true
+traces_sample_rate: 0.05
 browser_traces_sample_rate: null
 database_tracing: true
 twig_tracing: false
 auto_session_tracking: false
 send_client_reports: false
+drush_tracing: true
+seckit_set_report_uri: false
+send_monitoring_sensor_status_changes: false
+404_tracing: true
+show_report_dialog: false
+error_embed_url: ''
