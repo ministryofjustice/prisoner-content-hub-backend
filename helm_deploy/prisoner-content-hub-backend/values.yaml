@@ -1,7 +1,7 @@
 nameOverride: ""
 fullnameOverride: ""
 
-replicaCount: 3
+replicaCount: 5
 maxReplicaCount: 6
 
 image:
