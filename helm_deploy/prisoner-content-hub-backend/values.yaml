@@ -2,7 +2,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 replicaCount: 5
-maxReplicaCount: 6
 
 image:
   repository: quay.io/hmpps/prisoner-content-hub-backend
