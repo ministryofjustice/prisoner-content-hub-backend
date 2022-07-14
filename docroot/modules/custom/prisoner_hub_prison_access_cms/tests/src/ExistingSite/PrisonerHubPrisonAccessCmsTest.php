@@ -49,6 +49,12 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $key = array_search('homepage', $this->contentTypes);
     unset($this->contentTypes[$key]);
 
+    // Temporarily remove urgent banner content type, as this is not yet
+    // accessible local content managers.
+    // TODO: Remove these lines (re-instate tests) for urgent banner content type.
+    $key = array_search('urgent_banner', $this->contentTypes);
+    unset($this->contentTypes[$key]);
+
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
         ['target_id' => $this->prisonTerm->id()],

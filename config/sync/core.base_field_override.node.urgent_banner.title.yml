@@ -1,0 +1,18 @@
+uuid: 45befe25-b911-4791-8b4f-bb5c3db24876
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+id: node.urgent_banner.title
+field_name: title
+entity_type: node
+bundle: urgent_banner
+label: 'Banner text'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

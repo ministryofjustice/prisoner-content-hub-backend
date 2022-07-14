@@ -1,0 +1,187 @@
+uuid: 75a9c3fc-56b8-4ea9-bb88-db9b17024699
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.urgent_banner.field_exclude_from_prison
+    - field.field.node.urgent_banner.field_more_info_page
+    - field.field.node.urgent_banner.field_prison_owner
+    - field.field.node.urgent_banner.field_prisons
+    - node.type.urgent_banner
+  module:
+    - field_group
+    - publication_date
+    - scheduler
+    - select2
+    - term_reference_tree
+third_party_settings:
+  field_group:
+    group_prison_owner:
+      children:
+        - field_prison_owner
+      label: 'Prison owner'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: details_sidebar
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: true
+        description: ''
+        required_fields: true
+        weight: 0
+    group_prison_categories:
+      children:
+        - field_prisons
+        - group_exclude_from_prison
+      label: 'Where would you like this content to appear?'
+      region: content
+      parent_name: ''
+      weight: 9
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_exclude_from_prison:
+      children:
+        - field_exclude_from_prison
+      label: 'Exclude from prison'
+      region: content
+      parent_name: group_prison_categories
+      weight: 15
+      format_type: details_open_non_empty
+      format_settings:
+        show_empty_fields: 0
+        id: ''
+        classes: ''
+        description: 'Select prison(s) that this content should be excluded from. '
+        required_fields: 1
+        open: false
+    group_published_date:
+      children:
+        - published_at
+      label: 'Published date'
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: details_sidebar
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: ''
+        required_fields: true
+        weight: 0
+id: node.urgent_banner.default
+targetEntityType: node
+bundle: urgent_banner
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_exclude_from_prison:
+    type: term_reference_tree
+    weight: 16
+    region: content
+    settings:
+      start_minimized: false
+      leaves_only: true
+      select_parents: false
+      cascading_selection: 0
+      cascading_selection_enforce: false
+      max_depth: 0
+    third_party_settings: {  }
+  field_more_info_page:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_prison_owner:
+    type: select2_entity_reference
+    weight: 15
+    region: content
+    settings:
+      width: 100%
+      autocomplete: false
+      match_operator: CONTAINS
+      match_limit: 10
+    third_party_settings: {  }
+  field_prisons:
+    type: term_reference_tree
+    weight: 14
+    region: content
+    settings:
+      start_minimized: false
+      leaves_only: true
+      select_parents: false
+      cascading_selection: 0
+      cascading_selection_enforce: false
+      max_depth: 0
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  path: true
+  promote: true
+  sticky: true

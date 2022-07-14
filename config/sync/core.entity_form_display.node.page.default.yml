@@ -25,6 +25,7 @@ dependencies:
     - field_group
     - image
     - path
+    - publication_date
     - scheduler
     - select2
     - term_reference_tree
@@ -167,7 +168,7 @@ content:
     weight: 3
     region: content
     settings:
-      rows: 9
+      rows: 35
       summary_rows: 3
       placeholder: ''
       show_summary: false
@@ -276,6 +277,12 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

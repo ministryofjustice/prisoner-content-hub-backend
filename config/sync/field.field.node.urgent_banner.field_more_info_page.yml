@@ -1,0 +1,37 @@
+uuid: 30f62369-8b84-4922-80a5-baec92a66cb3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_more_info_page
+    - node.type.link
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+    - node.type.urgent_banner
+id: node.urgent_banner.field_more_info_page
+field_name: field_more_info_page
+entity_type: node
+bundle: urgent_banner
+label: 'More info page'
+description: "Set a page that the \"more info\" text should link to. This can be left empty, and no link we be displayed. <br/>\r\nNote that the page needs to have been already created.  To add a new page, <a href=\"/node/add\" target=\"_blank\">click here</a>."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      moj_radio_item: moj_radio_item
+      page: page
+      link: link
+      moj_pdf_item: moj_pdf_item
+      moj_video_item: moj_video_item
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: moj_radio_item
+field_type: entity_reference
