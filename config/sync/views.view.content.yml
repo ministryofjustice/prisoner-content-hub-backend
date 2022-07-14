@@ -957,6 +957,7 @@ display:
             featured_articles: featured_articles
             help_page: help_page
             link: link
+            homepage: homepage
             moj_pdf_item: moj_pdf_item
             moj_video_item: moj_video_item
           group: 1
