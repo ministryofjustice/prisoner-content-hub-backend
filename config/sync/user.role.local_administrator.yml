@@ -6,6 +6,7 @@ dependencies:
     - filter.format.full_html
     - node.type.featured_articles
     - node.type.help_page
+    - node.type.homepage
     - node.type.link
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
@@ -58,6 +59,7 @@ permissions:
   - 'clone taxonomy_term entity'
   - 'create featured_articles content'
   - 'create help_page content'
+  - 'create homepage content'
   - 'create link content'
   - 'create moj_pdf_item content'
   - 'create moj_radio_item content'
@@ -76,6 +78,7 @@ permissions:
   - 'delete terms in series'
   - 'edit any featured_articles content'
   - 'edit any help_page content'
+  - 'edit any homepage content'
   - 'edit any link content'
   - 'edit any moj_pdf_item content'
   - 'edit any moj_radio_item content'
@@ -83,6 +86,7 @@ permissions:
   - 'edit any page content'
   - 'edit own featured_articles content'
   - 'edit own help_page content'
+  - 'edit own homepage content'
   - 'edit own link content'
   - 'edit own moj_pdf_item content'
   - 'edit own moj_radio_item content'
@@ -107,6 +111,7 @@ permissions:
   - 'execute views_bulk_edit all'
   - 'revert featured_articles revisions'
   - 'revert help_page revisions'
+  - 'revert homepage revisions'
   - 'revert link revisions'
   - 'revert moj_pdf_item revisions'
   - 'revert moj_radio_item revisions'
