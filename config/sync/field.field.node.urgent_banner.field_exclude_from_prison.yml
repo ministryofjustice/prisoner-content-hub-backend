@@ -1,0 +1,29 @@
+uuid: 0990d9fa-420e-4207-83f3-e837b1fa6e45
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_exclude_from_prison
+    - node.type.urgent_banner
+    - taxonomy.vocabulary.prisons
+id: node.urgent_banner.field_exclude_from_prison
+field_name: field_exclude_from_prison
+entity_type: node
+bundle: urgent_banner
+label: 'Exclude from prison'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prisons: prisons
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

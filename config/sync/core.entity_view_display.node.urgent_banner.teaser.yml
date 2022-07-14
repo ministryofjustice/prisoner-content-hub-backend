@@ -1,0 +1,31 @@
+uuid: 141a8128-a9e0-4d5d-a35c-c1df6a48e914
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.urgent_banner.field_exclude_from_prison
+    - field.field.node.urgent_banner.field_more_info_page
+    - field.field.node.urgent_banner.field_prison_owner
+    - field.field.node.urgent_banner.field_prisons
+    - node.type.urgent_banner
+  module:
+    - user
+id: node.urgent_banner.teaser
+targetEntityType: node
+bundle: urgent_banner
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  breadcrumbs: true
+  field_exclude_from_prison: true
+  field_more_info_page: true
+  field_prison_owner: true
+  field_prisons: true
+  published_at: true
+  search_api_excerpt: true

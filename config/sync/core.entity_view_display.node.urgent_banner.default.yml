@@ -1,0 +1,58 @@
+uuid: 41ff7d81-4386-45ac-bfca-2a079cf853dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.urgent_banner.field_exclude_from_prison
+    - field.field.node.urgent_banner.field_more_info_page
+    - field.field.node.urgent_banner.field_prison_owner
+    - field.field.node.urgent_banner.field_prisons
+    - node.type.urgent_banner
+  module:
+    - user
+id: node.urgent_banner.default
+targetEntityType: node
+bundle: urgent_banner
+mode: default
+content:
+  field_exclude_from_prison:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_more_info_page:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_prison_owner:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_prisons:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  breadcrumbs: true
+  published_at: true
+  search_api_excerpt: true
