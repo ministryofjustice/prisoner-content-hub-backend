@@ -57,6 +57,7 @@ module:
   maintenance_exempt: 0
   menu_ui: 0
   monolog: 0
+  mysql: 0
   node: 0
   node_edit_protection: 0
   optgroup_taxonomy_select: 0
