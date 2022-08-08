@@ -58,15 +58,18 @@ function prisoner_hub_taxonomy_sorting_entity_presave(Drupal\Core\Entity\EntityI
 function prisoner_hub_taxonomy_sorting_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface && $entity->hasField('field_sort_by')) {
     /** @var ContentEntityInterface $original_entity */
-    if ($entity->original->get('field_sort_by')->getString() != $entity->get('field_sort_by')->getString()) {
-      $results = \Drupal::entityQuery('node')->condition('field_moj_series', $entity->id())->execute();
-      $nodes = Node::loadMultiple($results);
-      /** @var \Drupal\node\NodeInterface $node */
-      foreach ($nodes as $node) {
-        // Resave the node to invoke hook_entity_presave().
-        $node->save();
-      }
-    }
+    // Temporarily disable so that prisoner_content_hub_profile_deploy_update_series_to_date_sorting()
+    // can run.
+    // TODO: Re-enable this afterwards.
+//    if ($entity->original->get('field_sort_by')->getString() != $entity->get('field_sort_by')->getString()) {
+//      $results = \Drupal::entityQuery('node')->condition('field_moj_series', $entity->id())->execute();
+//      $nodes = Node::loadMultiple($results);
+//      /** @var \Drupal\node\NodeInterface $node */
+//      foreach ($nodes as $node) {
+//        // Resave the node to invoke hook_entity_presave().
+//        $node->save();
+//      }
+//    }
   }
 }
 
