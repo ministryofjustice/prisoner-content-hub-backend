@@ -482,8 +482,14 @@ function prisoner_content_hub_profile_deploy_update_series_to_date_sorting() {
       ->accessCheck(FALSE)
       ->execute();
     $nodes = Node::loadMultiple($result);
+
+    // Set the release date value for content (this won't exist as it was
+    // previously using episode numbers).
     foreach ($nodes as $node) {
       $date = NULL;
+
+      // Try to establish date from the title, as often this is put there.
+
       // Format NPR Friday | 29 July | NPR
       // OR NPR Friday | 29 July 2022 | NPR
       $parts = explode('|', $node->label());
@@ -525,7 +531,7 @@ function prisoner_content_hub_profile_deploy_update_series_to_date_sorting() {
         }
       }
 
-      // If still no date found, use the created date.
+      // If no date fround from title, use the created date.
       if (!$date) {
         $date = $node->get('created')->value;
       }
@@ -605,6 +611,7 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
 
   foreach ($terms as $term) {
 
+    // Create a new category and copy all over all the previous values.
     $new_category = Term::create([
       'vid' => 'moj_categories',
       'name' => $term->label(),
@@ -617,6 +624,9 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
       'parent' => $term->get('field_category')->getValue(),
     ]);
     $new_category->save();
+
+    // Now update all the content assigned to the series to now be assigned
+    // the category.
     $result = Drupal::entityQuery('node')
       ->condition('field_moj_series', $term->id())
       ->accessCheck(FALSE)
@@ -633,6 +643,9 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
       $node->setRevisionUserId(334);
       $node->save();
     }
+
+    // Update any embedded links to the old series, as the id and url have
+    // now changed.
     $find = 'tags/' . $term->id();
     $replace = 'tags/' . $new_category->id();
     \Drupal::database()->query("UPDATE node__field_moj_description SET field_moj_description_value = REPLACE(field_moj_description_value, '" . $find . "', '" . $replace . "') WHERE field_moj_description_value LIKE '%" . $find . "%'");
