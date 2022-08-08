@@ -421,3 +421,222 @@ function prisoner_content_hub_profile_deploy_reimport_layout_builder_config() {
     $config_storage->write($config, $source->read($config));
   }
 }
+
+
+/**
+ * Update series to use release date sorting.
+ *
+ * For list of series, see https://docs.google.com/spreadsheets/d/1rpF-uYfU2pkTVKTWY6Un4jq9Y8NCNYPfl0_GFXRnUIQ
+ */
+function prisoner_content_hub_profile_deploy_update_series_to_date_sorting() {
+  $series_to_convert = [
+    978,
+    964,
+    965,
+    989,
+    1100,
+    1106,
+    1108,
+    1119,
+    1168,
+    1172,
+    1183,
+    1324,
+    933,
+    938,
+    940,
+    947,
+    1254,
+    1255,
+    1256,
+    1319,
+    1320,
+    1323,
+    1347,
+    1348,
+    1353,
+    1382,
+    1414,
+    1416,
+    1427,
+    1441,
+    1445,
+    1451,
+    1475,
+    1478,
+    1485,
+    1524,
+    1529,
+    1536,
+  ];
+  foreach ($series_to_convert as $series_id) {
+    $term = Term::load($series_id);
+    $term->set('field_sort_by', 'release_date_desc');
+    $term->save();
+
+    $previous_content_date = NULL;
+    $result = \Drupal::entityQuery('node')
+      ->condition('field_moj_series', $series_id)
+      ->sort('series_sort_value')
+      ->sort('created', 'DESC')
+      ->accessCheck(FALSE)
+      ->execute();
+    $nodes = Node::loadMultiple($result);
+    foreach ($nodes as $node) {
+      $date = NULL;
+      // Format NPR Friday | 29 July | NPR
+      // OR NPR Friday | 29 July 2022 | NPR
+      $parts = explode('|', $node->label());
+      if (isset($parts[1])) {
+        $date_string = trim($parts[1]);
+        if (is_numeric(substr($date_string, -4))) {
+          $date = strtotime($date_string);
+          if ($date) {
+            \Drupal::messenger()->addMessage('Converted ' . $date_string);
+          }
+        }
+        else {
+          $date = strtotime($date_string . ' ' . date('Y', $node->get('created')->value));
+          if ($date) {
+            \Drupal::messenger()
+              ->addMessage('Converted ' . $date_string . ' with year ' . date('Y', $node->get('created')->value));
+          }
+        }
+      }
+      if (!$date) {
+        // Format NPR Sunday Service: 3 May
+        // OR Youth Council Meeting 3rd March 2022
+        $parts = explode(':', $node->label());
+        if (isset($parts[1])) {
+          $date_string = trim($parts[1]);
+          if (is_numeric(substr($date_string, -4))) {
+            $date = strtotime($date_string);
+            if ($date) {
+              \Drupal::messenger()->addMessage('Converted ' . $date_string);
+            }
+          }
+          else {
+            $date = strtotime($date_string . ' ' . date('Y', $node->get('created')->value));
+            if ($date) {
+              \Drupal::messenger()
+                ->addMessage('Converted ' . $date_string . ' with year ' . date('Y', $node->get('created')->value));
+            }
+          }
+        }
+      }
+
+      // If still no date found, use the created date.
+      if (!$date) {
+        $date = $node->get('created')->value;
+      }
+
+      // If node is published, we want to ensure it keeps the existing order.
+      if ($node->isPublished()) {
+        // To ensure the existing order is retained, overwrite the date if the new
+        // one places this before the previous content item.
+        if ($previous_content_date && $date > $previous_content_date) {
+          $date = $previous_content_date - 86400;
+        }
+
+        $previous_content_date = $date;
+      }
+
+      $node->set('field_release_date', date('Y-m-d', $date));
+      $node->save();
+    }
+  }
+}
+
+/**
+ * Convert series to subcategories.
+ *
+ * For list of series, see https://docs.google.com/spreadsheets/d/1rpF-uYfU2pkTVKTWY6Un4jq9Y8NCNYPfl0_GFXRnUIQ
+ */
+function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
+  $series_to_convert = [
+    953,
+    966,
+    975,
+    1176,
+    1201,
+    1202,
+    1203,
+    1229,
+    1230,
+    1231,
+    1232,
+    1239,
+    1241,
+    1242,
+    1243,
+    1245,
+    1246,
+    1251,
+    1313,
+    1315,
+    1351,
+    1374,
+    1377,
+    1380,
+    1383,
+    1411,
+    1413,
+    1420,
+    1424,
+    1425,
+    1430,
+    1442,
+    1452,
+    1453,
+    1479,
+    1483,
+    1484,
+    1489,
+    1490,
+    1517,
+    1519,
+    1523,
+    1541,
+    1544,
+    1545,
+  ];
+
+  $terms = Term::loadMultiple($series_to_convert);
+
+  foreach ($terms as $term) {
+
+    $new_category = Term::create([
+      'vid' => 'moj_categories',
+      'name' => $term->label(),
+      'description' => $term->get('description')->getValue(),
+      'field_moj_thumbnail_image' => $term->get('field_moj_thumbnail_image')->getValue(),
+      'field_is_homepage_updates' => $term->get('field_is_homepage_updates')->getValue(),
+      'field_exclude_feedback' => $term->get('field_exclude_feedback')->getValue(),
+      'field_prisons' => $term->get('field_prisons')->getValue(),
+      'field_exclude_from_prison' => $term->get('field_exclude_from_prison')->getValue(),
+      'parent' => $term->get('field_category')->getValue(),
+    ]);
+    $new_category->save();
+    $result = Drupal::entityQuery('node')
+      ->condition('field_moj_series', $term->id())
+      ->accessCheck(FALSE)
+      ->execute();
+    $nodes = Node::loadMultiple($result);
+    foreach ($nodes as $node) {
+      $node->set('field_moj_top_level_categories', [
+        ['target_id' => $new_category->id()]
+      ]);
+      $node->set('field_moj_series', NULL);
+      $node->set('field_not_in_series', 1);
+      $node->revision_log = 'Bulk update, converting series to subcategories, automatically updating content to be assigned to the new subcategory.';
+      $node->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+      $node->setRevisionUserId(334);
+      $node->save();
+    }
+    $find = 'tags/' . $term->id();
+    $replace = 'tags/' . $new_category->id();
+    \Drupal::database()->query("UPDATE node__field_moj_description SET field_moj_description_value = REPLACE(field_moj_description_value, '" . $find . "', '" . $replace . "') WHERE field_moj_description_value LIKE '%" . $find . "%'");
+    $term->delete();
+
+  }
+}
