@@ -37,6 +37,7 @@
         "drupal/jsonapi_menu_items": "^1.2",
         "drupal/jsonapi_page_limit": "^1.0@beta",
         "drupal/jsonapi_search_api": "^1.0@RC",
+        "drupal/linkit": "^6.0",
         "drupal/maintenance_exempt": "1.x-dev",
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^5.0",
@@ -44,6 +45,7 @@
         "drupal/node_edit_protection": "^1.0",
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/pathauto": "^1.8",
+        "drupal/pathologic": "^1.0@alpha",
         "drupal/profile_switcher": "1.0-alpha5",
         "drupal/publication_date": "^2.0@beta",
         "drupal/raven": "^3.2",
@@ -185,6 +187,9 @@
             },
             "drupal/publication_date": {
                 "Issue #2983348: Published on empty for existing nodes.": "patches/publication_date-fill_published_at-2983348-60-for-composer.patch"
+            },
+            "drupal/pathologic": {
+                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-18.patch"
             }
         },
         "patches-ignore": {

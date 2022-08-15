@@ -54,6 +54,7 @@ module:
   layout_builder: 0
   layout_discovery: 0
   link: 0
+  linkit: 0
   maintenance_exempt: 0
   menu_ui: 0
   monolog: 0
@@ -66,6 +67,7 @@ module:
   page_cache_persist: 0
   path: 0
   path_alias: 0
+  pathologic: 0
   prisoner_hub_breadcrumbs: 0
   prisoner_hub_cms_help: 0
   prisoner_hub_content_suggestions: 0
