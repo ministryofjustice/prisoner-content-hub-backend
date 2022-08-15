@@ -21,6 +21,13 @@ use Symfony\Component\Routing\Route;
 class Explore extends EntityQueryResourceBase {
 
   /**
+   * Array of content types to use in the resource.
+   *
+   * @var array|string[]
+   */
+  static array $content_types = ['moj_radio_item', 'page', 'link', 'moj_pdf_item', 'moj_video_item'];
+
+  /**
    * Process the resource request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -48,10 +55,7 @@ class Explore extends EntityQueryResourceBase {
     // See https://drupal.stackexchange.com/a/249153/4831
     $query->addTag('prisoner_hub_explore_sort_by_random');
 
-    // We only want to include certain content types that can be shown as tiles.
-    // TODO: Is there a better way to determine this other than checking they
-    // have the image field?
-    $query->exists('field_moj_thumbnail_image');
+    $query->condition('type', self::$content_types, 'IN');
 
     $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
 
