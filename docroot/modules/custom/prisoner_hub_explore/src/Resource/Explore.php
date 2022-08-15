@@ -48,8 +48,10 @@ class Explore extends EntityQueryResourceBase {
     // See https://drupal.stackexchange.com/a/249153/4831
     $query->addTag('prisoner_hub_explore_sort_by_random');
 
-    // Exclude homepage content types.
-    $query->condition('type', ['featured_articles', 'homepage'], 'NOT IN');
+    // We only want to include certain content types that can be shown as tiles.
+    // TODO: Is there a better way to determine this other than checking they
+    // have the image field?
+    $query->exists('field_moj_thumbnail_image');
 
     $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
 
