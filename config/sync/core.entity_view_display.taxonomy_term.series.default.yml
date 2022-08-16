@@ -44,25 +44,6 @@ third_party_settings:
               items_per_page: none
             weight: 0
             additional: {  }
-          28321f34-6156-40cc-85a2-31a3f5e4d954:
-            uuid: 28321f34-6156-40cc-85a2-31a3f5e4d954
-            region: content
-            configuration:
-              id: 'field_block:taxonomy_term:series:field_moj_thumbnail_image'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: image
-                label: above
-                settings:
-                  image_link: ''
-                  image_style: ''
-                  image_loading:
-                    attribute: lazy
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
         third_party_settings: {  }
 id: taxonomy_term.series.default
 targetEntityType: taxonomy_term
