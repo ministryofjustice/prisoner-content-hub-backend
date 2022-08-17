@@ -22,6 +22,7 @@ dependencies:
     - filter
     - node
     - prisoner_hub_prison_access_cms
+    - publication_date
     - raven
     - role_delegation
     - scheduler
@@ -119,6 +120,7 @@ permissions:
   - 'revert page revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'set any published on date'
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
