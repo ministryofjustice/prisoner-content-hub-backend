@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.prisons.field_primary_navigation
     - taxonomy.vocabulary.prisons
   module:
     - text
@@ -20,4 +21,5 @@ content:
     region: content
 hidden:
   breadcrumbs: true
+  field_primary_navigation: true
   search_api_excerpt: true
