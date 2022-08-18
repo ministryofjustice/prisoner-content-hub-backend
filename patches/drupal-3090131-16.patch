@@ -1,0 +1,24 @@
+diff --git a/core/modules/jsonapi/src/Controller/EntityResource.php b/core/modules/jsonapi/src/Controller/EntityResource.php
+index 9ce8a725ce..b17a59ae90 100644
+--- a/core/modules/jsonapi/src/Controller/EntityResource.php
++++ b/core/modules/jsonapi/src/Controller/EntityResource.php
+@@ -1062,9 +1062,16 @@ protected function respondWithCollection(ResourceObjectData $primary_data, Data
+     $response = $this->buildWrappedResponse($primary_data, $request, $includes, 200, [], $collection_links, $meta);
+
+     // When a new change to any entity in the resource happens, we cannot ensure
+-    // the validity of this cached list. Add the list tag to deal with that.
+-    $list_tag = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId())
+-      ->getListCacheTags();
++    // the validity of this cached list.
++    if ($resource_type->getBundle() && $resource_type->getBundle() !== $resource_type->getEntityTypeId()) {
++      // Add the list tag per bundle to deal with that.
++      $list_tag = [$resource_type->getEntityTypeId() . '_list:' . $resource_type->getBundle()];
++    }
++    else {
++      // Add the list tag to deal with that.
++      $list_tag = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId())
++        ->getListCacheTags();
++    }
+     $response->getCacheableMetadata()->addCacheTags($list_tag);
+     foreach ($primary_data as $entity) {
+       $response->addCacheableDependency($entity);
