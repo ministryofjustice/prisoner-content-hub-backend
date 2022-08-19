@@ -13,6 +13,7 @@ dependencies:
   module:
     - filter
     - node
+    - publication_date
     - raven
     - scheduler
     - system
@@ -45,6 +46,7 @@ permissions:
   - 'edit own page content'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'set any published on date'
   - 'use text format full_html'
   - 'view any unpublished featured_articles content'
   - 'view any unpublished homepage content'

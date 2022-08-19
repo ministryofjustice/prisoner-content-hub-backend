@@ -66,6 +66,8 @@ content:
     settings:
       image_link: ''
       image_style: ''
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 102
     region: content
@@ -131,4 +133,5 @@ hidden:
   breadcrumbs: true
   field_exclude_from_prison: true
   field_prisons: true
+  published_at: true
   search_api_excerpt: true
