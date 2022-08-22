@@ -1,0 +1,129 @@
+diff --git a/js/linkit.autocomplete.js b/js/linkit.autocomplete.js
+index 558278d..6f14ea7 100644
+--- a/js/linkit.autocomplete.js
++++ b/js/linkit.autocomplete.js
+@@ -80,7 +80,7 @@
+       $('input[name="attributes[data-entity-substitution]"]', $form).val(ui.item.substitution_id);
+     }
+ 
+-    event.target.value = ui.item.path;
++    event.target.value = ui.item.alias ? ui.item.alias : ui.item.path;
+ 
+     return false;
+   }
+diff --git a/src/Element/Linkit.php b/src/Element/Linkit.php
+index 2bb7963..1184c1e 100644
+--- a/src/Element/Linkit.php
++++ b/src/Element/Linkit.php
+@@ -41,6 +41,16 @@ class Linkit extends FormElement {
+    * {@inheritdoc}
+    */
+   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
++    if (!empty($input) && \Drupal::moduleHandler()->moduleExists('path_alias')) {
++      /** @var \Drupal\path_alias\AliasManagerInterface $aliasManager */
++      $aliasManager = \Drupal::service('path_alias.manager');
++
++      $path = $aliasManager->getPathByAlias($input);
++      if ($path !== $input) {
++        $input = $path;
++      }
++    }
++
+     return Textfield::valueCallback($element, $input, $form_state);
+   }
+ 
+@@ -86,6 +96,25 @@ class Linkit extends FormElement {
+    * {@inheritdoc}
+    */
+   public static function preRenderLinkitElement($element) {
++    if (empty($element['#default_value']) || empty($element['#value'])) {
++      return Textfield::preRenderTextfield($element);
++    }
++
++    if ($element['#value'][0] !== '/') {
++      return Textfield::preRenderTextfield($element);
++    }
++
++    if (\Drupal::moduleHandler()->moduleExists('path_alias')) {
++      /** @var \Drupal\path_alias\AliasManagerInterface $aliasManager */
++      $aliasManager = \Drupal::service('path_alias.manager');
++
++      $alias = $aliasManager->getAliasByPath($element['#value']);
++      if ($alias !== $element['#value']) {
++        $element['#default_value'] = $alias;
++        $element['#value'] = $alias;
++      }
++    }
++
+     return Textfield::preRenderTextfield($element);
+   }
+ 
+diff --git a/src/Plugin/Linkit/Matcher/EntityMatcher.php b/src/Plugin/Linkit/Matcher/EntityMatcher.php
+index e5a9413..99edf8c 100644
+--- a/src/Plugin/Linkit/Matcher/EntityMatcher.php
++++ b/src/Plugin/Linkit/Matcher/EntityMatcher.php
+@@ -426,7 +426,8 @@ class EntityMatcher extends ConfigurableMatcherBase {
+       ->setEntityUuid($entity->uuid())
+       ->setEntityTypeId($entity->getEntityTypeId())
+       ->setSubstitutionId($this->configuration['substitution_type'])
+-      ->setPath($this->buildPath($entity));
++      ->setPath($this->buildPath($entity))
++      ->setAlias($this->buildPath($entity));
+ 
+     return $suggestion;
+   }
+@@ -491,7 +492,7 @@ class EntityMatcher extends ConfigurableMatcherBase {
+    *   The path for this entity.
+    */
+   protected function buildPath(EntityInterface $entity) {
+-    $path = $entity->toUrl('canonical', ['path_processing' => FALSE])->toString();
++    $path = $entity->toUrl('canonical')->toString();
+     // For media entities, check if standalone URLs are allowed. If not, then
+     // strip '/edit' from the end of the canonical URL returned
+     // by $entity->toUrl().
+diff --git a/src/Suggestion/EntitySuggestion.php b/src/Suggestion/EntitySuggestion.php
+index bd55db3..618a84b 100644
+--- a/src/Suggestion/EntitySuggestion.php
++++ b/src/Suggestion/EntitySuggestion.php
+@@ -28,6 +28,13 @@ class EntitySuggestion extends DescriptionSuggestion {
+    */
+   protected $substitutionId;
+ 
++  /**
++   * The entity's path alias.
++   *
++   * @var string
++   */
++  protected $alias;
++
+   /**
+    * Sets the entity uuid.
+    *
+@@ -67,6 +74,19 @@ class EntitySuggestion extends DescriptionSuggestion {
+     return $this;
+   }
+ 
++  /**
++   * Sets the path alias.
++   *
++   * @param string $alias
++   *   The path alias.
++   *
++   * @return $this
++   */
++  public function setAlias($alias) {
++    $this->alias = $alias;
++    return $this;
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -76,6 +96,7 @@ class EntitySuggestion extends DescriptionSuggestion {
+       'entity_uuid' => $this->entityUuid,
+       'entity_type_id' => $this->entityTypeId,
+       'substitution_id' => $this->substitutionId,
++      'alias' => $this->alias,
+     ];
+   }
+ 
