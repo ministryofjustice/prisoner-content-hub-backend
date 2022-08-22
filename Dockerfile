@@ -95,6 +95,9 @@ RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_se
 # Set no memory limit (for PHP running as cli only).
 RUN echo 'memory_limit = -1' >> /usr/local/etc/php/php-cli.ini
 
+# Enable mod_status, used for Promotheus reporting.
+RUN a2enmod status
+
 ###########################################################################################
 # Copy repository files
 ###########################################################################################

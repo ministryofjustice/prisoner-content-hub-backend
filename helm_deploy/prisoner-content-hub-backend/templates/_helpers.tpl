@@ -6,6 +6,10 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{- define "prisoner-content-hub-backend-prometheus-metrics.name" -}}
+{{ include "prisoner-content-hub-backend.name" . }}-prometheus-metrics
+{{- end }}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -36,12 +40,29 @@ heritage: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "prisoner-content-hub-backend-prometheus-metrics.labels" -}}
+chart: {{ include "prisoner-content-hub-backend.chart" . }}
+{{ include "prisoner-content-hub-backend-prometheus-metrics.selectorLabels" . }}
+heritage: prisoner-content-hub-backend-prometheus-metrics
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "prisoner-content-hub-backend.selectorLabels" -}}
 app: {{ include "prisoner-content-hub-backend.name" . }}
 release: {{ .Release.Name }}
 tier: {{ .Values.tier }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "prisoner-content-hub-backend-prometheus-metrics.selectorLabels" -}}
+app: prisoner-content-hub-backend
+release: prisoner-content-hub-backend-prometheus-metrics
 {{- end }}
 
 {{/*
@@ -102,3 +123,10 @@ Create a string from a list of values joined by a comma
 {{- $local := dict "first" true -}}
 {{- range $k, $v := . -}}{{- if not $local.first -}},{{- end -}}{{- $v -}}{{- $_ := set $local "first" false -}}{{- end -}}
 {{- end -}}
+
+{{/*
+Create args for running the apache exporter docker image.
+*/}}
+{{- define "prisoner-content-hub-backend-prometheus-metrics.apacheExporterArgs" -}}
+args: ["--scrape_uri={{ include "prisoner-content-hub-backend.internalHost" . }}/server-status?auto"]
+{{- end }}

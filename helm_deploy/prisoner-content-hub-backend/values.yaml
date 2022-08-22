@@ -8,6 +8,11 @@ image:
   pullPolicy: IfNotPresent
   tag: latest
 
+prometheusApacheExporterImage:
+  repository: lusotycoon/apache-exporter
+  pullPolicy: IfNotPresent
+  tag: v0.11.0
+
 tier: backend
 
 application:
