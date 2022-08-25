@@ -28,7 +28,7 @@ spec:
           containers:
           - name: database-backup-cronjob
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            args: ["--target database-backup-build"]
+            args: ["--target some-random-build"]
             command:
               - /bin/entrypoint.sh
             volumeMounts:
