@@ -118,20 +118,13 @@ COPY Makefile Makefile
 RUN chmod u-w docroot/sites/default/settings.php \
   && chmod u-w docroot/sites/default/services.yml
 
-###########################################################################################
-# Create test image
-###########################################################################################
-FROM base AS test
+FROM base as base-extended
 
 # Install mysql cli client, required for running certain drush commands.
 RUN apt-get update && apt-get install -y \
   mariadb-client
 
 COPY Makefile Makefile
-COPY phpunit.xml phpunit.xml
-
-# Remove the memory limit for the CLI only.
-RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
 
 # Install dependencies (with dev)
 RUN composer install \
@@ -142,6 +135,17 @@ RUN composer install \
 
 # Change ownership of files
 RUN chown -R www-data:www-data /var/www
+
+###########################################################################################
+# Create test image
+###########################################################################################
+FROM base-extended AS test
+
+COPY Makefile Makefile
+COPY phpunit.xml phpunit.xml
+
+# Remove the memory limit for the CLI only.
+RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
 
 USER www-data
 RUN mkdir -p ~/phpunit/browser_output
@@ -155,11 +159,13 @@ RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
 
 USER www-data
 
-FROM base as database-backup-build
+FROM base-extended as database-backup-build
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.1.27.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
+
+USER www-data
 
 ###########################################################################################
 # Create optimised build
