@@ -9,9 +9,8 @@ metadata:
 data:
   entrypoint.sh: |-
   {{ .Files.Get "database-backup.sh" | indent 4 }}
-
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "prisoner-content-hub-backend.fullname" . }}-database-backup-cronjob
