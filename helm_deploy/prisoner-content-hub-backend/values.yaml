@@ -93,3 +93,6 @@ ingress:
 
 cron:
   schedule: "0 */2 * * *"
+
+databaseBackup:
+  enabled: true
