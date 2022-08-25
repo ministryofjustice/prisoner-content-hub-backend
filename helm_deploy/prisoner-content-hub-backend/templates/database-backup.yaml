@@ -55,4 +55,9 @@ spec:
                     name: {{ .Values.application.s3.secretName }}
                     key: bucket_name
           restartPolicy: Never
+          volumes:
+            - name: database-backup-script
+              configMap:
+                name: database-backup-script
+                defaultMode: 0755
   {{- end }}
