@@ -22,7 +22,11 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.databaseRefresh.enabled }}
+          command: ["./scripts/database-refresh.sh"]
+          {{ else }}
           command: ["make", "deploy"]
+          {{ end }}
 {{ include "drupal-deployment.envs" . | nindent 10 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

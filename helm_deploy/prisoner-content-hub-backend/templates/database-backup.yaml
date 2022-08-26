@@ -8,7 +8,7 @@ metadata:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 data:
   entrypoint.sh: |-
-{{ .Files.Get "database-backup.sh" | indent 4 }}
+{{ .Files.Get "../scripts/database-backup.sh" | indent 4 }}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -28,7 +28,6 @@ spec:
           containers:
           - name: database-backup-cronjob
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            args: ["--target some-random-build"]
             command:
               - /bin/entrypoint.sh
             volumeMounts:
