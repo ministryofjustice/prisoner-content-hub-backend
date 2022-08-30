@@ -22,8 +22,8 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{ if .Values.databaseRefresh.enabled }}
-          command: ["./scripts/database-refresh.sh"]
+          {{ if .Values.dbRefresh.enabled }}
+          command: ["./scripts/db-refresh.sh"]
           {{ else }}
           command: ["make", "deploy"]
           {{ end }}

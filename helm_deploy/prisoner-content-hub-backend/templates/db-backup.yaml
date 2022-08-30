@@ -1,19 +1,19 @@
-{{- if .Values.databaseRefresh.enabled -}}
+{{- if .Values.dbBackup.enabled -}}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: database-refresh-script
+  name: db-backup-script
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 data:
   entrypoint.sh: |-
-{{ .Files.Get "../database-refresh.sh" | indent 4 }}
+{{ .Files.Get "../scripts/db-backup.sh" | indent 4 }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "prisoner-content-hub-backend.fullname" . }}-database-refresh-cronjob
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}-db-backup-cronjob
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
@@ -26,37 +26,37 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
-          - name: database-refresh-cronjob
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          - name: db-backup-cronjob
+            image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
             command:
               - /bin/entrypoint.sh
             volumeMounts:
-              - name: database-refresh-script
+              - name: db-backup-script
                 mountPath: /bin/entrypoint.sh
                 readOnly: true
                 subPath: entrypoint.sh
 {{ include "drupal-deployment.envs" . | nindent 12 }}
-              - name: DATABASE_refresh_S3_KEY
+              - name: DB_BACKUP_S3_KEY
                 valueFrom:
                   secretKeyRef:
                     name: {{ .Values.application.s3.secretName }}
                     key: access_key_id
-              - name: DATABASE_refresh_S3_SECRET
+              - name: DB_BACKUP_S3_SECRET
                 valueFrom:
                   secretKeyRef:
                     name: {{ .Values.application.s3.secretName }}
                     key: secret_access_key
-              - name: DATABASE_refresh_S3_REGION
+              - name: DB_BACKUP_S3_REGION
                 value: {{ .Values.application.s3.region }}
-              - name: DATABASE_refresh_S3_BUCKET
+              - name: DB_BACKUP_S3_BUCKET
                 valueFrom:
                   secretKeyRef:
                     name: {{ .Values.application.s3.secretName }}
                     key: bucket_name
           restartPolicy: Never
           volumes:
-            - name: database-refresh-script
+            - name: db-backup-script
               configMap:
-                name: database-refresh-script
+                name: db-backup-script
                 defaultMode: 0755
   {{- end }}
