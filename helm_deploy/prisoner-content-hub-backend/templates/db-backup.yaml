@@ -35,24 +35,7 @@ spec:
                 mountPath: /bin/entrypoint.sh
                 readOnly: true
                 subPath: entrypoint.sh
-{{ include "drupal-deployment.envs" . | nindent 12 }}
-              - name: DB_BACKUP_S3_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.application.s3.secretName }}
-                    key: access_key_id
-              - name: DB_BACKUP_S3_SECRET
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.application.s3.secretName }}
-                    key: secret_access_key
-              - name: DB_BACKUP_S3_REGION
-                value: {{ .Values.application.s3.region }}
-              - name: DB_BACKUP_S3_BUCKET
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.application.s3.secretName }}
-                    key: bucket_name
+{{ include "db-backup.envs" . | nindent 12 }}
           restartPolicy: Never
           volumes:
             - name: db-backup-script

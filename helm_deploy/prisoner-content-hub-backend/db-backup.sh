@@ -1,12 +1,15 @@
 #!/bin/bash
 set -ue
 
+echo "[mysqldump]" > ~/.my.cnf
+echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
+echo "password=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
+
 filename="db_backup_$(date +"%F %T").sql"
-pathToFile="~/${filename}"
-drush sql-dump --result-file="${pathToFile}"
+mysqldump ${HUB_DB_ENV_MYSQL_DATABASE} > ${filename}
 
 echo "[default]" > ~/.aws/credentials
 echo "aws_access_key_id=${DB_BACKUP_S3_KEY}"
 echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}"
 
-aws s3 mv ${pathToFile} s3://${DB_BACKUP_S3_BUCKET}/${filename} --region=${DB_BACKUP_S3_REGION}
+aws s3 mv ${filename} s3://${DB_BACKUP_S3_BUCKET}/${filename} --region=${DB_BACKUP_S3_REGION}
