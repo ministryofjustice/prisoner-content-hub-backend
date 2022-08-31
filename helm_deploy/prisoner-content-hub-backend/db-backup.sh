@@ -1,6 +1,7 @@
 #!/bin/bash
 set -ue
 
+whoami
 echo "[mysqldump]" > ${HOME}/.my.cnf
 echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ${HOME}/.my.cnf
 echo "password=${HUB_DB_ENV_MYSQL_USER}" >> ${HOME}/.my.cnf
