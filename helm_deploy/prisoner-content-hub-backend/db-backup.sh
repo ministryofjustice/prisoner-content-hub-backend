@@ -6,7 +6,7 @@ echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
 echo "password=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
 
 filename="db_backup_$(date +"%F-%H%M%S").sql"
-mysqldump ${HUB_DB_ENV_MYSQL_DATABASE} > ~/${filename}
+mysqldump -h ${HUB_DB_PORT_3306_TCP_ADDR} ${HUB_DB_ENV_MYSQL_DATABASE} > ~/${filename}
 
 echo "[default]" > ~/.aws/credentials
 echo "aws_access_key_id=${DB_BACKUP_S3_KEY}" >> ~/.aws/credentials
