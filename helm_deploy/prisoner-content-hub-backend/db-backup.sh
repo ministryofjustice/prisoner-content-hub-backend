@@ -10,6 +10,7 @@ echo "column-statistics=0" >> ~/.my.cnf
 filename="db_backup_$(date +"%F-%H%M%S").sql"
 mysqldump ${HUB_DB_ENV_MYSQL_DATABASE} > ~/${filename}
 
+mkdir ~/.aws/
 echo "[default]" > ~/.aws/credentials
 echo "aws_access_key_id=${DB_BACKUP_S3_KEY}" >> ~/.aws/credentials
 echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}" >> ~/.aws/credentials
