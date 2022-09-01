@@ -19,12 +19,16 @@ metadata:
 spec:
   schedule: "0 4 * * *"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
   jobTemplate:
     spec:
+      # Tidy up all jobs after 4 days
+      ttlSecondsAfterFinished: 345600
+      backoffLimit: 0
+      activeDeadlineSeconds: 2400
       template:
         spec:
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
           - name: db-refresh-cronjob
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
