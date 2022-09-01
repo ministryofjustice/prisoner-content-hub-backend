@@ -113,7 +113,6 @@ COPY ./apache/ /etc/apache2/
 COPY docroot/sites/ docroot/sites/
 COPY config/ config/
 COPY Makefile Makefile
-COPY scripts/ scripts/
 
 # Remove write permissions for added security
 RUN chmod u-w docroot/sites/default/settings.php \
