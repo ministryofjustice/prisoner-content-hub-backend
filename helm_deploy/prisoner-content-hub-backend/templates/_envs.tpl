@@ -115,18 +115,18 @@ env:
   - name: DB_BACKUP_S3_KEY
     valueFrom:
       secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
+        name: db-backups-s3
         key: access_key_id
   - name: DB_BACKUP_S3_SECRET
     valueFrom:
       secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
+        name: db-backups-s3
         key: secret_access_key
   - name: DB_BACKUP_S3_REGION
-    value: {{ .Values.application.s3.region }}
+    value: db-backups-s3
   - name: DB_BACKUP_S3_BUCKET
     valueFrom:
       secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
+        name: db-backups-s3
         key: bucket_name
 {{- end -}}
