@@ -1,13 +1,25 @@
 #!/bin/bash
 set -ue
 
+mkdir ~/.aws
 echo "[default]" > ~/.aws/credentials
 echo "aws_access_key_id=${DB_BACKUP_S3_KEY}"
 echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}"
 
-OBJECT="$(aws s3 ls --profile $BUCKET --recursive | sort | tail -n 1 | awk '{print $4}')"
-aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$OBJECT $OBJECT
+# Find the most recent file in the S3 bucket.
+OBJECT="$(aws s3 ls $BUCKET --recursive | grep '.sql' | sort | tail -n 1 | awk '{print $4}')"
+if [ -z "$OBJECT" ]
+then
+  echo "No database backup files found.  Unable to perform database refresh."
+  # Exit with error.
+  exit 1
+fi
 
-drush sql-drop -y
-drush sql-cli < $OBJECT
-make deploy
+aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$OBJECT ~/{$OBJECT}
+
+echo "[mysql]" > ~/.my.cnf
+echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
+echo "password=${HUB_DB_ENV_MYSQL_PASSWORD}" >> ~/.my.cnf
+echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
+
+mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/{$OBJECT}
