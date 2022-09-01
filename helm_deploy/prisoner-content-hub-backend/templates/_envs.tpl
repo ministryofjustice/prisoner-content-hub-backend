@@ -123,7 +123,7 @@ env:
         name: db-backups-s3
         key: secret_access_key
   - name: DB_BACKUP_S3_REGION
-    value: db-backups-s3
+    value: {{ .Values.dbBackup.s3.region }}
   - name: DB_BACKUP_S3_BUCKET
     valueFrom:
       secretKeyRef:

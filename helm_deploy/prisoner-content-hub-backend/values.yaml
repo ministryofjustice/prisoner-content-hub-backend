@@ -96,3 +96,5 @@ cron:
 
 dbBackup:
   enabled: true
+  s3:
+    region: eu-west-2
