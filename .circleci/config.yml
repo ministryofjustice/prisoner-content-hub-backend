@@ -58,7 +58,7 @@ commands:
           name: Refresh database
           command: |
             docker run -d --name hmpps-mysql-tools ghcr.io/ministryofjustice/hmpps-mysql-tools:latest
-            docker cp helm_deploy/prisoner-content-hub-backend/db-refresh.sh hmpps-mysql-tools:/db-refresh.sh
+            docker cp ~/git/helm_deploy/prisoner-content-hub-backend/db-refresh.sh hmpps-mysql-tools:/db-refresh.sh
             docker exec hmpps-mysql-tools db-refresh.sh
 
 jobs:
