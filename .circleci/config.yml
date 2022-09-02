@@ -167,6 +167,7 @@ jobs:
   deploy_cloud_platform_development_preview:
     <<: *defaults
     steps:
+      - database_refresh
       - release_to_namespace:
           environment: "development"
 
