@@ -46,6 +46,19 @@ commands:
               --set application.sentry_environment="${SENTRY_ENVIRONMENT}" \
               --set application.sentry_release="${CIRCLE_BUILD_NUM}"
           no_output_timeout: 1500
+  database_refresh:
+    description: "Refresh database"
+    steps:
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - checkout:
+          path: ~/git
+      - run:
+          name: Refresh database
+          command: |
+            docker run -d --name hmpps-mysql-tools ghcr.io/ministryofjustice/hmpps-mysql-tools:latest
+            docker exec hmpps-mysql-tools helm_deploy/prisoner-content-hub-backend/db-refresh.sh
 
 jobs:
   run_tests:
@@ -160,12 +173,14 @@ jobs:
   deploy_cloud_platform_development:
     <<: *defaults
     steps:
+      - database_refresh
       - release_to_namespace:
           environment: "development"
 
   deploy_cloud_platform_staging:
     <<: *defaults
     steps:
+      - database_refresh
       - release_to_namespace:
           environment: "staging"
 
