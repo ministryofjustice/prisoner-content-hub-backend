@@ -45,8 +45,6 @@ spec:
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             command: ["make", "deploy"]
   {{ include "drupal-deployment.envs" . | nindent 12 }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           restartPolicy: Never
           volumes:
             - name: db-refresh-script
