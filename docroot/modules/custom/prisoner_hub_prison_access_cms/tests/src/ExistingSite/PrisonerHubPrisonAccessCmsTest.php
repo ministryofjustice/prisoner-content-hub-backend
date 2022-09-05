@@ -43,12 +43,6 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->userPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
 
-    // Temporarily remove urgent banner content type, as this is not yet
-    // accessible local content managers.
-    // TODO: Remove these lines (re-instate tests) for urgent banner content type.
-    $key = array_search('urgent_banner', $this->contentTypes);
-    unset($this->contentTypes[$key]);
-
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
         ['target_id' => $this->prisonTerm->id()],
