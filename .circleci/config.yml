@@ -59,13 +59,13 @@ commands:
           name: Refresh database
           command: |
             docker run -d -t --name hmpps-mysql-tools \
-            --env DB_BACKUP_S3_KEY=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 -o json | jq '.data.access_key_id' | base64 --decode) \
-            --env DB_BACKUP_S3_SECRET=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 -o json | jq '.data.secret_access_key' | base64 --decode) \
+            --env DB_BACKUP_S3_KEY=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 --template={{.data.access_key_id}} | base64 --decode) \
+            --env DB_BACKUP_S3_SECRET=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 --template={{.data.secret_access_key}} | base64 --decode) \
             --env DB_BACKUP_S3_REGION=eu-west-2 \
-            --env HUB_DB_ENV_MYSQL_USER=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds -o json | jq '.data.database_username' | base64 --decode) \
-            --env HUB_DB_ENV_MYSQL_PASSWORD=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds -o json | jq '.data.database_password' | base64 --decode) \
-            --env HUB_DB_PORT_3306_TCP_ADDR=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds -o json | jq '.data.rds_instance_address' | base64 --decode) \
-            --env HUB_DB_ENV_MYSQL_DATABASE=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds -o json | jq '.data.database_name' | base64 --decode) \
+            --env HUB_DB_ENV_MYSQL_USER=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.database_username}} | base64 --decode) \
+            --env HUB_DB_ENV_MYSQL_PASSWORD=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.database_password}} | base64 --decode) \
+            --env HUB_DB_PORT_3306_TCP_ADDR=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.rds_instance_address}} | base64 --decode) \
+            --env HUB_DB_ENV_MYSQL_DATABASE=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.database_name}} | base64 --decode) \
             ghcr.io/ministryofjustice/hmpps-mysql-tools:latest
             docker cp ~/git/helm_deploy/prisoner-content-hub-backend/db-refresh.sh hmpps-mysql-tools:/db-refresh.sh
             docker exec hmpps-mysql-tools ./db-refresh.sh
