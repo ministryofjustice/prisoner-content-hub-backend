@@ -12,6 +12,7 @@ dependencies:
     - node.type.moj_radio_item
     - node.type.moj_video_item
     - node.type.page
+    - node.type.urgent_banner
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.series
   module:
@@ -69,14 +70,18 @@ permissions:
   - 'create page content'
   - 'create terms in moj_categories'
   - 'create terms in series'
+  - 'create urgent_banner content'
   - 'delete any help_page content'
   - 'delete any link content'
+  - 'delete any urgent_banner content'
   - 'delete help_page revisions'
   - 'delete link revisions'
   - 'delete own help_page content'
   - 'delete own link content'
+  - 'delete own urgent_banner content'
   - 'delete terms in moj_categories'
   - 'delete terms in series'
+  - 'delete urgent_banner revisions'
   - 'edit any featured_articles content'
   - 'edit any help_page content'
   - 'edit any homepage content'
@@ -85,6 +90,7 @@ permissions:
   - 'edit any moj_radio_item content'
   - 'edit any moj_video_item content'
   - 'edit any page content'
+  - 'edit any urgent_banner content'
   - 'edit own featured_articles content'
   - 'edit own help_page content'
   - 'edit own homepage content'
@@ -93,6 +99,7 @@ permissions:
   - 'edit own moj_radio_item content'
   - 'edit own moj_video_item content'
   - 'edit own page content'
+  - 'edit own urgent_banner content'
   - 'edit terms in moj_categories'
   - 'edit terms in series'
   - 'execute entity:publish_action node'
@@ -118,6 +125,7 @@ permissions:
   - 'revert moj_radio_item revisions'
   - 'revert moj_video_item revisions'
   - 'revert page revisions'
+  - 'revert urgent_banner revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'set any published on date'
@@ -134,3 +142,4 @@ permissions:
   - 'view own unpublished content'
   - 'view page revisions'
   - 'view scheduled content'
+  - 'view urgent_banner revisions'
