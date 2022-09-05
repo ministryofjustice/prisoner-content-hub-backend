@@ -231,7 +231,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $this->visit($edit_url->toString());
 
       // Test some fields are disabled, that appear on all content types.
-      $this->assertSession()->fieldDisabled('Title');
+      $this->assertSession()->fieldDisabled('title[0][value]');
       $this->assertSession()->fieldDisabled('Published');
 
       $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
@@ -344,7 +344,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected function assertUserCanEditNodeOnCurrentPage(string $contentType) {
     // Test some fields are enabled, that appear on all content types.
     try {
-      $this->assertSession()->fieldEnabled('Title');
+      $this->assertSession()->fieldEnabled('title[0][value]');
       $this->assertSession()->fieldEnabled('Published');
     }
     catch (\Exception $e) {
