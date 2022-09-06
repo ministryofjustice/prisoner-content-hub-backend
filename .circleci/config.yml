@@ -46,31 +46,6 @@ commands:
               --set application.sentry_environment="${SENTRY_ENVIRONMENT}" \
               --set application.sentry_release="${CIRCLE_BUILD_NUM}"
           no_output_timeout: 1500
-  database_refresh:
-    description: "Refresh database"
-    steps:
-      - hmpps/k8s_setup
-      - setup_remote_docker:
-          version: 20.10.14
-          docker_layer_caching: true
-      - checkout:
-          path: ~/git
-      - run:
-          name: Refresh database
-          command: |
-            docker run -d -t --name hmpps-mysql-tools \
-            --env DB_BACKUP_S3_KEY=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 --template={{.data.access_key_id}} | base64 --decode) \
-            --env DB_BACKUP_S3_SECRET=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 --template={{.data.secret_access_key}} | base64 --decode) \
-            --env DB_BACKUP_S3_BUCKET=$(kubectl -n ${KUBE_NAMESPACE} get secret db-backups-s3 --template={{.data.bucket_name}} | base64 --decode) \
-            --env DB_BACKUP_S3_REGION=eu-west-2 \
-            --env HUB_DB_ENV_MYSQL_USER=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.database_username}} | base64 --decode) \
-            --env HUB_DB_ENV_MYSQL_PASSWORD=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.database_password}} | base64 --decode) \
-            --env HUB_DB_PORT_3306_TCP_ADDR=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.rds_instance_address}} | base64 --decode) \
-            --env HUB_DB_ENV_MYSQL_DATABASE=$(kubectl -n ${KUBE_NAMESPACE} get secret drupal-rds --template={{.data.database_name}} | base64 --decode) \
-            ghcr.io/ministryofjustice/hmpps-mysql-tools:latest
-            docker cp ~/git/helm_deploy/prisoner-content-hub-backend/db-refresh.sh hmpps-mysql-tools:/db-refresh.sh
-            docker exec hmpps-mysql-tools ./db-refresh.sh
-
 jobs:
   run_tests:
     <<: *defaults
@@ -178,21 +153,18 @@ jobs:
   deploy_cloud_platform_development_preview:
     <<: *defaults
     steps:
-      - database_refresh
       - release_to_namespace:
           environment: "development"
 
   deploy_cloud_platform_development:
     <<: *defaults
     steps:
-      - database_refresh
       - release_to_namespace:
           environment: "development"
 
   deploy_cloud_platform_staging:
     <<: *defaults
     steps:
-      - database_refresh
       - release_to_namespace:
           environment: "staging"
 
