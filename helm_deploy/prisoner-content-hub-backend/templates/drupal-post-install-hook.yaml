@@ -18,9 +18,9 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       restartPolicy: Never
-{{- if .Values.dbRefresh.enabled -}}
+  {{ if .Values.dbRefresh.enabled }}
       initContainers:
-        - name: db-refresh-cronjob
+        - name: db-refresh
           image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
           command:
             - /bin/entrypoint.sh
@@ -30,7 +30,7 @@ spec:
               readOnly: true
               subPath: entrypoint.sh
 {{ include "db-backup.envs" . | nindent 10 }}
-{{- end }}
+  {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
