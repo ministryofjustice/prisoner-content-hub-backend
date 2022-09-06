@@ -30,6 +30,11 @@ spec:
               readOnly: true
               subPath: entrypoint.sh
 {{ include "db-backup.envs" . | nindent 10 }}
+      volumes:
+        - name: db-refresh-script
+          configMap:
+            name: db-refresh-script
+            defaultMode: 0755
   {{ end }}
       containers:
         - name: {{ .Chart.Name }}
