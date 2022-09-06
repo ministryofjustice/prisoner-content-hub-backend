@@ -83,22 +83,29 @@ RUN pecl install redis \
 # Enable apache modules that are used in Drupal's htaccess.
 RUN a2enmod expires headers
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=/bin --filename=composer --version=2.1.8 \
-  && php -r "unlink('composer-setup.php');"
-
-# Add the composer bin directory to the path.
-ENV PATH="/var/www/html/vendor/bin:${PATH}"
-
 # Set Timezone
 RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_set.ini
 # Set no memory limit (for PHP running as cli only).
 RUN echo 'memory_limit = -1' >> /usr/local/etc/php/php-cli.ini
 
 ###########################################################################################
-# Copy repository files
+# Install composer as non-root and copy repository files
 ###########################################################################################
+
+RUN chown www-data:www-data /var/www
+# Set to www-data user.
+# Have to use uid instead username, as otherwise we are forced to use a securityContext
+# See https://stackoverflow.com/a/66367783
+USER 33
 WORKDIR /var/www/html
+
+RUN mkdir -p ~/.local/bin
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php composer-setup.php --install-dir=$HOME/.local/bin --filename=composer --version=2.1.8 \
+  && php -r "unlink('composer-setup.php');"
+
+# Add the composer bin directory to the path.
+ENV PATH="/var/www/html/vendor/bin:~/.local/bin:${PATH}"
 
 # Copy in Composer configuration
 COPY composer.json composer.lock ./
@@ -114,37 +121,31 @@ COPY docroot/sites/ docroot/sites/
 COPY config/ config/
 COPY Makefile Makefile
 
-# Remove write permissions for added security
-RUN chmod u-w docroot/sites/default/settings.php \
-  && chmod u-w docroot/sites/default/services.yml
-
 ###########################################################################################
 # Create test image
 ###########################################################################################
 FROM base AS test
-
+USER root
 # Install mysql cli client, required for running certain drush commands.
 RUN apt-get update && apt-get install -y \
   mariadb-client
 
-COPY Makefile Makefile
 COPY phpunit.xml phpunit.xml
 
 # Remove the memory limit for the CLI only.
 RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
 
+# Set to www-data user.
+USER 33
+
+RUN mkdir -p ~/phpunit/browser_output
+
 # Install dependencies (with dev)
-RUN composer install \
+RUN ~/.local/bin/composer install \
   --no-ansi \
   --dev \
   --no-interaction \
   --prefer-dist
-
-# Change ownership of files
-RUN chown -R www-data:www-data /var/www
-
-USER www-data
-RUN mkdir -p ~/phpunit/browser_output
 
 FROM test as local
 USER root
@@ -153,7 +154,8 @@ RUN pecl install xdebug-3.0.4 \
 
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
 
-USER www-data
+# Set to www-data user.
+USER 33
 ###########################################################################################
 # Create optimised build
 #
@@ -163,16 +165,9 @@ USER www-data
 ###########################################################################################
 FROM base as optimised-build
 
-# Install dependencies
-RUN composer install \
+# Install dependencies (with dev)
+RUN ~/.local/bin/composer install \
   --no-ansi \
-  --no-dev \
-  --optimize-autoloader \
+  --dev \
   --no-interaction \
   --prefer-dist
-
-# Change ownership of files
-RUN chown -R www-data:www-data ./
-RUN chown -R www-data:www-data /var/www
-
-USER www-data
