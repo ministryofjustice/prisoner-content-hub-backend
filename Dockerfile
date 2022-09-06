@@ -127,7 +127,6 @@ FROM base AS test
 RUN apt-get update && apt-get install -y \
   mariadb-client
 
-COPY Makefile Makefile
 COPY phpunit.xml phpunit.xml
 
 # Remove the memory limit for the CLI only.
@@ -175,4 +174,6 @@ RUN composer install \
 RUN chown -R www-data:www-data ./
 RUN chown -R www-data:www-data /var/www
 
-USER www-data
+# Have to use uid instead username, as otherwise we are forced to use a securityContext
+# See https://stackoverflow.com/a/66367783
+USER 33
