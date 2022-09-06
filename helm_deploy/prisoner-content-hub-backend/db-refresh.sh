@@ -7,7 +7,7 @@ echo "aws_access_key_id=${DB_BACKUP_S3_KEY}" >> ~/.aws/credentials
 echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}" >> ~/.aws/credentials
 
 # Find the most recent file in the S3 bucket.
-filename="$(aws s3 ls ${DB_BACKUP_S3_BUCKET} --recursive | grep '.sql' | sort | tail -n 1 | awk '{print $4}')"
+filename="$(aws s3 ls ${DB_BACKUP_S3_BUCKET} --region=${DB_BACKUP_S3_REGION} --recursive | grep '.sql' | sort | tail -n 1 | awk '{print $4}')"
 if [ -z "$filename" ]
 then
   echo "No database backup files found.  Unable to perform database refresh."
