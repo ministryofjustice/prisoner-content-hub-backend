@@ -36,6 +36,7 @@ module:
   flysystem: 0
   flysystem_s3: 0
   form_state_empty: 0
+  health_check: 0
   image: 0
   image_style_warmer: 0
   inline_form_errors: 0
