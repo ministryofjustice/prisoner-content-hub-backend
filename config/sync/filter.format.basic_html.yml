@@ -39,23 +39,6 @@ filters:
     status: true
     weight: -47
     settings: {  }
-  linkit:
-    id: linkit
-    provider: linkit
-    status: true
-    weight: -46
-    settings:
-      title: true
-  filter_pathologic:
-    id: filter_pathologic
-    provider: pathologic
-    status: true
-    weight: -45
-    settings:
-      settings_source: global
-      local_settings:
-        protocol_style: full
-        local_paths: ''
   filter_autop:
     id: filter_autop
     provider: filter
@@ -87,3 +70,20 @@ filters:
     weight: -42
     settings:
       filter_url_length: 72
+  linkit:
+    id: linkit
+    provider: linkit
+    status: true
+    weight: -46
+    settings:
+      title: true
+  filter_pathologic:
+    id: filter_pathologic
+    provider: pathologic
+    status: true
+    weight: -45
+    settings:
+      settings_source: global
+      local_settings:
+        protocol_style: full
+        local_paths: ''

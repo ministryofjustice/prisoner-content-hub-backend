@@ -184,7 +184,9 @@ services:
     class: Monolog\Handler\StreamHandler
     arguments: ["php://stdout"]
     formatter: monolog.formatters.logstash
+    processors: ['request_uri']
   monolog.handler.errStream:
     class: Monolog\Handler\StreamHandler
     arguments: ["php://stderr", 300]
     formatter: monolog.formatters.logstash
+    processors: ['request_uri']
