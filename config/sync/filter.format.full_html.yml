@@ -45,16 +45,6 @@ filters:
       allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <s> <sup> <sub> <img src alt data-entity-type data-entity-uuid data-align data-caption> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <hr> <p> <h1> <pre> <a href hreflang href data-entity-substitution data-entity-type data-entity-uuid title>'
       filter_html_help: true
       filter_html_nofollow: false
-  filter_pathologic:
-    id: filter_pathologic
-    provider: pathologic
-    status: true
-    weight: -41
-    settings:
-      settings_source: global
-      local_settings:
-        protocol_style: full
-        local_paths: ''
   filter_autop:
     id: filter_autop
     provider: filter
@@ -87,3 +77,13 @@ filters:
     weight: -42
     settings:
       title: true
+  filter_pathologic:
+    id: filter_pathologic
+    provider: pathologic
+    status: true
+    weight: -41
+    settings:
+      settings_source: global
+      local_settings:
+        protocol_style: full
+        local_paths: ''
