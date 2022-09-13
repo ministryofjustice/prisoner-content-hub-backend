@@ -182,3 +182,9 @@ if (PHP_SAPI !== 'cli') {
   // Setting the trusted reverse proxy header, to further prevent IP spoofing.
   $settings['reverse_proxy_trusted_headers'] = \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO | \Symfony\Component\HttpFoundation\Request::HEADER_FORWARDED;
 }
+
+// Set max_execution_time to 30 seconds, as this is the same timeout as on the
+// frontend.  Note this does not apply to cli commands.
+if (PHP_SAPI !== 'cli') {
+  ini_set('max_execution_time', 30);
+}
