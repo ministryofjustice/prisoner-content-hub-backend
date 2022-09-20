@@ -46,6 +46,7 @@ module:
   jquery_ui_touch_punch: 0
   jsonapi: 0
   jsonapi_cross_bundles: 0
+  jsonapi_filter_cachetags: 0
   jsonapi_image_styles: 0
   jsonapi_menu_items: 0
   jsonapi_page_limit: 0
