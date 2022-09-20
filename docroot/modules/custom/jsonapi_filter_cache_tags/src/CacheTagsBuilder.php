@@ -54,9 +54,9 @@ class CacheTagsBuilder {
   /**
    * Store the field used as filters in Drupal's state system.
    *
-   * We do this so that we can retrieve them later and know which ones to
-   * invalidate.  We'd otherwise need to invalidate every field, which would
-   * be wasteful.
+   * We do this so that we can retrieve them later and know which fields to
+   * use as cache tags for invalidation.  We'd otherwise need to invalidate
+   * every field, which would be wasteful.
    *
    * @param string $entity_type
    *   The entity type name, e.g. "node".
@@ -75,7 +75,7 @@ class CacheTagsBuilder {
   }
 
   /**
-   * Invalidate cache tags based for $entity, based on what is already stored.
+   * Invalidate cache tags for $entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity that has been created/updated.
