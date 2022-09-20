@@ -39,6 +39,14 @@ class CacheTagsBuilder {
     return self::CACHE_TAG_PREFIX . ':' . $entity_type . ':' . $field_name . ':' . $field_value;
   }
 
+  /**
+   * Get the state key to be used based on $entity_type.
+   *
+   * @param string $entity_type
+   *   The entity type name, e.g. "node"
+   *
+   * @return string
+   */
   public function getStateKey(string $entity_type) {
     return self::STATE_KEY_PREFIX . '.' . $entity_type;
   }
