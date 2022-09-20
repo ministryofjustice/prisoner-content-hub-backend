@@ -2,24 +2,15 @@
 
 namespace Drupal\jsonapi_filter_cache_tags\EventSubscriber;
 
-use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Cache\CacheableResponse;
 use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Query\EntityCondition;
 use Drupal\jsonapi\Query\Filter;
 use Drupal\jsonapi\ResourceType\ResourceType;
-use Drupal\jsonapi\Routing\Routes;
 use Drupal\jsonapi_filter_cache_tags\CacheTagsBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class ResponseSubscriber.
@@ -90,6 +81,4 @@ class ResponseSubscriber implements EventSubscriberInterface {
       }
     }
   }
-
-
 }
