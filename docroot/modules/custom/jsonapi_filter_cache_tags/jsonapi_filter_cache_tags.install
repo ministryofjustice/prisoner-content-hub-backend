@@ -9,7 +9,7 @@ function jsonapi_filter_cache_tags_uninstall($is_syncing) {
   $entity_types = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_types as $entity_type) {
     if ($entity_type instanceof ContentEntityType) {
-      \Drupal::state()->delete('jsonapi_filter_cache_tags:' . $entity_type->id());
+      \Drupal::state()->delete(\Drupal::service('jsonapi_filter_cache_tags.cache_tags_builder')->getStateKey($entity_type->id()));
     }
   }
 }

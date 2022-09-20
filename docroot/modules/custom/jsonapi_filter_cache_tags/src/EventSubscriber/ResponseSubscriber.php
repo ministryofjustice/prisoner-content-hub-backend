@@ -71,12 +71,23 @@ class ResponseSubscriber implements EventSubscriberInterface {
             // field_reference_name.entity:entity_type.uuid
             if (isset($parts[2]) && $parts[2] == 'uuid') {
               $cache_tags[] = $this->cacheTagsBuilder->buildCacheTag($resource_type->getEntityTypeId(), $parts[0], $member->value());
+              $this->cacheTagsBuilder->storeFilterField($resource_type->getEntityTypeId(), $parts[0]);
             }
           }
         }
+        // Only override cache tags if there is something to be set.
         if (!empty($cache_tags)) {
-          $this->cacheTagsBuilder->storeCacheTags($resource_type->getEntityTypeId(), $cache_tags);
-          $response->getCacheableMetadata()->setCacheTags($cache_tags);
+          // Add on existing cache tags.
+          $cache_tags += $response->getCacheableMetadata()->getCacheTags();
+
+          // Remove any existing list cache tags, e.g. "node_list".
+          $cache_tags_to_remove = [$resource_type->getEntityTypeId() . '_list'];
+          // Drupal also supports bundle specific entity list cache tags. Remove
+          // these as well if present.
+          if ($resource_type->getBundle()) {
+            $cache_tags_to_remove[] = $resource_type->getEntityTypeId() . '_list:' . $resource_type->getBundle();
+          }
+          $response->getCacheableMetadata()->setCacheTags(array_diff($cache_tags, $cache_tags_to_remove));
         }
       }
     }

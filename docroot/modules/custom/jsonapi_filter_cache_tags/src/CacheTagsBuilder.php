@@ -9,9 +9,19 @@ use Drupal\Core\Entity\ContentEntityInterface;
  * The CacheTagsBuilder service.
  *
  * Provide common functionality between the creating and storing the cache tags
- * (via the ResponseSubcriber) and invalidating them on entity save.
+ * (via the ResponseSubscriber) and invalidating them on entity save.
  */
 class CacheTagsBuilder {
+
+  /**
+   * String prefix for storing cache tags.
+   */
+  const CACHE_TAG_PREFIX = 'jsonapi_filter';
+
+  /**
+   * String prefix for storing data in the state API.
+   */
+  const STATE_KEY_PREFIX = 'jsonapi_filter_cache_tags.field_list';
 
   /**
    * Build the cache tag string.
@@ -26,27 +36,34 @@ class CacheTagsBuilder {
    * @return string
    */
   public function buildCacheTag(string $entity_type, string $field_name, string $field_value) {
-    return 'jsonapi_filter:' . $entity_type . ':' . $field_name . ':' . $field_value;
+    return self::CACHE_TAG_PREFIX . ':' . $entity_type . ':' . $field_name . ':' . $field_value;
+  }
+
+  public function getStateKey(string $entity_type) {
+    return self::STATE_KEY_PREFIX . '.' . $entity_type;
   }
 
   /**
-   * Store the cache tags in Drupal's state system.
+   * Store the field used as filters in Drupal's state system.
    *
    * We do this so that we can retrieve them later and know which ones to
-   * invalidate.  We'd otherwise need to invalidate every theoretical cache tag
-   * (for every field on the entity), which would be wasteful.
+   * invalidate.  We'd otherwise need to invalidate every field, which would
+   * be wasteful.
    *
    * @param string $entity_type
    *   The entity type name, e.g. "node".
-   * @param array $cache_tags
-   *   A list of cache tags to be stored.
+   * @param string $field_name
+   *   A name of the field, e.g. "field_category"
    *
    * @return void
    */
-  public function storeCacheTags(string $entity_type, array $cache_tags) {
-    $state_key = 'jsonapi_filter_cache_tags:' . $entity_type;
-    $existing_cache_tags = \Drupal::state()->get($state_key, []);
-    \Drupal::state()->set($state_key, array_merge($cache_tags, $existing_cache_tags));
+  public function storeFilterField(string $entity_type, string $field_name) {
+    $state_key = $this->getStateKey($entity_type);
+    $existing_filter_fields = \Drupal::state()->get($state_key, []);
+    if (array_search($field_name, $existing_filter_fields) === FALSE) {
+      $existing_filter_fields[] = $field_name;
+      \Drupal::state()->set($state_key, $existing_filter_fields);
+    }
   }
 
   /**
@@ -58,11 +75,10 @@ class CacheTagsBuilder {
    * @return void
    */
   public function invalidateForEntity(ContentEntityInterface $entity) {
-    $existing_cache_tags = \Drupal::state()->get('jsonapi_filter_cache_tags:' . $entity->getEntityTypeId(), []);
-    foreach($existing_cache_tags as $cache_tag) {
-      $parts = explode(':', $cache_tag);
-      if ($entity->hasField($parts[2]) && $entity->{$parts[2]}->entity && $entity->{$parts[2]}->entity->uuid() == $parts[3]) {
-        Cache::invalidateTags([$cache_tag]);
+    $existing_filter_fields = \Drupal::state()->get($this->getStateKey($entity->getEntityTypeId()), []);
+    foreach($existing_filter_fields as $field_name) {
+      if ($entity->hasField($field_name) && $entity->{$field_name}->entity) {
+        Cache::invalidateTags([$this->buildCacheTag($entity->getEntityTypeId(), $field_name, $entity->{$field_name}->entity->uuid())]);
       }
     }
   }
