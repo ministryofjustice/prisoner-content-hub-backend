@@ -72,7 +72,7 @@ function prisoner_hub_cms_help_preprocess_page_title(&$vars) {
  * @see prisconhub_preprocess_form_element().
  */
 function prisoner_hub_cms_help_preprocess_form_element(&$variables) {
-  if ($variables['element']['#name'] == 'field_large_update_tile[0][target_id]') {
+  if (isset($variables['element']['#name']) && $variables['element']['#name'] == 'field_large_update_tile[0][target_id]') {
     $variables['#help_page_url'] = Url::fromUserInput('/content/16897', ['fragment' => 'large-update-tile']);
   }
 }

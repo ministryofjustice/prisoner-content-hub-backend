@@ -106,11 +106,8 @@ COPY composer.json composer.lock ./
 COPY patches/ patches/
 
 # Copy Project
-COPY docroot/modules/custom docroot/modules/custom
-COPY docroot/themes/custom docroot/themes/custom
-COPY docroot/profiles docroot/profiles
+COPY docroot/ docroot/
 COPY ./apache/ /etc/apache2/
-COPY docroot/sites/ docroot/sites/
 COPY config/ config/
 COPY Makefile Makefile
 
