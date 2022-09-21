@@ -57,39 +57,74 @@ class ResponseSubscriber implements EventSubscriberInterface {
   public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
     $request = $event->getRequest();
-    if ($response instanceof CacheableResourceResponse && $request->query->has('filter')) {
-      $resource_type = $request->attributes->get('resource_type');
-      if ($resource_type instanceof ResourceType) {
-        $cache_tags = [];
-        $filter = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
-        foreach ($filter->root()->members() as $member) {
-          // We currently don't support group conditions, or any operator other
-          // than =.
-          if ($member instanceof EntityCondition && $member->operator() == '=') {
-            $parts = explode('.', $member->field());
-            // We are looking for an entity reference field, in the format of:
-            // field_reference_name.entity:entity_type.uuid
-            if (isset($parts[2]) && $parts[2] == 'uuid') {
-              $cache_tags[] = $this->cacheTagsBuilder->buildCacheTag($resource_type->getEntityTypeId(), $parts[0], $member->value());
-              $this->cacheTagsBuilder->storeFilterField($resource_type->getEntityTypeId(), $parts[0]);
-            }
-          }
-        }
-        // Only override cache tags if there is something to be set.
-        if (!empty($cache_tags)) {
-          // Add on existing cache tags.
-          $cache_tags += $response->getCacheableMetadata()->getCacheTags();
+    if ($response instanceof CacheableResourceResponse
+      && $request->query->has('filter')
+      && $resource_type = $request->attributes->get('resource_type'))
+    {
+      assert($resource_type instanceof ResourceType);
+      $filter = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
+      $cache_tags = $this->createCacheTagsFromFilter($filter, $resource_type->getEntityTypeId());
+      $this->addCacheTagsToResponse($response, $cache_tags, $resource_type);
+    }
+  }
 
-          // Remove any existing list cache tags, e.g. "node_list".
-          $cache_tags_to_remove = [$resource_type->getEntityTypeId() . '_list'];
-          // Drupal also supports bundle specific entity list cache tags. Remove
-          // these as well if present.
-          if ($resource_type->getBundle()) {
-            $cache_tags_to_remove[] = $resource_type->getEntityTypeId() . '_list:' . $resource_type->getBundle();
-          }
-          $response->getCacheableMetadata()->setCacheTags(array_diff($cache_tags, $cache_tags_to_remove));
+  /**
+   * Create cache tag(s) from a JSON:API filter.
+   *
+   * @param \Drupal\jsonapi\Query\Filter $filter
+   *   The filter object, originating from the url quey.
+   * @param string $entity_type_id
+   *   The entity type id, e.g. "node".
+   *
+   * @return array
+   *   An array of cache tags, can be empty if none are created.
+   */
+  protected function createCacheTagsFromFilter(Filter $filter, string $entity_type_id) {
+    $cache_tags = [];
+    foreach ($filter->root()->members() as $member) {
+      // We currently don't support group conditions, or any operator other
+      // than "=".  I.e. we don't support "!=", "IN", "NOT IN", etc.
+      if ($member instanceof EntityCondition && $member->operator() == '=') {
+        $parts = explode('.', $member->field());
+        // We are looking for an entity reference field, in the format of:
+        // field_reference_name.entity:entity_type.uuid
+        if (isset($parts[2]) && $parts[2] == 'uuid') {
+          $cache_tags[] = $this->cacheTagsBuilder->buildCacheTag($entity_type_id, $parts[0], $member->value());
+          $this->cacheTagsBuilder->storeFilterField($entity_type_id, $parts[0]);
         }
       }
+    }
+    return $cache_tags;
+  }
+
+  /**
+   * Add the $cache_tags as cacheable metadata to the $response.
+   *
+   * We also look for list cache tags (e.g. "node_list") and remove them.
+   *
+   * @param \Drupal\jsonapi\CacheableResourceResponse $response
+   *   The response object.
+   * @param array $cache_tags
+   *   An array of cache tags, if empty then we do not alter the $response.
+   * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
+   *   The JSON:API resource type.
+   *
+   * @return void
+   */
+  protected function addCacheTagsToResponse(CacheableResourceResponse $response, array $cache_tags, ResourceType $resource_type) {
+    // Only override cache tags if there is something to be set.
+    if (!empty($cache_tags)) {
+      // Add on existing cache tags.
+      $cache_tags += $response->getCacheableMetadata()->getCacheTags();
+
+      // Remove any existing list cache tags, e.g. "node_list".
+      $cache_tags_to_remove = [$resource_type->getEntityTypeId() . '_list'];
+      // Drupal also supports bundle specific entity list cache tags. Remove
+      // these as well if present.
+      if ($resource_type->getBundle()) {
+        $cache_tags_to_remove[] = $resource_type->getEntityTypeId() . '_list:' . $resource_type->getBundle();
+      }
+      $response->getCacheableMetadata()->setCacheTags(array_diff($cache_tags, $cache_tags_to_remove));
     }
   }
 }
