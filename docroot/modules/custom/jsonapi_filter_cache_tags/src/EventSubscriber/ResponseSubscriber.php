@@ -61,10 +61,11 @@ class ResponseSubscriber implements EventSubscriberInterface {
       && $request->query->has('filter')
       && $resource_type = $request->attributes->get('resource_type'))
     {
-      assert($resource_type instanceof ResourceType);
-      $filter = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
-      $cache_tags = $this->createCacheTagsFromFilter($filter, $resource_type->getEntityTypeId());
-      $this->addCacheTagsToResponse($response, $cache_tags, $resource_type);
+      if ($resource_type instanceof ResourceType) {
+        $filter = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
+        $cache_tags = $this->createCacheTagsFromFilter($filter, $resource_type->getEntityTypeId());
+        $this->addCacheTagsToResponse($response, $cache_tags, $resource_type);
+      }
     }
   }
 
