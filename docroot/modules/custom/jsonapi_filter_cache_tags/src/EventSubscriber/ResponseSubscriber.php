@@ -72,7 +72,7 @@ class ResponseSubscriber implements EventSubscriberInterface {
    * Create cache tag(s) from a JSON:API filter.
    *
    * @param \Drupal\jsonapi\Query\Filter $filter
-   *   The filter object, originating from the url quey.
+   *   The filter object, originating from the url query.
    * @param string $entity_type_id
    *   The entity type id, e.g. "node".
    *
