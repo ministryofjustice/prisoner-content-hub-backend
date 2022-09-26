@@ -246,11 +246,14 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
       $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
     }
+    else {
+      $this->markTestSkipped('Page cache module not installed, test can be removed.');
+    }
 
-    // We should have one cachetag invalidation, as we created one peice of content.
-    $cachetag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
-    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
-    $this->assertSame(1, $invalidation_count, 'Cachetag has been cleared exactly one time.');
+    // We should have one cache tag invalidation, as we created one piece of content.
+    $cache_tag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
+    $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
 
     // Create a new node, and check for a MISS.
     $this->createNode([
@@ -261,8 +264,11 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
       $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
     }
-    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
-    $this->assertSame(2, $invalidation_count, 'Cachetag has been cleared exactly two times.');
+    else {
+      $this->markTestSkipped('Page cache module not installed, test can be removed.');
+    }
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
+    $this->assertSame(2, $invalidation_count, 'Cache tag has been cleared exactly two times.');
   }
 
   /**

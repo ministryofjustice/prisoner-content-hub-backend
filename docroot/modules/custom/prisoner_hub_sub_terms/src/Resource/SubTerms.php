@@ -49,6 +49,12 @@ class SubTerms extends EntityResourceBase {
     // Add our own custom cache tag that is cleared whenever content is updated.
     $cacheability->addCacheTags(['prisoner_hub_sub_terms:' . $taxonomy_term->id()]);
 
+    // Set cache to 24 hours.  We do this because we only invalidate the
+    // directly associated subcategory, and not parent categories.  So parent
+    // categories will have their cache rebuilt after 24 hours with the new
+    // order of subcategories and series.
+    $cacheability->setCacheMaxAge(86400);
+
     $tids = [$taxonomy_term->id()];
 
     // Check content also assigned to any sub-category (multiple levels) of the
@@ -91,7 +97,7 @@ class SubTerms extends EntityResourceBase {
     $query->groupBy('field_moj_series');
 
     // Aggregate the groupings by the most recently created, and sort by that.
-    $query->sortAggregate('changed', 'MAX', 'DESC');
+    $query->sortAggregate('created', 'MAX', 'DESC');
 
     $pagination = $this->getPagination($request);
     if ($pagination->getSize() <= 0) {

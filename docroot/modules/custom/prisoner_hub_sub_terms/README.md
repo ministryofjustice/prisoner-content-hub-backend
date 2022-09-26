@@ -12,21 +12,23 @@ The results will be a paginated list of series and sub-categories.
 - Any sub category of the {uuid} (only direct sub-categories are included, not further levels)
 - Any series assigned to the {uuid} category (series assigned to sub-categories are not included).
 
-The results will be ordered by the most recently updated content within each sub term.
+The results will be ordered by the most recently created content within each sub term.
 When checking for the most recently updated content, we look at all levels of the taxonomy.  So changes to content that
-is in a sub-category multiple levels down, will affect the sorting order of it's parent sub-category.
+are in a sub-category multiple levels down, will affect the sorting order of it's parent sub-category (although this
+can take up to 24 hours to appear, see the cache tags info below).
 
 Note that if using a prison context, this again will be applied to the results.  So only content available in the
 current prison will be used for sorting.
 
-## Custom cachetags
-This module uses custom cachetags to invalidate the response when content has been updated or created.
-The cachetag looks like:
+## Custom cache tags
+This module uses custom cache tags to invalidate the response when content has been created.
+The cache tag looks like:
 `'prisoner_hub_sub_terms:123`
 (Where 123 is the taxonomy term id of the category).
 
-When content is updated or created, the cachetags for it's associated category and parent categories will be invalidated.
+When content is created, the cache tags for it's associated parent category will be invalidated.
+If the content is in a series, the category of the series will be invalidated.
+If the content is not in a series, then the category it is associated with will have its parent category invalidated.
 
-The reason for using a custom cachetag instead of the `taxonomy_term:123` tag that comes with Drupal, is that clearing
-the more generic Drupal cachetag will affect multiple parts of the site, whereas our custom cachetag can be specific
-to sub_terms JSON:API resource.
+There is also a 24 hour max-age set, which means that the sorting for parent categories higher up the hierarchy will
+eventually be updated with the new sorting order.

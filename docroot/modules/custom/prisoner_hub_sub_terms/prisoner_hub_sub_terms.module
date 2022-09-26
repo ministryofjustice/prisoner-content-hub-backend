@@ -9,17 +9,10 @@ use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_entity_update().
- */
-function prisoner_hub_sub_terms_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
-  \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity, FALSE);
-}
-
-/**
  * Implements hook_entity_insert().
  */
 function prisoner_hub_sub_terms_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
-  \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity, TRUE);
+  \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity);
 }
 
 /**
