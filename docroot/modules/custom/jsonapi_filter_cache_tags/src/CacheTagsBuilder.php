@@ -84,7 +84,7 @@ class CacheTagsBuilder {
    */
   public function invalidateForEntity(ContentEntityInterface $entity) {
     $existing_filter_fields = \Drupal::state()->get($this->getStateKey($entity->getEntityTypeId()), []);
-    foreach($existing_filter_fields as $field_name) {
+    foreach ($existing_filter_fields as $field_name) {
       if ($entity->hasField($field_name) && $entity->{$field_name}->entity) {
         Cache::invalidateTags([$this->buildCacheTag($entity->getEntityTypeId(), $field_name, $entity->{$field_name}->entity->uuid())]);
       }
