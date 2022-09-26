@@ -243,7 +243,9 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Run the request twice, so the first one generates a cache.
     $this->getJsonApiResponse($this->jsonApiUrl);
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
-    $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+    if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+    }
 
     // We should have one cachetag invalidation, as we created one peice of content.
     $cachetag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
@@ -256,7 +258,9 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       'field_not_in_series' => 1,
     ]);
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
-    $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
+    if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
+    }
     $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
     $this->assertSame(2, $invalidation_count, 'Cachetag has been cleared exactly two times.');
   }

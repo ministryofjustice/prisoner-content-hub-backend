@@ -115,6 +115,36 @@ class JsonApiFilterCacheTagsTest extends ExistingSiteBase {
 
   }
 
+
+  /**
+   * Test for HIT and MISS from Drupal's page cache.
+   *
+   * NOTE this test depends on the page_cache module being enabled.  Should this
+   * ever be uninstalled (e.g. we move to using varnish), then these tests will
+   * fail so are therefore not run.
+   */
+  public function testCacheTagHeaders() {
+    if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
+      $response = $this->getJsonApiResponse($this->jsonapiUrlTermA);
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+
+      $response = $this->getJsonApiResponse($this->jsonapiUrlTermB);
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+
+      // Now update one node.
+      $this->nodeA->set('title', 'Changed');
+      $this->nodeA->save();
+
+      $response = $this->getJsonApiResponse($this->jsonapiUrlTermA);
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
+      $response = $this->getJsonApiResponse($this->jsonapiUrlTermB);
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+    }
+    else {
+      $this->markTestSkipped('Page cache module not installed, test can be removed.');
+    }
+  }
+
   /**
    * Get a response from a JSON:API url.
    *
