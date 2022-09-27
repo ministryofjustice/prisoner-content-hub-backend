@@ -96,8 +96,8 @@ class SubTerms extends EntityResourceBase {
     $query->groupBy('field_moj_top_level_categories');
     $query->groupBy('field_moj_series');
 
-    // Aggregate the groupings by the most recently created, and sort by that.
-    $query->sortAggregate('created', 'MAX', 'DESC');
+    // Aggregate the groupings by the most recently published, and sort by that.
+    $query->sortAggregate('published_at', 'MAX', 'DESC');
 
     $pagination = $this->getPagination($request);
     if ($pagination->getSize() <= 0) {

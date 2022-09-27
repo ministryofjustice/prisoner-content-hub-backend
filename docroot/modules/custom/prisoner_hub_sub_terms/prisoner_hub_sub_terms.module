@@ -16,6 +16,13 @@ function prisoner_hub_sub_terms_entity_insert(\Drupal\Core\Entity\EntityInterfac
 }
 
 /**
+ * Implements hook_entity_update().
+ */
+function prisoner_hub_sub_terms_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
+  \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity);
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Modify the options for the Subcategory exposed filter, to only include

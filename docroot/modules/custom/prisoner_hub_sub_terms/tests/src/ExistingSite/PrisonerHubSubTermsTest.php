@@ -88,7 +88,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $first_term->id()]],
       'field_not_in_series' => 1,
-      'created' => time(),
+      'published_at' => time(),
     ]);
 
     // Create another subcategory, and create content that is _very old_,
@@ -101,7 +101,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
       'field_not_in_series' => 1,
-      'created' => strtotime('-2 years'),
+      'published_at' => strtotime('-2 years'),
     ]);
 
     // Create some unpublished content to ensure this doesn't effect
@@ -109,7 +109,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
       'field_not_in_series' => 1,
-      'created' => time(),
+      'published_at' => time(),
       'status' => 0,
     ]);
 
@@ -127,7 +127,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $second_series->id()]],
-      'created' => strtotime('-10 minutes'),
+      'published_at' => strtotime('-10 minutes'),
     ]);
 
     // Create a subcategory with some content, and ensure it's displayed
@@ -140,7 +140,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $third_term->id()]],
       'field_not_in_series' => 1,
-      'created' => strtotime('-1 week'),
+      'published_at' => strtotime('-1 week'),
     ]);
 
     // Create a series inside the current category, with some content in it.
@@ -152,7 +152,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $fourth_term->id()]],
-      'created' => strtotime('-6 months'),
+      'published_at' => strtotime('-6 months'),
     ]);
 
     // Create a three new sub-categories (going three levels down), and ensure
@@ -175,7 +175,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
       'field_not_in_series' => 1,
-      'created' => strtotime('-7 months'),
+      'published_at' => strtotime('-7 months'),
     ]);
 
     $correct_order_sub_terms = [

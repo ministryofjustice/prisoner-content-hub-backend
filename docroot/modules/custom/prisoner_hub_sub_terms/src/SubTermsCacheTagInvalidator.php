@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 
 class SubTermsCacheTagInvalidator {
@@ -56,20 +57,20 @@ class SubTermsCacheTagInvalidator {
    *   The node $entity.
    */
   protected function invalidateNode(NodeInterface $entity) {
-    if (!$entity->isPublished()) {
+    if (!$this->checkEntityIsBeingPublished($entity)) {
       return;
     }
     $term = NULL;
     if ($entity->hasField('field_moj_top_level_categories') && !$entity->get('field_moj_top_level_categories')->isEmpty()) {
       $entities = $entity->get('field_moj_top_level_categories')->referencedEntities();
       if (!empty($entities)) {
-        $term = $entities[0];
+        $this->invalidateCategoryParent($entities[0]);
       }
     }
     if ($entity->hasField('field_moj_series') && !$entity->get('field_moj_series')->isEmpty()) {
       $entities = $entity->get('field_moj_series')->referencedEntities();
       if (!empty($entities)) {
-        $term = $entities[0];
+        $this->invalidateSeriesCategory($entities[0]);
       }
     }
     if ($term) {
@@ -78,30 +79,58 @@ class SubTermsCacheTagInvalidator {
   }
 
   /**
+   * Check whether the $entity is currently being published.
+   *
+   * If the $entity is being updated, then we check that the previous version
+   * was unpublished and the new version is published.
+   *
+   * @param \Drupal\Core\Entity\EntityPublishedInterface $entity
+   *   The $entity to check.
+   *
+   * @return bool
+   *   TRUE if $entity is being published, otherwise FALSE.
+   */
+  protected function checkEntityIsBeingPublished(EntityPublishedInterface $entity) {
+    // If no original then this is a new entity.
+    if (!isset($entity->original)) {
+      return $entity->isPublished();
+    }
+    return !$entity->original->isPublished() && $entity->isPublished();
+  }
+
+  /**
    * Invalidate cache tags for the immediate parent category.
    *
-   * Note we do not invalidate grandfather (and beyond) categories. Even though
-   * content updates do still "bubble up" to the highest level in the hierarchy.
-   * But due to performance reasons, we only clear the most immediate parent and
-   * instead allow the others caches to reach their max-age.
+   * Note we only invalidate the immediate parent, and not the full hierarchy.
+   * This is to prevent excessive cache rebuilds, which can have a big impact on
+   * performance.  Instead, we allow the others caches to reach their max-age.
    * Note we did use to expire grandfather categories, so if this is required
    * again please look in the git history.
    *
    * @param \Drupal\taxonomy\TermInterface $term
    *   The taxonomy term, either a series or a category.
    */
-  protected function invalidateTermParent(TermInterface $term) {
+  protected function invalidateCategoryParent(TermInterface $term) {
     $cache_tags = [];
-    if ($term->bundle() == 'series') {
-      $cache_tags[] = 'prisoner_hub_sub_terms:' . $term->get('field_category')->target_id;
-    }
-    else if ($term->bundle() == 'moj_categories') {
-      foreach ($term->get('parent') as $parent) {
-        if ($parent->target_id != 0) {
-          $cache_tags = ['prisoner_hub_sub_terms:' . $parent->target_id];
-        }
+    foreach ($term->get('parent') as $parent) {
+      if ($parent->target_id != 0) {
+        $cache_tags = ['prisoner_hub_sub_terms:' . $parent->target_id];
       }
     }
+    $this->cacheTagsInvalidator->invalidateTags($cache_tags);
+  }
+
+  /**
+   * Invalidate the category associated with a series.
+   *
+   * Same as invalidateCategoryParent(), but for series.  Again we don't
+   * go through the entire hierarchy, we just invalidate the immediate parent.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The series taxonomy term.
+   */
+  protected function invalidateSeriesCategory(TermInterface $term) {
+    $cache_tags = ['prisoner_hub_sub_terms:' . $term->get('field_category')->target_id];
     $this->cacheTagsInvalidator->invalidateTags($cache_tags);
   }
 }
