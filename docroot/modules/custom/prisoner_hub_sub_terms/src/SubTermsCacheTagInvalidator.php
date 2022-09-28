@@ -111,7 +111,10 @@ class SubTermsCacheTagInvalidator {
     }
     $referenced_entity = $this->getCategoryFromEntity($entity) ?: $this->getSeriesFromEntity($entity);
     $previous_referenced_entity = $this->getCategoryFromEntity($entity->original) ?: $this->getSeriesFromEntity($entity->original);
-    return $referenced_entity->id() != $previous_referenced_entity->id();
+    
+    $previous_entity_id = $previous_referenced_entity ? $previous_referenced_entity->id() : NULL;
+    $current_entity_id = $referenced_entity ? $referenced_entity->id() : NULL;
+    return $previous_entity_id != $current_entity_id;
   }
 
   /**
