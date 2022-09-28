@@ -256,7 +256,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
 
     // Create a new node, and check for a MISS.
-    $this->createNode([
+    $node = $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
       'field_not_in_series' => 1,
     ]);
@@ -269,6 +269,25 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     }
     $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
     $this->assertSame(2, $invalidation_count, 'Cache tag has been cleared exactly two times.');
+
+    // Test switching content to a different category only invalidates the
+    // new category.
+    $new_category = $this->createTerm(Vocabulary::load('moj_categories'));
+    $new_subcategory = $this->createTerm(Vocabulary::load('series'), [
+      'parent' => [
+        'target_id' => $new_category->id(),
+      ],
+    ]);
+    $node->set('field_moj_top_level_categories', [
+      ['target_id' => $new_subcategory->id()],
+    ]);
+    $node->save();
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
+    $this->assertSame(2, $invalidation_count, 'Cache tag has no further invalidations.');
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum(['prisoner_hub_sub_terms:' . $new_category->id()]);
+    $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
+
   }
 
   /**

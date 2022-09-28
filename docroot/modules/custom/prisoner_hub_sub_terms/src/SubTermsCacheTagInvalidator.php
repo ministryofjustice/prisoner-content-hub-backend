@@ -3,10 +3,10 @@
 namespace Drupal\prisoner_hub_sub_terms;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 
 class SubTermsCacheTagInvalidator {
@@ -58,23 +58,21 @@ class SubTermsCacheTagInvalidator {
    */
   protected function invalidateNode(NodeInterface $entity) {
     if (!$this->checkEntityIsBeingPublished($entity)) {
-      return;
-    }
-    $term = NULL;
-    if ($entity->hasField('field_moj_top_level_categories') && !$entity->get('field_moj_top_level_categories')->isEmpty()) {
-      $entities = $entity->get('field_moj_top_level_categories')->referencedEntities();
-      if (!empty($entities)) {
-        $this->invalidateCategoryParent($entities[0]);
+      // If the entity is not being published, then check whether it is changing
+      // category or series.  If not, then do not invalidate any cache tags.
+      if (!$this->checkEntityIsChangingCategoryOrSeries($entity)) {
+        return;
       }
     }
-    if ($entity->hasField('field_moj_series') && !$entity->get('field_moj_series')->isEmpty()) {
-      $entities = $entity->get('field_moj_series')->referencedEntities();
-      if (!empty($entities)) {
-        $this->invalidateSeriesCategory($entities[0]);
-      }
+
+    $category_entity = $this->getCategoryFromEntity($entity);
+    if ($category_entity) {
+      $this->invalidateCategoryParent($category_entity);
     }
-    if ($term) {
-      $this->invalidateTermParent($term);
+
+    $series_entity = $this->getSeriesFromEntity($entity);
+    if ($series_entity) {
+      $this->invalidateSeriesCategory($series_entity);
     }
   }
 
@@ -96,6 +94,60 @@ class SubTermsCacheTagInvalidator {
       return $entity->isPublished();
     }
     return !$entity->original->isPublished() && $entity->isPublished();
+  }
+
+  /**
+   * Check whether content is being updated to have a different series/category.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity to check.
+   *
+   * @return bool
+   *   TRUE if the content is changing category or series, otherwise FALSE.
+   */
+  protected function checkEntityIsChangingCategoryOrSeries(ContentEntityInterface $entity) {
+    if (!isset($entity->original) || !$entity->isPublished()) {
+      return FALSE;
+    }
+    $referenced_entity = $this->getCategoryFromEntity($entity) ?: $this->getSeriesFromEntity($entity);
+    $previous_referenced_entity = $this->getCategoryFromEntity($entity->original) ?: $this->getSeriesFromEntity($entity->original);
+    return $referenced_entity->id() != $previous_referenced_entity->id();
+  }
+
+  /**
+   * Get the category taxonomy term from $entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *
+   * @return TermInterface|false
+   *   Either the category taxonomy term entity, or FALSE if not found.
+   */
+  protected function getCategoryFromEntity(ContentEntityInterface $entity) {
+    if ($entity->hasField('field_moj_top_level_categories') && !$entity->get('field_moj_top_level_categories')->isEmpty()) {
+      $entities = $entity->get('field_moj_top_level_categories')->referencedEntities();
+      if (!empty($entities)) {
+        return $entities[0];
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Get the series taxonomy term from $entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *
+   * @return TermInterface|false
+   *   Either the series taxonomy term entity, or FALSE if not found.
+   */
+  protected function getSeriesFromEntity(ContentEntityInterface $entity) {
+    if ($entity->hasField('field_moj_series') && !$entity->get('field_moj_series')->isEmpty()) {
+      $entities = $entity->get('field_moj_series')->referencedEntities();
+      if (!empty($entities)) {
+        return $entities[0];
+      }
+    }
+    return FALSE;
   }
 
   /**
