@@ -5,3 +5,4 @@ core_version_requirement: ^8 || ^9
 package: 'Custom'
 dependencies:
   - jsonapi_resources:jsonapi_resources
+  - publication_date:publication_date
