@@ -16,3 +16,6 @@ application:
   # but the default is London
   s3:
     region: eu-west-1
+
+dbBackup:
+  enabled: true
