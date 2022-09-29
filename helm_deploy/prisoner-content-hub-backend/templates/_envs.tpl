@@ -89,3 +89,44 @@ env:
     value: "true"
 
 {{- end -}}
+
+{{- define "db-backup.envs" }}
+env:
+  - name: HUB_DB_ENV_MYSQL_DATABASE
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: database_name
+  - name: HUB_DB_ENV_MYSQL_USER
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: database_username
+  - name: HUB_DB_ENV_MYSQL_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: database_password
+  - name: HUB_DB_PORT_3306_TCP_ADDR
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.dbSecretName }}
+        key: rds_instance_address
+  - name: DB_BACKUP_S3_KEY
+    valueFrom:
+      secretKeyRef:
+        name: db-backups-s3
+        key: access_key_id
+  - name: DB_BACKUP_S3_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: db-backups-s3
+        key: secret_access_key
+  - name: DB_BACKUP_S3_REGION
+    value: {{ .Values.dbBackup.s3.region }}
+  - name: DB_BACKUP_S3_BUCKET
+    valueFrom:
+      secretKeyRef:
+        name: db-backups-s3
+        key: bucket_name
+{{- end -}}
