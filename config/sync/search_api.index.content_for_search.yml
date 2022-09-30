@@ -3,18 +3,19 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_exclude_from_prison
+    - field.storage.node.field_moj_top_level_categories
     - field.storage.node.field_moj_description
+    - field.storage.node.field_exclude_from_prison
+    - field.storage.node.field_prisons
     - field.storage.node.field_moj_secondary_tags
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_stand_first
-    - field.storage.node.field_prisons
-    - field.storage.node.field_moj_top_level_categories
     - search_api.server.elasticsearch
   module:
     - elasticsearch_connector
     - taxonomy
     - node
+    - taxonomy_machine_name
     - search_api
 third_party_settings:
   elasticsearch_connector:
@@ -38,6 +39,17 @@ field_settings:
         - field.storage.node.field_exclude_from_prison
       module:
         - taxonomy
+  field_exclude_from_prison_name:
+    label: 'Exclude from prison » Taxonomy term » Machine name'
+    datasource_id: 'entity:node'
+    property_path: 'field_exclude_from_prison:entity:machine_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_exclude_from_prison
+      module:
+        - taxonomy
+        - taxonomy_machine_name
   field_moj_description:
     label: 'Description » Processed text'
     datasource_id: 'entity:node'
@@ -95,6 +107,17 @@ field_settings:
         - field.storage.node.field_prisons
       module:
         - taxonomy
+  field_prisons_name:
+    label: 'Prisons » Taxonomy term » Machine name'
+    datasource_id: 'entity:node'
+    property_path: 'field_prisons:entity:machine_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_prisons
+      module:
+        - taxonomy
+        - taxonomy_machine_name
   name:
     label: 'Category » Taxonomy term » Name'
     datasource_id: 'entity:node'
@@ -140,17 +163,20 @@ processor_settings:
   add_url: {  }
   aggregated_field: {  }
   entity_status: {  }
+  entity_type: {  }
   ignorecase:
     weights:
       preprocess_index: -20
       preprocess_query: -48
     all_fields: true
     fields:
+      - field_exclude_from_prison_name
       - field_moj_description
       - field_moj_description_summary
       - field_moj_secondary_tags
       - field_moj_series
       - field_moj_stand_first
+      - field_prisons_name
       - name
       - title
       - type

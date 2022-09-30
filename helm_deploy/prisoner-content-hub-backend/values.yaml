@@ -13,11 +13,11 @@ tier: backend
 application:
   port: 8080
   liveness:
-    endpoint: /health
+    endpoint: /healthcheck/
     delaySeconds: 10
     timeoutSeconds: 10
   readiness:
-    endpoint: /health
+    endpoint: /healthcheck/
     delaySeconds: 10
     timeoutSeconds: 5
   config:
@@ -93,3 +93,9 @@ ingress:
 
 cron:
   schedule: "0 */2 * * *"
+
+dbBackup:
+  enabled: false
+  s3:
+    region: eu-west-2
+

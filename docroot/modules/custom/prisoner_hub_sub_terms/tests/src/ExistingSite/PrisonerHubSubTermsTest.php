@@ -88,7 +88,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $first_term->id()]],
       'field_not_in_series' => 1,
-      'changed' => time(),
+      'published_at' => time(),
     ]);
 
     // Create another subcategory, and create content that is _very old_,
@@ -101,7 +101,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
       'field_not_in_series' => 1,
-      'changed' => strtotime('-2 years'),
+      'published_at' => strtotime('-2 years'),
     ]);
 
     // Create some unpublished content to ensure this doesn't effect
@@ -109,7 +109,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
       'field_not_in_series' => 1,
-      'changed' => time(),
+      'published_at' => time(),
       'status' => 0,
     ]);
 
@@ -127,7 +127,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $second_series->id()]],
-      'changed' => strtotime('-10 minutes'),
+      'published_at' => strtotime('-10 minutes'),
     ]);
 
     // Create a subcategory with some content, and ensure it's displayed
@@ -140,7 +140,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $third_term->id()]],
       'field_not_in_series' => 1,
-      'changed' => strtotime('-1 week'),
+      'published_at' => strtotime('-1 week'),
     ]);
 
     // Create a series inside the current category, with some content in it.
@@ -152,7 +152,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $fourth_term->id()]],
-      'changed' => strtotime('-6 months'),
+      'published_at' => strtotime('-6 months'),
     ]);
 
     // Create a three new sub-categories (going three levels down), and ensure
@@ -175,7 +175,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
       'field_not_in_series' => 1,
-      'changed' => strtotime('-7 months'),
+      'published_at' => strtotime('-7 months'),
     ]);
 
     $correct_order_sub_terms = [
@@ -243,22 +243,51 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Run the request twice, so the first one generates a cache.
     $this->getJsonApiResponse($this->jsonApiUrl);
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
-    $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+    if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
+    }
+    else {
+      $this->markTestSkipped('Page cache module not installed, test can be removed.');
+    }
 
-    // We should have one cachetag invalidation, as we created one peice of content.
-    $cachetag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
-    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
-    $this->assertSame(1, $invalidation_count, 'Cachetag has been cleared exactly one time.');
+    // We should have one cache tag invalidation, as we created one piece of content.
+    $cache_tag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
+    $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
 
     // Create a new node, and check for a MISS.
-    $this->createNode([
+    $node = $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
       'field_not_in_series' => 1,
     ]);
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
-    $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
-    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cachetag]);
-    $this->assertSame(2, $invalidation_count, 'Cachetag has been cleared exactly two times.');
+    if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
+      $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'MISS');
+    }
+    else {
+      $this->markTestSkipped('Page cache module not installed, test can be removed.');
+    }
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
+    $this->assertSame(2, $invalidation_count, 'Cache tag has been cleared exactly two times.');
+
+    // Test switching content to a different category only invalidates the
+    // new category.
+    $new_category = $this->createTerm(Vocabulary::load('moj_categories'));
+    $new_subcategory = $this->createTerm(Vocabulary::load('series'), [
+      'parent' => [
+        'target_id' => $new_category->id(),
+      ],
+    ]);
+    $node->set('field_moj_top_level_categories', [
+      ['target_id' => $new_subcategory->id()],
+    ]);
+    $node->save();
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
+    $this->assertSame(2, $invalidation_count, 'Cache tag has no further invalidations.');
+    $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum(['prisoner_hub_sub_terms:' . $new_category->id()]);
+    $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
+
   }
 
   /**
