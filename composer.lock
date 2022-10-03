@@ -1602,12 +1602,12 @@
                     "role": "Maintainer"
                 },
                 {
-                    "name": "fethi.krout",
-                    "homepage": "https://www.drupal.org/user/3206765"
-                },
-                {
                     "name": "matio89",
                     "homepage": "https://www.drupal.org/user/2320090"
+                },
+                {
+                    "name": "Musa.thomas",
+                    "homepage": "https://www.drupal.org/user/1213824"
                 },
                 {
                     "name": "romainj",
@@ -1662,6 +1662,10 @@
                     "name": "Volodymyr Mostepaniuk (mostepaniukvm)",
                     "homepage": "https://www.drupal.org/u/mostepaniukvm",
                     "role": "Maintainer"
+                },
+                {
+                    "name": "mostepaniukvm",
+                    "homepage": "https://www.drupal.org/user/3440017"
                 }
             ],
             "description": "Extends standard entity autocomplete. Allow users to see autocomplete results by entity id.",
@@ -1725,12 +1729,16 @@
                     "homepage": "https://www.drupal.org/u/neslee-canil-pinto"
                 },
                 {
-                    "name": "jkopel",
-                    "homepage": "https://www.drupal.org/user/66207"
-                },
-                {
                     "name": "mikeker",
                     "homepage": "https://www.drupal.org/user/192273"
+                },
+                {
+                    "name": "Neslee Canil Pinto",
+                    "homepage": "https://www.drupal.org/user/3580850"
+                },
+                {
+                    "name": "podarok",
+                    "homepage": "https://www.drupal.org/user/116002"
                 },
                 {
                     "name": "rlhawk",
@@ -1786,67 +1794,6 @@
             "homepage": "https://www.drupal.org/project/book_blocks",
             "support": {
                 "source": "https://git.drupalcode.org/project/book_blocks"
-            }
-        },
-        {
-            "name": "drupal/cer",
-            "version": "dev-4.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/cer.git",
-                "reference": "995cf2788420339c3572bc64909cebc87eb90f1e"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-4.x": "4.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-4.0-alpha3+1-dev",
-                    "datestamp": "1632417597",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "bmcclure",
-                    "homepage": "https://www.drupal.org/user/278485"
-                },
-                {
-                    "name": "chertzog",
-                    "homepage": "https://www.drupal.org/user/806366"
-                },
-                {
-                    "name": "gcb",
-                    "homepage": "https://www.drupal.org/user/1682976"
-                },
-                {
-                    "name": "gregcube",
-                    "homepage": "https://www.drupal.org/user/336930"
-                },
-                {
-                    "name": "jrglasgow",
-                    "homepage": "https://www.drupal.org/user/36590"
-                },
-                {
-                    "name": "phenaproxima",
-                    "homepage": "https://www.drupal.org/user/205645"
-                }
-            ],
-            "description": "Allows user to create two-way references between entities.",
-            "homepage": "https://www.drupal.org/project/cer",
-            "support": {
-                "source": "https://git.drupalcode.org/project/cer"
             }
         },
         {
@@ -2163,16 +2110,16 @@
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "9.3.14",
+            "version": "9.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
-                "reference": "a9dd9def8891e1c388719474720b57d3fe929a2f"
+                "reference": "5f37a9e4008b34e3e4f6bb34ce0b3f7e5ec8984f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-composer-scaffold/zipball/a9dd9def8891e1c388719474720b57d3fe929a2f",
-                "reference": "a9dd9def8891e1c388719474720b57d3fe929a2f",
+                "url": "https://api.github.com/repos/drupal/core-composer-scaffold/zipball/5f37a9e4008b34e3e4f6bb34ce0b3f7e5ec8984f",
+                "reference": "5f37a9e4008b34e3e4f6bb34ce0b3f7e5ec8984f",
                 "shasum": ""
             },
             "require": {
@@ -2207,22 +2154,22 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.3.14"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/9.4.7"
             },
-            "time": "2022-02-24T17:40:56+00:00"
+            "time": "2022-06-19T16:14:23+00:00"
         },
         {
             "name": "drupal/core-project-message",
-            "version": "9.3.14",
+            "version": "9.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-project-message.git",
-                "reference": "69664743736977676e11f824301ea3e925a712fc"
+                "reference": "5dfa0b75a057caf6542be67f61e7531c737db48c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-project-message/zipball/69664743736977676e11f824301ea3e925a712fc",
-                "reference": "69664743736977676e11f824301ea3e925a712fc",
+                "url": "https://api.github.com/repos/drupal/core-project-message/zipball/5dfa0b75a057caf6542be67f61e7531c737db48c",
+                "reference": "5dfa0b75a057caf6542be67f61e7531c737db48c",
                 "shasum": ""
             },
             "require": {
@@ -2248,9 +2195,9 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-project-message/tree/9.3.14"
+                "source": "https://github.com/drupal/core-project-message/tree/9.5.0-beta1"
             },
-            "time": "2022-02-24T17:40:56+00:00"
+            "time": "2022-02-24T17:40:53+00:00"
         },
         {
             "name": "drupal/core-recommended",
@@ -2340,16 +2287,16 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "9.3.14",
+            "version": "9.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-vendor-hardening.git",
-                "reference": "1c867b32b93200ef00840c5f153ae7750fa3ca7b"
+                "reference": "6e2b95d65ca2aac7350039c5826175cab5a81881"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-vendor-hardening/zipball/1c867b32b93200ef00840c5f153ae7750fa3ca7b",
-                "reference": "1c867b32b93200ef00840c5f153ae7750fa3ca7b",
+                "url": "https://api.github.com/repos/drupal/core-vendor-hardening/zipball/6e2b95d65ca2aac7350039c5826175cab5a81881",
+                "reference": "6e2b95d65ca2aac7350039c5826175cab5a81881",
                 "shasum": ""
             },
             "require": {
@@ -2375,9 +2322,9 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-vendor-hardening/tree/9.3.14"
+                "source": "https://github.com/drupal/core-vendor-hardening/tree/9.5.0-beta1"
             },
-            "time": "2022-02-24T17:40:56+00:00"
+            "time": "2022-02-24T17:40:53+00:00"
         },
         {
             "name": "drupal/ctools",
@@ -2786,10 +2733,6 @@
                     "homepage": "https://www.drupal.org/user/214652"
                 },
                 {
-                    "name": "TR",
-                    "homepage": "https://www.drupal.org/user/202830"
-                },
-                {
                     "name": "bojanz",
                     "homepage": "https://www.drupal.org/user/86106"
                 },
@@ -2808,6 +2751,10 @@
                 {
                     "name": "mglaman",
                     "homepage": "https://www.drupal.org/user/2416470"
+                },
+                {
+                    "name": "TR",
+                    "homepage": "https://www.drupal.org/user/202830"
                 }
             ],
             "description": "Provides expanded entity APIs, which will be moved to Drupal core one day.",
@@ -2851,12 +2798,20 @@
             ],
             "authors": [
                 {
+                    "name": "colan",
+                    "homepage": "https://www.drupal.org/user/58704"
+                },
+                {
                     "name": "NickDickinsonWilde",
                     "homepage": "https://www.drupal.org/user/3094661"
                 },
                 {
-                    "name": "colan",
-                    "homepage": "https://www.drupal.org/user/58704"
+                    "name": "Rajeshreeputra",
+                    "homepage": "https://www.drupal.org/user/3418561"
+                },
+                {
+                    "name": "Upchuk",
+                    "homepage": "https://www.drupal.org/user/1885838"
                 },
                 {
                     "name": "vpeltot",
@@ -2910,16 +2865,16 @@
                     "homepage": "https://www.drupal.org/user/647364"
                 },
                 {
-                    "name": "Stalski",
-                    "homepage": "https://www.drupal.org/user/322618"
-                },
-                {
                     "name": "jyve",
                     "homepage": "https://www.drupal.org/user/591438"
                 },
                 {
                     "name": "nils.destoop",
                     "homepage": "https://www.drupal.org/user/361625"
+                },
+                {
+                    "name": "Stalski",
+                    "homepage": "https://www.drupal.org/user/322618"
                 },
                 {
                     "name": "swentel",
@@ -3605,6 +3560,10 @@
                     "name": "Naveen Valecha",
                     "homepage": "https://drupal.org/u/naveenvalecha",
                     "role": "Maintainer"
+                },
+                {
+                    "name": "naveenvalecha",
+                    "homepage": "https://www.drupal.org/user/2665733"
                 }
             ],
             "description": "Provides jQuery UI Touch Punch library.",
@@ -4099,14 +4058,6 @@
             ],
             "authors": [
                 {
-                    "name": "Fabianx",
-                    "homepage": "https://www.drupal.org/user/693738"
-                },
-                {
-                    "name": "Jeremy",
-                    "homepage": "https://www.drupal.org/user/409"
-                },
-                {
                     "name": "bdragon",
                     "homepage": "https://www.drupal.org/user/53081"
                 },
@@ -4119,8 +4070,16 @@
                     "homepage": "https://www.drupal.org/user/1037976"
                 },
                 {
+                    "name": "Fabianx",
+                    "homepage": "https://www.drupal.org/user/693738"
+                },
+                {
                     "name": "japerry",
                     "homepage": "https://www.drupal.org/user/45640"
+                },
+                {
+                    "name": "Jeremy",
+                    "homepage": "https://www.drupal.org/user/409"
                 },
                 {
                     "name": "jvandyk",
@@ -4314,7 +4273,7 @@
             "authors": [
                 {
                     "name": "Chris Pliakas",
-                    "homepage": "https://www.drupal.org/user/1011436",
+                    "homepage": "https://www.drupal.org/user/266779",
                     "email": "opensource@chrispliakas.com",
                     "role": "Project Lead"
                 },
@@ -4324,8 +4283,8 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "lussoluca",
-                    "homepage": "https://www.drupal.org/user/138068"
+                    "name": "ParisLiakos",
+                    "homepage": "https://www.drupal.org/user/1011436"
                 }
             ],
             "description": "A Framework for integrating with the Monolog library.",
@@ -4604,12 +4563,8 @@
             "authors": [
                 {
                     "name": "Author name",
-                    "homepage": "https://www.drupal.org/user/3299791",
+                    "homepage": "https://www.drupal.org/user/145609",
                     "email": "author@example.com"
-                },
-                {
-                    "name": "alexmoreno",
-                    "homepage": "https://www.drupal.org/user/145609"
                 },
                 {
                     "name": "joachim",
@@ -4626,6 +4581,10 @@
                 {
                     "name": "phenaproxima",
                     "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "University of Colorado Boulder",
+                    "homepage": "https://www.drupal.org/user/3299791"
                 }
             ],
             "description": "Allows switching of installation profiles for a Drupal site.",
@@ -4655,7 +4614,7 @@
             "extra": {
                 "drupal": {
                     "version": "8.x-2.0-beta4",
-                    "datestamp": "1645141218",
+                    "datestamp": "1645141243",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -4672,16 +4631,16 @@
                     "homepage": "https://www.drupal.org/user/547746"
                 },
                 {
-                    "name": "Sheldon Rampton",
-                    "homepage": "https://www.drupal.org/user/13085"
-                },
-                {
                     "name": "dgtlmoon",
                     "homepage": "https://www.drupal.org/user/25027"
                 },
                 {
                     "name": "jstoller",
                     "homepage": "https://www.drupal.org/user/99012"
+                },
+                {
+                    "name": "Sheldon Rampton",
+                    "homepage": "https://www.drupal.org/user/13085"
                 },
                 {
                     "name": "tmarly",
@@ -4878,6 +4837,14 @@
                     "homepage": "https://www.drupal.org/user/214652"
                 },
                 {
+                    "name": "greg.1.anderson",
+                    "homepage": "https://www.drupal.org/user/438598"
+                },
+                {
+                    "name": "kporras07",
+                    "homepage": "https://www.drupal.org/user/1349780"
+                },
+                {
                     "name": "pounard",
                     "homepage": "https://www.drupal.org/user/240164"
                 }
@@ -5072,7 +5039,7 @@
             "extra": {
                 "drupal": {
                     "version": "8.x-1.4",
-                    "datestamp": "1637145565",
+                    "datestamp": "1654699160",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5595,8 +5562,8 @@
                     "homepage": "https://www.drupal.org/u/graber"
                 },
                 {
-                    "name": "benjy",
-                    "homepage": "https://www.drupal.org/user/1852732"
+                    "name": "Graber",
+                    "homepage": "https://www.drupal.org/user/1599440"
                 }
             ],
             "description": "Allows bulk edition of entity field values.",
@@ -5655,12 +5622,8 @@
                     "homepage": "https://www.drupal.org/u/graber"
                 },
                 {
-                    "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028"
-                },
-                {
-                    "name": "bojanz",
-                    "homepage": "https://www.drupal.org/user/86106"
+                    "name": "Graber",
+                    "homepage": "https://www.drupal.org/user/1599440"
                 },
                 {
                     "name": "infojunkie",
@@ -5669,6 +5632,10 @@
                 {
                     "name": "joelpittet",
                     "homepage": "https://www.drupal.org/user/160302"
+                },
+                {
+                    "name": "Jon Pugh",
+                    "homepage": "https://www.drupal.org/user/17028"
                 }
             ],
             "description": "Adds an ability to perform bulk operations on selected entities from view results. Provides an API to create such operations.",
@@ -7959,11 +7926,11 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
+                "php": "^7.2 || ^8.0",
                 "ruflin/elastica": "dev-master"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.3"
+                "phpunit/phpunit": "^8.4.1 || ^9"
             },
             "type": "library",
             "autoload": {
@@ -9309,7 +9276,7 @@
                 "shasum": ""
             },
             "require": {
-                "elasticsearch/elasticsearch": "^7.1.1",
+                "elasticsearch/elasticsearch": "^7.10",
                 "ext-json": "*",
                 "nyholm/dsn": "^2.0.0",
                 "php": "^7.2 || ^8.0",
@@ -18160,5 +18127,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
