@@ -120,6 +120,7 @@ COPY ./apache/ /etc/apache2/
 COPY docroot/sites/ docroot/sites/
 COPY config/ config/
 COPY Makefile Makefile
+RUN chown -R www-data:www-data /var/www
 
 ###########################################################################################
 # Create test image
