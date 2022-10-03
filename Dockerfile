@@ -107,20 +107,15 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Add the composer bin directory to the path.
 ENV PATH="/var/www/html/vendor/bin:~/.local/bin:${PATH}"
 
-# Copy in Composer configuration
-COPY composer.json composer.lock ./
-# Copy in patches we want to apply to modules in Drupal using Composer
-COPY patches/ patches/
-
 # Copy Project
-COPY docroot/modules/custom docroot/modules/custom
-COPY docroot/themes/custom docroot/themes/custom
-COPY docroot/profiles docroot/profiles
+COPY --chown=www-data:www-data composer.json composer.lock Makefile ./
+COPY --chown=www-data:www-data patches/ patches/
+COPY --chown=www-data:www-data docroot/modules/custom docroot/modules/custom
+COPY --chown=www-data:www-data docroot/themes/custom docroot/themes/custom
+COPY --chown=www-data:www-data docroot/profiles docroot/profiles
+COPY --chown=www-data:www-data docroot/sites/ docroot/sites/
+COPY --chown=www-data:www-data config/ config/
 COPY ./apache/ /etc/apache2/
-COPY docroot/sites/ docroot/sites/
-COPY config/ config/
-COPY Makefile Makefile
-RUN chown -R www-data:www-data /var/www
 
 ###########################################################################################
 # Create test image
