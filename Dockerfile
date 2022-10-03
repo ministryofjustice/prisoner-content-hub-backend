@@ -109,12 +109,12 @@ ENV PATH="/var/www/html/vendor/bin:~/.local/bin:${PATH}"
 
 # Copy Project
 COPY --chown=www-data:www-data composer.json composer.lock Makefile ./
-COPY --chown=www-data:www-data patches/ patches/
-COPY --chown=www-data:www-data docroot/modules/custom docroot/modules/custom
-COPY --chown=www-data:www-data docroot/themes/custom docroot/themes/custom
+COPY --chown=www-data:www-data patches patches
+COPY --chown=www-data:www-data docroot/modules docroot/modules
+COPY --chown=www-data:www-data docroot/themes docroot/themes
 COPY --chown=www-data:www-data docroot/profiles docroot/profiles
-COPY --chown=www-data:www-data docroot/sites/ docroot/sites/
-COPY --chown=www-data:www-data config/ config/
+COPY --chown=www-data:www-data docroot/sites docroot/sites
+COPY --chown=www-data:www-data config config
 COPY ./apache/ /etc/apache2/
 
 ###########################################################################################
