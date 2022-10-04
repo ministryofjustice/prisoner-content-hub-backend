@@ -99,13 +99,13 @@ RUN chown -R www-data:www-data /var/www
 USER 33
 WORKDIR /var/www/html
 
-RUN mkdir -p ~/.local/bin
+RUN mkdir -p /var/www/.local/bin
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir=$HOME/.local/bin --filename=composer --version=2.4.2 \
   && php -r "unlink('composer-setup.php');"
 
 # Add the composer bin directory to the path.
-ENV PATH="/var/www/html/vendor/bin:~/.local/bin:${PATH}"
+ENV PATH="/var/www/html/vendor/bin:/var/www/.local/bin:$PATH"
 
 # Copy Project files.
 # Copy with chown as otherwise files are owned by root.
@@ -135,10 +135,9 @@ USER 33
 
 RUN mkdir -p ~/phpunit/browser_output
 
-# Install dependencies (with dev)
-RUN ~/.local/bin/composer install \
+## Install dependencies (with dev)
+RUN composer install \
   --no-ansi \
-  --dev \
   --no-interaction \
   --prefer-dist
 
@@ -160,9 +159,9 @@ USER 33
 ###########################################################################################
 FROM base as optimised-build
 
-# Install dependencies (with dev)
-RUN ~/.local/bin/composer install \
+## Install dependencies (without dev)
+RUN composer install \
   --no-ansi \
-  --dev \
+  --no-dev \
   --no-interaction \
   --prefer-dist
