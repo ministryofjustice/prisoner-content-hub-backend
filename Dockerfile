@@ -116,8 +116,6 @@ COPY --chown=www-data:www-data docroot/themes docroot/themes
 COPY --chown=www-data:www-data docroot/profiles docroot/profiles
 COPY --chown=www-data:www-data docroot/sites docroot/sites
 COPY --chown=www-data:www-data config config
-# An additional chown is required for subdirectories.
-RUN chown -R www-data:www-data /var/www/html
 
 COPY ./apache/ /etc/apache2/
 
