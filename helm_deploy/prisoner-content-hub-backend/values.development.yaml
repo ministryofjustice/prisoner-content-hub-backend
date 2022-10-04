@@ -11,5 +11,3 @@ ingress:
       external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-jsonapi-prisoner-content-hub-development-green
     hosts:
       - host: jsonapi-cms-prisoner-content-hub-development.apps.live.cloud-platform.service.justice.gov.uk
-dbRefresh:
-  enabled: true
