@@ -111,13 +111,8 @@ ENV PATH="/var/www/html/vendor/bin:~/.local/bin:${PATH}"
 # Copy with chown as otherwise files are owned by root.
 COPY --chown=www-data:www-data composer.json composer.lock Makefile ./
 COPY --chown=www-data:www-data patches patches
-COPY --chown=www-data:www-data docroot/modules docroot/modules
-COPY --chown=www-data:www-data docroot/themes docroot/themes
-COPY --chown=www-data:www-data docroot/profiles docroot/profiles
-COPY --chown=www-data:www-data docroot/sites docroot/sites
+COPY --chown=www-data:www-data docroot docroot
 COPY --chown=www-data:www-data config config
-# An additional chown is required for subdirectories.
-RUN chown -R www-data:www-data /var/www/html/docroot
 
 COPY ./apache/ /etc/apache2/
 
