@@ -92,7 +92,7 @@ RUN echo 'memory_limit = -1' >> /usr/local/etc/php/php-cli.ini
 # Install composer as non-root and copy repository files
 ###########################################################################################
 
-RUN chown www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www
 # Set to www-data user.
 # Have to use uid instead username, as otherwise we are forced to use a securityContext
 # See https://stackoverflow.com/a/66367783
