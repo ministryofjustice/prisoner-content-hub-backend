@@ -5,7 +5,7 @@
 # We copy over the first part of the Drupal dockerhub image.  We don't want the steps
 # that come after this (e.g. composer create-project).
 ###########################################################################################
-FROM php:7.4-apache-buster AS base
+FROM php:8.1-apache-buster AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -143,7 +143,7 @@ RUN composer install \
 
 FROM test as local
 USER root
-RUN pecl install xdebug-3.0.4 \
+RUN pecl install xdebug-3.1.5 \
   && docker-php-ext-enable xdebug
 
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
