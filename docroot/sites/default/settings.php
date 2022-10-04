@@ -130,34 +130,33 @@ if ($config['raven.settings']['environment'] != 'production') {
   $config['raven.settings']['ignored_channels'] = ['flysystem'];
 }
 
-// Temporarily disable Redis due to ongoing performance issues.
-//// Do not load Redis during installation (required for CircleCI builds).
-//// See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
-//if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
-//  $settings['redis.connection']['interface'] = 'PhpRedis';
-//  if (getenv('REDIS_TLS_ENABLED', 'true') == 'true') {
-//    $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
-//  }
-//  else {
-//    $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
-//  }
-//  if (getenv('REDIS_PASSWORD', true)) {
-//    $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
-//  }
-//  $settings['cache']['default'] = 'cache.backend.redis';
-//
-//  // Load in the services config directly from the module.  This allows
-//  // for any updates to be automatically added, and also ensures we do not add
-//  // the config during site installation (which will result in an error).
-//  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
-//
-//  // Set a prefix for Redis cache entries.  Otherwise the Redis module will
-//  // generate one, via Settings::getApcuPrefix().  This can change over time
-//  // (e.g. when updating Drupal versions) resulting in lots stale cache items
-//  // in the cache.
-//  $settings['cache_prefix'] = 'prisoner_content_hub_backend';
-//
-//}
+// Do not load Redis during installation (required for CircleCI builds).
+// See https://www.drupal.org/project/redis/issues/2876132#comment-13054928
+if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+  $settings['redis.connection']['interface'] = 'PhpRedis';
+  if (getenv('REDIS_TLS_ENABLED', 'true') == 'true') {
+    $settings['redis.connection']['host'] = 'tls://' . getenv('REDIS_HOST', true);
+  }
+  else {
+    $settings['redis.connection']['host'] = getenv('REDIS_HOST', true);
+  }
+  if (getenv('REDIS_PASSWORD', true)) {
+    $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD', true);
+  }
+  $settings['cache']['default'] = 'cache.backend.redis';
+
+  // Load in the services config directly from the module.  This allows
+  // for any updates to be automatically added, and also ensures we do not add
+  // the config during site installation (which will result in an error).
+  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+
+  // Set a prefix for Redis cache entries.  Otherwise the Redis module will
+  // generate one, via Settings::getApcuPrefix().  This can change over time
+  // (e.g. when updating Drupal versions) resulting in lots stale cache items
+  // in the cache.
+  $settings['cache_prefix'] = 'prisoner_content_hub_backend';
+
+}
 
 $settings['config_sync_directory'] = '../config/sync';
 
