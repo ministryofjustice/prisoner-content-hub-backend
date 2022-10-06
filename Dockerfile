@@ -127,8 +127,8 @@ RUN apt-get update && apt-get install -y \
 
 COPY phpunit.xml phpunit.xml
 
-# Remove the memory limit for the CLI only.
-RUN echo 'memory_limit = -1' > /usr/local/etc/php/php-cli.ini
+# Install vim/vi for easier debugging (e.g. from circleci).
+RUN apt-get install vim
 
 # Set to www-data user.
 USER 33
