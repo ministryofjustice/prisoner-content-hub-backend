@@ -43,7 +43,7 @@ class PageCachePersistCommands extends DrushCommands {
    *   Note this does not accept any arguments.  If you want to clear an individual cache use drush cache:clear
    */
   public function forceCacheClearAll() {
-    drush_cache_clear_all();
+    drupal_flush_all_caches();
     $this->pageCache->forceDeleteAll();
   }
 
