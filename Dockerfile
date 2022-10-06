@@ -128,7 +128,7 @@ RUN apt-get update && apt-get install -y \
 COPY phpunit.xml phpunit.xml
 
 # Install vim/vi for easier debugging (e.g. from circleci).
-RUN apt-get install vim
+RUN apt-get install -y vim
 
 # Set to www-data user.
 USER 33
