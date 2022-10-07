@@ -135,7 +135,7 @@ class RecentlyAdded extends EntityResourceBase {
       $term = Term::load($result['field_moj_series_target_id']);
       if ($term) {
         $entities[] = $term;
-        $published_at_timestamps[] = $result['published_at_max'];
+        $published_at_timestamps[] = (int) $result['published_at_max'];
       }
     }
   }
@@ -177,7 +177,7 @@ class RecentlyAdded extends EntityResourceBase {
     $nodes = Node::loadMultiple($result);
     foreach ($nodes as $node) {
       $entities[] = $node;
-      $published_at_timestamps[] = $node->get('published_at')->value;
+      $published_at_timestamps[] = (int) $node->get('published_at')->value;
     }
   }
 
