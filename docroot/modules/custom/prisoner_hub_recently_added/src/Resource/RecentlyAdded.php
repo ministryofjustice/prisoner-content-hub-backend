@@ -77,12 +77,12 @@ class RecentlyAdded extends EntityResourceBase {
 
     // Sort the $timestamps_and_entities array.
     usort($timestamps_and_entities, function ($a, $b) {
-      $a['published_at'] <=> $b['published_at'];
+      $b['published_at'] <=> $a['published_at'];
     });
 
     // Extract the "entity" key from the array.
     $entities = array_column($timestamps_and_entities, 'entity');
-    
+
     $data = $this->createCollectionDataFromEntities(array_slice($entities, 0, $pagination->getSize()));
     $response = $this->createJsonapiResponse($data, $request);
     $response->addCacheableDependency($cacheability);
