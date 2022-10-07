@@ -77,7 +77,7 @@ class RecentlyAdded extends EntityResourceBase {
 
     // Sort the $timestamps_and_entities array.
     usort($timestamps_and_entities, function ($a, $b) {
-      $b['published_at'] <=> $a['published_at'];
+      return $b['published_at'] <=> $a['published_at'];
     });
 
     // Extract the "entity" key from the array.
