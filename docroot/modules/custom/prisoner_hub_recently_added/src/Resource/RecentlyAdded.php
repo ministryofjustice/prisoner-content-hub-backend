@@ -65,24 +65,24 @@ class RecentlyAdded extends EntityResourceBase {
       throw new CacheableBadRequestHttpException($cacheability, sprintf('The page size needs to be a positive integer.'));
     }
 
-    /** @var \Drupal\Core\Entity\ContentEntityInterface[] $entities */
-    // An array of either node or series entities.
-    $entities = [];
-
-    /** @var int[] $published_at_timestamps */
-    // The published_at timestamps, keyed to correspond with $entities.
-    $published_at_timestamps = [];
+    // Multidimensional array, each item containing a 'published_at' timestamp
+    // and a 'entity' key.
+    $timestamps_and_entities = [];
 
     // Load in series and content entities separately.
     // We are unable to run everything in one db query, due to the different
     // rules for content in a series.
-    $this->loadSeriesEntities($entities, $published_at_timestamps, $pagination->getSize());
-    $this->loadContentEntities($entities, $published_at_timestamps, $pagination->getSize());
+    $this->loadSeriesEntities($timestamps_and_entities, $pagination->getSize());
+    $this->loadContentEntities($timestamps_and_entities, $pagination->getSize());
 
-    // Sort the $published_at_timestamps array and update the $entities to use
-    // the same order.
-    array_multisort($published_at_timestamps, SORT_DESC, SORT_NUMERIC, $entities);
+    // Sort the $timestamps_and_entities array.
+    usort($timestamps_and_entities, function ($a, $b) {
+      $a['published_at'] <=> $b['published_at'];
+    });
 
+    // Extract the "entity" key from the array.
+    $entities = array_column($timestamps_and_entities, 'entity');
+    
     $data = $this->createCollectionDataFromEntities(array_slice($entities, 0, $pagination->getSize()));
     $response = $this->createJsonapiResponse($data, $request);
     $response->addCacheableDependency($cacheability);
@@ -97,7 +97,7 @@ class RecentlyAdded extends EntityResourceBase {
    * that is in a series.  Groups them by series (to remove duplicates) and
    * appends them onto $entities.
    *
-   * @param array $entities
+   * @param array $timestamps_and_entities
    *   The array of content entities, passed in by reference, to be appended to.
    * @param array $published_at_timestamps
    *   The array of timestamps, passed in by reference, to be appended to.
@@ -107,7 +107,7 @@ class RecentlyAdded extends EntityResourceBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function loadSeriesEntities(array &$entities, array &$published_at_timestamps, int $size) {
+  protected function loadSeriesEntities(array &$timestamps_and_entities, int $size) {
     // Use aggregateQuery instead of standard entity query, so that we can group
     // by series (to remove duplicates).
     $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
@@ -125,8 +125,8 @@ class RecentlyAdded extends EntityResourceBase {
 
     // If already have enough entities set, ensure we only query for newer
     // content. (This avoids having to unnecessarily load entities).
-    if (count($entities) >= $size) {
-      $query->condition('published_at', min($published_at_timestamps), '>');
+    if (count($timestamps_and_entities) >= $size) {
+      $query->condition('published_at', min(array_column($timestamps_and_entities, 'published_at')), '>');
     }
 
     $query->range(0, $size);
@@ -134,8 +134,10 @@ class RecentlyAdded extends EntityResourceBase {
     foreach ($results as $result) {
       $term = Term::load($result['field_moj_series_target_id']);
       if ($term) {
-        $entities[] = $term;
-        $published_at_timestamps[] = (int) $result['published_at_max'];
+        $timestamps_and_entities[] = [
+          'published_at' => (int) $result['published_at_max'],
+          'entity' => $term,
+        ];
       }
     }
   }
@@ -143,17 +145,16 @@ class RecentlyAdded extends EntityResourceBase {
   /**
    * Load content entities that are not in a series.
    *
-   * @param array $entities
-   *   The array of content entities, passed in by reference, to be appended to.
-   * @param array $published_at_timestamps
-   *   The array of timestamps, passed in by reference, to be appended to.
+   * @param array $timestamps_and_entities
+   *   The array of timestamps and entities, passed in by reference, to be
+   *   appended to.
    * @param int $size
    *   The size requested.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function loadContentEntities(array &$entities, array &$published_at_timestamps, int $size) {
+  protected function loadContentEntities(array &$timestamps_and_entities, int $size) {
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
     $query->condition('type', self::$content_types, 'IN');
 
@@ -167,8 +168,8 @@ class RecentlyAdded extends EntityResourceBase {
 
     // If already have enough entities set, ensure we only query for newer
     // content. (This avoids having to unnecessarily load entities).
-    if (count($entities) >= $size) {
-      $query->condition('published_at', min($published_at_timestamps), '>');
+    if (count($timestamps_and_entities) >= $size) {
+      $query->condition('published_at', min(array_column($timestamps_and_entities, 'published_at')), '>');
     }
 
     $query->sort('published_at', 'DESC');
@@ -176,8 +177,10 @@ class RecentlyAdded extends EntityResourceBase {
     $result = $this->executeQueryInRenderContext($query);
     $nodes = Node::loadMultiple($result);
     foreach ($nodes as $node) {
-      $entities[] = $node;
-      $published_at_timestamps[] = (int) $node->get('published_at')->value;
+      $timestamps_and_entities[] = [
+        'published_at' => (int) $node->get('published_at')->value,
+        'entity' => $node,
+      ];
     }
   }
 
