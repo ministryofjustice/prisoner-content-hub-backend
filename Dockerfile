@@ -133,9 +133,6 @@ RUN apt-get install -y vim
 # Set to www-data user.
 USER 33
 
-# Set to www-data user.
-USER 33
-
 RUN mkdir -p ~/phpunit/browser_output
 
 ## Install dependencies (with dev)
