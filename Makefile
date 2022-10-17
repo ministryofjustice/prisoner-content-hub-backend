@@ -1,5 +1,5 @@
 build:
-	docker build --target optimised-build -t prisoner-content-hub-backend .
+	docker build -t prisoner-content-hub-backend .
 
 push:
 	@docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
