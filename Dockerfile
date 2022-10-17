@@ -5,7 +5,7 @@
 # We copy over the first part of the Drupal dockerhub image.  We don't want the steps
 # that come after this (e.g. composer create-project).
 ###########################################################################################
-FROM php:7.4-apache-buster AS base
+FROM php:8.1.11-apache-buster AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
