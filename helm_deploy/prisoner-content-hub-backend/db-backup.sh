@@ -15,7 +15,7 @@ echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
 # Make 2 attempts to connect to the database.  This mitigates intermittent DNS issues.
 # See https://mojdt.slack.com/archives/C57UPMZLY/p1664264969450269
 attempts=2
-while [ $attempts -gt 0 ] && ! mysql ${HUB_DB_ENV_MYSQL_DATABASE} -e "SELECT 1" &> /dev/null
+while ! mysql ${HUB_DB_ENV_MYSQL_DATABASE} -e "SELECT 1" &> /dev/null
 do
   ((attempts--))
   if [ $attempts -eq 0 ]
