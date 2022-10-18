@@ -7,6 +7,24 @@ echo "password=${HUB_DB_ENV_MYSQL_PASSWORD}" >> ~/.my.cnf
 echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
 echo "column-statistics=0" >> ~/.my.cnf
 
+echo "[client]" >> ~/.my.cnf
+echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
+echo "password=${HUB_DB_ENV_MYSQL_PASSWORD}" >> ~/.my.cnf
+echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
+
+# Make 2 attempts to connect to the database.  This mitigates intermittent DNS issues.
+# See https://mojdt.slack.com/archives/C57UPMZLY/p1664264969450269
+attempts=2
+while ! mysql ${HUB_DB_ENV_MYSQL_DATABASE} -e "SELECT 1" &> /dev/null
+do
+  ((attempts--))
+  if [ $attempts -eq 0 ]
+  then
+    echo "Error establishing connection to database, aborting."
+    exit 1
+  fi
+done
+
 filename="db_backup_$(date +"%F-%H%M%S").sql"
 mysqldump ${HUB_DB_ENV_MYSQL_DATABASE} > ~/${filename}
 
@@ -17,4 +35,4 @@ echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}" >> ~/.aws/credentials
 
 aws s3 mv ~/${filename} s3://${DB_BACKUP_S3_BUCKET}/${filename} --region=${DB_BACKUP_S3_REGION}
 
-echo "Successfuly backed up database ${filename}"
+echo "Successfully backed up database ${filename}"
