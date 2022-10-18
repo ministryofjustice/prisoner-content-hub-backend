@@ -235,10 +235,6 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());
     $message = 'JSON response returns the correct results on url: ' . $url->toString();
-    if (is_null($response_document) || !isset($response_document['data'])) {
-      print $response->getBody()->__toString();
-      ob_flush();
-    }
     if (empty($entities_to_check)) {
       $this->assertEmpty($response_document['data'], $message);
     }
