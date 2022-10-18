@@ -15,7 +15,7 @@
         "drupal/config_ignore": "^2.3",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
-        "drupal/core-recommended": "^9.4",
+        "drupal/core-recommended": "~9.4.7",
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
@@ -78,7 +78,17 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "cweagans/composer-patches": true,
+            "drupal/console-extend-plugin": true,
+            "drupal/core-vendor-hardening": true,
+            "oomphinc/composer-installers-extender": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
         "composer-exit-on-patch-failure": true,
