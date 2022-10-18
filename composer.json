@@ -67,7 +67,7 @@
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
         "drupal/views_filters_populate": "^2.0",
-        "drush/drush": "^10.3",
+        "drush/drush": "^11.2",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
         "oomphinc/composer-installers-extender": "^2.0"
@@ -203,6 +203,9 @@
             },
             "drupal/linkit": {
                 "Issue #2877535: Link shown after the autocomplete selection is the bare node/xxx link, not the alias": "patches/linkit-2877535-link-shown-after-autocomplete-is-bare-41.patch"
+            },
+            "guzzlehttp/guzzle": {
+                "https://github.com/guzzle/guzzle/issues/3020 support PHP8.1 as used by Behat 3 with Drupal 9.3": "patches/guzzle-3020.patch"
             }
         },
         "patches-ignore": {
