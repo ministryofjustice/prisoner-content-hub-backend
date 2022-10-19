@@ -20,7 +20,7 @@ use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
  * text.  This refreshes the image urls (including signatures).
  */
 function text_editor_refresh_images_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
-  if ($context['widget'] instanceof TextareaWidget && $element['#type'] == 'text_format') {
+  if ($context['widget'] instanceof TextareaWidget && $element['#type'] == 'text_format' && !empty($element['#default_value'])) {
     $filter_manager = \Drupal::service('plugin.manager.filter');
     $filter = $filter_manager->createInstance('editor_file_reference');
     /** @var \Drupal\filter\FilterProcessResult $text_with_updated_images */
