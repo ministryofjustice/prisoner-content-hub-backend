@@ -1,0 +1,18 @@
+diff --git a/src/Cookie/CookieJar.php b/src/Cookie/CookieJar.php
+index 394df3a7..f1933d0c 100644
+--- a/src/Cookie/CookieJar.php
++++ b/src/Cookie/CookieJar.php
+@@ -217,11 +217,13 @@ class CookieJar implements CookieJarInterface
+         return true;
+     }
+ 
++    #[\ReturnTypeWillChange]
+     public function count()
+     {
+         return count($this->cookies);
+     }
+ 
++    #[\ReturnTypeWillChange]
+     public function getIterator()
+     {
+         return new \ArrayIterator(array_values($this->cookies));
