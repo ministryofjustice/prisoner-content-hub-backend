@@ -8,7 +8,6 @@ dependencies:
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
-    - field.field.node.page.field_moj_secondary_tags
     - field.field.node.page.field_moj_series
     - field.field.node.page.field_moj_stand_first
     - field.field.node.page.field_moj_thumbnail_image
@@ -73,14 +72,6 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 5
-    region: content
-  field_moj_secondary_tags:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 2
     region: content
   field_moj_series:
     type: entity_reference_label

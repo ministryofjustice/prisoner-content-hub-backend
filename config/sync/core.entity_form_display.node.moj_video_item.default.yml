@@ -8,7 +8,6 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_description
     - field.field.node.moj_video_item.field_moj_episode
     - field.field.node.moj_video_item.field_moj_season
-    - field.field.node.moj_video_item.field_moj_secondary_tags
     - field.field.node.moj_video_item.field_moj_series
     - field.field.node.moj_video_item.field_moj_subtitles
     - field.field.node.moj_video_item.field_moj_thumbnail_image
@@ -27,6 +26,7 @@ dependencies:
     - file
     - image
     - path
+    - publication_date
     - scheduler
     - select2
     - term_reference_tree
@@ -287,6 +287,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   scheduler_settings:
     weight: 14
     region: content
@@ -330,6 +336,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
-  field_moj_secondary_tags: true
   promote: true
   sticky: true

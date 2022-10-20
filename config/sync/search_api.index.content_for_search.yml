@@ -3,19 +3,18 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_moj_top_level_categories
-    - field.storage.node.field_moj_description
     - field.storage.node.field_exclude_from_prison
-    - field.storage.node.field_prisons
-    - field.storage.node.field_moj_secondary_tags
+    - field.storage.node.field_moj_description
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_stand_first
+    - field.storage.node.field_prisons
+    - field.storage.node.field_moj_top_level_categories
     - search_api.server.elasticsearch
   module:
     - elasticsearch_connector
     - taxonomy
-    - node
     - taxonomy_machine_name
+    - node
     - search_api
 third_party_settings:
   elasticsearch_connector:
@@ -66,17 +65,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_moj_description
-  field_moj_secondary_tags:
-    label: 'Secondary tags » Taxonomy term » Name'
-    datasource_id: 'entity:node'
-    property_path: 'field_moj_secondary_tags:entity:name'
-    type: text
-    boost: !!float 3
-    dependencies:
-      config:
-        - field.storage.node.field_moj_secondary_tags
-      module:
-        - taxonomy
   field_moj_series:
     label: 'Series » Taxonomy term » Name'
     datasource_id: 'entity:node'
@@ -173,7 +161,6 @@ processor_settings:
       - field_exclude_from_prison_name
       - field_moj_description
       - field_moj_description_summary
-      - field_moj_secondary_tags
       - field_moj_series
       - field_moj_stand_first
       - field_prisons_name
@@ -190,7 +177,6 @@ processor_settings:
     fields:
       - field_moj_description
       - field_moj_description_summary
-      - field_moj_secondary_tags
       - field_moj_series
       - field_moj_stand_first
       - name
