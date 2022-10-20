@@ -19,3 +19,5 @@ application:
 
 dbBackup:
   enabled: true
+dbRefresh:
+  enabled: false
