@@ -28,13 +28,6 @@ function prisoner_hub_taxonomy_sorting_entity_base_field_info(\Drupal\Core\Entit
       ->setDescription(t('A calculated sorting value for a content within a series.'))
       ->setReadOnly(TRUE);
   }
-  elseif ($entity_type->id() == 'taxonomy_term') {
-    // TODO: Remove this after prisoner_hub_taxonomy_sorting_update_9004() has run.
-    $fields['content_updated'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Content updated'))
-      ->setDescription(t('A timestamp of when the last piece of content within this taxonomy term was updated.'))
-      ->setReadOnly(TRUE);
-  }
   return $fields;
 }
 
