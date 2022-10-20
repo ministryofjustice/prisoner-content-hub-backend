@@ -1,0 +1,28 @@
+uuid: a85856ea-0e14-4669-8a87-31ff2754df22
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.full_wi.field_image
+    - paragraphs.paragraphs_type.full_wi
+  module:
+    - image
+id: paragraph.full_wi.default
+targetEntityType: paragraph
+bundle: full_wi
+mode: default
+content:
+  field_image:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  breadcrumbs: true
+  search_api_excerpt: true

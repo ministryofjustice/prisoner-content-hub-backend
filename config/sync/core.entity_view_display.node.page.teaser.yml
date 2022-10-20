@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.page.field_components
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
     - field.field.node.page.field_moj_description
@@ -36,6 +37,7 @@ content:
     region: content
 hidden:
   breadcrumbs: true
+  field_components: true
   field_exclude_feedback: true
   field_exclude_from_prison: true
   field_moj_description: true
@@ -51,4 +53,5 @@ hidden:
   field_prisons: true
   field_release_date: true
   field_topics: true
+  published_at: true
   search_api_excerpt: true

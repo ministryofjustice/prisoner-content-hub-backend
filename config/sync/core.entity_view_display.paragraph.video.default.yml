@@ -1,0 +1,25 @@
+uuid: 2209314a-2064-40b0-b902-f496f04eeff3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.video.field_video_file
+    - paragraphs.paragraphs_type.video
+  module:
+    - file
+id: paragraph.video.default
+targetEntityType: paragraph
+bundle: video
+mode: default
+content:
+  field_video_file:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  breadcrumbs: true
+  search_api_excerpt: true

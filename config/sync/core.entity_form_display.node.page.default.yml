@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_components
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
     - field.field.node.page.field_moj_description
@@ -24,12 +25,12 @@ dependencies:
     - datetime
     - field_group
     - image
+    - paragraphs
     - path
     - publication_date
     - scheduler
     - select2
     - term_reference_tree
-    - text
 third_party_settings:
   field_group:
     group_prison_categories:
@@ -39,7 +40,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 11
+      weight: 13
       format_type: fieldset
       format_settings:
         classes: ''
@@ -55,7 +56,7 @@ third_party_settings:
       label: 'Does this content fit into a Series?'
       region: content
       parent_name: ''
-      weight: 9
+      weight: 10
       format_type: fieldset
       format_settings:
         classes: ''
@@ -95,7 +96,7 @@ third_party_settings:
       label: Category
       region: content
       parent_name: ''
-      weight: 10
+      weight: 12
       format_type: fieldset
       format_settings:
         classes: ''
@@ -131,6 +132,21 @@ third_party_settings:
         description: ''
         required_fields: true
         weight: 0
+    group_components:
+      children:
+        - field_components
+      label: 'Main body content'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: true
+        description: ''
+        required_fields: true
 _core:
   default_config_hash: KSvzyFhdLuxniTsunUnUfpfMmod2l57GibtVjL8ymHM
 id: node.page.default
@@ -140,13 +156,31 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_components:
+    type: paragraphs
+    weight: 4
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+      features:
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
-    weight: 12
+    weight: 14
     region: content
     settings:
       display_label: true
@@ -162,16 +196,6 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
-    third_party_settings: {  }
-  field_moj_description:
-    type: text_textarea_with_summary
-    weight: 3
-    region: content
-    settings:
-      rows: 35
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   field_moj_episode:
     type: number
@@ -207,7 +231,7 @@ content:
     third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
-    weight: 4
+    weight: 5
     region: content
     settings:
       progress_indicator: throbber
@@ -260,7 +284,7 @@ content:
     third_party_settings: {  }
   field_topics:
     type: select2_entity_reference
-    weight: 8
+    weight: 9
     region: content
     settings:
       width: 100%
@@ -270,30 +294,30 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 13
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 16
+    weight: 18
     region: content
     settings:
       display_label: true
@@ -308,7 +332,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 6
     region: content
     settings:
       match_operator: CONTAINS
@@ -318,11 +342,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_moj_description: true
   field_moj_secondary_tags: true
   promote: true
   sticky: true
