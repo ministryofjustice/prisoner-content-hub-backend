@@ -12,6 +12,7 @@ metadata:
   {{- end }}
     kubernetes.io/ingress.class: "nginx"
     external-dns.alpha.kubernetes.io/aws-weight: "0"
+    external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-prisoner-content-hub-{{ .Values.environmentName }}-green
 spec:
   tls:
   {{- range .Values.ingress.hosts }}

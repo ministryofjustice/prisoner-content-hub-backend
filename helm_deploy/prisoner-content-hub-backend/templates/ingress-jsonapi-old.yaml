@@ -13,6 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.ingress.jsonapi.allowed | quote }}
     kubernetes.io/ingress.class: "nginx"
     external-dns.alpha.kubernetes.io/aws-weight: "0"
+    external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-jsonapi-prisoner-content-hub-{{ .Values.environmentName }}-green
 spec:
   tls:
   {{- range .Values.ingress.jsonapi.hosts }}

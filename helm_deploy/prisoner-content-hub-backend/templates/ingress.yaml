@@ -11,6 +11,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
     external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-ingress-prisoner-content-hub-{{ .Values.environmentName }}-green
 spec:
   ingressClassName: default
   tls:
