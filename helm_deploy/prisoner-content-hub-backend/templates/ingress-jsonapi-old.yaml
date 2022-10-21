@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-jsonapi-ingress
+  name: {{ $fullName }}-jsonapi
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.jsonapi.annotations }}
@@ -11,9 +11,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.ingress.jsonapi.allowed | quote }}
-    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    kubernetes.io/ingress.class: "nginx"
+    external-dns.alpha.kubernetes.io/aws-weight: "0"
 spec:
-  ingressClassName: default
   tls:
   {{- range .Values.ingress.jsonapi.hosts }}
   - hosts:
