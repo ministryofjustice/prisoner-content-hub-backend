@@ -8,7 +8,6 @@ dependencies:
     - field.storage.node.field_prison_owner
     - field.storage.node.field_prisons
     - field.storage.node.field_topics
-    - node.type.featured_articles
     - node.type.help_page
     - node.type.homepage
     - node.type.link
@@ -954,7 +953,6 @@ display:
           value:
             moj_radio_item: moj_radio_item
             page: page
-            featured_articles: featured_articles
             help_page: help_page
             link: link
             homepage: homepage
