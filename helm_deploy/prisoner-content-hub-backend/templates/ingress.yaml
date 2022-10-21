@@ -10,7 +10,6 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-    external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
   ingressClassName: default
   tls:
