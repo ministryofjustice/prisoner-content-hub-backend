@@ -11,6 +11,8 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.ingress.jsonapi.allowed | quote }}
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-jsonapi-ingress-prisoner-content-hub-{{ .Values.environmentName }}-green
 spec:
   ingressClassName: default
   tls:
