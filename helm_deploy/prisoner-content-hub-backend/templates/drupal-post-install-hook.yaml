@@ -18,6 +18,24 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       restartPolicy: Never
+  {{ if .Values.dbRefresh.enabled }}
+      initContainers:
+        - name: db-refresh
+          image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
+          command:
+            - /bin/entrypoint.sh
+          volumeMounts:
+            - name: db-refresh-script
+              mountPath: /bin/entrypoint.sh
+              readOnly: true
+              subPath: entrypoint.sh
+{{ include "db-backup.envs" . | nindent 10 }}
+      volumes:
+        - name: db-refresh-script
+          configMap:
+            name: db-refresh-script
+            defaultMode: 0755
+  {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

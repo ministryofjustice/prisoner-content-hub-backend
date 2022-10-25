@@ -29,8 +29,6 @@ class SeriesSortByTest extends ExistingSiteBase {
   protected $seriesTerm;
 
   public function setUp() : void {
-    $this->markTestSkipped('Temporarily disabled whilst prisoner_hub_taxonomy_sorting_entity_update is run.');
-    
     parent::setUp();
     // Create a series
     $vocab = Vocabulary::load('series');

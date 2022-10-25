@@ -389,3 +389,20 @@ function prisoner_content_hub_profile_update_8024() {
     }
   }
 }
+
+
+/**
+ * Delete content in "featured_articles" content type.
+ */
+function prisoner_content_hub_profile_update_8025() {
+  $result = \Drupal::entityQuery('node')
+    ->condition('type', 'featured_articles')
+    ->execute();
+  $nodes = Node::loadMultiple($result);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $node->delete();
+  }
+
+}

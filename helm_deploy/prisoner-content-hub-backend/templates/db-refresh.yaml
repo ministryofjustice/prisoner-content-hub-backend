@@ -1,0 +1,54 @@
+{{- if .Values.dbRefresh.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-refresh-script
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+data:
+  entrypoint.sh: |-
+{{ .Files.Get "db-refresh.sh" | indent 4 }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}-db-refresh-cronjob
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "30 4 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      # Tidy up all jobs after 4 days
+      ttlSecondsAfterFinished: 345600
+      backoffLimit: 0
+      activeDeadlineSeconds: 2400
+      template:
+        spec:
+          initContainers:
+          - name: db-refresh-cronjob
+            image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
+            command:
+              - /bin/entrypoint.sh
+            volumeMounts:
+              - name: db-refresh-script
+                mountPath: /bin/entrypoint.sh
+                readOnly: true
+                subPath: entrypoint.sh
+  {{ include "db-backup.envs" . | nindent 12 }}
+          containers:
+          - name: drupal-deploy
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["make", "deploy"]
+  {{ include "drupal-deployment.envs" . | nindent 12 }}
+          restartPolicy: Never
+          volumes:
+            - name: db-refresh-script
+              configMap:
+                name: db-refresh-script
+                defaultMode: 0755
+  {{- end }}

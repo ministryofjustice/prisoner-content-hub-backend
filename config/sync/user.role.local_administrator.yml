@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
-    - node.type.featured_articles
     - node.type.help_page
     - node.type.homepage
     - node.type.link
@@ -58,7 +57,6 @@ permissions:
   - 'bypass prison ownership edit access'
   - 'clone node entity'
   - 'clone taxonomy_term entity'
-  - 'create featured_articles content'
   - 'create help_page content'
   - 'create homepage content'
   - 'create link content'
@@ -77,7 +75,6 @@ permissions:
   - 'delete own link content'
   - 'delete terms in moj_categories'
   - 'delete terms in series'
-  - 'edit any featured_articles content'
   - 'edit any help_page content'
   - 'edit any homepage content'
   - 'edit any link content'
@@ -85,7 +82,6 @@ permissions:
   - 'edit any moj_radio_item content'
   - 'edit any moj_video_item content'
   - 'edit any page content'
-  - 'edit own featured_articles content'
   - 'edit own help_page content'
   - 'edit own homepage content'
   - 'edit own link content'
@@ -110,7 +106,6 @@ permissions:
   - 'execute user_unblock_user_action user'
   - 'execute vbo_cancel_user_action user'
   - 'execute views_bulk_edit all'
-  - 'revert featured_articles revisions'
   - 'revert help_page revisions'
   - 'revert homepage revisions'
   - 'revert link revisions'
@@ -125,7 +120,6 @@ permissions:
   - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
   - 'view any unpublished content'
-  - 'view featured_articles revisions'
   - 'view help_page revisions'
   - 'view link revisions'
   - 'view moj_pdf_item revisions'

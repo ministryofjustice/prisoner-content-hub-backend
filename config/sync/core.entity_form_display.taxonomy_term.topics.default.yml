@@ -12,7 +12,6 @@ dependencies:
   module:
     - field_group
     - image
-    - path
     - term_reference_tree
     - text
 third_party_settings:
@@ -62,7 +61,7 @@ content:
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
-    weight: 5
+    weight: 4
     region: content
     settings:
       display_label: true
@@ -107,17 +106,12 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  path:
-    type: path
-    weight: 4
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 6
+    weight: 5
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  path: true
