@@ -21,7 +21,7 @@ do
   ((attempts--))
   if [ $attempts -eq 0 ]
   then
-    echo "Unable to connect to database.  Possible DNS error."
+    echo "Unable to connect to database instance.  Possibly route53 DNS is not yet available. (Tried 8 times before failing)."
     exit 1
   fi
 done
