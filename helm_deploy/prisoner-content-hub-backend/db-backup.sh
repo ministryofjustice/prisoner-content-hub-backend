@@ -14,6 +14,7 @@ echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
 
 # Make 8 maximum attempts to connect to the database.  This mitigates intermittent DNS issues.
 # See https://mojdt.slack.com/archives/C57UPMZLY/p1664264969450269
+# See https://mojdt.slack.com/archives/C57UPMZLY/p1666708074467369
 attempts=8
 while ! mysql ${HUB_DB_ENV_MYSQL_DATABASE} -e "SELECT 1" &> /dev/null
 do
