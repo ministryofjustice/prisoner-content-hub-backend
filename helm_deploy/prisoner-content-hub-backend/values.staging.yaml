@@ -1,8 +1,11 @@
-environmentName: staging
 ingress:
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-ingress-prisoner-content-hub-staging-green
   hosts:
     - host: cms-prisoner-content-hub-staging.apps.live.cloud-platform.service.justice.gov.uk
   jsonapi:
+    annotations:
+      external-dns.alpha.kubernetes.io/set-identifier: prisoner-content-hub-backend-jsonapi-ingress-prisoner-content-hub-staging-green
     hosts:
       - host: jsonapi-cms-prisoner-content-hub-staging.apps.live.cloud-platform.service.justice.gov.uk
 dbRefresh:
