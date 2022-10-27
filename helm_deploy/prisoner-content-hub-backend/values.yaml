@@ -13,11 +13,11 @@ tier: backend
 application:
   port: 8080
   liveness:
-    endpoint: /health
+    endpoint: /healthcheck/
     delaySeconds: 10
     timeoutSeconds: 10
   readiness:
-    endpoint: /health
+    endpoint: /healthcheck/
     delaySeconds: 10
     timeoutSeconds: 5
   config:
@@ -66,7 +66,6 @@ ingress:
   tlsEnabled: true
   path: "/"
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     # nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     # nginx.ingress.kubernetes.io/modsecurity-snippet: |
     #   Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
@@ -85,7 +84,6 @@ ingress:
       }
   jsonapi:
     annotations:
-      kubernetes.io/ingress.class: "nginx"
       nginx.ingress.kubernetes.io/server-snippet: |
         add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
       nginx.ingress.kubernetes.io/proxy-body-size: 500m
@@ -93,3 +91,11 @@ ingress:
 
 cron:
   schedule: "0 */2 * * *"
+
+dbBackup:
+  enabled: false
+  s3:
+    region: eu-west-2
+dbRefresh:
+  enabled: false
+

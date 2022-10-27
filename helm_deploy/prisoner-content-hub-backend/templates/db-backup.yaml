@@ -1,0 +1,49 @@
+{{- if .Values.dbBackup.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-backup-script
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+data:
+  entrypoint.sh: |-
+{{ .Files.Get "db-backup.sh" | indent 4 }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}-db-backup-cronjob
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      # Tidy up all jobs after 4 days
+      ttlSecondsAfterFinished: 345600
+      backoffLimit: 0
+      activeDeadlineSeconds: 2400
+      template:
+        spec:
+          containers:
+          - name: db-backup-cronjob
+            image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
+            command:
+              - /bin/entrypoint.sh
+            volumeMounts:
+              - name: db-backup-script
+                mountPath: /bin/entrypoint.sh
+                readOnly: true
+                subPath: entrypoint.sh
+{{ include "db-backup.envs" . | nindent 12 }}
+          restartPolicy: Never
+          volumes:
+            - name: db-backup-script
+              configMap:
+                name: db-backup-script
+                defaultMode: 0755
+  {{- end }}

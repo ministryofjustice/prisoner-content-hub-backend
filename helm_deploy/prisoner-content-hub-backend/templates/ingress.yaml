@@ -1,16 +1,19 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "prisoner-content-hub-backend.fullname" . -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-ingress
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-ingress-prisoner-content-hub-{{ .Values.environmentName }}-green
 spec:
+  ingressClassName: default
   tls:
   {{- range .Values.ingress.hosts }}
   - hosts:
@@ -23,8 +26,11 @@ spec:
       http:
         paths:
           - path: "/"
+            pathType: Prefix
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: 80
   {{- end }}
 {{- end -}}

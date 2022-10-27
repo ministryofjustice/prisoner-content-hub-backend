@@ -59,7 +59,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   public function testUserCanCreateNewContent() {
     foreach ($this->contentTypes as $contentType) {
       // Skip the homepage content type, as we do not have access to create these.
-      if (in_array($contentType, ['featured_articles', 'homepage'])) {
+      if (in_array($contentType, ['homepage'])) {
         continue;
       }
       $this->visit('/node/add/' . $contentType);

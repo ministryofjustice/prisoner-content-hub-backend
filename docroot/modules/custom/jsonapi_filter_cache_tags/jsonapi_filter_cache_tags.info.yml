@@ -1,0 +1,7 @@
+name: 'JSON:API Filter Cachetags'
+type: module
+description: 'Provides custom cachetag integration based on jsonapi filters.'
+core_version_requirement: ^9
+package: 'Custom'
+dependencies:
+  - drupal:jsonapi

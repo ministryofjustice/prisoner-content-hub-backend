@@ -22,7 +22,7 @@ third_party_settings:
     unpublish_enable: false
     unpublish_required: false
     unpublish_revision: false
-name: 'New homepage'
+name: Homepage
 type: homepage
 description: 'Use the <em>Homepage</em> content type to control certain components on a prisons homepage.  There is normally one <em>Homepage</em> per prison, and these are created when the prison is first added to Drupal.'
 help: ''

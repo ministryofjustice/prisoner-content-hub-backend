@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
-    - node.type.featured_articles
     - node.type.homepage
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
