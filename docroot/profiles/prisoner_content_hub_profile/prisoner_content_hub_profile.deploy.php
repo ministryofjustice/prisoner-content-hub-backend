@@ -426,7 +426,8 @@ function prisoner_content_hub_profile_deploy_reimport_layout_builder_config() {
 /**
  * Update series to use release date sorting.
  *
- * For list of series, see https://docs.google.com/spreadsheets/d/1rpF-uYfU2pkTVKTWY6Un4jq9Y8NCNYPfl0_GFXRnUIQ
+ * For list of series, see
+ * https://docs.google.com/spreadsheets/d/1rpF-uYfU2pkTVKTWY6Un4jq9Y8NCNYPfl0_GFXRnUIQ
  */
 function prisoner_content_hub_profile_deploy_update_series_to_date_sorting() {
   $series_to_convert = [
@@ -558,7 +559,8 @@ function prisoner_content_hub_profile_deploy_update_series_to_date_sorting() {
 /**
  * Convert series to subcategories.
  *
- * For list of series, see https://docs.google.com/spreadsheets/d/1rpF-uYfU2pkTVKTWY6Un4jq9Y8NCNYPfl0_GFXRnUIQ
+ * For list of series, see
+ * https://docs.google.com/spreadsheets/d/1rpF-uYfU2pkTVKTWY6Un4jq9Y8NCNYPfl0_GFXRnUIQ
  */
 function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
   $series_to_convert = [
@@ -593,7 +595,7 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
     $nodes = Node::loadMultiple($result);
     foreach ($nodes as $node) {
       $node->set('field_moj_top_level_categories', [
-        ['target_id' => $new_category->id()]
+        ['target_id' => $new_category->id()],
       ]);
       $node->set('field_moj_series', NULL);
       $node->set('field_not_in_series', 1);
@@ -610,5 +612,24 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
     \Drupal::database()->query("UPDATE node__field_moj_description SET field_moj_description_value = REPLACE(field_moj_description_value, '" . $find . "', '" . $replace . "') WHERE field_moj_description_value LIKE '%" . $find . "%'");
     $term->delete();
 
+  }
+}
+
+/**
+ * The summary field on the link content type has changed name, copy over
+ * previous values.
+ */
+function prisoner_content_hub_profile_deploy_copy_link_summary() {
+  $result = \Drupal::entityQuery('node')
+    ->condition('type', 'link')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $nodes = Node::loadMultiple($result);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    $node->set('field_link_summary', $node->get('field_summary')->getValue());
+    $node->save();
   }
 }

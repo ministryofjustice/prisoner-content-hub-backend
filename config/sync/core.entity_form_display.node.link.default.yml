@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.link.field_display_url
     - field.field.node.link.field_exclude_from_prison
+    - field.field.node.link.field_link_summary
     - field.field.node.link.field_moj_episode
     - field.field.node.link.field_moj_season
     - field.field.node.link.field_moj_series
@@ -23,6 +24,7 @@ dependencies:
     - field_group
     - image
     - path
+    - publication_date
     - scheduler
     - select2
     - term_reference_tree
@@ -142,6 +144,14 @@ content:
       cascading_selection_enforce: false
       max_depth: 0
     third_party_settings: {  }
+  field_link_summary:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_moj_episode:
     type: number
     weight: 17
@@ -216,14 +226,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_summary:
-    type: string_textfield
-    weight: 2
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_url:
     type: string_textfield
     weight: 3
@@ -241,6 +243,12 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -266,7 +274,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 9
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -281,5 +289,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_summary: true
   promote: true
   sticky: true
