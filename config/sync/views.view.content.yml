@@ -15,6 +15,7 @@ dependencies:
     - node.type.moj_radio_item
     - node.type.moj_video_item
     - node.type.page
+    - node.type.urgent_banner
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.prisons
     - taxonomy.vocabulary.series
@@ -951,12 +952,14 @@ display:
           plugin_id: bundle
           operator: in
           value:
+            all: all
             moj_radio_item: moj_radio_item
             page: page
             help_page: help_page
-            link: link
             homepage: homepage
+            link: link
             moj_pdf_item: moj_pdf_item
+            urgent_banner: urgent_banner
             moj_video_item: moj_video_item
           group: 1
           exposed: true
@@ -978,7 +981,7 @@ display:
               moj_local_content_manager: '0'
               local_administrator: '0'
               administrator: '0'
-            reduce: true
+            reduce: false
           is_grouped: false
           group_info:
             label: ''

@@ -51,4 +51,5 @@ hidden:
   field_prisons: true
   field_release_date: true
   field_topics: true
+  published_at: true
   search_api_excerpt: true

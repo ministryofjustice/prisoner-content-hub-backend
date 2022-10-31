@@ -271,6 +271,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   scheduler_settings:
     weight: 12
     region: content
