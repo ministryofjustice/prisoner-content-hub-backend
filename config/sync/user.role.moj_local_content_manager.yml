@@ -9,6 +9,7 @@ dependencies:
     - node.type.moj_radio_item
     - node.type.moj_video_item
     - node.type.page
+    - node.type.urgent_banner
   module:
     - filter
     - node
@@ -31,16 +32,24 @@ permissions:
   - 'create moj_radio_item content'
   - 'create moj_video_item content'
   - 'create page content'
+  - 'create urgent_banner content'
+  - 'delete any urgent_banner content'
+  - 'delete own urgent_banner content'
+  - 'edit any featured_articles content'
   - 'edit any homepage content'
   - 'edit any moj_pdf_item content'
   - 'edit any moj_radio_item content'
   - 'edit any moj_video_item content'
   - 'edit any page content'
+  - 'edit any urgent_banner content'
+  - 'edit own featured_articles content'
   - 'edit own homepage content'
   - 'edit own moj_pdf_item content'
   - 'edit own moj_radio_item content'
   - 'edit own moj_video_item content'
   - 'edit own page content'
+  - 'edit own urgent_banner content'
+  - 'revert urgent_banner revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'set any published on date'
@@ -52,6 +61,8 @@ permissions:
   - 'view any unpublished moj_radio_item content'
   - 'view any unpublished moj_video_item content'
   - 'view any unpublished page content'
+  - 'view any unpublished urgent_banner content'
+  - 'view featured_articles revisions'
   - 'view homepage revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
@@ -59,3 +70,4 @@ permissions:
   - 'view own unpublished content'
   - 'view page revisions'
   - 'view scheduled content'
+  - 'view urgent_banner revisions'

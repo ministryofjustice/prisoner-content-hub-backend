@@ -43,12 +43,6 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->userPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
 
-    // Temporarily remove urgent banner content type, as this is not yet
-    // accessible local content managers.
-    // TODO: Remove these lines (re-instate tests) for urgent banner content type.
-    $key = array_search('urgent_banner', $this->contentTypes);
-    unset($this->contentTypes[$key]);
-
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
         ['target_id' => $this->prisonTerm->id()],
@@ -237,7 +231,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $this->visit($edit_url->toString());
 
       // Test some fields are disabled, that appear on all content types.
-      $this->assertSession()->fieldDisabled('Title');
+      $this->assertSession()->fieldDisabled('title[0][value]');
       $this->assertSession()->fieldDisabled('Published');
 
       $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
@@ -350,7 +344,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected function assertUserCanEditNodeOnCurrentPage(string $contentType) {
     // Test some fields are enabled, that appear on all content types.
     try {
-      $this->assertSession()->fieldEnabled('Title');
+      $this->assertSession()->fieldEnabled('title[0][value]');
       $this->assertSession()->fieldEnabled('Published');
     }
     catch (\Exception $e) {
