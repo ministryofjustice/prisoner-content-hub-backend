@@ -5,7 +5,6 @@ module:
   admin_toolbar: 0
   admin_toolbar_links_access_filter: 0
   autocomplete_id: 0
-  better_exposed_filters: 0
   block: 0
   book: 0
   book_blocks: 0
@@ -40,10 +39,6 @@ module:
   image: 0
   image_style_warmer: 0
   inline_form_errors: 0
-  jquery_ui: 0
-  jquery_ui_datepicker: 0
-  jquery_ui_slider: 0
-  jquery_ui_touch_punch: 0
   jsonapi: 0
   jsonapi_cross_bundles: 0
   jsonapi_filter_cache_tags: 0
