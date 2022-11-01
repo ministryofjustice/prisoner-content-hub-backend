@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_episode
     - field.field.node.moj_radio_item.field_moj_programme_code
     - field.field.node.moj_radio_item.field_moj_season
-    - field.field.node.moj_radio_item.field_moj_secondary_tags
     - field.field.node.moj_radio_item.field_moj_series
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
@@ -345,5 +344,4 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
-  field_moj_secondary_tags: true
   promote: true

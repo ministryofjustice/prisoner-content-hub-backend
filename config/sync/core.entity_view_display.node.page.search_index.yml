@@ -9,7 +9,6 @@ dependencies:
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
-    - field.field.node.page.field_moj_secondary_tags
     - field.field.node.page.field_moj_series
     - field.field.node.page.field_moj_stand_first
     - field.field.node.page.field_moj_thumbnail_image
@@ -36,7 +35,6 @@ hidden:
   field_moj_description: true
   field_moj_episode: true
   field_moj_season: true
-  field_moj_secondary_tags: true
   field_moj_series: true
   field_moj_stand_first: true
   field_moj_thumbnail_image: true
@@ -47,4 +45,5 @@ hidden:
   field_release_date: true
   field_topics: true
   links: true
+  published_at: true
   search_api_excerpt: true

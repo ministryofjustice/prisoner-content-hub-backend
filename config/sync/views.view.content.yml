@@ -1457,7 +1457,7 @@ display:
             name: name
             status: status
             field_moj_top_level_categories: field_moj_top_level_categories
-            field_moj_secondary_tags: field_moj_secondary_tags
+            field_topics: field_topics
             field_moj_series: field_moj_series
             field_prisons: field_prisons
             field_prison_owner: field_prison_owner
@@ -1502,11 +1502,13 @@ display:
               empty_column: false
               responsive: ''
             field_moj_top_level_categories:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_moj_secondary_tags:
+            field_topics:
               align: ''
               separator: ''
               empty_column: false

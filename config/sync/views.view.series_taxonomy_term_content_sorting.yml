@@ -942,16 +942,14 @@ display:
             type: type
             uid: uid
             status: status
-            field_moj_top_level_categories: field_moj_top_level_categories
-            field_moj_category_featured_item: field_moj_category_featured_item
-            field_moj_secondary_tags: field_moj_secondary_tags
+            field_category: field_category
+            field_topics: field_topics
             changed: changed
-            nid: nid
+            form_field_field_release_date: form_field_field_release_date
             form_field_field_moj_season: form_field_field_moj_season
             form_field_field_moj_episode: form_field_field_moj_episode
+            nid: nid
             operations: operations
-            edit_taxonomy_term: edit_taxonomy_term
-            field_sort_by: field_sort_by
           default: '-1'
           info:
             title:
@@ -982,19 +980,14 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            field_moj_top_level_categories:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_moj_category_featured_item:
+            field_category:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_moj_secondary_tags:
+            field_topics:
               align: ''
               separator: ''
               empty_column: false
@@ -1006,9 +999,7 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            nid:
-              sortable: false
-              default_sort_order: asc
+            form_field_field_release_date:
               align: ''
               separator: ''
               empty_column: false
@@ -1023,21 +1014,14 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            nid:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             operations:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            edit_taxonomy_term:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_sort_by:
-              sortable: false
-              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
