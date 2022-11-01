@@ -14,7 +14,6 @@ dependencies:
     - field.field.node.link.field_prisons
     - field.field.node.link.field_release_date
     - field.field.node.link.field_show_interstitial_page
-    - field.field.node.link.field_summary
     - field.field.node.link.field_url
     - image.style.thumbnail
     - node.type.link
@@ -23,6 +22,7 @@ dependencies:
     - field_group
     - image
     - path
+    - publication_date
     - scheduler
     - select2
     - term_reference_tree
@@ -216,14 +216,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_summary:
-    type: string_textfield
-    weight: 2
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_url:
     type: string_textfield
     weight: 3
@@ -241,6 +233,12 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
