@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.moj_pdf_item.field_prison_owner
     - field.field.node.moj_pdf_item.field_prisons
     - field.field.node.moj_pdf_item.field_release_date
+    - field.field.node.moj_pdf_item.field_summary
     - field.field.node.moj_pdf_item.field_topics
     - node.type.moj_pdf_item
   module:
@@ -132,6 +133,13 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 17
+    region: content
+  field_summary:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 23
     region: content
   field_topics:
     type: entity_reference_label

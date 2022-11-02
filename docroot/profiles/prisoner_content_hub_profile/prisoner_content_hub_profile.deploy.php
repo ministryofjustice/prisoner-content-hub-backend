@@ -612,3 +612,27 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
 
   }
 }
+
+/**
+ * Copy summaries from the description field to the new summary field
+ */
+function prisoner_content_hub_profile_deploy_copy_summary_to_new_field() {
+  $result = \Drupal::entityQuery('node')
+    ->exists('field_moj_description')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $nodes = Node::loadMultiple($result);
+  $dummy = \Drupal::service('page_cache_persist.dummy_cache_tags_invalidator');
+  \Drupal::getContainer()->set('cache_tags.invalidator', $dummy);
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($nodes as $node) {
+    if ($node->hasField('field_moj_description')) {
+      $summary = $node->field_moj_description->summary;
+      if (!empty($summary)) {
+        $node->set('field_summary', $summary);
+        $node->save();
+      }
+    }
+  }
+}

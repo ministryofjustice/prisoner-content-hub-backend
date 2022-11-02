@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.page.field_prison_owner
     - field.field.node.page.field_prisons
     - field.field.node.page.field_release_date
+    - field.field.node.page.field_summary
     - field.field.node.page.field_topics
     - node.type.page
   module:
@@ -48,6 +49,7 @@ hidden:
   field_prison_owner: true
   field_prisons: true
   field_release_date: true
+  field_summary: true
   field_topics: true
   published_at: true
   search_api_excerpt: true

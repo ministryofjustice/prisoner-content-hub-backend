@@ -1,0 +1,19 @@
+uuid: 4ef95a76-6426-4ad5-a316-9e48a2638ea6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_summary
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.field_summary
+field_name: field_summary
+entity_type: node
+bundle: moj_pdf_item
+label: Summary
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
