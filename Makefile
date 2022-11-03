@@ -29,3 +29,13 @@ deploy:
 	echo "Disabling maintenance and readonly mode"
 	drush state-set readonlymode_active 0
 	drush state-set system.maintenance_mode 0
+
+sync:
+	# Downloading latest db backup from S3
+	./scripts/downloadDBFromBackup.sh
+	# Download complete
+	# Clearing Drupal db of existing data
+	docker-compose -f ../prisoner-content-hub/docker-compose.yml exec -it prisoner-content-hub-backend drush sql-drop -y
+	# Importing db backup to Drupal DB
+	docker-compose -f ../prisoner-content-hub/docker-compose.yml exec prisoner-content-hub-backend scripts/importDBFromBackup.sh
+	# Import complete

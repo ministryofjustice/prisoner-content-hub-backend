@@ -142,6 +142,9 @@ RUN composer install \
   --prefer-dist
 
 FROM test as local
+
+COPY scripts/ scripts/
+
 USER root
 RUN pecl install xdebug-3.1.5 \
   && docker-php-ext-enable xdebug
