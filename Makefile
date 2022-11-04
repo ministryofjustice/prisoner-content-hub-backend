@@ -31,8 +31,10 @@ deploy:
 	drush state-set system.maintenance_mode 0
 
 sync:
+	# Copying kubeconfig into docker container
+	docker-compose -f ../prisoner-content-hub/docker-compose.yml cp ~/.kube/config prisoner-content-hub-backend:/var/www/.kube/config
 	# Downloading latest db backup from S3
-	./scripts/downloadDBFromBackup.sh
+	docker-compose -f ../prisoner-content-hub/docker-compose.yml exec prisoner-content-hub-backend scripts/downloadDBFromBackup.sh
 	# Download complete
 	# Clearing Drupal db of existing data
 	docker-compose -f ../prisoner-content-hub/docker-compose.yml exec -it prisoner-content-hub-backend drush sql-drop -y
