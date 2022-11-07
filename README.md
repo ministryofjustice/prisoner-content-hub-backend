@@ -5,19 +5,11 @@ The backend CMS for the Digital Hub service using Drupal
 ## Getting started
 
 ### Prerequisites
-
-    Composer
-    Docker
-
-### Install dependencies
-
-    composer clear-cache && \
-    composer install --no-dev --no-ansi --no-scripts --prefer-dist --ignore-platform-reqs --no-interaction --no-autoloader
+Docker
 
 ### Running the application
 
-Being a PHP/Drupal application, there is a requirement for Apache to be set up and configured.
-The simplest way of setting up the application for development is using Docker-Compose and the provided overrides to mount a volume on the host machine
+To run this application locally, use the docker-compose setup from http://github.com/ministryofjustice/prisoner-content-hub
 
 ### Custom Modules
 
@@ -28,7 +20,7 @@ All custom code specific to the Digital Hub project is implemented as Drupal mod
     ./docroot/modules/custom
 
 ### Configuration
-Drupal configuration is stored inside the `config/sync` directory.
+Drupal's configuration is stored inside the `config/sync` directory.
 This is imported during the deployment process, to simulate this on your local environment run the following:
 ```
 vendor/bin/drush deploy
@@ -38,21 +30,15 @@ Please note that any configuration that has been modified on the environment you
 To make any configuration changes, make the change on your local environment, and run `drush config-export`, then push
 the changes to git.
 
-## Restoring a database dump
+## Sync local environment with production
 
 ### Prerequisites
-    Docker
+Kubectl setup and authenticated with cloud platform.
+See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#connecting-to-the-cloud-platform-39-s-kubernetes-cluster
 
-### Apply dump to hub_db in Docker
-
-    docker exec -i hub-db mysql -u <DB_USER> --password=<DB_PASS> hubdb < ~/path/to/dump.sql
-
-### Apply dump to hub_db in Kubernetes
-
-    kubectl exec -it <POD_ID> -c mysql -- mysql -u <DB_USER> --password=<DB_PASS> < cat ~/path/to/dump.sql
-
-### Character encoding
-
-You can manually specify the encoding type when importing
-
-    --default-character-set=<ENC_TYPE>
+### Sync command
+Run `make sync` from the root of this repo.
+This command does the following actions:
+- Copies your kubectl config to the prisoner-content-hub-backend Docker container.
+- Runs the kubectl and aws cli to download the latest database backup (the database is backed up once a day from prod).
+- Imports this into your local environment.
