@@ -19,11 +19,11 @@ if [ ! -f "db-backups/$filename" ]
 then
   # Clear out any old db dumps
   rm -rf db-backups/
-  mkdir -p db-backups
+  mkdir db-backups
   aws s3 cp --profile=drupal-db-backups s3://$(kubectl -n prisoner-content-hub-development get secret db-backups-s3 --template={{.data.bucket_name}} | base64 --decode)/$filename db-backups/$filename
 
 else
-  echo "Latest backup already downloaded"
+  echo "Latest backup already previously downloaded.  Using existing copy."
 fi
 
 
