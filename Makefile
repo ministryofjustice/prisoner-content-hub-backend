@@ -32,6 +32,7 @@ deploy:
 
 sync:
 	# Copying kubeconfig into docker container
+	docker-compose -f ../prisoner-content-hub/docker-compose.yml exec prisoner-content-hub-backend mkdir -p /var/www/.kube
 	docker-compose -f ../prisoner-content-hub/docker-compose.yml cp --archive ~/.kube/config prisoner-content-hub-backend:/var/www/.kube/config
 	# Downloading latest db backup from S3
 	docker-compose -f ../prisoner-content-hub/docker-compose.yml exec prisoner-content-hub-backend scripts/downloadDBFromBackup.sh
