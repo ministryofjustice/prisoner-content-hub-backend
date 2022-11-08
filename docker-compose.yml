@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   database:
@@ -64,3 +64,4 @@ services:
 
 networks:
   prisoner_content_hub:
+    name: prisoner_content_hub

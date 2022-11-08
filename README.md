@@ -22,6 +22,9 @@ Once all the services have started, you can access them at:
 
 http://localhost:11001
 
+When you first launch the application, you should see the Drupal install screen.
+This means the setup was successfully.  To get a fully working site, follow the steps below to sync the database.
+
 ## Sync local database with production
 
 ### Prerequisites
