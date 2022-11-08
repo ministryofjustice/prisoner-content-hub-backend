@@ -37,3 +37,8 @@ docroot/.eslintrc.json
 docroot/.ht.router.php
 docroot/.htaccess
 docroot/INSTALL.txt
+
+# Ignore override docker-compose files.
+# Even those these are in git, we want to allow local changes to them without being pushed up to git.
+docker-compose.override.yml
+prisoner-content-hub-backend-local.env

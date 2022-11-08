@@ -31,9 +31,6 @@ deploy:
 	drush state-set system.maintenance_mode 0
 
 sync:
-	# Copying kubeconfig into docker container
-	docker-compose exec drupal mkdir -p /var/www/.kube
-	docker-compose cp --archive ~/.kube/config drupal:/var/www/.kube/config
 	# Downloading latest db backup from S3
 	docker-compose exec drupal scripts/downloadDBFromBackup.sh
 	# Download complete
