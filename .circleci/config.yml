@@ -52,10 +52,10 @@ jobs:
     <<: *defaults
     parameters:
       docker-compose-filename:
-        default: docker-compose.circleci.yml
+        default: docker-compose.yml
         type: string
       docker-image-name-backend:
-        default: prisoner-content-hub-backend
+        default: drupal
         type: string
     steps:
       - checkout
@@ -76,7 +76,7 @@ jobs:
           name: Create S3 bucket in localstack
           command: |
             set -x
-            docker-compose -f << parameters.docker-compose-filename >> exec prisoner-content-hub-localstack awslocal s3 mb s3://localstack-s3
+            docker-compose -f << parameters.docker-compose-filename >> exec localstack awslocal s3 mb s3://localstack-s3
       - run:
           name: Install Drupal and run tests
           command: |
