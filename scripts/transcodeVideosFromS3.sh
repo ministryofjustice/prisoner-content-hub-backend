@@ -23,8 +23,7 @@ docker-compose exec drupal drush sql-query 'SELECT REPLACE(file_managed.uri, "s3
                           JOIN node__field_video on node__field_video.entity_id = node_field_data.nid
                           JOIN file_managed on file_managed.fid = node__field_video.field_video_target_id
                           WHERE node_field_data.status = 1
-                          ORDER BY node_field_data.created DESC
-                          LIMIT 2;' > video_urls.txt
+                          ORDER BY node_field_data.created DESC;' > video_urls.txt
 files=$(more video_urls.txt)
 IFS=$'\n'       # make newlines the only separator
 
@@ -52,5 +51,6 @@ do
   fi
   ((n++))
   echo "Processed $n videos."
-
+  rm $unTranscodedFilename
+  rm $transcodedFilename
 done
