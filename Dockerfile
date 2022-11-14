@@ -142,6 +142,20 @@ RUN composer install \
   --prefer-dist
 
 FROM test as local
+
+COPY scripts/ scripts/
+
+# Install kubectl, required to run `make sync`.
+RUN curl -LO "https://dl.k8s.io/release/v1.25.3/bin/linux/amd64/kubectl" \
+    && chmod +x kubectl \
+    && mkdir -p ~/.local/bin \
+    && mv ./kubectl ~/.local/bin/kubectl
+
+# Install aws cli, required to run `make sync`.
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.8.8.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install -i ~/.local/aws-cli -b ~/.local/bin
+
 USER root
 RUN pecl install xdebug-3.1.5 \
   && docker-php-ext-enable xdebug
