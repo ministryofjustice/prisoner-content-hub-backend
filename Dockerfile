@@ -1,11 +1,14 @@
 ###########################################################################################
 # Copy Dockerhub Drupal image
-# https://github.com/docker-library/drupal/blob/master/8.9/php7.4/apache-buster/Dockerfile
+# https://github.com/docker-library/drupal/blob/master/9.4/php8.1/apache-buster/Dockerfile
 #
 # We copy over the first part of the Drupal dockerhub image.  We don't want the steps
 # that come after this (e.g. composer create-project).
 ###########################################################################################
-FROM php:8.1.11-apache-buster AS base
+
+# Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
+# of the things we run, like kubectl.
+FROM --platform=linux/amd64 php:8.1.11-apache-buster AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
