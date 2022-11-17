@@ -13,7 +13,7 @@
 -->
 <phpunit bootstrap="vendor/weitzman/drupal-test-traits/src/bootstrap.php">
   <php>
-    <env name="DTT_BASE_URL" value="http://prisoner-content-hub-backend:8080"/>
+    <env name="DTT_BASE_URL" value="http://drupal:8080"/>
     <env name="DTT_API_URL" value="http://chrome:9222"/>
     <!-- <env name="DTT_MINK_DRIVER_ARGS" value='["chrome", { "chromeOptions" : { "w3c": false } }, "http://localhost:4444/wd/hub"]'/> -->
     <env name="DTT_MINK_DRIVER_ARGS" value='["firefox", null, "http://selenium:9222/wd/hub"]'/>
