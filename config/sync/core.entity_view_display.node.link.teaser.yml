@@ -15,7 +15,6 @@ dependencies:
     - field.field.node.link.field_prisons
     - field.field.node.link.field_release_date
     - field.field.node.link.field_show_interstitial_page
-    - field.field.node.link.field_summary
     - field.field.node.link.field_url
     - node.type.link
   module:
@@ -43,6 +42,6 @@ hidden:
   field_prisons: true
   field_release_date: true
   field_show_interstitial_page: true
-  field_summary: true
   field_url: true
+  published_at: true
   search_api_excerpt: true
