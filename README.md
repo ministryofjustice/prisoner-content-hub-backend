@@ -1,4 +1,4 @@
-# Digital Hub Backend
+# Content Hub Backend
 
 The backend CMS for the Digital Hub service using Drupal
 
@@ -9,35 +9,52 @@ For the frontend, see https://github.com/ministryofjustice/prisoner-content-hub-
 ### Prerequisites
 Docker
 
-### Running the application
-Start the application with:
-
+### Running the application for the first time
+#### 1. Start the docker environment
 >`-d` starts the services up in the background
 
 ```
 docker-compose up -d
 ```
+#### 2. Build PHP/Drupal dependencies
+```
+docker-compose exec drupal composer install
+```
+_(Note that is already run as part of the docker build, but the files will be wiped out by the volume mount, set in
+docker-compose.override.yml.  So the command needs to be run again.)_
+#### 3. Import the database
+For this part you will need to have `kubectl` setup and authenticated with cloud platform. \
+See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#connecting-to-the-cloud-platform-39-s-kubernetes-cluster. \
+I.e. you should be able to run `kubectl -n prisoner-content-hub-development get pods` without any errors.
 
+Now run:
+```
+make sync
+```
+This will download the latest database backup and import it (the database is backed up once a day). \
+Note this should be run from your host machine (not inside the container).
+
+Alternatively, you can install a "fresh" version of Drupal.
+```
+docker-compose exec drupal make install-drupal
+```
+This will have all of the site's configuration, but won't have any content or taxonomy.
+#### 4. Access the service
 Once all the services have started, you can access them at:
 
-http://localhost:11001
+**http://localhost:11001**
 
-When you first launch the application, you should see the Drupal install screen.
-This means the setup was successfully.  To get a fully working site, follow the steps below to sync the database.
+#### 5. Logging into Drupal
+The `make sync` command brings in all of the Drupal users from production.  So if you already have an account setup there,
+you can login with the same username/password on your local environment.
 
-## Sync local database with production
-
-### Prerequisites
-- The application is running locally though docker compose (see above)
-- Kubectl setup and authenticated with cloud platform.
-  See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#connecting-to-the-cloud-platform-39-s-kubernetes-cluster.
-  I.e. you should be able to run `kubectl -n prisoner-content-hub-development get pods` without any errors.
-
-### Sync command
-Run `make sync` from the root of this repo.  Run this from your host machine (not inside the container).
-This command does the following actions:
-- Runs the kubectl and aws cli to download the latest database backup (the database is backed up once a day from prod).
-- Imports this into your local environment.
+Alternatively, you can login with the admin account by running:
+```
+docker-compose exec drupal drush user:unblock admin
+docker-compose exec drupal drush uli --uri=http://localhost:11001/
+```
+This will give you a login link to access the site. \
+Note this account is blocked on production, and should only be used on local environments.
 
 ## Files in S3
 Drupal is configured to store its files in S3 (e.g. images, pdfs, videos and audio files).

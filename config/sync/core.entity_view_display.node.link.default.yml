@@ -14,7 +14,6 @@ dependencies:
     - field.field.node.link.field_prisons
     - field.field.node.link.field_release_date
     - field.field.node.link.field_show_interstitial_page
-    - field.field.node.link.field_summary
     - field.field.node.link.field_url
     - node.type.link
   module:
@@ -107,14 +106,6 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 117
-    region: content
-  field_summary:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 114
     region: content
   field_url:
     type: string

@@ -78,6 +78,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
+        "process-timeout": 600,
+        "preferred-install": "dist",
+        "github-protocols": ["https"],
         "sort-packages": true,
         "allow-plugins": {
             "composer/installers": true,
