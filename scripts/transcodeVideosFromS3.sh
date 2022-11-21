@@ -25,8 +25,8 @@ docker-compose exec drupal drush sql-query 'SELECT REPLACE(file_managed.uri, "s3
                           JOIN node__field_video on node__field_video.entity_id = node_field_data.nid
                           JOIN file_managed on file_managed.fid = node__field_video.field_video_target_id
                           WHERE node_field_data.status = 1
-                          ORDER BY node_field_data.created;' > video_urls.txt
-files=$(more video_urls.txt)
+                          ORDER BY node_field_data.created;' --result-file=../transcode-videos-query-results.txt
+files=$(more transcode-videos-query-results.txt)
 IFS=$'\n'       # make newlines the only separator
 
 n=0
@@ -39,30 +39,31 @@ do
   id=$(echo $line | cut -d "," -f 2)
   echo $file
   echo $id
-  unTranscodedFilename="videos_untranscoded/"$file
-  transcodedFilename="videos_transcoded/"$file
-  newS3Filename=${file/"videos"/"videos_transcoded"}
-  dir="$(dirname "${transcodedFilename}")"
-  mkdir -p $dir
-  aws s3 cp "s3://cloud-platform-5e5f7ac99afe21a0181cbf50a850627b/"$file $unTranscodedFilename --profile=dev
-  mediaInfo=$(mediaInfo $unTranscodedFilename --Output=JSON)
-  if [ $(echo "$mediaInfo" | jq '.media.track[1].BitRate|tonumber') -gt 1000000 ] || [ $(echo "$mediaInfo" | jq '.media.track[1].Height|tonumber') -gt 480 ] || [ $(echo "$mediaInfo" | jq '.media.track[1].FrameRate|tonumber|floor') -gt 30 ]
+  presignedUrl=$(aws s3 presign "s3://cloud-platform-5e5f7ac99afe21a0181cbf50a850627b/"$file --profile=dev --region eu-west-1)
+  mediaInfo=$(mediaInfo $presignedUrl --Output=JSON)
+  if [ $(echo "$mediaInfo" | jq '.media.track[1].BitRate|tonumber') -gt 1250000 ] || [ $(echo "$mediaInfo" | jq '.media.track[1].Height|tonumber') -gt 480 ] || [ $(echo "$mediaInfo" | jq '.media.track[1].FrameRate|tonumber|floor') -gt 30 ]
   then
+    unTranscodedFilename="videos_untranscoded/"$file
+    transcodedFilename="videos_transcoded/"$file
+    newS3Filename=${file/"videos"/"videos_transcoded"}
+    dir="$(dirname "${transcodedFilename}")"
+    mkdir -p $dir
+    aws s3 cp "s3://cloud-platform-5e5f7ac99afe21a0181cbf50a850627b/"$file $unTranscodedFilename --profile=dev --region eu-west-1
     HandBrakeCli --preset-import-file scripts/content-hub-handbrake-preset.json --preset="content-hub-handbrake-preset" -i "$unTranscodedFilename" -o "$transcodedFilename"
     untranscodedFileSize=$(stat -f%z $unTranscodedFilename)
     transcodedFileSize=$(stat -f%z $transcodedFilename)
     if [ $transcodedFileSize -lt $untranscodedFileSize ]
     then
       echo "$transcodedFilename, $id, reduced by "$((($untranscodedFileSize-$transcodedFileSize)/1000000))"MB" >> video_transcoded.txt
-      aws s3 cp $transcodedFilename "s3://cloud-platform-5e5f7ac99afe21a0181cbf50a850627b/"$newS3Filename --profile=dev
+      aws s3 cp $transcodedFilename "s3://cloud-platform-5e5f7ac99afe21a0181cbf50a850627b/"$newS3Filename --profile=dev --region eu-west-1
     else
       echo "$transcodedFilename, $id, increased by "$((($transcodedFileSize-$untranscodedFileSize)/1000000))"MB" >> video_untranscoded.txt
     fi
     rm $transcodedFilename
+    rm $unTranscodedFilename
   else
-    echo "$transcodedFilename, $id, not transcoded due to mediainfo" >> video_untranscoded.txt
+    echo "$file, $id, not transcoded due to mediainfo" >> video_untranscoded.txt
   fi
   ((n++))
   echo "Processed $n videos."
-  rm $unTranscodedFilename
 done
