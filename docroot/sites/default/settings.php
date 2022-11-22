@@ -48,7 +48,9 @@ $settings['flysystem'] = [
 
       'options' => [
         'ACL' => 'private',
-        'CacheControl' => 'max-age=7890000, public',
+        // Set max-age to be 24 hours.  This takes into account the url
+        // signatures (which have a max expiration of 24 hours).
+        'CacheControl' => 'max-age=86400, public',
       ],
 
       // Directory prefix for all viewed files
