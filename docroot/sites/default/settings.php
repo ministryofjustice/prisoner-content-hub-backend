@@ -48,6 +48,7 @@ $settings['flysystem'] = [
 
       'options' => [
         'ACL' => 'private',
+        'CacheControl' => 'max-age=7890000, public',
       ],
 
       // Directory prefix for all viewed files
