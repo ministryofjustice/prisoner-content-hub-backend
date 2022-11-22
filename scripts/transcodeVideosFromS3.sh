@@ -25,7 +25,7 @@ docker-compose exec drupal drush sql-query 'SELECT REPLACE(file_managed.uri, "s3
                           JOIN node__field_video on node__field_video.entity_id = node_field_data.nid
                           JOIN file_managed on file_managed.fid = node__field_video.field_video_target_id
                           WHERE node_field_data.status = 1
-                          ORDER BY node_field_data.created;' --result-file=../transcode-videos-query-results.txt
+                          ORDER BY node_field_data.created;' --result-file=../transcode-videos-query-results.txt --extra=--default-character-set=utf8
 files=$(more transcode-videos-query-results.txt)
 IFS=$'\n'       # make newlines the only separator
 
