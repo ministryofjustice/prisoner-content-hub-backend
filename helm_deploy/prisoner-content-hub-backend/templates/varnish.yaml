@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: varnish-service
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+      nodePort: 30081
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: varnish-configmap
+  labels:
+    app: varnish
+data:
+  default.vcl: |
+    vcl 4.0;
+    backend default {
+        .host = "apache-drupal-service";
+        .port = "8080";
+    }
+    sub vcl_recv {
+        set req.backend_hint = default;
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish-deployment
+  labels:
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      containers:
+        - name: varnish
+          image: varnish:6.6.2
+          env:
+            - name: CACHE_SIZE
+              value: 128m
+            - name: VCL_CONFIG
+              value: /etc/varnish/configmap/default.vcl
+          volumeMounts:
+            - name: varnish-config
+              mountPath: /etc/varnish/configmap
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: varnish-config
+          configMap:
+            name: varnish-configmap
