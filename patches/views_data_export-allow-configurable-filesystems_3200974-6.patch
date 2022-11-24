@@ -1,0 +1,157 @@
+diff --git a/config/schema/views_data_export.views.schema.yml b/config/schema/views_data_export.views.schema.yml
+index bc2765b..2e4cbf5 100644
+--- a/config/schema/views_data_export.views.schema.yml
++++ b/config/schema/views_data_export.views.schema.yml
+@@ -31,9 +31,9 @@ views.display.data_export:
+     facet_settings:
+       type: string
+       label: 'Facet sources'
+-    store_in_public_file_directory:
+-      type: boolean
+-      label: 'Allow anonymous users to download this file'
++    export_filesystem:
++      type: string
++      label: 'Allow users to choose the default file system'
+     custom_redirect_path:
+       type: boolean
+       label: 'Custom redirect path'
+diff --git a/src/Plugin/views/display/DataExport.php b/src/Plugin/views/display/DataExport.php
+index d6a02b4..18d988e 100644
+--- a/src/Plugin/views/display/DataExport.php
++++ b/src/Plugin/views/display/DataExport.php
+@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableResponse;
+ use Drupal\Core\Config\StorageException;
+ use Drupal\Core\Form\FormStateInterface;
+ use Drupal\Core\Render\BubbleableMetadata;
++use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+ use Drupal\rest\Plugin\views\display\RestExport;
+ use Drupal\views\Views;
+ use Drupal\views\ViewExecutable;
+@@ -222,7 +223,7 @@ class DataExport extends RestExport {
+ 
+     // Set download, file storage and redirect defaults.
+     $options['automatic_download']['default'] = FALSE;
+-    $options['store_in_public_file_directory']['default'] = FALSE;
++    $options['export_filesystem']['default'] = 'private';
+     $options['custom_redirect_path']['default'] = FALSE;
+ 
+     // Redirect to views display option.
+@@ -397,21 +398,17 @@ class DataExport extends RestExport {
+           '#fieldset' => 'file_fieldset',
+         ];
+ 
++        // Any visible, writable wrapper can potentially be used for the files
++        // directory, including a remote file system that integrates with a CDN.
+         $streamWrapperManager = \Drupal::service('stream_wrapper_manager');
+-        // Check if the private file system is ready to use.
+-        if ($streamWrapperManager->isValidScheme('private')) {
+-          $form['store_in_public_file_directory'] = [
+-            '#type' => 'checkbox',
+-            '#title' => $this->t("Store file in public files directory"),
+-            '#description' => $this->t("Check this if you want to store the export files in the public:// files directory instead of the private:// files directory."),
+-            '#default_value' => $this->options['store_in_public_file_directory'],
+-            '#fieldset' => 'file_fieldset',
+-          ];
+-        }
+-        else {
+-          $form['store_in_public_file_directory'] = [
+-            '#type' => 'markup',
+-            '#markup' => $this->t('<strong>The private:// file system is not configured so the exported files will be stored in the public:// files directory. Click <a href="@link" target="_blank">here</a> for instructions on configuring the private files in the settings.php file.</strong>', ['@link' => 'https://www.drupal.org/docs/8/modules/skilling/installation/set-up-a-private-file-path']),
++        $options = $streamWrapperManager->getDescriptions(StreamWrapperInterface::WRITE_VISIBLE);
++        if (!empty($options)) {
++          $form['export_filesystem'] = [
++            '#type' => 'radios',
++            '#title' => t('Default download method'),
++            '#default_value' => $this->options['export_filesystem'],
++            '#options' => $options,
++            '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
+             '#fieldset' => 'file_fieldset',
+           ];
+         }
+@@ -603,7 +600,7 @@ class DataExport extends RestExport {
+       case 'path':
+         $this->setOption('filename', $form_state->getValue('filename'));
+         $this->setOption('automatic_download', $form_state->getValue('automatic_download'));
+-        $this->setOption('store_in_public_file_directory', $form_state->getValue('store_in_public_file_directory'));
++        $this->setOption('export_filesystem', $form_state->getValue('export_filesystem'));
+ 
+         // Adds slash if not in the redirect path if custom path is chosen.
+         if ($form_state->getValue('custom_redirect_path')) {
+@@ -722,20 +719,14 @@ class DataExport extends RestExport {
+       $user_dir = $user_ID ? "$user_ID-$timestamp" : $timestamp;
+       $view_dir = $view_id . '_' . $display_id;
+ 
+-      // Determine if the export file should be stored in the public or private
+-      // file system.
+-      $store_in_public_file_directory = TRUE;
++      // Determine which filesystem the export file should be stored in.
+       $streamWrapperManager = \Drupal::service('stream_wrapper_manager');
+-      // Check if the private file system is ready to use.
+-      if ($streamWrapperManager->isValidScheme('private')) {
+-        $store_in_public_file_directory = $view->getDisplay()->getOption('store_in_public_file_directory');
+-      }
+-
+-      if ($store_in_public_file_directory === TRUE) {
+-        $directory = "public://views_data_export/$view_dir/$user_dir/";
++      $export_filesystem = $view->getDisplay()->getOption('export_filesystem');
++      if (!empty($export_filesystem) && $streamWrapperManager->isValidScheme($export_filesystem)) {
++        $directory = "$export_filesystem://views_data_export/$view_dir/$user_dir/";
+       }
+       else {
+-        $directory = "private://views_data_export/$view_dir/$user_dir/";
++        $directory = "public://views_data_export/$view_dir/$user_dir/";
+       }
+ 
+       try {
+diff --git a/tests/modules/views_data_export_test/test_views/views.view.search_api_tests.yml b/tests/modules/views_data_export_test/test_views/views.view.search_api_tests.yml
+index 931b44b..6953b85 100644
+--- a/tests/modules/views_data_export_test/test_views/views.view.search_api_tests.yml
++++ b/tests/modules/views_data_export_test/test_views/views.view.search_api_tests.yml
+@@ -206,7 +206,7 @@ display:
+             encoding: utf8
+             utf8_bom: '0'
+       export_limit: 8
+-      store_in_public_file_directory: false
++      export_filesystem: private
+       redirect_to_display: none
+       custom_redirect_path: false
+       include_query_params: false
+diff --git a/tests/modules/views_data_export_test/test_views/views.view.views_data_test_1.yml b/tests/modules/views_data_export_test/test_views/views.view.views_data_test_1.yml
+index 07d3437..c7ba5a2 100644
+--- a/tests/modules/views_data_export_test/test_views/views.view.views_data_test_1.yml
++++ b/tests/modules/views_data_export_test/test_views/views.view.views_data_test_1.yml
+@@ -208,7 +208,7 @@ display:
+               company: ''
+       export_method: batch
+       export_batch_size: 4
+-      store_in_public_file_directory: true
++      export_filesystem: public
+       redirect_to_display: none
+       custom_redirect_path: false
+       include_query_params: false
+diff --git a/tests/modules/views_data_export_test/test_views/views.view.views_data_test_2.yml b/tests/modules/views_data_export_test/test_views/views.view.views_data_test_2.yml
+index 1e1500a..c708af9 100644
+--- a/tests/modules/views_data_export_test/test_views/views.view.views_data_test_2.yml
++++ b/tests/modules/views_data_export_test/test_views/views.view.views_data_test_2.yml
+@@ -208,7 +208,7 @@ display:
+               company: ''
+       export_method: batch
+       export_batch_size: 4
+-      store_in_public_file_directory: true
++      export_filesystem: public
+       redirect_to_display: none
+       custom_redirect_path: false
+       include_query_params: false
+diff --git a/tests/modules/views_data_export_test/test_views/views.view.views_data_test_3.yml b/tests/modules/views_data_export_test/test_views/views.view.views_data_test_3.yml
+index 204d11a..8e93977 100644
+--- a/tests/modules/views_data_export_test/test_views/views.view.views_data_test_3.yml
++++ b/tests/modules/views_data_export_test/test_views/views.view.views_data_test_3.yml
+@@ -210,7 +210,7 @@ display:
+       export_limit: 3
+ 
+       redirect_path: /admin
+-      store_in_public_file_directory: false
++      export_filesystem: public
+       custom_redirect_path: true
+ 
+       redirect_to_display: none
