@@ -42,11 +42,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: varnish
+      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: varnish
+        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: varnish
