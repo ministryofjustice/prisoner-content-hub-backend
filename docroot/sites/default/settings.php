@@ -17,6 +17,7 @@ $databases['default']['default'] = array(
 $settings['trusted_host_patterns'] = [
   // TODO: Set this dynamically for all environments.
   'apache-drupal-service.prisoner-content-hub-development.svc.cluster.local',
+  'varnish-service.prisoner-content-hub-development.svc.cluster.local',
   getenv('TRUSTED_HOSTS', true),
   getenv('TRUSTED_HOSTS_JSONAPI', true),
 ];
