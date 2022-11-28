@@ -8,12 +8,12 @@ metadata:
 spec:
   selector:
     {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
-  type: NodePort
+  type: ClusterIP
   ports:
-    - protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.port }}
-      nodePort: 30081
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
 ---
 apiVersion: v1
 kind: ConfigMap
