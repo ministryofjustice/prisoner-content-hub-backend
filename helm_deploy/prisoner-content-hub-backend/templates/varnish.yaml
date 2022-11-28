@@ -25,7 +25,7 @@ data:
   default.vcl: |
     vcl 4.0;
     backend default {
-        .host = "apache-drupal-service";
+        .host = "apache-drupal-service.prisoner-content-hub-development.svc.cluster.local";
         .port = "8080";
     }
     sub vcl_recv {
