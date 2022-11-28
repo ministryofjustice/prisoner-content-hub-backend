@@ -64,7 +64,7 @@ spec:
             - name: varnish-config
               mountPath: /etc/varnish/configmap
           ports:
-            - containerPort: 80
+            - containerPort: 8080
       volumes:
         - name: varnish-config
           configMap:
