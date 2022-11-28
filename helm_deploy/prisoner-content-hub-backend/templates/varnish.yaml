@@ -10,7 +10,7 @@ spec:
     {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
-    - port: 8080
+    - port: 80
       targetPort: http
       protocol: TCP
       name: http
@@ -64,7 +64,7 @@ spec:
             - name: varnish-config
               mountPath: /etc/varnish/configmap
           ports:
-            - containerPort: 8080
+            - containerPort: 80
       volumes:
         - name: varnish-config
           configMap:
