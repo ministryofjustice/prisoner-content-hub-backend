@@ -29,7 +29,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: varnish-service
+                name: {{ $fullName }}
                 port:
                   number: 80
   {{- end }}
