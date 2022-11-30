@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ include "prisoner-content-hub-backend.fullname" . }}
   labels:
-    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }},varnish
 spec:
   selector:
     {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }}
+      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }},varnish
   template:
     metadata:
       labels:
