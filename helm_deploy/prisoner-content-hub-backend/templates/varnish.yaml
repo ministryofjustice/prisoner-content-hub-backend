@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: varnish-service
+  name: {{ include "prisoner-content-hub-backend.fullname" . }}
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
@@ -22,15 +22,8 @@ metadata:
   labels:
     app: varnish
 data:
-  default.vcl: |
-    vcl 4.0;
-    backend default {
-        .host = "apache-drupal-service.prisoner-content-hub-development.svc.cluster.local";
-        .port = "8080";
-    }
-    sub vcl_recv {
-        set req.backend_hint = default;
-    }
+  default.vcl: |-
+  {{ .Files.Get "default.vcl" | indent 4 }}
 ---
 apiVersion: apps/v1
 kind: Deployment
