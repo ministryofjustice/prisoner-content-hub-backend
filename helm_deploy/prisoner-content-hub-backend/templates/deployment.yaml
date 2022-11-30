@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "prisoner-content-hub-backend.fullname" . }}
+  name: drupal-deployment
   labels:
-    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+    {{- include "drupal.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }}
+      {{- include "drupal.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}
+        {{- include "drupal.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

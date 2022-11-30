@@ -36,10 +36,28 @@ heritage: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "drupal.labels" -}}
+chart: {{ include "prisoner-content-hub-backend.chart" . }}
+{{ include "drupal.selectorLabels" . }}
+heritage: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "prisoner-content-hub-backend.selectorLabels" -}}
 app: {{ include "prisoner-content-hub-backend.name" . }}
+release: {{ .Release.Name }}
+tier: {{ .Values.tier }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "drupal.selectorLabels" -}}
+app: {{ include "prisoner-content-hub-backend.name" . }}-drupal
 release: {{ .Release.Name }}
 tier: {{ .Values.tier }}
 {{- end }}

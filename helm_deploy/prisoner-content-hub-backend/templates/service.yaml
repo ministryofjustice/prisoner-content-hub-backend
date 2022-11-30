@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: drupal-service
   labels:
-    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
+    {{- include "drupal.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
+    {{- include "drupal.selectorLabels" . | nindent 4 }}

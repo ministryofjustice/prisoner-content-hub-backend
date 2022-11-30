@@ -4,10 +4,10 @@ kind: Service
 metadata:
   name: {{ include "prisoner-content-hub-backend.fullname" . }}
   labels:
-    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}-varnish
+    {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
   selector:
-    {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}-varnish
+    {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   ports:
     - port: 80
@@ -35,11 +35,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }}-varnish
+      {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}-varnish
+        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
         runAsNonRoot: true
