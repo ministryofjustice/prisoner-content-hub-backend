@@ -91,6 +91,10 @@ RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_se
 # Set no memory limit (for PHP running as cli only).
 RUN echo 'memory_limit = -1' >> /usr/local/etc/php/php-cli.ini
 
+# Install kubectl
+RUN curl -sLo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.25.4/bin/linux/amd64/kubectl \
+    && chmod +x /usr/local/bin/kubectl
+
 ###########################################################################################
 # Install composer as non-root and copy repository files
 ###########################################################################################
