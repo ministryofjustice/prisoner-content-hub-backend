@@ -7,7 +7,7 @@ metadata:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}-varnish
 spec:
   selector:
-    {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}
+    {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 4 }}-varnish
   type: ClusterIP
   ports:
     - port: 80
@@ -39,7 +39,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}
+        {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}-varnish
     spec:
       securityContext:
         runAsNonRoot: true
