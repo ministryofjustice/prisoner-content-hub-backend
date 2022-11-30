@@ -51,11 +51,9 @@ spec:
           env:
             - name: CACHE_SIZE
               value: 128m
-            - name: VCL_CONFIG
-              value: /etc/varnish/configmap/default.vcl
           volumeMounts:
             - name: varnish-config
-              mountPath: /etc/varnish/configmap
+              mountPath: /etc/varnish
           ports:
             - containerPort: 80
       volumes:
