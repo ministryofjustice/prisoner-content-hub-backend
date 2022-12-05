@@ -21,3 +21,5 @@ dbBackup:
   enabled: true
 dbRefresh:
   enabled: false
+s3Sync:
+  enabled: false

@@ -99,3 +99,7 @@ dbBackup:
 dbRefresh:
   enabled: false
 
+s3Sync:
+  enabled: false
+  source_region: eu-west-1
+

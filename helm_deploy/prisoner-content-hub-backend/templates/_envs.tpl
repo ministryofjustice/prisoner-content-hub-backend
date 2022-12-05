@@ -130,3 +130,30 @@ env:
         name: db-backups-s3
         key: bucket_name
 {{- end -}}
+
+{{- define "s3-sync.envs" }}
+  - name: S3_DESTINATION_KEY
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3.secretName }}
+        key: access_key_id
+  - name: S3_DESTINATION_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3.secretName }}
+        key: secret_access_key
+  - name: S3_DESTINATION_REGION
+    value: {{ .Values.application.s3.region }}
+  - name: S3_DESTINATION_BUCKET
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3.secretName }}
+        key: bucket_name
+  - name: S3_SOURCE_BUCKET
+    valueFrom:
+      secretKeyRef:
+        name: drupal-s3-output
+        key: bucket_name
+  - name: S3_SOURCE_REGION
+    value: {{ .Values.s3Sync.source_region }}
+{{- end -}}
