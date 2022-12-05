@@ -38,6 +38,6 @@ do
   fi
 done
 
-mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/{filenameExtracted}
+mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/${filenameExtracted}
 rm ~/{filenameExtracted}
 echo "Successfully imported database ${filenameExtracted}"
