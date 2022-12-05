@@ -15,7 +15,7 @@ then
   exit 1
 fi
 
-aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$filename ~/{$filename}
+aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$filename ~/${filename}
 gzip -d ~/${filename}
 filenameExtracted=$(basename $filename .gz)
 
