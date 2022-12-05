@@ -16,7 +16,7 @@ then
 fi
 
 aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$filename ~/{$filename}
-gzip -d ~/{$filename}
+gzip -d ~/${filename}
 filenameExtracted=$(basename $filename .gz)
 
 echo "[mysql]" > ~/.my.cnf
