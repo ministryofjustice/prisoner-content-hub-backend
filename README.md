@@ -1,58 +1,75 @@
-# Digital Hub Backend
+# Content Hub Backend
 
 The backend CMS for the Digital Hub service using Drupal
+
+For the frontend, see https://github.com/ministryofjustice/prisoner-content-hub-frontend
 
 ## Getting started
 
 ### Prerequisites
+Docker
 
-    Composer
-    Docker
+### Running the application for the first time
+#### 1. Start the docker environment
+>`-d` starts the services up in the background
 
-### Install dependencies
-
-    composer clear-cache && \
-    composer install --no-dev --no-ansi --no-scripts --prefer-dist --ignore-platform-reqs --no-interaction --no-autoloader
-
-### Running the application
-
-Being a PHP/Drupal application, there is a requirement for Apache to be set up and configured.
-The simplest way of setting up the application for development is using Docker-Compose and the provided overrides to mount a volume on the host machine
-
-### Custom Modules
-
-The application is built using Docker, using a Drupal base image.
-
-All custom code specific to the Digital Hub project is implemented as Drupal modules, these are located in
-
-    ./docroot/modules/custom
-
-### Configuration
-Drupal configuration is stored inside the `config/sync` directory.
-This is imported during the deployment process, to simulate this on your local environment run the following:
 ```
-vendor/bin/drush deploy
+docker-compose up -d
 ```
-Please note that any configuration that has been modified on the environment you are importing to, will be wiped.
+#### 2. Build PHP/Drupal dependencies
+```
+docker-compose exec drupal composer install
+```
+_(Note that is already run as part of the docker build, but the files will be wiped out by the volume mount, set in
+docker-compose.override.yml.  So the command needs to be run again.)_
+#### 3. Import the database
+For this part you will need to have `kubectl` setup and authenticated with cloud platform. \
+See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#connecting-to-the-cloud-platform-39-s-kubernetes-cluster. \
+I.e. you should be able to run `kubectl -n prisoner-content-hub-development get pods` without any errors.
 
-To make any configuration changes, make the change on your local environment, and run `drush config-export`, then push
-the changes to git.
+Now run:
+```
+make sync
+```
+This will download the latest database backup and import it (the database is backed up once a day). \
+Note this should be run from your host machine (not inside the container).
 
-## Restoring a database dump
+Alternatively, you can install a "fresh" version of Drupal.
+```
+docker-compose exec drupal make install-drupal
+```
+This will have all of the site's configuration, but won't have any content or taxonomy.
+#### 4. Access the service
+Once all the services have started, you can access them at:
 
-### Prerequisites
-    Docker
+**http://localhost:11001**
 
-### Apply dump to hub_db in Docker
+#### 5. Logging into Drupal
+The `make sync` command brings in all of the Drupal users from production.  So if you already have an account setup there,
+you can login with the same username/password on your local environment.
 
-    docker exec -i hub-db mysql -u <DB_USER> --password=<DB_PASS> hubdb < ~/path/to/dump.sql
+Alternatively, you can login with the admin account by running:
+```
+docker-compose exec drupal drush user:unblock admin
+docker-compose exec drupal drush uli --uri=http://localhost:11001/
+```
+This will give you a login link to access the site. \
+Note this account is blocked on production, and should only be used on local environments.
 
-### Apply dump to hub_db in Kubernetes
+## Files in S3
+Drupal is configured to store its files in S3 (e.g. images, pdfs, videos and audio files).
+The docker-compose.yml file on this project comes with a local s3 environment, via localstack.
+However, if you want to use real files from production, it's best to update your prisoner-content-hub-backend-local.env
+file with the s3 credentials for the development S3 bucket.
 
-    kubectl exec -it <POD_ID> -c mysql -- mysql -u <DB_USER> --password=<DB_PASS> < cat ~/path/to/dump.sql
+To obtain the s3 credentials, you can run the following commands:
+- FLYSYSTEM_S3_KEY
 
-### Character encoding
+  `kubectl -n prisoner-content-hub-development get secret drupal-s3 --template={{.data.access_key_id}} | base64 --decode`
+- FLYSYSTEM_S3_SECRET
 
-You can manually specify the encoding type when importing
+  `kubectl -n prisoner-content-hub-development get secret drupal-s3 --template={{.data.secret_access_key}} | base64 --decode`
+- FLYSYSTEM_S3_BUCKET
 
-    --default-character-set=<ENC_TYPE>
+  `kubectl -n prisoner-content-hub-development get secret drupal-s3 --template={{.data.bucket_name}} | base64 --decode`
+- FLYSYSTEM_S3_REGION=eu-west-2

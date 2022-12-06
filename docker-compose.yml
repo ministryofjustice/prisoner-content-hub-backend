@@ -1,30 +1,30 @@
-version: "3"
+version: "3.5"
 
 services:
-  prisoner-content-hub-backend-db:
+  database:
     image: mariadb:10.4
     env_file:
-      - prisoner-content-hub-backend-db.circleci.env
+      - prisoner-content-hub-backend-db.env
     ports:
       - 3306:3306
     networks:
-      - circleci-prisoner_content_hub
+      - prisoner_content_hub
 
-  prisoner-content-hub-backend:
+  drupal:
     image: quay.io/hmpps/prisoner-content-hub-backend
     build:
       context: .
       target: test
     depends_on:
-      - prisoner-content-hub-backend-db
+      - database
     env_file:
-      - prisoner-content-hub-backend.circleci.env
+      - prisoner-content-hub-backend.env
     ports:
       - 11001:8080
     networks:
-      - circleci-prisoner_content_hub
+      - prisoner_content_hub
 
-  prisoner-content-hub-elasticsearch:
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -37,30 +37,31 @@ services:
     ports:
       - 9200:9200
     networks:
-      - circleci-prisoner_content_hub
+      - prisoner_content_hub
   chrome:
     image: previousnext/chrome-headless:65
     ports:
       - "${CHROMEDRIVER_PORT-9222}:9222"
     networks:
-      - circleci-prisoner_content_hub
+      - prisoner_content_hub
 
-  prisoner-content-hub-redis:
+  redis:
     image: redis:5.0.6
     ports:
       - 6379:6379
     networks:
-      - circleci-prisoner_content_hub
+      - prisoner_content_hub
 
-  prisoner-content-hub-localstack:
+  localstack:
     image: localstack/localstack:0.13.3
     environment:
       - SERVICES=s3
     ports:
       - "4566:4566"
     networks:
-      - circleci-prisoner_content_hub
+      - prisoner_content_hub
 
 
 networks:
-  circleci-prisoner_content_hub:
+  prisoner_content_hub:
+    name: prisoner_content_hub

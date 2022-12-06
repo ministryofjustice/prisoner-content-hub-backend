@@ -5,7 +5,6 @@ module:
   admin_toolbar: 0
   admin_toolbar_links_access_filter: 0
   autocomplete_id: 0
-  better_exposed_filters: 0
   block: 0
   book: 0
   book_blocks: 0
@@ -16,6 +15,7 @@ module:
   config_filter: 0
   config_ignore: 0
   contextual: 0
+  csv_serialization: 0
   ctools: 0
   datetime: 0
   decoupled_router: 0
@@ -40,10 +40,6 @@ module:
   image: 0
   image_style_warmer: 0
   inline_form_errors: 0
-  jquery_ui: 0
-  jquery_ui_datepicker: 0
-  jquery_ui_slider: 0
-  jquery_ui_touch_punch: 0
   jsonapi: 0
   jsonapi_cross_bundles: 0
   jsonapi_filter_cache_tags: 0
@@ -88,6 +84,7 @@ module:
   rdf: 0
   readonlymode: 0
   redis: 0
+  rest: 0
   role_delegation: 0
   scheduler: 0
   search_api: 0
@@ -110,6 +107,7 @@ module:
   view_unpublished: 0
   views_bulk_edit: 0
   views_bulk_operations: 0
+  views_data_export: 0
   views_ef_fieldset: 0
   views_entity_form_field: 0
   views_filters_populate: 0
