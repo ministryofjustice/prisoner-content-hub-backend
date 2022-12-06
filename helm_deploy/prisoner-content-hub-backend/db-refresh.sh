@@ -39,5 +39,5 @@ do
 done
 
 mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/${filenameExtracted}
-rm ~/{filenameExtracted}
+rm ~/${filenameExtracted}
 echo "Successfully imported database ${filenameExtracted}"
