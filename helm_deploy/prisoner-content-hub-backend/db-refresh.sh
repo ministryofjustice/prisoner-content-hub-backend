@@ -7,7 +7,7 @@ echo "aws_access_key_id=${DB_BACKUP_S3_KEY}" >> ~/.aws/credentials
 echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}" >> ~/.aws/credentials
 
 # Find the most recent file in the S3 bucket.
-filename="$(aws s3 ls ${DB_BACKUP_S3_BUCKET} --region=${DB_BACKUP_S3_REGION} --recursive | grep '.sql' | sort | tail -n 1 | awk '{print $4}')"
+filename="$(aws s3 ls ${DB_BACKUP_S3_BUCKET} --region=${DB_BACKUP_S3_REGION} --recursive | grep '.sql.gz' | sort | tail -n 1 | awk '{print $4}')"
 if [ -z "$filename" ]
 then
   echo "No database backup files found.  Unable to perform database refresh."
@@ -15,7 +15,9 @@ then
   exit 1
 fi
 
-aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$filename ~/{$filename}
+aws s3 cp s3://${DB_BACKUP_S3_BUCKET}/$filename ~/${filename}
+gzip -d ~/${filename}
+filenameExtracted=$(basename $filename .gz)
 
 echo "[mysql]" > ~/.my.cnf
 echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
@@ -36,6 +38,6 @@ do
   fi
 done
 
-mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/{$filename}
-
-echo "Successfully imported database ${filename}"
+mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/${filenameExtracted}
+rm ~/${filenameExtracted}
+echo "Successfully imported database ${filenameExtracted}"
