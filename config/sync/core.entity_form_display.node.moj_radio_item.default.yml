@@ -31,7 +31,6 @@ dependencies:
     - scheduler
     - select2
     - term_reference_tree
-    - text
 third_party_settings:
   field_group:
     group_prison_categories:
@@ -171,16 +170,6 @@ content:
     region: content
     settings:
       progress_indicator: throbber
-    third_party_settings: {  }
-  field_moj_description:
-    type: text_textarea_with_summary
-    weight: 9
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   field_moj_episode:
     type: number
@@ -353,4 +342,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
+  field_moj_description: true
   promote: true

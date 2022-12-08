@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
+    - field.field.node.page.field_main_body_content
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
@@ -48,6 +49,13 @@ content:
       link: true
     third_party_settings: {  }
     weight: 20
+    region: content
+  field_main_body_content:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_moj_description:
     type: text_default

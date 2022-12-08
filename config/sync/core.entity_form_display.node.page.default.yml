@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
+    - field.field.node.page.field_main_body_content
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
@@ -162,6 +163,14 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
+    third_party_settings: {  }
+  field_main_body_content:
+    type: text_textarea
+    weight: 27
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
   field_moj_description:
     type: text_textarea_with_summary
