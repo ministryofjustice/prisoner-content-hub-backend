@@ -10,3 +10,5 @@ ingress:
       - host: jsonapi-cms-prisoner-content-hub-staging.apps.live.cloud-platform.service.justice.gov.uk
 dbRefresh:
   enabled: true
+s3Sync:
+  enabled: true
