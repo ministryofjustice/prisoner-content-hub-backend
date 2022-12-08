@@ -616,23 +616,39 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
 /**
  * Copy summaries from the description field to the new summary field
  */
-function prisoner_content_hub_profile_deploy_copy_summary_to_new_field() {
-  $result = \Drupal::entityQuery('node')
-    ->exists('field_moj_description')
-    ->accessCheck(FALSE)
-    ->execute();
+function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['result'] = \Drupal::entityQuery('node')
+      ->exists('field_moj_description')
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['progress'] = 0;
+  }
 
-  $nodes = Node::loadMultiple($result);
-  $dummy = \Drupal::service('page_cache_persist.dummy_cache_tags_invalidator');
-  \Drupal::getContainer()->set('cache_tags.invalidator', $dummy);
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 50, TRUE));
+
   /** @var \Drupal\node\NodeInterface $node */
   foreach ($nodes as $node) {
+    $sandbox['progress']++;
     if ($node->hasField('field_moj_description')) {
+      $updated = FALSE;
       $summary = $node->field_moj_description->summary;
       if (!empty($summary)) {
         $node->set('field_summary', $summary);
+        $updated = TRUE;
+      }
+      if ($node->bundle() == 'page' && !empty($node->field_moj_description->value)) {
+        $node->set('field_main_body_content',  $node->field_moj_description->value);
+        $updated = TRUE;
+      }
+      if ($updated) {
         $node->save();
       }
     }
   }
+  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  if ($sandbox['#finished'] ) {
+    return 'Completed updated, processed total of: ' . $sandbox['updated'];
+  }
+  return 'Updated nodes: ' . $sandbox['progress'];
 }
