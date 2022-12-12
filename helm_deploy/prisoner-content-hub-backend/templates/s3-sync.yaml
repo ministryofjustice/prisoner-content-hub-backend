@@ -39,7 +39,7 @@ spec:
                 mountPath: /bin/entrypoint.sh
                 readOnly: true
                 subPath: entrypoint.sh
-  {{ include "s3-sync.envs" . | nindent 12 }}
+{{ include "s3-sync.envs" . | nindent 12 }}
           restartPolicy: Never
           volumes:
             - name: s3-sync-script

@@ -132,6 +132,7 @@ env:
 {{- end -}}
 
 {{- define "s3-sync.envs" }}
+env:
   - name: S3_DESTINATION_KEY
     valueFrom:
       secretKeyRef:
