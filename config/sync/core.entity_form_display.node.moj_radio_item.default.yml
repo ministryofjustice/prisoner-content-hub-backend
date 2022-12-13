@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_radio_item.field_description
     - field.field.node.moj_radio_item.field_exclude_feedback
     - field.field.node.moj_radio_item.field_exclude_from_prison
     - field.field.node.moj_radio_item.field_moj_audio
@@ -31,6 +32,7 @@ dependencies:
     - scheduler
     - select2
     - term_reference_tree
+    - text
 third_party_settings:
   field_group:
     group_prison_categories:
@@ -144,6 +146,14 @@ content:
     weight: 3
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_description:
+    type: text_textarea
+    weight: 9
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox

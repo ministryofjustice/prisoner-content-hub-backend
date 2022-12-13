@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_description
     - field.field.node.moj_video_item.field_exclude_feedback
     - field.field.node.moj_video_item.field_exclude_from_prison
     - field.field.node.moj_video_item.field_moj_description
@@ -146,6 +147,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_description:
+    type: text_textarea
+    weight: 6
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
     weight: 15
@@ -164,16 +173,6 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
-    third_party_settings: {  }
-  field_moj_description:
-    type: text_textarea_with_summary
-    weight: 6
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   field_moj_episode:
     type: number
@@ -345,5 +344,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_moj_archived: true
+  field_moj_description: true
   promote: true
   sticky: true

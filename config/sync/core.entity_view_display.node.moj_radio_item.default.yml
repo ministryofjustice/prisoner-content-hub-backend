@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_radio_item.field_description
     - field.field.node.moj_radio_item.field_exclude_feedback
     - field.field.node.moj_radio_item.field_exclude_from_prison
     - field.field.node.moj_radio_item.field_moj_audio
@@ -32,6 +33,13 @@ targetEntityType: node
 bundle: moj_radio_item
 mode: default
 content:
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 23
+    region: content
   field_exclude_feedback:
     type: boolean
     label: above

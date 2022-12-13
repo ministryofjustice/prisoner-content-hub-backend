@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_description
     - field.field.node.moj_video_item.field_exclude_feedback
     - field.field.node.moj_video_item.field_exclude_from_prison
     - field.field.node.moj_video_item.field_moj_description
@@ -33,6 +34,13 @@ targetEntityType: node
 bundle: moj_video_item
 mode: default
 content:
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 26
+    region: content
   field_exclude_feedback:
     type: boolean
     label: above

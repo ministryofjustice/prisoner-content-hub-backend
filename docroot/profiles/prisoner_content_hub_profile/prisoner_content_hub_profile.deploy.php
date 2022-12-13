@@ -638,7 +638,11 @@ function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox
         $updated = TRUE;
       }
       if ($node->bundle() == 'page' && !empty($node->field_moj_description->value)) {
-        $node->set('field_main_body_content',  $node->field_moj_description->value);
+        $node->set('field_main_body_content', $node->field_moj_description->value);
+        $updated = TRUE;
+      }
+      if ($node->bundle() == 'moj_radio_item' || $node->bundle() == 'moj_video_item') {
+        $node->set('field_description', $node->field_moj_description->value);
         $updated = TRUE;
       }
       if ($updated) {
