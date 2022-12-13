@@ -166,21 +166,11 @@ content:
     third_party_settings: {  }
   field_main_body_content:
     type: text_textarea
-    weight: 27
+    weight: 4
     region: content
     settings:
       rows: 5
       placeholder: ''
-    third_party_settings: {  }
-  field_moj_description:
-    type: text_textarea_with_summary
-    weight: 4
-    region: content
-    settings:
-      rows: 35
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   field_moj_episode:
     type: number
@@ -274,7 +264,11 @@ content:
     settings:
       rows: 5
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: 180
+        maxlength_js_label: 'Summary limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: true
   field_topics:
     type: select2_entity_reference
     weight: 9
@@ -340,5 +334,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_moj_description: true
   promote: true
   sticky: true

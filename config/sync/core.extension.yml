@@ -53,6 +53,7 @@ module:
   link: 0
   linkit: 0
   maintenance_exempt: 0
+  maxlength: 0
   menu_ui: 0
   monolog: 0
   mysql: 0

@@ -265,7 +265,11 @@ content:
     settings:
       rows: 5
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      maxlength:
+        maxlength_js: 180
+        maxlength_js_label: 'Summary limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: true
   field_topics:
     type: select2_entity_reference
     weight: 10

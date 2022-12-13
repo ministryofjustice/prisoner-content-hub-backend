@@ -39,6 +39,7 @@
         "drupal/jsonapi_search_api": "^1.0@RC",
         "drupal/linkit": "^6.0",
         "drupal/maintenance_exempt": "1.x-dev",
+        "drupal/maxlength": "^2.0",
         "drupal/memcache": "^2.0",
         "drupal/migrate_tools": "^5.0",
         "drupal/monolog": "^2.0",
