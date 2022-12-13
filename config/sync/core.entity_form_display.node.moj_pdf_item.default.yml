@@ -29,7 +29,6 @@ dependencies:
     - scheduler
     - select2
     - term_reference_tree
-    - text
 third_party_settings:
   field_group:
     group_prison_categories:
@@ -39,7 +38,7 @@ third_party_settings:
       label: 'Where would you like this content to appear?'
       region: content
       parent_name: ''
-      weight: 13
+      weight: 12
       format_type: fieldset
       format_settings:
         classes: ''
@@ -55,7 +54,7 @@ third_party_settings:
       label: 'Does this content fit into a Series?'
       region: content
       parent_name: ''
-      weight: 10
+      weight: 9
       format_type: fieldset
       format_settings:
         classes: ''
@@ -95,7 +94,7 @@ third_party_settings:
       label: Category
       region: content
       parent_name: ''
-      weight: 12
+      weight: 11
       format_type: fieldset
       format_settings:
         classes: ''
@@ -156,16 +155,6 @@ content:
       cascading_selection_enforce: false
       max_depth: 0
     third_party_settings: {  }
-  field_moj_description:
-    type: text_textarea_with_summary
-    weight: 7
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
   field_moj_episode:
     type: number
     weight: 13
@@ -199,7 +188,7 @@ content:
     third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
-    weight: 8
+    weight: 7
     region: content
     settings:
       progress_indicator: throbber
@@ -260,7 +249,7 @@ content:
     third_party_settings: {  }
   field_topics:
     type: select2_entity_reference
-    weight: 9
+    weight: 8
     region: content
     settings:
       width: 100%
@@ -276,24 +265,24 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
-    weight: 11
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 14
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 17
+    weight: 16
     region: content
     settings:
       display_label: true
@@ -318,10 +307,11 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_moj_description: true
   promote: true
   sticky: true
