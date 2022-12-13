@@ -267,9 +267,8 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'field_prisons' => [
         ['target_id' => $this->anotherPrisonTerm->id()],
       ],
-      'field_moj_description' => [
+      'field_main_body_content' => [
         'value' => $this->randomString(),
-        'summary' => $this->randomString(),
         'format' => 'plain_text',
       ],
       'field_prison_owner' => [
