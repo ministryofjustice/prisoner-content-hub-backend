@@ -267,6 +267,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'field_prisons' => [
         ['target_id' => $this->anotherPrisonTerm->id()],
       ],
+      'field_summary' => [
+        'value' => $this->randomString(),
+      ],
       'field_main_body_content' => [
         'value' => $this->randomString(),
         'format' => 'plain_text',
@@ -294,7 +297,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $fieldExcludeFromPrisonElement->checkField($this->prisonTerm->label());
 
     $this->submitForm([], 'Save');
-    $message = "Basic page ". $node->label() . " has been updated.";
+    $message = "Basic page " . $node->label() . " has been updated.";
     $this->assertSession()->pageTextContains($message);
 
     $prisonFieldElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
