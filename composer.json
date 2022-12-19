@@ -63,7 +63,7 @@
         "drupal/token": "^1.5",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
-        "drupal/views_bulk_operations": "^3.10",
+        "drupal/views_bulk_operations": "^4.2",
         "drupal/views_data_export": "^1.2",
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
@@ -198,9 +198,6 @@
             },
             "drupal/config_ignore": {
                 "Issue #2857247: Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
-            },
-            "drupal/publication_date": {
-                "Issue #2983348: Published on empty for existing nodes.": "patches/publication_date-fill_published_at-2983348-60-for-composer.patch"
             },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-18.patch"
