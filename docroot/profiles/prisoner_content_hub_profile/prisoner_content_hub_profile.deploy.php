@@ -625,7 +625,7 @@ function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox
     $sandbox['progress'] = 0;
   }
 
-  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 50, TRUE));
+  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 25, TRUE));
 
   /** @var \Drupal\node\NodeInterface $node */
   foreach ($nodes as $node) {
