@@ -618,14 +618,16 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
  */
 function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox) {
   if (!isset($sandbox['progress'])) {
-    $sandbox['result'] = \Drupal::entityQuery('node')
-      ->exists('field_moj_description')
-      ->accessCheck(FALSE)
-      ->execute();
     $sandbox['progress'] = 0;
   }
 
-  $nodes = Node::loadMultiple(array_slice($sandbox['result'], $sandbox['progress'], 25, TRUE));
+  $result = \Drupal::entityQuery('node')
+    ->exists('field_moj_description')
+    ->accessCheck(FALSE)
+    ->range($sandbox['progress'] = 0,25)
+    ->execute();
+
+  $nodes = Node::loadMultiple($result);
 
   /** @var \Drupal\node\NodeInterface $node */
   foreach ($nodes as $node) {
