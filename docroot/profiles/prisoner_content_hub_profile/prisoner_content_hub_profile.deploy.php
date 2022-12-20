@@ -616,50 +616,15 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
 /**
  * Copy summaries from the description field to the new summary field
  */
-function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox) {
-  if (!isset($sandbox['progress'])) {
-    $sandbox['progress'] = 0;
-    $sandbox['total'] = \Drupal::entityQuery('node')
-      ->exists('field_moj_description')
-      ->accessCheck(FALSE)
-      ->count()
-      ->execute();
-  }
+function prisoner_content_hub_profile_deploy_copy_summary_to_new_field() {
 
-  $result = \Drupal::entityQuery('node')
-    ->exists('field_moj_description')
-    ->accessCheck(FALSE)
-    ->range($sandbox['progress'],10)
-    ->execute();
+  \Drupal::database()->query('INSERT INTO node__field_summary SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_summary FROM node__field_moj_description');
+  \Drupal::database()->query('INSERT INTO node_revision__field_summary SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_summary FROM node_revision__field_moj_description');
 
-  $nodes = Node::loadMultiple($result);
+  \Drupal::database()->query("INSERT INTO node__field_main_body_content (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_value, field_moj_description_format FROM node__field_moj_description WHERE bundle = 'page')");
+  \Drupal::database()->query("INSERT INTO node_revision__field_main_body_content (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_value, field_moj_description_format FROM node_revision__field_moj_description WHERE bundle = 'page')");
 
-  /** @var \Drupal\node\NodeInterface $node */
-  foreach ($nodes as $node) {
-    $sandbox['progress']++;
-    if ($node->hasField('field_moj_description')) {
-      $updated = FALSE;
-      $summary = $node->field_moj_description->summary;
-      if (!empty($summary)) {
-        $node->set('field_summary', $summary);
-        $updated = TRUE;
-      }
-      if ($node->bundle() == 'page' && !empty($node->field_moj_description->value)) {
-        $node->set('field_main_body_content', $node->field_moj_description->value);
-        $updated = TRUE;
-      }
-      if ($node->bundle() == 'moj_radio_item' || $node->bundle() == 'moj_video_item') {
-        $node->set('field_description', $node->field_moj_description->value);
-        $updated = TRUE;
-      }
-      if ($updated) {
-        $node->save();
-      }
-    }
-  }
-  $sandbox['#finished'] = $sandbox['progress'] >= $sandbox['total'];
-  if ($sandbox['#finished'] ) {
-    return 'Completed updated, processed total of: ' . $sandbox['updated'];
-  }
-  return 'Updated nodes: ' . $sandbox['progress'];
+  \Drupal::database()->query("INSERT INTO node__field_description (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_value, field_moj_description_format FROM node__field_moj_description WHERE bundle IN ('moj_radio_item', 'moj_video_item'))");
+  \Drupal::database()->query("INSERT INTO node_revision__field_description (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_value, field_moj_description_format FROM node_revision__field_moj_description WHERE bundle IN ('moj_radio_item', 'moj_video_item'))");
+
 }
