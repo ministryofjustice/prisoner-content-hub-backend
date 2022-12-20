@@ -629,7 +629,7 @@ function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox
   $result = \Drupal::entityQuery('node')
     ->exists('field_moj_description')
     ->accessCheck(FALSE)
-    ->range($sandbox['progress'],25)
+    ->range($sandbox['progress'],10)
     ->execute();
 
   $nodes = Node::loadMultiple($result);
