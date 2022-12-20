@@ -652,7 +652,7 @@ function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox
       }
     }
   }
-  $sandbox['#finished'] = $sandbox['progress'] >= count($sandbox['result']);
+  $sandbox['#finished'] = $sandbox['progress'] >= count($result);
   if ($sandbox['#finished'] ) {
     return 'Completed updated, processed total of: ' . $sandbox['updated'];
   }
