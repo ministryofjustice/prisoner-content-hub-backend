@@ -8,7 +8,7 @@ metadata:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 data:
   entrypoint.sh: |-
-  {{ .Files.Get "s3-sync.sh" | indent 4 }}
+{{ .Files.Get "s3-sync.sh" | indent 4 }}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -30,20 +30,20 @@ spec:
       template:
         spec:
           containers:
-            - name: s3-sync-cronjob
-              image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
-              command:
-                - /bin/entrypoint.sh
-              volumeMounts:
-                - name: s3-sync-script
-                  mountPath: /bin/entrypoint.sh
-                  readOnly: true
-                  subPath: entrypoint.sh
-  {{ include "s3-sync.envs" . | nindent 12 }}
-restartPolicy: Never
-volumes:
-  - name: s3-sync-script
-    configMap:
-      name: s3-sync-script
-      defaultMode: 0755
+          - name: s3-sync-cronjob
+            image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
+            command:
+              - /bin/entrypoint.sh
+            volumeMounts:
+              - name: s3-sync-script
+                mountPath: /bin/entrypoint.sh
+                readOnly: true
+                subPath: entrypoint.sh
+{{ include "s3-sync.envs" . | nindent 12 }}
+          restartPolicy: Never
+          volumes:
+            - name: s3-sync-script
+              configMap:
+                name: s3-sync-script
+                defaultMode: 0755
   {{- end }}
