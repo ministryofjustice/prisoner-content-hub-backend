@@ -619,12 +619,17 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
 function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
+    $sandbox['total'] = \Drupal::entityQuery('node')
+      ->exists('field_moj_description')
+      ->accessCheck(FALSE)
+      ->count()
+      ->execute();
   }
 
   $result = \Drupal::entityQuery('node')
     ->exists('field_moj_description')
     ->accessCheck(FALSE)
-    ->range($sandbox['progress'] = 0,25)
+    ->range($sandbox['progress'],25)
     ->execute();
 
   $nodes = Node::loadMultiple($result);
@@ -652,7 +657,7 @@ function prisoner_content_hub_profile_deploy_copy_summary_to_new_field(&$sandbox
       }
     }
   }
-  $sandbox['#finished'] = $sandbox['progress'] >= count($result);
+  $sandbox['#finished'] = $sandbox['progress'] >= $sandbox['total'];
   if ($sandbox['#finished'] ) {
     return 'Completed updated, processed total of: ' . $sandbox['updated'];
   }
