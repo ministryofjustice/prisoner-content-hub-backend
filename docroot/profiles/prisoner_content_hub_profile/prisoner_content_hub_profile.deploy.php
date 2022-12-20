@@ -618,8 +618,8 @@ function prisoner_content_hub_profile_deploy_convert_series_to_subcats() {
  */
 function prisoner_content_hub_profile_deploy_copy_summary_to_new_field() {
 
-  \Drupal::database()->query('INSERT INTO node__field_summary SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_summary FROM node__field_moj_description');
-  \Drupal::database()->query('INSERT INTO node_revision__field_summary SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_summary FROM node_revision__field_moj_description');
+  \Drupal::database()->query('INSERT INTO node__field_summary (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_summary FROM node__field_moj_description)');
+  \Drupal::database()->query('INSERT INTO node_revision__field_summary (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_summary FROM node_revision__field_moj_description)');
 
   \Drupal::database()->query("INSERT INTO node__field_main_body_content (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_value, field_moj_description_format FROM node__field_moj_description WHERE bundle = 'page')");
   \Drupal::database()->query("INSERT INTO node_revision__field_main_body_content (SELECT bundle, deleted, entity_id, revision_id, langcode, delta, field_moj_description_value, field_moj_description_format FROM node_revision__field_moj_description WHERE bundle = 'page')");
