@@ -75,4 +75,4 @@ To obtain the s3 credentials, you can run the following commands:
 - FLYSYSTEM_S3_REGION=eu-west-2
 - FLYSYSTEM_S3_CNAME_IS_BUCKET=true
 - FLYSYSTEM_S3_CNAME=""
-- FLYSYSTEM_S3_ENDPOINT="""
+- FLYSYSTEM_S3_ENDPOINT=""
