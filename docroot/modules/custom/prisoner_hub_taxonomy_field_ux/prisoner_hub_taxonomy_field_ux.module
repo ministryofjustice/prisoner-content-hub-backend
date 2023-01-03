@@ -7,6 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_field_group_form_process_build_alter().
@@ -35,5 +36,20 @@ function prisoner_hub_taxonomy_field_ux_entity_presave(Drupal\Core\Entity\Entity
     else {
       $entity->set('field_moj_top_level_categories', NULL);
     }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function prisoner_hub_taxonomy_field_ux_views_data_alter(array &$data) {
+  if (isset($data['taxonomy_term_data'])) {
+    // Add the current company computed field to Views.
+    $data['taxonomy_term_data']['dynamic_parent_category'] = [
+      'title' => t('Dynamic parent category'),
+      'field' => [
+        'id' => 'dynamic_parent_category',
+      ],
+    ];
   }
 }
