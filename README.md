@@ -73,3 +73,6 @@ To obtain the s3 credentials, you can run the following commands:
 
   `kubectl -n prisoner-content-hub-development get secret drupal-s3 --template={{.data.bucket_name}} | base64 --decode`
 - FLYSYSTEM_S3_REGION=eu-west-2
+- FLYSYSTEM_S3_CNAME_IS_BUCKET=true
+- FLYSYSTEM_S3_CNAME=""
+- FLYSYSTEM_S3_ENDPOINT="""
