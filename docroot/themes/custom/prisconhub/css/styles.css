@@ -77,3 +77,26 @@ a[href="/admin/help"].toolbar-icon:before {
 .tabledrag-toggle-weight {
   display: none;
 }
+
+/**
+ * Set our "Taxonomy" menu item to have it's own icon.
+ */
+.toolbar-icon-views-viewviews-taxonomy-overview-page-1:before {
+  background-image: url(../../../../core/misc/icons/787878/orgchart.svg);
+}
+.toolbar-icon-views-viewviews-taxonomy-overview-page-1:active:before,
+.toolbar-icon-views-viewviews-taxonomy-overview-page-1.is-active:before {
+  background-image: url(../../../../core/misc/icons/000000/orgchart.svg);
+}
+
+/**
+ * Override the icon used for structure, replace with a cog.
+ * As we are using the original icon for the Taxonomy menu item.
+ */
+.toolbar-icon-system-admin-structure:before {
+  background-image: url(../../../../core/misc/icons/787878/cog.svg);
+}
+.toolbar-icon-system-admin-structure:active:before,
+.toolbar-icon-system-admin-structure.is-active:before {
+  background-image: url(../../../../core/misc/icons/787878/cog.svg);
+}

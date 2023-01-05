@@ -355,15 +355,15 @@ display:
     display_options:
       display_extenders:
         views_ef_fieldset: {  }
-      path: admin/content/taxonomy-map
+      path: admin/taxonomy/map
       menu:
         type: normal
-        title: 'Taxonomy Map'
+        title: Map
         description: ''
         weight: 99
         expanded: false
         menu_name: admin
-        parent: system.admin_content
+        parent: 'views_view:views.taxonomy_overview.page_1'
         context: '0'
     cache_metadata:
       max-age: -1
