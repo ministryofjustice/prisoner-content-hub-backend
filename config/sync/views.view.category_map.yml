@@ -11,8 +11,8 @@ dependencies:
     - taxonomy
     - user
     - views_tree
-id: taxonomy_map
-label: 'Taxonomy map'
+id: category_map
+label: 'Category map'
 module: views
 description: ''
 tag: ''
@@ -25,7 +25,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Taxonomy map'
+      title: 'Category map'
       fields:
         name:
           id: name
@@ -355,10 +355,10 @@ display:
     display_options:
       display_extenders:
         views_ef_fieldset: {  }
-      path: admin/taxonomy/map
+      path: admin/taxonomy/category-map
       menu:
         type: normal
-        title: Map
+        title: Category map
         description: ''
         weight: 99
         expanded: false
