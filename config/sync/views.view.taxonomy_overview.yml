@@ -158,16 +158,16 @@ display:
             0:
               action_id: views_bulk_edit
               preconfiguration:
-                add_confirmation: 0
-                get_bundles_from_results: 1
+                add_confirmation: false
+                get_bundles_from_results: true
             2:
               action_id: 'entity:publish_action:taxonomy_term'
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             4:
               action_id: 'entity:unpublish_action:taxonomy_term'
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
         name:
           id: name
           table: taxonomy_term_field_data
@@ -1980,7 +1980,7 @@ display:
         fields: false
       display_extenders:
         views_ef_fieldset: {  }
-      path: admin/content/taxonomy/csv-export
+      path: admin/taxonomy/csv-export
       displays:
         default: default
         page_1: page_1
@@ -2105,15 +2105,15 @@ display:
                   pid: root
                   depth: '1'
                   type: container
-      path: admin/content/taxonomy
+      path: admin/taxonomy
       menu:
         type: normal
         title: Taxonomy
         description: ''
-        weight: 0
-        expanded: false
+        weight: -59
+        expanded: true
         menu_name: admin
-        parent: system.admin_content
+        parent: system.admin
         context: '0'
     cache_metadata:
       max-age: 0
