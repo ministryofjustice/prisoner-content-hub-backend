@@ -227,7 +227,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'access content overview'
       cache:
         type: tag
         options: {  }
@@ -358,7 +358,7 @@ display:
       path: admin/taxonomy/category-map
       menu:
         type: normal
-        title: Category map
+        title: 'Category map'
         description: ''
         weight: 99
         expanded: false
