@@ -21,6 +21,7 @@ run-tests:
 	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose
 
 deploy:
+	drush cache:rebuild
 	echo "Enabling maintenance and readonly mode"
 	drush state-set readonlymode_active 1
 	drush state-set system.maintenance_mode 1
