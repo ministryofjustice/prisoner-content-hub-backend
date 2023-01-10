@@ -35,7 +35,7 @@
         "drupal/jsonapi_cross_bundles": "^1.0",
         "drupal/jsonapi_image_styles": "^2.0@beta",
         "drupal/jsonapi_menu_items": "^1.2",
-        "drupal/jsonapi_page_limit": "^1.0@beta",
+        "drupal/jsonapi_page_limit": "^1.0.0-beta2",
         "drupal/jsonapi_search_api": "^1.0@RC",
         "drupal/linkit": "^6.0",
         "drupal/maintenance_exempt": "1.x-dev",
@@ -69,6 +69,7 @@
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
         "drupal/views_filters_populate": "^2.0",
+        "drupal/views_tree": "^2.0@alpha",
         "drush/drush": "^11.2",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
@@ -161,10 +162,6 @@
                 "Issue #3114365 - Vocabulary name not shown in View for Anonymous Users": "patches/drupal-3114365-17.patch",
                 "Issue #3090131 - Use per-bundle entity list cache tags to potentially increase caching and performance": "patches/drupal-3090131-16.patch"
             },
-            "drupal/jsonapi_page_limit": {
-                "Add option to set a global limit, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/1": "patches/jsonapi_page_limit-add-option-to-set-global-limit-2.patch",
-                "Fix incorrect pager links, see https://gitlab.com/drupalspoons/jsonapi_page_limit/-/issues/2": "patches/jsonapi_page_limit_fix_pager_links.patch"
-            },
             "drupal/views_ef_fieldset": {
                 "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
             },
@@ -208,6 +205,9 @@
             },
             "drupal/views_data_export": {
                 "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
+            },
+            "drupal/views_tree": {
+                "Issue #3298991: Return type of Drupal\\views_tree\\TreeItem::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable": "patches/views_tree-3298991-undefined-function-getIterator.patch"
             },
             "guzzlehttp/guzzle": {
                 "https://github.com/guzzle/guzzle/issues/3020 support PHP8.1 as used by Behat 3 with Drupal 9.3": "patches/guzzle-3020.patch"

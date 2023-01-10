@@ -177,8 +177,8 @@ parameters:
   monolog.channel_handlers:
     default: ["stream", "errStream", "drupal.raven"]
 
-  jsonapi_page_limit.size_max: []
-  jsonapi_page_limit.global_size_max: 100
+  jsonapi_page_limit.size_max:
+    /jsonapi/*: 100
 services:
   monolog.handler.stream:
     class: Monolog\Handler\StreamHandler
