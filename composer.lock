@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87f804c63af5467cf24fda9e198ac473",
+    "content-hash": "4c2a51f02bb48ab5091514eaa489bc1e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3746,6 +3746,54 @@
             ],
             "support": {
                 "source": "https://git.drupalcode.org/project/jsonapi_cross_bundles"
+            }
+        },
+        {
+            "name": "drupal/jsonapi_filter_cache_tags",
+            "version": "1.0.1-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/jsonapi_filter_cache_tags.git",
+                "reference": "1.0.1-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_filter_cache_tags-1.0.1-beta1.zip",
+                "reference": "1.0.1-beta1",
+                "shasum": "b6f233c77564efc94c0ad983e6fb367504d6d902"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.1-beta1",
+                    "datestamp": "1672923307",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Leon Kessler",
+                    "homepage": "https://www.drupal.org/user/595374"
+                },
+                {
+                    "name": "Unsupported Projects",
+                    "homepage": "https://www.drupal.org/user/291168"
+                }
+            ],
+            "description": "Provides cache tag integration based on jsonapi filters.",
+            "homepage": "https://www.drupal.org/project/jsonapi_filter_cache_tags",
+            "support": {
+                "source": "https://git.drupalcode.org/project/jsonapi_filter_cache_tags"
             }
         },
         {
@@ -18928,6 +18976,7 @@
         "drupal/computed_breadcrumbs": 20,
         "drupal/entity_clone": 10,
         "drupal/form_state_empty": 15,
+        "drupal/jsonapi_filter_cache_tags": 10,
         "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_search_api": 5,
         "drupal/maintenance_exempt": 20,
