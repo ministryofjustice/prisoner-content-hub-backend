@@ -1,8 +1,0 @@
-services:
-  jsonapi_filter_cache_tags.cache_tags_builder:
-    class: Drupal\jsonapi_filter_cache_tags\CacheTagsBuilder
-  jsonapi_filter_cache_tags.subscriber:
-    class: Drupal\jsonapi_filter_cache_tags\EventSubscriber\ResponseSubscriber
-    arguments: ['@jsonapi_filter_cache_tags.cache_tags_builder', '@jsonapi.field_resolver']
-    tags:
-      - { name: event_subscriber }
