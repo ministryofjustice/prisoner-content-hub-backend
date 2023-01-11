@@ -26,9 +26,9 @@ third_party_settings:
     unpublish_revision: false
 _core:
   default_config_hash: Vjr0aSl-JsKOCzaSE5gEze0AHBo02LWEsJK2ZsdROkg
-name: 'Audio item'
+name: Audio
 type: moj_radio_item
-description: 'Use <em>radio items</em> to represent radio content stored within the content library.'
+description: 'Use <em>audio</em> to add audio content such as audiobooks, music and podcasts  - use mp3 files.'
 help: ''
 new_revision: true
 preview_mode: 0
