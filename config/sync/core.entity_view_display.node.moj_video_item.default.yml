@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_video_item.field_description
     - field.field.node.moj_video_item.field_exclude_feedback
     - field.field.node.moj_video_item.field_exclude_from_prison
     - field.field.node.moj_video_item.field_moj_description
@@ -16,6 +17,7 @@ dependencies:
     - field.field.node.moj_video_item.field_prison_owner
     - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
+    - field.field.node.moj_video_item.field_summary
     - field.field.node.moj_video_item.field_topics
     - field.field.node.moj_video_item.field_video
     - node.type.moj_video_item
@@ -32,6 +34,13 @@ targetEntityType: node
 bundle: moj_video_item
 mode: default
 content:
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 26
+    region: content
   field_exclude_feedback:
     type: boolean
     label: above
@@ -144,6 +153,13 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 18
+    region: content
+  field_summary:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 25
     region: content
   field_topics:
     type: entity_reference_label

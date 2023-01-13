@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_radio_item.field_description
     - field.field.node.moj_radio_item.field_exclude_feedback
     - field.field.node.moj_radio_item.field_exclude_from_prison
     - field.field.node.moj_radio_item.field_moj_audio
@@ -17,6 +18,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_prison_owner
     - field.field.node.moj_radio_item.field_prisons
     - field.field.node.moj_radio_item.field_release_date
+    - field.field.node.moj_radio_item.field_summary
     - field.field.node.moj_radio_item.field_topics
     - node.type.moj_radio_item
   module:
@@ -31,6 +33,13 @@ targetEntityType: node
 bundle: moj_radio_item
 mode: default
 content:
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 23
+    region: content
   field_exclude_feedback:
     type: boolean
     label: above
@@ -143,6 +152,13 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 15
+    region: content
+  field_summary:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 22
     region: content
   field_topics:
     type: entity_reference_label

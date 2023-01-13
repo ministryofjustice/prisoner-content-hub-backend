@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.node.search_result
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
+    - field.field.node.page.field_main_body_content
     - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
@@ -17,6 +18,7 @@ dependencies:
     - field.field.node.page.field_prison_owner
     - field.field.node.page.field_prisons
     - field.field.node.page.field_release_date
+    - field.field.node.page.field_summary
     - field.field.node.page.field_topics
     - node.type.page
   module:
@@ -37,6 +39,7 @@ hidden:
   breadcrumbs: true
   field_exclude_feedback: true
   field_exclude_from_prison: true
+  field_main_body_content: true
   field_moj_description: true
   field_moj_episode: true
   field_moj_season: true
@@ -48,6 +51,7 @@ hidden:
   field_prison_owner: true
   field_prisons: true
   field_release_date: true
+  field_summary: true
   field_topics: true
   published_at: true
   search_api_excerpt: true
