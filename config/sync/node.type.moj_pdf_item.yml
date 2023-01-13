@@ -24,9 +24,9 @@ third_party_settings:
     unpublish_revision: false
 _core:
   default_config_hash: geREINR7PSsVaMs0PPwd-l3o0rq0b-Ou5GI-sitWDg8
-name: 'PDF  item'
+name: PDF
 type: moj_pdf_item
-description: 'Used to create PDF items within the content library. We should avoid PDFs where possible, because they aren''t an accessible format.'
+description: 'Use <em>PDF</em> to add PDF files. Ideally, content should be formatted to be used on a Basic Page instead of a PDF. PDF content cannot be read by the Hub Search engine.'
 help: ''
 new_revision: true
 preview_mode: 0
