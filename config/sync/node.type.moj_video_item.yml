@@ -24,9 +24,9 @@ third_party_settings:
     unpublish_revision: false
 _core:
   default_config_hash: igT4viXry9YfpMH3ULYXK54YCTuJ_eF-lfvDYJZfEI0
-name: 'Video item'
+name: Video
 type: moj_video_item
-description: 'Use <em>video items</em> to represent video content stored within the content library.'
+description: 'Use <em>video</em> to add video - use mp4 files (ideally encoded using h.264, and 720p).'
 help: ''
 new_revision: true
 preview_mode: 0
