@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_pdf_item.field_exclude_from_prison
-    - field.field.node.moj_pdf_item.field_moj_description
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
     - field.field.node.moj_pdf_item.field_moj_season
@@ -316,6 +315,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_moj_description: true
   promote: true
   sticky: true
