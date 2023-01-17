@@ -164,7 +164,8 @@
                 "Issue #3090131 - Use per-bundle entity list cache tags to potentially increase caching and performance": "patches/drupal-3090131-16.patch"
             },
             "drupal/views_ef_fieldset": {
-                "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
+                "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch",
+                "Issue #3269083: TypeError: Unsupported operand types:": "patches/views_ef_fieldset-3269083-17.patch"
             },
             "drupal/dynamic_entity_reference": {
                 "Issue #3057556: Incompatibility with jsonapi relatable resource search": "patches/dynamic_entity_reference-3057556-4.patch"
