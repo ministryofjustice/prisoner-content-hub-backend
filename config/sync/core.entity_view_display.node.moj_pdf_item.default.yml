@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_pdf_item.field_exclude_from_prison
-    - field.field.node.moj_pdf_item.field_moj_description
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
     - field.field.node.moj_pdf_item.field_moj_season
@@ -22,7 +21,6 @@ dependencies:
     - datetime
     - file
     - image
-    - text
     - user
 _core:
   default_config_hash: IvT63FRubJaKA0yIyvSNZJwgBfEXB3zeNuSH1t5K6rM
@@ -38,13 +36,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 20
-    region: content
-  field_moj_description:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
     region: content
   field_moj_episode:
     type: number_integer

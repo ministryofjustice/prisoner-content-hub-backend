@@ -7,7 +7,6 @@ dependencies:
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
     - field.field.node.page.field_main_body_content
-    - field.field.node.page.field_moj_description
     - field.field.node.page.field_moj_episode
     - field.field.node.page.field_moj_season
     - field.field.node.page.field_moj_series
@@ -40,7 +39,6 @@ hidden:
   field_exclude_feedback: true
   field_exclude_from_prison: true
   field_main_body_content: true
-  field_moj_description: true
   field_moj_episode: true
   field_moj_season: true
   field_moj_series: true
