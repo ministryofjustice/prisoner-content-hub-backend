@@ -15,7 +15,7 @@
         "drupal/config_ignore": "^2.3",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
-        "drupal/core-recommended": "~9.4.7",
+        "drupal/core-recommended": "^9.5",
         "drupal/core-vendor-hardening": "^9.0.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
@@ -156,7 +156,7 @@
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
             },
             "drupal/core": {
-                "Issue #1149078 - States API doesn't work with multiple select fields": "patches/drupal_states-multiselect-1149078-109.patch",
+                "Issue #1149078 - States API doesn't work with multiple select fields": "patches/1149078-144.patch",
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #3057545 - ResourceTypeRepository wrongly assumes that all entity reference fields have the setting \"target_type\".": "patches/drupal-3057545-40.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
