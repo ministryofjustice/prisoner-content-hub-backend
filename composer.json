@@ -56,6 +56,7 @@
         "drupal/taxonomy_machine_name": "1.x-dev",
         "drupal/term_reference_tree": "^1.1",
         "drupal/token": "^1.5",
+        "drupal/upgrade_status": "^4.0",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
         "drupal/views_bulk_operations": "^4.2",
@@ -231,7 +232,6 @@
         "dmore/chrome-mink-driver": "^2.7",
         "drupal/console": "^1.9",
         "drupal/core-dev": "^9.0.0",
-        "drupal/devel": "^4.0",
         "phpspec/prophecy-phpunit": "^2",
         "weitzman/drupal-test-traits": "^1.5"
     }
