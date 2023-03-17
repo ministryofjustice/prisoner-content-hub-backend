@@ -1,7 +1,0 @@
-prisoner_hub_featured_content:
-  version: VERSION
-  js:
-    js/prisoner-hub-featured-content.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupal.form
