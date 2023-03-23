@@ -1,0 +1,7 @@
+name: Prisoner Hub Linkit Matcher
+type: module
+description: Provides a custom Linkit Matcher for the content hub.
+package: Custom
+core_version_requirement: ^9 || ^10
+dependencies:
+  - linkit:linkit
