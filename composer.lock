@@ -3692,26 +3692,26 @@
         },
         {
             "name": "drupal/maxlength",
-            "version": "2.0.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/maxlength.git",
-                "reference": "2.0.1"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/maxlength-2.0.1.zip",
-                "reference": "2.0.1",
-                "shasum": "9503a590601cb54b2f4c33cf810ba0abcb958369"
+                "url": "https://ftp.drupal.org/files/projects/maxlength-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "fb434fba2afd6c521d9a9d3b5c7c4981e20d264c"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9.2 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.1",
-                    "datestamp": "1670863355",
+                    "version": "2.1.0",
+                    "datestamp": "1678299441",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3752,6 +3752,10 @@
                     "name": "Steven DuBois (srdtwc)",
                     "homepage": "https://www.drupal.org/u/srdtwc",
                     "role": "Maintainer"
+                },
+                {
+                    "name": "srdtwc",
+                    "homepage": "https://www.drupal.org/user/3422763"
                 }
             ],
             "description": "Maxlength allows a soft or hard character limit to be set on titles, text fields and link fields.",
