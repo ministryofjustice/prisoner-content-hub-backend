@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - node
+    - prisoner_hub_linkit_matcher
     - taxonomy
 _core:
   default_config_hash: Tt8DtxZ3Nooo0PoWPpJvszA3R_5d8MmpUW7LM_R-BzY
@@ -26,7 +27,7 @@ matchers:
       substitution_type: canonical
       limit: 100
       include_unpublished: false
-    weight: 0
+    weight: -9
   83f16b85-c553-402e-8cdc-1d58265b0216:
     id: 'entity:taxonomy_term'
     uuid: 83f16b85-c553-402e-8cdc-1d58265b0216
@@ -39,4 +40,9 @@ matchers:
       group_by_bundle: false
       substitution_type: canonical
       limit: 100
-    weight: 0
+    weight: -8
+  91b234df-d6ee-44b9-b73b-6c6ee2f6b200:
+    id: 'prisoner_hub:front_end'
+    uuid: 91b234df-d6ee-44b9-b73b-6c6ee2f6b200
+    settings: {  }
+    weight: -10
