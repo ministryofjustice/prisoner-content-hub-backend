@@ -13,7 +13,6 @@ info.php
 import
 db_dump/
 .idea/**
-.idea
 *.swp
 .vscode/**
 docroot/sites/default/settings.local.php
@@ -37,6 +36,12 @@ docroot/.eslintrc.json
 docroot/.ht.router.php
 docroot/.htaccess
 docroot/INSTALL.txt
+aws
+awscliv2.zip
+.phpunit.result.cache
+db-backups
+docroot/libraries
+docroot/sites/simpletest
 
 # Ignore override docker-compose files.
 # Even those these are in git, we want to allow local changes to them without being pushed up to git.
