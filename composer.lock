@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3aa6e46dde14cf339f71b0e2879d21f7",
+    "content-hash": "c800677c9ae84d1fcb37a50b53ef67c8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3294,29 +3294,30 @@
         },
         {
             "name": "drupal/jsonapi_image_styles",
-            "version": "2.0.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_image_styles.git",
-                "reference": "2.0.1"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_image_styles-2.0.1.zip",
-                "reference": "2.0.1",
-                "shasum": "fb723e06236fb84299020ce23fb77ca92fac0bea"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_image_styles-3.0.0.zip",
+                "reference": "3.0.0",
+                "shasum": "9747a66d4da23d07e33768e77a07e86b1916f425"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9 || ^10"
             },
             "require-dev": {
-                "drupal/coder": "^8.3"
+                "drupal/coder": "^8.3",
+                "phpcompatibility/php-compatibility": "10.x-dev"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.1",
-                    "datestamp": "1632412799",
+                    "version": "3.0.0",
+                    "datestamp": "1646861925",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -18192,7 +18193,6 @@
         "drupal/entity_clone": 10,
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_filter_cache_tags": 10,
-        "drupal/jsonapi_image_styles": 10,
         "drupal/jsonapi_search_api": 5,
         "drupal/maintenance_exempt": 20,
         "drupal/pathologic": 15,
