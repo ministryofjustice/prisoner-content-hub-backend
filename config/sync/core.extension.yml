@@ -32,7 +32,7 @@ module:
   file: 0
   file_download_expires_fix: 0
   filter: 0
-  flood_unblock: 0
+  flood_control: 0
   flysystem: 0
   flysystem_s3: 0
   form_state_empty: 0
@@ -83,7 +83,6 @@ module:
   prisoner_hub_taxonomy_field_ux: 0
   prisoner_hub_taxonomy_sorting: 0
   raven: 0
-  rdf: 0
   readonlymode: 0
   redis: 0
   rest: 0
@@ -121,9 +120,6 @@ module:
   publication_date: 99
   prisoner_content_hub_profile: 1000
 theme:
-  stable: 0
-  classy: 0
-  seven: 0
   prisconhub: 0
   claro: 0
 profile: prisoner_content_hub_profile
