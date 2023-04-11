@@ -49,9 +49,12 @@ class PrisonContext implements ParamConverterInterface {
    * @return \Drupal\Core\Entity\EntityInterface|\Drupal\taxonomy\Entity\Term|null
    */
   public function getPrisonTerm(string $name) {
-    $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
-    $query->condition('machine_name', $name);
-    $tid = $query->execute();
+    $tid = $this->entityTypeManager->getStorage('taxonomy_term')
+      ->getQuery()
+      ->condition('machine_name', $name)
+      ->accessCheck(TRUE)
+      ->execute();
+
     if ($tid) {
       return $this->entityTypeManager->getStorage('taxonomy_term')->load(reset($tid));
     }
