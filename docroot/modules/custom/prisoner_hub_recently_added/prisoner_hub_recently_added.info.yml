@@ -1,7 +1,7 @@
 name: 'Prisoner hub recently added'
 type: module
 description: 'Provides a custom jsonapi resource to retrieve recently added content and series.'
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - jsonapi_resources:jsonapi_resources

@@ -1,7 +1,7 @@
 name: 'Prisoner hub prison access cms'
 type: module
 description: 'Provides entity access integration within the CMS.'
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - prisoner_hub_prison_access:prisoner_hub_prison_access

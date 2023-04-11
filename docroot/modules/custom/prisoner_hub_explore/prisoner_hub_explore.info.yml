@@ -1,7 +1,7 @@
 name: 'Prisoner hub explore'
 type: module
 description: 'Provides a JSON:API resource for exploring content on the Hub.'
-core_version_requirement: ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - jsonapi_resources:jsonapi_resources

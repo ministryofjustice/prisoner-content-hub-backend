@@ -2,8 +2,7 @@ name: Prisconhub
 type: theme
 description: 'Admin theme for the Prisoner content hub'
 package: Other
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 libraries:
   - prisconhub/global-styling
 
