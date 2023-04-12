@@ -1,8 +1,7 @@
 name: 'Field group open non-empty'
 type: module
 description: 'Extends field group details element to open when containing fields are non-empty, otherwise closed.'
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - field_group:field_group

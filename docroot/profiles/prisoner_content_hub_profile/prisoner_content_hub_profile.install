@@ -377,6 +377,7 @@ function prisoner_content_hub_profile_update_8023() {
 function prisoner_content_hub_profile_update_8024() {
   $result = \Drupal::entityQuery('taxonomy_term')
     ->exists('field_moj_thumbnail_image')
+    ->accessCheck(TRUE)
     ->execute();
 
   $terms = Term::loadMultiple($result);
@@ -397,6 +398,7 @@ function prisoner_content_hub_profile_update_8024() {
 function prisoner_content_hub_profile_update_8025() {
   $result = \Drupal::entityQuery('node')
     ->condition('type', 'featured_articles')
+    ->accessCheck(TRUE)
     ->execute();
   $nodes = Node::loadMultiple($result);
 

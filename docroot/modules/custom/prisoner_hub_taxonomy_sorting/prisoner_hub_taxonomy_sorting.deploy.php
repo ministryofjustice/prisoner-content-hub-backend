@@ -15,9 +15,10 @@ use Drupal\taxonomy\Entity\Term;
  * Update existing Taxonomy terms with default values.
  */
 function prisoner_hub_taxonomy_sorting_deploy_set_field_default_values() {
-  $query = \Drupal::entityQuery('taxonomy_term');
-  $query->condition('vid', 'series');
-  $result = $query->execute();
+  $result = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', 'series')
+    ->accessCheck(TRUE)
+    ->execute();
   $taxonomy_terms = Term::loadMultiple($result);
   foreach ($taxonomy_terms as $term) {
     /* @var \Drupal\Taxonomy\TermInterface $term */
@@ -44,9 +45,10 @@ function prisoner_hub_taxonomy_sorting_deploy_copy_moj_date_2() {
 function prisoner_hub_taxonomy_sorting_deploy_set_series_value_field(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
-    $query = \Drupal::entityQuery('node');
     // Get all nodes tagged with "Youth female".
-    $query->exists('field_moj_series');
+    $query = \Drupal::entityQuery('node')
+      ->exists('field_moj_series')
+      ->accessCheck(TRUE);
     $sandbox['result'] = $query->execute();
   }
 

@@ -243,6 +243,7 @@ function prisoner_content_hub_profile_deploy_update_series_images() {
       ->condition('field_moj_thumbnail_image', NULL, 'IS NOT NULL')
       ->range(0, 1)
       ->sort('created', 'DESC')
+      ->accessCheck(TRUE)
       ->execute();
     if (!empty($result)) {
       $node = Node::load(reset($result));
@@ -379,6 +380,7 @@ function prisoner_content_hub_profile_deploy_copy_thumbnail_image_field_data() {
 function prisoner_content_hub_profile_deploy_copy_homepage_data() {
   $results = \Drupal::entityQuery('node')
     ->condition('type', 'featured_articles')
+    ->accessCheck(TRUE)
     ->execute();
   $nodes = Node::loadMultiple($results);
 

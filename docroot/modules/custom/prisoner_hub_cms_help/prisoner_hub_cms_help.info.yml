@@ -1,8 +1,7 @@
 name: 'Prisoner hub CMS help'
 type: module
 description: 'Provides functionality for the Prisoner content hub help section.'
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - drupal:book
