@@ -1,7 +1,7 @@
 name: 'Prisoner hub primary nav'
 type: module
 description: 'Adds support for prisoner hub primary nav.'
-core_version_requirement: ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - prisoner_hub_prison_context:prisoner_hub_prison_context

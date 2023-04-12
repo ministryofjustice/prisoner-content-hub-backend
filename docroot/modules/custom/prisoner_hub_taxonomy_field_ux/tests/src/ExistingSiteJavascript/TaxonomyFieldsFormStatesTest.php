@@ -4,14 +4,14 @@ namespace Drupal\Tests\prisoner_hub_taxonomy_field_ux\ExistingSiteJavascript;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
-use weitzman\DrupalTestTraits\ExistingSiteWebDriverTestBase;
+use weitzman\DrupalTestTraits\ExistingSiteSelenium2DriverTestBase;
 
 /**
  * Functional tests to ensure that series sorting fields work correctly.
  *
  * @group prisoner_hub_taxonomy_field_ux
  */
-class TaxonomyFieldsFormStatesTest extends ExistingSiteWebDriverTestBase {
+class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
 
   /**
    * The Studio Administrator user.

@@ -33,6 +33,7 @@ function prisoner_hub_taxonomy_sorting_update_9003(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['result'] = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', ['series', 'moj_categories'],'IN')
+      ->accessCheck(TRUE)
       ->execute();
 
     $sandbox['progress'] = 0;

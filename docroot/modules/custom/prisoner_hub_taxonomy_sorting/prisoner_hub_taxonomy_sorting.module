@@ -52,7 +52,10 @@ function prisoner_hub_taxonomy_sorting_entity_update(Drupal\Core\Entity\EntityIn
   if ($entity instanceof ContentEntityInterface && $entity->hasField('field_sort_by')) {
     /** @var ContentEntityInterface $original_entity */
     if ($entity->original->get('field_sort_by')->getString() != $entity->get('field_sort_by')->getString()) {
-      $results = \Drupal::entityQuery('node')->condition('field_moj_series', $entity->id())->execute();
+      $results = \Drupal::entityQuery('node')
+        ->condition('field_moj_series', $entity->id())
+        ->accessCheck(TRUE)
+        ->execute();
       $nodes = Node::loadMultiple($results);
       /** @var \Drupal\node\NodeInterface $node */
       foreach ($nodes as $node) {

@@ -1,8 +1,7 @@
 name: 'Prisoner Hub Prison Access'
 type: module
 description: 'Provides entity access rules based on prison and prison categories.'
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'
 dependencies:
   - entity:entity

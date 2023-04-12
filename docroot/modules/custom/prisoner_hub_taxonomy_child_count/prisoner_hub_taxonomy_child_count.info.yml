@@ -1,5 +1,5 @@
 name: 'Prisoner Hub taxonomy child count'
 type: module
 description: 'Provides a computed field that shows the number of child taxonomy terms.'
-core_version_requirement: ^9
+core_version_requirement: ^9 || ^10
 package: 'Custom'

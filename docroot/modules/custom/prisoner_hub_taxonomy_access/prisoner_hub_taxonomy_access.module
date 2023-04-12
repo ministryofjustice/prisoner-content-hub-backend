@@ -66,7 +66,7 @@ function prisoner_hub_taxonomy_access_taxonomy_term_access(\Drupal\Core\Entity\E
   // @See \Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
   $context = new RenderContext();
   $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
-    return $query->execute();
+    return $query->accessCheck(TRUE)->execute();
   });
   return AccessResult::forbiddenIf(count($results) == 0);
 }
