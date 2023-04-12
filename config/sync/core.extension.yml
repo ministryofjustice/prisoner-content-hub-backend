@@ -9,7 +9,7 @@ module:
   book: 0
   book_blocks: 0
   breakpoint: 0
-  ckeditor: 0
+  ckeditor5: 0
   computed_breadcrumbs: 0
   config: 0
   config_filter: 0
