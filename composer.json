@@ -23,7 +23,6 @@
         "drupal/entity_clone": "^1.0@beta",
         "drupal/field_group": "^3.1",
         "drupal/flood_control": "^2.3",
-        "drupal/flood_unblock": "^2.0",
         "drupal/flysystem": "^2.0",
         "drupal/flysystem_s3": "^2.0-rc5",
         "drupal/form_state_empty": "^1.0@alpha",
@@ -233,6 +232,7 @@
         "dmore/chrome-mink-driver": "^2.7",
         "drupal/console": "^1.9",
         "drupal/core-dev": "^9.0.0",
+        "palantirnet/drupal-rector": "^0.15.1",
         "phpspec/prophecy-phpunit": "^2",
         "weitzman/drupal-test-traits": "^1.5"
     }
