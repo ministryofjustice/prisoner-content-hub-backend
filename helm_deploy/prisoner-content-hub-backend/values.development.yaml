@@ -15,3 +15,7 @@ dbRefresh:
   enabled: true
 s3Sync:
   enabled: true
+
+application:
+  s3:
+    secretName: drupal-s3-2
