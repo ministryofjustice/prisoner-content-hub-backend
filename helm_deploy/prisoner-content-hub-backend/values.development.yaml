@@ -16,6 +16,7 @@ dbRefresh:
 s3Sync:
   enabled: true
 
-application:
-  s3:
-    secretName: drupal-s3-2
+# Uncomment this section to switch development to use the new S3 bucket.
+#application:
+#  s3:
+#    secretName: drupal-s3-2
