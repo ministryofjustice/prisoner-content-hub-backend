@@ -26,5 +26,6 @@ s3SyncTemp:
 
 # Temporary setting for passing new S3 bucket details to cron jobs.
 application:
-  s3-2:
+  s3temp:
     secretName: drupal-s3-2
+    region: eu-west-2
