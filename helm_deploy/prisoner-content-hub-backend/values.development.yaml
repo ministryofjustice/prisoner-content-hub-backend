@@ -15,3 +15,16 @@ dbRefresh:
   enabled: true
 s3Sync:
   enabled: true
+# Temporary switch for syncing new bucket from staging.
+s3SyncTemp:
+  enabled: true
+
+# Uncomment this section to switch Drupal to use the new S3 bucket.
+#application:
+#  s3:
+#    secretName: drupal-s3-2
+
+# Temporary setting for passing new S3 bucket details to cron jobs.
+application:
+  s3-2:
+    secretName: drupal-s3-2
