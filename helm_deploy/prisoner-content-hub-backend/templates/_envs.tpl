@@ -164,7 +164,6 @@ env:
   - name: S3_DESTINATION_KEY_TEMP
     valueFrom:
       secretKeyRef:
-<<<<<<< HEAD
         name: {{ .Values.application.s3temp.secretName }}
         key: access_key_id
   - name: S3_DESTINATION_SECRET_TEMP
