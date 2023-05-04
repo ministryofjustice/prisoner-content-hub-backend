@@ -166,14 +166,10 @@ env:
       secretKeyRef:
 <<<<<<< HEAD
         name: {{ .Values.application.s3temp.secretName }}
-=======
-        name: {{ .Values.application.s3-2.secretName }}
->>>>>>> main
         key: access_key_id
   - name: S3_DESTINATION_SECRET_TEMP
     valueFrom:
       secretKeyRef:
-<<<<<<< HEAD
         name: {{ .Values.application.s3temp.secretName }}
         key: secret_access_key
   - name: S3_DESTINATION_REGION_TEMP
@@ -182,16 +178,6 @@ env:
     valueFrom:
       secretKeyRef:
         name: {{ .Values.application.s3temp.secretName }}
-=======
-        name: {{ .Values.application.s3-2.secretName }}
-        key: secret_access_key
-  - name: S3_DESTINATION_REGION_TEMP
-    value: {{ .Values.application.s3-2.region }}
-  - name: S3_DESTINATION_BUCKET_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3-2.secretName }}
->>>>>>> main
         key: bucket_name
   - name: S3_SOURCE_BUCKET_TEMP
     valueFrom:
