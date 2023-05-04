@@ -158,3 +158,31 @@ env:
   - name: S3_SOURCE_REGION
     value: {{ .Values.s3Sync.source_region }}
 {{- end -}}
+
+{{- define "s3-sync-temp.envs" }}
+env:
+  - name: S3_DESTINATION_KEY_TEMP
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3-2.secretName }}
+        key: access_key_id
+  - name: S3_DESTINATION_SECRET_TEMP
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3-2.secretName }}
+        key: secret_access_key
+  - name: S3_DESTINATION_REGION_TEMP
+    value: {{ .Values.application.s3-2.region }}
+  - name: S3_DESTINATION_BUCKET_TEMP
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.s3-2.secretName }}
+        key: bucket_name
+  - name: S3_SOURCE_BUCKET_TEMP
+    valueFrom:
+      secretKeyRef:
+        name: drupal-s3-output-temp
+        key: bucket_name
+  - name: S3_SOURCE_REGION_TEMP
+    value: {{ .Values.s3SyncTemp.source_region }}
+{{- end -}}

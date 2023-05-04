@@ -103,3 +103,7 @@ s3Sync:
   enabled: false
   source_region: eu-west-1
 
+# Temporary settings for syncing new buckets from staging.
+s3SyncTemp:
+  enabled: false
+  source_region: eu-west-1
