@@ -19,13 +19,10 @@ s3Sync:
 s3SyncTemp:
   enabled: true
 
-# Uncomment this section to switch Drupal to use the new S3 bucket.
-#application:
-#  s3:
-#    secretName: drupal-s3-2
-
-# Temporary setting for passing new S3 bucket details to cron jobs.
 application:
+  s3:
+    secretName: drupal-s3-2
+  # Temporary setting for passing new S3 bucket details to cron jobs.
   s3temp:
     secretName: drupal-s3-2
     region: eu-west-2
