@@ -90,7 +90,7 @@ env:
   - name:GOVUK_NOTIFY_API_KEY
     valueFrom:
       secretKeyRef:
-        name: govuknotify
+        name: {{ .Values.application.govUkSecretName }}
         key: access_key
 
 {{- end -}}
