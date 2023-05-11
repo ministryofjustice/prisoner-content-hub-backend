@@ -16,6 +16,10 @@ application:
   # but the default is London
   s3:
     region: eu-west-1
+  # Temporary setting for passing new S3 bucket details to cron jobs.
+  s3temp:
+    secretName: drupal-s3-2
+    region: eu-west-2
 
 dbBackup:
   enabled: true
@@ -23,3 +27,6 @@ dbRefresh:
   enabled: false
 s3Sync:
   enabled: false
+# Temporary switch for syncing new bucket from staging.
+s3SyncTemp:
+  enabled: true
