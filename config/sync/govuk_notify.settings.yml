@@ -1,0 +1,6 @@
+notification_service: uk
+api_key: ''
+default_template_id: f6cf7d37-7a5c-4a26-a758-ef902bb7f7ab
+default_sms_template_id: ''
+force_temporary_failure: 0
+force_permanent_failure: 0
