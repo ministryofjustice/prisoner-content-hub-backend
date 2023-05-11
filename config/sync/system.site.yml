@@ -3,7 +3,7 @@ _core:
 langcode: en
 uuid: a760ecec-2369-499e-9591-3fad01b7f592
 name: 'Digital Hub'
-mail: admin@example.com
+mail: thehub@digital.justice.gov.uk
 slogan: ''
 page:
   403: ''
