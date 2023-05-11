@@ -10,7 +10,6 @@
  * don't belong to a particular module, and are global to the site.
  */
 
-use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceFieldItemList;
 use Drupal\dynamic_entity_reference\Plugin\Field\FieldWidget\DynamicEntityReferenceWidget;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -24,17 +23,6 @@ function prisoner_content_hub_profile_toolbar_alter(&$items) {
   // prison that the user is associated with (if we were to start assigning
   // users to prisons).
   unset($items['home']);
-}
-
-
-/**
- * Implements hook_mail_alter().
- *
- * Disable all email messages from being sent, as they just result in an error
- * in the logs.
- */
-function prisoner_content_hub_profile_mail_alter(&$message) {
-  $message['send'] = FALSE;
 }
 
 /**
