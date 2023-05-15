@@ -87,6 +87,11 @@ env:
         key: auth_token
   - name: REDIS_TLS_ENABLED
     value: "true"
+  - name: GOVUK_NOTIFY_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.govUkSecretName }}
+        key: access_key
 
 {{- end -}}
 

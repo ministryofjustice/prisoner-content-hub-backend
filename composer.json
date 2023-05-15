@@ -26,6 +26,7 @@
         "drupal/flysystem": "^2.0",
         "drupal/flysystem_s3": "^2.0-rc5",
         "drupal/form_state_empty": "^1.0@alpha",
+        "drupal/govuk_notify": "^2.1",
         "drupal/health_check": "^3.0",
         "drupal/image_style_warmer": "^1.1",
         "drupal/jsonapi_cross_bundles": "^1.0",
