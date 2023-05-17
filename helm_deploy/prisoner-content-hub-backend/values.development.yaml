@@ -18,6 +18,7 @@ s3Sync:
 # Temporary switch for syncing new bucket from staging.
 s3SyncTemp:
   enabled: true
+  source_region: eu-west-1
 
 application:
   s3:
