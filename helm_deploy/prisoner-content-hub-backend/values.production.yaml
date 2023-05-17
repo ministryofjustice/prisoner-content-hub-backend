@@ -27,6 +27,7 @@ dbRefresh:
   enabled: false
 s3Sync:
   enabled: false
-# Temporary switch for syncing new bucket from staging.
+# Temporary switch for syncing new bucket from old production.
 s3SyncTemp:
   enabled: true
+  source_region: eu-west-1
