@@ -17,7 +17,6 @@ dependencies:
   module:
     - actions_permissions
     - book
-    - entity_clone
     - field_ui
     - filter
     - node
@@ -57,9 +56,6 @@ permissions:
   - 'assign prisons to users'
   - 'bypass node access'
   - 'bypass prison ownership edit access'
-  - 'clone menu entity'
-  - 'clone node entity'
-  - 'clone taxonomy_term entity'
   - 'create help_page content'
   - 'create homepage content'
   - 'create link content'
@@ -126,8 +122,6 @@ permissions:
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'set any published on date'
-  - 'take_ownership_on_clone file entity'
-  - 'take_ownership_on_clone node entity'
   - 'use text format full_html'
   - 'view any unpublished content'
   - 'view help_page revisions'
