@@ -12,10 +12,8 @@ ingress:
       - host: jsonapi-cms-prisoner-content-hub-production.apps.live.cloud-platform.service.justice.gov.uk
 
 application:
-  # The S3 bucket for production exists in Ireland,
-  # but the default is London
   s3:
-    region: eu-west-1
+    secretName: drupal-s3-2
   # Temporary setting for passing new S3 bucket details to cron jobs.
   s3temp:
     secretName: drupal-s3-2
@@ -29,5 +27,5 @@ s3Sync:
   enabled: false
 # Temporary switch for syncing new bucket from old production.
 s3SyncTemp:
-  enabled: true
+  enabled: false
   source_region: eu-west-1
