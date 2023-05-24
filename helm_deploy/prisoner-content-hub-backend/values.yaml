@@ -102,7 +102,7 @@ dbRefresh:
 
 s3Sync:
   enabled: false
-  source_region: eu-west-1
+  source_region: eu-west-2
 
 # Temporary settings for syncing new buckets from staging.
 s3SyncTemp:
