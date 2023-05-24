@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.storage.node.field_moj_top_level_categories
     - field.storage.node.field_description
+    - field.storage.node.field_exclude_from_prison
+    - field.storage.node.field_prisons
     - field.storage.node.field_moj_series
     - field.storage.node.field_moj_stand_first
     - field.storage.node.field_summary
@@ -13,6 +15,7 @@ dependencies:
     - elasticsearch_connector
     - taxonomy
     - node
+    - taxonomy_machine_name
     - search_api
 third_party_settings:
   elasticsearch_connector:
@@ -34,6 +37,27 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_description
+  field_exclude_from_prison:
+    label: 'Exclude from prison » Taxonomy term » Term ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_exclude_from_prison:entity:tid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_exclude_from_prison
+      module:
+        - taxonomy
+  field_exclude_from_prison_name:
+    label: 'Exclude from prison » Taxonomy term » Machine name'
+    datasource_id: 'entity:node'
+    property_path: 'field_exclude_from_prison:entity:machine_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_exclude_from_prison
+      module:
+        - taxonomy
+        - taxonomy_machine_name
   field_moj_series:
     label: 'Series » Taxonomy term » Name'
     datasource_id: 'entity:node'
@@ -54,6 +78,27 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_moj_stand_first
+  field_prisons:
+    label: 'Prisons » Taxonomy term » Term ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_prisons:entity:tid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_prisons
+      module:
+        - taxonomy
+  field_prisons_name:
+    label: 'Prisons » Taxonomy term » Machine name'
+    datasource_id: 'entity:node'
+    property_path: 'field_prisons:entity:machine_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_prisons
+      module:
+        - taxonomy
+        - taxonomy_machine_name
   field_summary:
     label: Summary
     datasource_id: 'entity:node'
@@ -115,8 +160,10 @@ processor_settings:
     all_fields: true
     fields:
       - field_description
+      - field_exclude_from_prison_name
       - field_moj_series
       - field_moj_stand_first
+      - field_prisons_name
       - field_summary
       - name
       - title
