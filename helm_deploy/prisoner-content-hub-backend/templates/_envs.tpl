@@ -158,7 +158,7 @@ env:
   - name: S3_SOURCE_BUCKET
     valueFrom:
       secretKeyRef:
-        name: drupal-s3-output
+        name: drupal-s3-output-new
         key: bucket_name
   - name: S3_SOURCE_REGION
     value: {{ .Values.s3Sync.source_region }}
