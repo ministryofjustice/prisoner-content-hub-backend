@@ -3107,26 +3107,26 @@
         },
         {
             "name": "drupal/form_state_empty",
-            "version": "1.0.0-alpha3",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/form_state_empty.git",
-                "reference": "1.0.0-alpha3"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/form_state_empty-1.0.0-alpha3.zip",
-                "reference": "1.0.0-alpha3",
-                "shasum": "fd049f17e05647c00b8c242137b8d3cb519c07a8"
+                "url": "https://ftp.drupal.org/files/projects/form_state_empty-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "04642f5e3000c186a9964d82cbf8a81df9ece952"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^8 || ^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-alpha3",
-                    "datestamp": "1637080673",
+                    "version": "1.0.0",
+                    "datestamp": "1686753614",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -3139,7 +3139,11 @@
             ],
             "authors": [
                 {
-                    "name": "Donnyboypony",
+                    "name": "Eli-T",
+                    "homepage": "https://www.drupal.org/user/516878"
+                },
+                {
+                    "name": "smithmilner",
                     "homepage": "https://www.drupal.org/user/523868"
                 }
             ],
