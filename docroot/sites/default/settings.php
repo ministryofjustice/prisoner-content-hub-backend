@@ -164,6 +164,9 @@ if (!InstallerKernel::installationAttempted() && extension_loaded('redis')) {
 // Set API key for govuk_notify for sending emails.
 $config['govuk_notify.settings']['api_key'] = getenv('GOVUK_NOTIFY_API_KEY', TRUE);
 
+// Set GA ID.
+$config['google_analytics.settings']['account'] = getenv('ANALYTICS_SITE_ID', TRUE);
+
 $settings['config_sync_directory'] = '../config/sync';
 
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
