@@ -12,3 +12,5 @@ dbRefresh:
   enabled: true
 s3Sync:
   enabled: true
+application:
+  analyticsSiteId: G-FVRKLRH5PJ

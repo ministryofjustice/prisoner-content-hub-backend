@@ -92,6 +92,8 @@ env:
       secretKeyRef:
         name: {{ .Values.application.govUkSecretName }}
         key: access_key
+  - name: ANALYTICS_SITE_ID
+    value: {{ .Values.application.analyticsSiteId }}
 
 {{- end -}}
 
