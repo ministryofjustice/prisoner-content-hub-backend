@@ -198,9 +198,6 @@
             "drupal/views_data_export": {
                 "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
             },
-            "drupal/views_tree": {
-                "Issue #3298991: Return type of Drupal\\views_tree\\TreeItem::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable": "patches/views_tree-3298991-undefined-function-getIterator.patch"
-            },
             "guzzlehttp/guzzle": {
                 "https://github.com/guzzle/guzzle/issues/3020 support PHP8.1 as used by Behat 3 with Drupal 9.3": "patches/guzzle-3020.patch"
             }
