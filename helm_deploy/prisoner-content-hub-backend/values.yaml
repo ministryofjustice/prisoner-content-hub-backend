@@ -3,6 +3,8 @@ fullnameOverride: ""
 
 replicaCount: 5
 
+serviceAccountName: prisoner-content-hub
+
 image:
   repository: quay.io/hmpps/prisoner-content-hub-backend
   pullPolicy: IfNotPresent
