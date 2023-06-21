@@ -23,16 +23,6 @@ env:
       secretKeyRef:
         name: {{ .Values.application.dbSecretName }}
         key: rds_instance_address
-  - name: FLYSYSTEM_S3_KEY
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
-        key: access_key_id
-  - name: FLYSYSTEM_S3_SECRET
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
-        key: secret_access_key
   - name: FLYSYSTEM_S3_REGION
     value: {{ .Values.application.s3.region }}
   - name: FLYSYSTEM_S3_BUCKET
