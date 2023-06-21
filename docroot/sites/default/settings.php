@@ -39,8 +39,6 @@ $settings['flysystem'] = [
   's3' => [
     'driver' => 's3',
     'config' => [
-      'key'    => getenv('FLYSYSTEM_S3_KEY', true),
-      'secret' => getenv('FLYSYSTEM_S3_SECRET', true),
       'region' => getenv('FLYSYSTEM_S3_REGION', true),
       'bucket' => getenv('FLYSYSTEM_S3_BUCKET', true),
 
