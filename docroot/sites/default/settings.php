@@ -81,6 +81,17 @@ $settings['flysystem'] = [
   ],
 ];
 
+// Test and local environments do not inherit IAM roles and therefore must set
+// S3 credentials explicitly.
+if ($flysystem_s3_key = getenv('FLYSYSTEM_S3_KEY', TRUE)) {
+  $settings['flysystem']['s3']['config']['key'] = $flysystem_s3_key;
+}
+
+if ($flysystem_s3_secret = getenv('FLYSYSTEM_S3_SECRET', TRUE)) {
+  $settings['flysystem']['s3']['config']['secret'] = $flysystem_s3_secret;
+}
+
+
 // Copy over our S3 config, and setup a new scheme that is used just for css/js.
 $settings['flysystem']['s3-css-js'] = $settings['flysystem']['s3'];
 $settings['flysystem']['s3-css-js']['serve_js'] = TRUE;
