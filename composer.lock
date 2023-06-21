@@ -1715,17 +1715,17 @@
         },
         {
             "name": "drupal/book_blocks",
-            "version": "1.7.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/book_blocks.git",
-                "reference": "8.x-1.7"
+                "reference": "8.x-1.11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/book_blocks-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "c6b7dfe91fa86315bf58f841f82a4dc1b5d8428f"
+                "url": "https://ftp.drupal.org/files/projects/book_blocks-8.x-1.11.zip",
+                "reference": "8.x-1.11",
+                "shasum": "b0d9cfd5030088a39085fbfaa2b908f7f60b61f4"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10"
@@ -1733,8 +1733,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1680485194",
+                    "version": "8.x-1.11",
+                    "datestamp": "1686356758",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5222,26 +5222,26 @@
         },
         {
             "name": "drupal/view_unpublished",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/view_unpublished.git",
-                "reference": "8.x-1.0"
+                "reference": "8.x-1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/view_unpublished-8.x-1.0.zip",
-                "reference": "8.x-1.0",
-                "shasum": "74ebdf1b4f6963f7bb63192bc314014c0132d03c"
+                "url": "https://ftp.drupal.org/files/projects/view_unpublished-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "f9f5e88cbaf1a1e71952d94cf67ef2f180e292be"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9.4 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0",
-                    "datestamp": "1597688978",
+                    "version": "8.x-1.1",
+                    "datestamp": "1681757575",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5269,6 +5269,14 @@
                 {
                     "name": "entendu",
                     "homepage": "https://www.drupal.org/user/173461"
+                },
+                {
+                    "name": "fathima.asmat",
+                    "homepage": "https://www.drupal.org/user/3622664"
+                },
+                {
+                    "name": "tobiasb",
+                    "homepage": "https://www.drupal.org/user/183956"
                 }
             ],
             "description": "Select which roles should be able to see unpublished nodes.",
