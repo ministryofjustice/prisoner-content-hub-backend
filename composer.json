@@ -44,7 +44,7 @@
         "drupal/node_edit_protection": "^1.0",
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/pathauto": "^1.8",
-        "drupal/pathologic": "^1.0@alpha",
+        "drupal/pathologic": "^2",
         "drupal/publication_date": "^2.0@beta",
         "drupal/raven": "^3.2",
         "drupal/readonlymode": "2.0.x-dev",
