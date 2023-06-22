@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b2a79ffaee3172cf565ed619b470942",
+    "content-hash": "c6164186100c3b0ccd3a2186d7a78346",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -1715,17 +1715,17 @@
         },
         {
             "name": "drupal/book_blocks",
-            "version": "1.7.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/book_blocks.git",
-                "reference": "8.x-1.7"
+                "reference": "8.x-1.11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/book_blocks-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "c6b7dfe91fa86315bf58f841f82a4dc1b5d8428f"
+                "url": "https://ftp.drupal.org/files/projects/book_blocks-8.x-1.11.zip",
+                "reference": "8.x-1.11",
+                "shasum": "b0d9cfd5030088a39085fbfaa2b908f7f60b61f4"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10"
@@ -1733,8 +1733,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1680485194",
+                    "version": "8.x-1.11",
+                    "datestamp": "1686356758",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2638,20 +2638,21 @@
         },
         {
             "name": "drupal/elasticsearch_connector",
-            "version": "7.0.0-alpha3",
+            "version": "7.0.0-alpha4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/elasticsearch_connector.git",
-                "reference": "8.x-7.0-alpha3"
+                "reference": "8.x-7.0-alpha4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/elasticsearch_connector-8.x-7.0-alpha3.zip",
-                "reference": "8.x-7.0-alpha3",
-                "shasum": "0752fc8b83479d10cdf314fc4225f6de17cc08e9"
+                "url": "https://ftp.drupal.org/files/projects/elasticsearch_connector-8.x-7.0-alpha4.zip",
+                "reference": "8.x-7.0-alpha4",
+                "shasum": "2e0922d831a781555970a787c9ec98dc9891f565"
             },
             "require": {
-                "drupal/core": "^8 || ^9",
+                "drupal/core": "^9.2 || ^10",
+                "ext-curl": "*",
                 "makinacorpus/php-lucene": "^1.0.2",
                 "nodespark/des-connector": "7.x-dev"
             },
@@ -2667,8 +2668,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-7.0-alpha3",
-                    "datestamp": "1602658539",
+                    "version": "8.x-7.0-alpha4",
+                    "datestamp": "1673006177",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -3725,20 +3726,20 @@
         },
         {
             "name": "drupal/jsonapi_search_api",
-            "version": "1.0.0-rc2",
+            "version": "1.0.0-rc3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_search_api.git",
-                "reference": "8.x-1.0-rc2"
+                "reference": "8.x-1.0-rc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_search_api-8.x-1.0-rc2.zip",
-                "reference": "8.x-1.0-rc2",
-                "shasum": "c36fa23790a61999830717442508f1bafa4ae9fe"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_search_api-8.x-1.0-rc3.zip",
+                "reference": "8.x-1.0-rc3",
+                "shasum": "96441cd7355eb1cf3623e4406ca4b237c6d66651"
             },
             "require": {
-                "drupal/core": "^8 || ^9",
+                "drupal/core": "^9.1 || ^10",
                 "drupal/jsonapi_resources": "^1.0@beta",
                 "drupal/search_api": "^1.0"
             },
@@ -3748,8 +3749,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-rc2",
-                    "datestamp": "1605116431",
+                    "version": "8.x-1.0-rc3",
+                    "datestamp": "1674556268",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -3761,6 +3762,14 @@
                 "GPL-2.0+"
             ],
             "authors": [
+                {
+                    "name": "Centarro",
+                    "homepage": "https://www.drupal.org/user/3661446"
+                },
+                {
+                    "name": "jsacksick",
+                    "homepage": "https://www.drupal.org/user/972218"
+                },
                 {
                     "name": "mglaman",
                     "homepage": "https://www.drupal.org/user/2416470"
@@ -4283,26 +4292,26 @@
         },
         {
             "name": "drupal/pathologic",
-            "version": "1.0.0-alpha3",
+            "version": "2.0.0-alpha1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/pathologic.git",
-                "reference": "8.x-1.0-alpha3"
+                "reference": "2.0.0-alpha1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pathologic-8.x-1.0-alpha3.zip",
-                "reference": "8.x-1.0-alpha3",
-                "shasum": "efcbbaccc24168e2fb30eb441e99ce330bde3321"
+                "url": "https://ftp.drupal.org/files/projects/pathologic-2.0.0-alpha1.zip",
+                "reference": "2.0.0-alpha1",
+                "shasum": "be911b098ece7d1ffa55cf0d5f33d38ea40acda4"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-alpha3",
-                    "datestamp": "1646804076",
+                    "version": "2.0.0-alpha1",
+                    "datestamp": "1681263978",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Alpha releases are not covered by Drupal security advisories."
@@ -4311,7 +4320,7 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0-or-later"
+                "GPL-2.0+"
             ],
             "authors": [
                 {
@@ -4319,12 +4328,16 @@
                     "homepage": "https://www.drupal.org/user/214652"
                 },
                 {
+                    "name": "dww",
+                    "homepage": "https://www.drupal.org/user/46549"
+                },
+                {
                     "name": "Garrett Albright",
                     "homepage": "https://www.drupal.org/user/191212"
                 },
                 {
-                    "name": "dww",
-                    "homepage": "https://www.drupal.org/user/46549"
+                    "name": "mark_fullmer",
+                    "homepage": "https://www.drupal.org/user/2612816"
                 }
             ],
             "description": "Helps avoid broken links and incorrect paths in content.",
@@ -4469,10 +4482,10 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/readonlymode.git",
-                "reference": "45d9e9e6293cbe9d12642861cdb515e7236a0a28"
+                "reference": "ae73c2fc5ac075eb297712c61c1d846554f16a9b"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^8 || ^9 || ^10"
             },
             "conflict": {
                 "drush/drush": "<10"
@@ -4484,7 +4497,7 @@
                 },
                 "drupal": {
                     "version": "2.0.x-dev",
-                    "datestamp": "1616593505",
+                    "datestamp": "1679996944",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -4514,12 +4527,12 @@
                     "role": "Maintainer"
                 },
                 {
-                    "name": "bircher",
-                    "homepage": "https://www.drupal.org/user/1344166"
-                },
-                {
                     "name": "petew",
                     "homepage": "https://www.drupal.org/user/1009366"
+                },
+                {
+                    "name": "Sharique",
+                    "homepage": "https://www.drupal.org/user/73545"
                 }
             ],
             "description": "Read Only Mode provides an alternate to the built in Maintenance Mode in Drupal.",
@@ -5222,26 +5235,26 @@
         },
         {
             "name": "drupal/view_unpublished",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/view_unpublished.git",
-                "reference": "8.x-1.0"
+                "reference": "8.x-1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/view_unpublished-8.x-1.0.zip",
-                "reference": "8.x-1.0",
-                "shasum": "74ebdf1b4f6963f7bb63192bc314014c0132d03c"
+                "url": "https://ftp.drupal.org/files/projects/view_unpublished-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "f9f5e88cbaf1a1e71952d94cf67ef2f180e292be"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9.4 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0",
-                    "datestamp": "1597688978",
+                    "version": "8.x-1.1",
+                    "datestamp": "1681757575",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5269,6 +5282,14 @@
                 {
                     "name": "entendu",
                     "homepage": "https://www.drupal.org/user/173461"
+                },
+                {
+                    "name": "fathima.asmat",
+                    "homepage": "https://www.drupal.org/user/3622664"
+                },
+                {
+                    "name": "tobiasb",
+                    "homepage": "https://www.drupal.org/user/183956"
                 }
             ],
             "description": "Select which roles should be able to see unpublished nodes.",
@@ -5634,35 +5655,35 @@
         },
         {
             "name": "drupal/views_tree",
-            "version": "2.0.0-alpha2",
+            "version": "2.0.0-rc1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_tree.git",
-                "reference": "8.x-2.0-alpha2"
+                "reference": "8.x-2.0-rc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_tree-8.x-2.0-alpha2.zip",
-                "reference": "8.x-2.0-alpha2",
-                "shasum": "9b11e8d874ca485e5f2b141b87fbe4fbc298a78b"
+                "url": "https://ftp.drupal.org/files/projects/views_tree-8.x-2.0-rc1.zip",
+                "reference": "8.x-2.0-rc1",
+                "shasum": "04da08c0dfac48dc008f0757cdc12bb406589127"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-alpha2",
-                    "datestamp": "1632851167",
+                    "version": "8.x-2.0-rc1",
+                    "datestamp": "1671654510",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "message": "RC releases are not covered by Drupal security advisories."
                     }
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -18668,7 +18689,6 @@
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_filter_cache_tags": 10,
         "drupal/jsonapi_search_api": 5,
-        "drupal/pathologic": 15,
         "drupal/publication_date": 10,
         "drupal/readonlymode": 20,
         "drupal/taxonomy_machine_name": 20,
