@@ -29,7 +29,7 @@ spec:
       activeDeadlineSeconds: 2400
       template:
         spec:
-          serviceAccountName: {{ .Values.serviceAccountName }}
+          serviceAccountName: {{ .Values.dbBackupServiceAccountName }}
           initContainers:
           - name: db-refresh-cronjob
             image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
