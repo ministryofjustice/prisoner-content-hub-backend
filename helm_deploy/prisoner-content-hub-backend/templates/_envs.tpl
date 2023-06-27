@@ -109,16 +109,6 @@ env:
       secretKeyRef:
         name: {{ .Values.application.dbSecretName }}
         key: rds_instance_address
-  - name: DB_BACKUP_S3_KEY
-    valueFrom:
-      secretKeyRef:
-        name: db-backups-s3
-        key: access_key_id
-  - name: DB_BACKUP_S3_SECRET
-    valueFrom:
-      secretKeyRef:
-        name: db-backups-s3
-        key: secret_access_key
   - name: DB_BACKUP_S3_REGION
     value: {{ .Values.dbBackup.s3.region }}
   - name: DB_BACKUP_S3_BUCKET
@@ -130,16 +120,6 @@ env:
 
 {{- define "s3-sync.envs" }}
 env:
-  - name: S3_DESTINATION_KEY
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
-        key: access_key_id
-  - name: S3_DESTINATION_SECRET
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3.secretName }}
-        key: secret_access_key
   - name: S3_DESTINATION_REGION
     value: {{ .Values.application.s3.region }}
   - name: S3_DESTINATION_BUCKET
@@ -158,16 +138,6 @@ env:
 
 {{- define "s3-sync-temp.envs" }}
 env:
-  - name: S3_DESTINATION_KEY_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3temp.secretName }}
-        key: access_key_id
-  - name: S3_DESTINATION_SECRET_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3temp.secretName }}
-        key: secret_access_key
   - name: S3_DESTINATION_REGION_TEMP
     value: {{ .Values.application.s3temp.region }}
   - name: S3_DESTINATION_BUCKET_TEMP
