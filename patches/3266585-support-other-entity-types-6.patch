@@ -7,7 +7,7 @@ index 2eea647..95e4ff4 100644
 -description: Provides breadcrumbs as computed fields in nodes.
 +description: Provides breadcrumbs as computed fields for content entities.
  type: module
- core_version_requirement: ^8.8 || ^9
+ core_version_requirement: ^9 || ^10
  dependencies:
 diff --git a/computed_breadcrumbs.module b/computed_breadcrumbs.module
 index d5c2459..bfae295 100644

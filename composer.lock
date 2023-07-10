@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "92cbc9d099a67d6492c1656f9defe145",
+    "content-hash": "2b13aabc99cd384161db8cea5b30f16d",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -1759,26 +1759,26 @@
         },
         {
             "name": "drupal/computed_breadcrumbs",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/computed_breadcrumbs.git",
-                "reference": "1.0.0"
+                "reference": "1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/computed_breadcrumbs-1.0.0.zip",
-                "reference": "1.0.0",
-                "shasum": "16b6a308bbb3f63ed239a72d47a91bccc4cc0b06"
+                "url": "https://ftp.drupal.org/files/projects/computed_breadcrumbs-1.1.0.zip",
+                "reference": "1.1.0",
+                "shasum": "0df28d44dbe15104ed7bae6aa3f4d1dfc92ebe3e"
             },
             "require": {
-                "drupal/core": "^8.8.0 || ^9.0"
+                "drupal/core": "^9.0 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0",
-                    "datestamp": "1646347624",
+                    "version": "1.1.0",
+                    "datestamp": "1688731335",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -1793,6 +1793,10 @@
                 {
                     "name": "blazey",
                     "homepage": "https://www.drupal.org/user/353861"
+                },
+                {
+                    "name": "Eli-T",
+                    "homepage": "https://www.drupal.org/user/516878"
                 }
             ],
             "description": "Provides breadcrumbs as computed fields.",
