@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "content-hash": "e75a5bd2d259c652c99c4bcb88b2b993",
+    "content-hash": "92cbc9d099a67d6492c1656f9defe145",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
