@@ -181,8 +181,8 @@
                 "Issue #3265853: Support other modules that provide their own field widget plugins (e.g. Select2).": "patches/optgroup_taxonomy_select-3265853-support-select2.patch"
             },
             "drupal/computed_breadcrumbs": {
-                "Issue #3266585: Support other entity types.": "patches/3266585-support-other-entity-types-6.patch",
-                "Issue #3243177: Allow return relative URLs.": "patches/computed_breadcrumbs-3243177-return-relative-urls-2.patch"
+                "Issue #3266585: Support other entity types.": "patches/3266585-support-other-entity-types-13.patch",
+                "Issue #3243177: Allow return relative URLs.": "patches/3243177-return-relative-urls-15.patch"
             },
             "drupal/jsonapi_menu_items": {
                 "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/jsonapi_menu_items-3270141-allow-other-modules-to-extend-2.patch"

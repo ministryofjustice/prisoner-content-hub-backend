@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b13aabc99cd384161db8cea5b30f16d",
+    "content-hash": "e75a5bd2d259c652c99c4bcb88b2b993",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -1759,17 +1759,17 @@
         },
         {
             "name": "drupal/computed_breadcrumbs",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/computed_breadcrumbs.git",
-                "reference": "1.1.0"
+                "reference": "1.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/computed_breadcrumbs-1.1.0.zip",
-                "reference": "1.1.0",
-                "shasum": "0df28d44dbe15104ed7bae6aa3f4d1dfc92ebe3e"
+                "url": "https://ftp.drupal.org/files/projects/computed_breadcrumbs-1.1.1.zip",
+                "reference": "1.1.1",
+                "shasum": "876dbcedaa3d71b7e6f6d48089019709cc0f70ff"
             },
             "require": {
                 "drupal/core": "^9.0 || ^10"
@@ -1777,8 +1777,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.1.0",
-                    "datestamp": "1688731335",
+                    "version": "1.1.1",
+                    "datestamp": "1689016771",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
