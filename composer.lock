@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e75a5bd2d259c652c99c4bcb88b2b993",
-    "content-hash": "92cbc9d099a67d6492c1656f9defe145",
+    "content-hash": "7177e41f134c7dd48be4e0c791993345",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -5036,29 +5035,32 @@
         },
         {
             "name": "drupal/taxonomy_machine_name",
-            "version": "dev-1.x",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/taxonomy_machine_name.git",
-                "reference": "0df34b70df1a303da3406bcbcb505e5398f8e79b"
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/taxonomy_machine_name-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "c12912804d5c00032cf33df20a14b014efda1aa4"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9.4 || ^10"
             },
             "require-dev": {
                 "drupal/search_api": "*"
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.0-beta6+6-dev",
-                    "datestamp": "1650813805",
+                    "version": "2.0.0",
+                    "datestamp": "1688572816",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -5078,8 +5080,8 @@
                     "role": "Co-Maintainer"
                 },
                 {
-                    "name": "sdstyles",
-                    "homepage": "https://www.drupal.org/user/1420228"
+                    "name": "Sebastien M.",
+                    "homepage": "https://www.drupal.org/user/380104"
                 }
             ],
             "description": "This module create a new property named machine_name.",
@@ -18772,7 +18774,6 @@
         "drupal/jsonapi_search_api": 5,
         "drupal/publication_date": 10,
         "drupal/readonlymode": 20,
-        "drupal/taxonomy_machine_name": 20,
         "drupal/views_entity_form_field": 10,
         "drupal/views_tree": 15
     },

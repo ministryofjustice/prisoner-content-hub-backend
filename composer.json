@@ -56,7 +56,7 @@
         "drupal/search_api": "^1.17",
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
-        "drupal/taxonomy_machine_name": "1.x-dev",
+        "drupal/taxonomy_machine_name": "^2.0",
         "drupal/term_reference_tree": "^1.1",
         "drupal/token": "^1.5",
         "drupal/upgrade_status": "^4.0",
