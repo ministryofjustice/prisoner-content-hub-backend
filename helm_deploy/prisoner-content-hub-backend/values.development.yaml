@@ -14,8 +14,8 @@ ingress:
 dbRefresh:
   enabled: true
 s3Sync:
-  enabled: true
+  enabled: false
 application:
   s3:
-    secretName: drupal-s3-2
+    secretName: drupal-s3-cf
   analyticsSiteId: G-0RBPFCWD3X
