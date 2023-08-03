@@ -44,15 +44,6 @@ $settings['flysystem'] = [
       'region' => getenv('FLYSYSTEM_S3_REGION', true),
       'bucket' => getenv('FLYSYSTEM_S3_BUCKET', true),
 
-      // Optional configuration settings.
-
-      'options' => [
-        'ACL' => 'private',
-        // Set max-age to be 24 hours.  This takes into account the url
-        // signatures (which have a max expiration of 24 hours).
-        'CacheControl' => 'max-age=86400, public',
-      ],
-
       // Directory prefix for all viewed files
       // 'prefix' => 'an/optional/prefix',
 
