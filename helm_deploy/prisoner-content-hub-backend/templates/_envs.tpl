@@ -46,7 +46,7 @@ env:
         name: {{ .Values.application.s3.secretName }}
         key: cloudfront_url
   - name: FLYSYSTEM_S3_CNAME_IS_BUCKET
-    value: {{ false | quote }}
+    value: {{ true | quote }}
   - name: HASH_SALT
     valueFrom:
       secretKeyRef:
