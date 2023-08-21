@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce541a9ed134bef262ddc6d492624a60",
+    "content-hash": "960f849772e83698cc3d65ea1478de21",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -5099,26 +5099,26 @@
         },
         {
             "name": "drupal/term_reference_tree",
-            "version": "1.1.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/term_reference_tree.git",
-                "reference": "8.x-1.1"
+                "reference": "2.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/term_reference_tree-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "e0da478d18be3193232c200b32dc8464fa509957"
+                "url": "https://ftp.drupal.org/files/projects/term_reference_tree-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "623420a7a6b1b8a78549c226afeb962de77c1730"
             },
             "require": {
-                "drupal/core": "^8.9 || ^9.1"
+                "drupal/core": "^9.4 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1633351519",
+                    "version": "2.0.1",
+                    "datestamp": "1684662041",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5127,7 +5127,7 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -5136,28 +5136,24 @@
                     "role": "contributor"
                 },
                 {
-                    "name": "Dave Reid",
-                    "homepage": "https://www.drupal.org/user/53892"
-                },
-                {
-                    "name": "MoustafaEid",
-                    "homepage": "https://www.drupal.org/user/1126928"
-                },
-                {
-                    "name": "VladimirAus",
-                    "homepage": "https://www.drupal.org/user/673120"
-                },
-                {
-                    "name": "alex_optim",
-                    "homepage": "https://www.drupal.org/user/3317601"
+                    "name": "BartK",
+                    "homepage": "https://www.drupal.org/user/401025"
                 },
                 {
                     "name": "carpenter.490",
                     "homepage": "https://www.drupal.org/user/804142"
                 },
                 {
+                    "name": "Dave Reid",
+                    "homepage": "https://www.drupal.org/user/53892"
+                },
+                {
                     "name": "dgtlmoon",
                     "homepage": "https://www.drupal.org/user/25027"
+                },
+                {
+                    "name": "MoustafaEid",
+                    "homepage": "https://www.drupal.org/user/1126928"
                 },
                 {
                     "name": "sdrycroft",
@@ -5166,10 +5162,17 @@
                 {
                     "name": "sumitmadan",
                     "homepage": "https://www.drupal.org/user/1538790"
+                },
+                {
+                    "name": "VladimirAus",
+                    "homepage": "https://www.drupal.org/user/673120"
                 }
             ],
             "description": "An expanding/collapsing tree widget for selecting terms in a taxonomy term reference field.",
             "homepage": "https://drupal.org/project/term_reference_tree",
+            "keywords": [
+                "Drupal"
+            ],
             "support": {
                 "source": "https://git.drupalcode.org/project/term_reference_tree",
                 "issues": "https://drupal.org/project/issues/term_reference_tree"
