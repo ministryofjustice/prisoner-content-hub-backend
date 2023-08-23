@@ -9,7 +9,7 @@
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
         "drupal/book_blocks": "^1.6",
-        "drupal/computed_breadcrumbs": "dev-3243613-problem-requiring-module",
+        "drupal/computed_breadcrumbs": "^1",
         "drupal/config_ignore": "^2.3",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-project-message": "^9.0.0",
@@ -56,8 +56,8 @@
         "drupal/search_api": "^1.17",
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
-        "drupal/taxonomy_machine_name": "1.x-dev",
-        "drupal/term_reference_tree": "^1.1",
+        "drupal/taxonomy_machine_name": "^2.0",
+        "drupal/term_reference_tree": "^2.0",
         "drupal/token": "^1.5",
         "drupal/upgrade_status": "^4.0",
         "drupal/view_unpublished": "^1.0",
@@ -91,7 +91,8 @@
             "drupal/console-extend-plugin": true,
             "drupal/core-vendor-hardening": true,
             "oomphinc/composer-installers-extender": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true
         }
     },
     "extra": {
@@ -171,8 +172,8 @@
                 "Issue #3241626: 404 on cross bundle routes when uninstalling another module": "patches/jsonapi_cross_bundles-3241626-fix-404-on-cross-bundle-routes-when-uninstalling-another-module-2.patch"
             },
             "drupal/term_reference_tree": {
-                "Issue #2411667: \"Disabled\" state of the element is cleared.": "patches/term_reference_tree-2411667-disabled-state-of-element-is-cleared.patch",
-                "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection.patch"
+                "Issue #2411667: \"Disabled\" state of the element is cleared.": "patches/term_reference_tree-2411667-disabled-state-of-element-is-cleared-2.0.x-rebase.patch",
+                "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection-2-0-x.patch"
             },
             "drupal/elasticsearch_connector": {
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
@@ -181,8 +182,8 @@
                 "Issue #3265853: Support other modules that provide their own field widget plugins (e.g. Select2).": "patches/optgroup_taxonomy_select-3265853-support-select2.patch"
             },
             "drupal/computed_breadcrumbs": {
-                "Issue #3266585: Support other entity types.": "patches/computed_breadcrumbs-3266585-support-other-entity-types-3.patch",
-                "Issue #3243177: Allow return relative URLs.": "patches/computed_breadcrumbs-3243177-return-relative-urls-2.patch"
+                "Issue #3266585: Support other entity types.": "patches/3266585-support-other-entity-types-13.patch",
+                "Issue #3243177: Allow return relative URLs.": "patches/3243177-return-relative-urls-15.patch"
             },
             "drupal/jsonapi_menu_items": {
                 "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/jsonapi_menu_items-3270141-allow-other-modules-to-extend-2.patch"
@@ -213,10 +214,6 @@
     },
     "repositories": [
         {
-            "url": "https://git.drupalcode.org/issue/computed_breadcrumbs-3243613.git",
-            "type": "git"
-        },
-        {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
@@ -231,6 +228,6 @@
         "drupal/core-dev": "^9.0.0",
         "palantirnet/drupal-rector": "^0.15.1",
         "phpspec/prophecy-phpunit": "^2",
-        "weitzman/drupal-test-traits": "^1.5"
+        "weitzman/drupal-test-traits": "^2"
     }
 }

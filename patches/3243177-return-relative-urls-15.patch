@@ -57,7 +57,7 @@ index 8761505..c2b5d2d 100644
 @@ -60,7 +60,11 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
        $items = [];
        \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($links, &$items) {
-         foreach ($links as $index => $link) {
+         foreach ($links as $link) {
 -          $uri = $link->getUrl()->setAbsolute()->toString();
 +          $absolute = TRUE;
 +          if (\Drupal::config('computed_breadcrumbs.settings')->get('use_relative_urls')) {
