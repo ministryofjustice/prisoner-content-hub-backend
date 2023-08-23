@@ -2012,99 +2012,99 @@ display:
       display_extenders:
         views_ef_fieldset:
           views_ef_fieldset:
-            enabled: 1
+            enabled: true
             options:
               sort:
                 root:
                   container_type: details
-                  title: Filters
-                  description: ''
-                  open: '1'
-                  weight: '0'
-                  id: root
-                  pid: ''
                   depth: '0'
+                  description: ''
+                  id: root
+                  open: true
+                  pid: ''
+                  title: Filters
                   type: container
+                  weight: '0'
                 container-1:
                   container_type: details
-                  title: Search
-                  description: ''
-                  open: '1'
-                  weight: '-13'
-                  id: container-1
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-1
+                  open: true
+                  pid: root
+                  title: Search
                   type: container
-                name:
                   weight: '-13'
+                name:
+                  depth: '2'
                   id: name
                   pid: container-1
-                  depth: '2'
                   type: filter
+                  weight: '-13'
                 populate:
-                  weight: '-12'
+                  depth: '2'
                   id: populate
                   pid: container-1
-                  depth: '2'
                   type: filter
+                  weight: '-12'
                 container-0:
                   container_type: details
-                  title: Type
-                  description: ''
-                  open: '1'
-                  weight: '-12'
-                  id: container-0
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-0
+                  open: true
+                  pid: root
+                  title: Type
                   type: container
+                  weight: '-12'
                 vid:
-                  weight: '-13'
+                  depth: '2'
                   id: vid
                   pid: container-0
-                  depth: '2'
                   type: filter
+                  weight: '-13'
                 container-3:
                   container_type: details
-                  title: Other
-                  description: ''
-                  open: '1'
-                  weight: '-11'
-                  id: container-3
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-3
+                  open: true
+                  pid: root
+                  title: Other
                   type: container
+                  weight: '-11'
                 field_is_homepage_updates_value:
-                  weight: '-13'
+                  depth: '2'
                   id: field_is_homepage_updates_value
                   pid: container-3
-                  depth: '2'
                   type: filter
+                  weight: '-13'
                 container-4:
                   container_type: container
-                  title: ''
-                  description: ''
-                  open: '1'
-                  weight: '-10'
-                  id: container-4
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-4
+                  open: true
+                  pid: root
+                  title: ''
                   type: container
+                  weight: '-10'
                 submit:
-                  weight: '-13'
+                  depth: '2'
                   id: submit
                   pid: container-4
-                  depth: '2'
                   type: buttons
+                  weight: '-13'
                 container-2:
                   container_type: details
-                  title: ''
-                  description: ''
-                  open: '1'
-                  weight: '-9'
-                  id: container-2
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-2
+                  open: true
+                  pid: root
+                  title: ''
                   type: container
+                  weight: '-9'
       path: admin/taxonomy
       menu:
         type: normal
