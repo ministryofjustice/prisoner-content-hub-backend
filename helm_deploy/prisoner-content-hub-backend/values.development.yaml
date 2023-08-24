@@ -18,4 +18,4 @@ s3Sync:
 application:
   s3:
     secretName: drupal-s3-2
-  analyticsSiteId: G-0RBPFCWD3X
+  analyticsSiteId: G-4WHXTZQ3EG
