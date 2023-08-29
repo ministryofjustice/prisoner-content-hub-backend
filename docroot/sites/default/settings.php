@@ -39,8 +39,6 @@ $settings['flysystem'] = [
   's3' => [
     'driver' => 's3',
     'config' => [
-      'key'    => getenv('FLYSYSTEM_S3_KEY', true),
-      'secret' => getenv('FLYSYSTEM_S3_SECRET', true),
       'region' => getenv('FLYSYSTEM_S3_REGION', true),
       'bucket' => getenv('FLYSYSTEM_S3_BUCKET', true),
 
@@ -82,6 +80,17 @@ $settings['flysystem'] = [
     'cache' => TRUE, // Creates a metadata cache to speed up lookups
   ],
 ];
+
+// Test and local environments do not inherit IAM roles and therefore must set
+// S3 credentials explicitly.
+if ($flysystem_s3_key = getenv('FLYSYSTEM_S3_KEY', TRUE)) {
+  $settings['flysystem']['s3']['config']['key'] = $flysystem_s3_key;
+}
+
+if ($flysystem_s3_secret = getenv('FLYSYSTEM_S3_SECRET', TRUE)) {
+  $settings['flysystem']['s3']['config']['secret'] = $flysystem_s3_secret;
+}
+
 
 // Copy over our S3 config, and setup a new scheme that is used just for css/js.
 $settings['flysystem']['s3-css-js'] = $settings['flysystem']['s3'];

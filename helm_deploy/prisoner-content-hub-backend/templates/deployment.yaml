@@ -14,6 +14,7 @@ spec:
       labels:
         {{- include "prisoner-content-hub-backend.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

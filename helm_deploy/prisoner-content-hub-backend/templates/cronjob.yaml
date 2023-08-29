@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "prisoner-content-hub-backend.fullname" . }}-drupal-cron
@@ -11,6 +11,7 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: {{ .Values.serviceAccountName }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
