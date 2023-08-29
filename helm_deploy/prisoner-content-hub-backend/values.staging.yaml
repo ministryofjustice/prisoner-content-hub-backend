@@ -13,4 +13,4 @@ dbRefresh:
 s3Sync:
   enabled: true
 application:
-  analyticsSiteId: G-FVRKLRH5PJ
+  analyticsSiteId: G-T5DWH21391
