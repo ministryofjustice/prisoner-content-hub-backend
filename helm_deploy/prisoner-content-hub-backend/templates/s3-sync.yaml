@@ -29,7 +29,6 @@ spec:
       activeDeadlineSeconds: 2400
       template:
         spec:
-          serviceAccountName: {{ .Values.serviceAccountName }}
           containers:
           - name: s3-sync-cronjob
             image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"

@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ include "prisoner-content-hub-backend.fullname" . }}-cache-rebuild-cronjob
@@ -11,7 +11,6 @@ spec:
     spec:
       template:
         spec:
-          serviceAccountName: {{ .Values.serviceAccountName }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           containers:
