@@ -29,6 +29,11 @@ done
 filename="db_backup_$(date +"%F-%H%M%S").sql.gz"
 mysqldump ${HUB_DB_ENV_MYSQL_DATABASE} | gzip -9 -c > ~/${filename}
 
+mkdir ~/.aws/
+echo "[default]" > ~/.aws/credentials
+echo "aws_access_key_id=${DB_BACKUP_S3_KEY}" >> ~/.aws/credentials
+echo "aws_secret_access_key=${DB_BACKUP_S3_SECRET}" >> ~/.aws/credentials
+
 aws s3 mv ~/${filename} s3://${DB_BACKUP_S3_BUCKET}/${filename} --region=${DB_BACKUP_S3_REGION}
 
 echo "Successfully backed up database ${filename}"
