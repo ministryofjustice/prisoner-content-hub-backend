@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - system
     - user
   theme:
     - prisconhub
@@ -19,4 +20,8 @@ settings:
   label: 'User login'
   label_display: visible
   provider: user
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    pages: /user/password
