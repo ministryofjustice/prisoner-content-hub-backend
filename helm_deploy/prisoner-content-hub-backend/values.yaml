@@ -29,7 +29,7 @@ application:
     elasticsearchServiceName: aws-es-proxy-service
   dbSecretName: drupal-rds
   s3:
-    secretName: drupal-s3
+    secretName: drupal-s3-2
     region: eu-west-2
     cname: ''
     cnameIsBucket: true
@@ -101,10 +101,5 @@ dbRefresh:
   enabled: false
 
 s3Sync:
-  enabled: false
-  source_region: eu-west-2
-
-# Temporary settings for syncing new buckets from staging.
-s3SyncTemp:
   enabled: false
   source_region: eu-west-2

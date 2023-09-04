@@ -16,6 +16,4 @@ dbRefresh:
 s3Sync:
   enabled: true
 application:
-  s3:
-    secretName: drupal-s3-2
   analyticsSiteId: G-4WHXTZQ3EG
