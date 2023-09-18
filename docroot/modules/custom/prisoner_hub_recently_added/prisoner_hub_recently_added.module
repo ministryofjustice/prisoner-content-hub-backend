@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Hook implementations for prisoner_hub_recently_added module.
+ */
+
 use Drupal\Core\Cache\Cache;
 use Drupal\node\NodeInterface;
 use Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded;
@@ -8,7 +13,7 @@ use Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded;
  * Implements hook_ENTITY_TYPE_update().
  */
 function prisoner_hub_recently_added_node_update(NodeInterface $entity) {
-  if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$content_types)) {
+  if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$contentTypes)) {
     // Clear cache if the previous version was not published, or a change has
     // been made to the published date.
     if (!$entity->original->isPublished() || $entity->original->get('published_at')->value != $entity->get('published_at')->value) {
@@ -21,7 +26,7 @@ function prisoner_hub_recently_added_node_update(NodeInterface $entity) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function prisoner_hub_recently_added_node_insert(NodeInterface $entity) {
-  if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$content_types)) {
+  if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$contentTypes)) {
     prisoner_hub_recently_added_clear_cache_tags($entity);
   }
 }
@@ -29,10 +34,17 @@ function prisoner_hub_recently_added_node_insert(NodeInterface $entity) {
 /**
  * Clear custom cache tags.
  *
- * These are set in are set in \Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded::process()
+ * These are set in
+ * \Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded::process()
  * and include the current prison context.
  *
  * @param \Drupal\node\NodeInterface $entity
+ *   Node for which we are clearing tags.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ *   Thrown if the entity type doesn't exist.
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ *   Thrown if the storage handler couldn't be loaded.
  */
 function prisoner_hub_recently_added_clear_cache_tags(NodeInterface $entity) {
   $cache_tag = 'prisoner_hub_recently_added';

@@ -5,20 +5,22 @@
  * Primary hook implementations for Prisoner hub sub terms module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_entity_insert().
  */
-function prisoner_hub_sub_terms_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+function prisoner_hub_sub_terms_entity_insert(EntityInterface $entity) {
   \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity);
 }
 
 /**
  * Implements hook_entity_update().
  */
-function prisoner_hub_sub_terms_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
+function prisoner_hub_sub_terms_entity_update(EntityInterface $entity) {
   \Drupal::service('prisoner_hub_sub_terms.cachetag_invalidator')->invalidate($entity);
 }
 
@@ -28,9 +30,9 @@ function prisoner_hub_sub_terms_entity_update(\Drupal\Core\Entity\EntityInterfac
  * Modify the options for the Subcategory exposed filter, to only include
  * categories that are children of the current category.
  *
- * @TODO: We could look at using facets for this instead.
+ * @todo We could look at using facets for this instead.
  */
-function prisoner_hub_sub_terms_form_views_exposed_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function prisoner_hub_sub_terms_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $view = $form_state->getStorage('view');
   $view = $view['view'];
   if ($view instanceof ViewExecutable && $view->id() == 'content_in_a_category') {

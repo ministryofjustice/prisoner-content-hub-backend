@@ -5,7 +5,7 @@ namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
- * Provides helper methods and properties for testing prison entity access stuff.
+ * Provides helper methods and properties for testing prison entity access.
  */
 trait PrisonerHubPrisonAccessTestTrait {
 
@@ -33,12 +33,12 @@ trait PrisonerHubPrisonAccessTestTrait {
   /**
    * The prison category term machine name.
    *
-   * @var String
+   * @var string
    */
   protected $prisonTermMachineName;
 
   /**
-   * Another prison category term, that is _not_ associated with the "current" prison.
+   * Another prison category term that isn't associated with the current prison.
    *
    * @var \Drupal\taxonomy\Entity\Term
    */
@@ -47,14 +47,14 @@ trait PrisonerHubPrisonAccessTestTrait {
   /**
    * The prison reference field name.
    *
-   * @var String
+   * @var string
    */
   protected $prisonFieldName;
 
   /**
    * The excluded from prison reference field name.
    *
-   * @var String
+   * @var string
    */
   protected $excludeFromPrisonFieldName;
 
@@ -90,19 +90,22 @@ trait PrisonerHubPrisonAccessTestTrait {
   }
 
   /**
-   * Get all the bundles for an $entityType that the prison field is attached to.
+   * Get the bundles for an $entityType that the prison field is attached to.
    *
    * @param string $entityType
-   *   The entity type id to serch for.
+   *   The entity type id to search.
+   * @param string $fieldName
+   *   Name of the prison field.
    *
    * @return array
    *   An array of bundle ids.
    */
-  protected function getBundlesWithField(string $entityType, string $fileName) {
+  protected function getBundlesWithField(string $entityType, string $fieldName) {
     // Get the list of content types with the prison field enabled.
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
     $entityFieldManager = $this->container->get('entity_field.manager');
     $entityFieldManager->getFieldMap();
-    return $entityFieldManager->getFieldMap()[$entityType][$fileName]['bundles'];
+    return $entityFieldManager->getFieldMap()[$entityType][$fieldName]['bundles'];
   }
+
 }

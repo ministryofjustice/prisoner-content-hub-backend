@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Route;
  * Processes a request for sub terms.
  *
  * For more info on how this class works, see examples in
- * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource
+ * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource.
  *
  * @internal
  */
@@ -33,7 +33,7 @@ class SubTerms extends EntityResourceBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   * @param TermInterface $taxonomy_term
+   * @param \Drupal\taxonomy\Entity\TermInterface $taxonomy_term
    *   The taxonomy term.
    *
    * @return \Drupal\jsonapi\ResourceResponse
@@ -86,12 +86,10 @@ class SubTerms extends EntityResourceBase {
 
     // Note that prison filtering is automatically applied to the query.
     // @see \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
-
     // Add groupBy's to the query.  Note that by adding these, the target id
     // of the taxonomy term will become available in the query result.
     // We can then convert these to taxonomy entities in
     // $this->getTaxonomyIdsFromQueryResults().
-
     // Group by category and series.
     $query->groupBy('field_moj_top_level_categories');
     $query->groupBy('field_moj_series');
@@ -122,8 +120,10 @@ class SubTerms extends EntityResourceBase {
    * Take aggregated entity results from nodes and convert them to taxonomy ids.
    *
    * @param array $results
-   *   The $results array from an \Drupal\Core\Entity\Query\QueryAggregateInterface
-   *   Should contain fields field_moj_top_level_categories and field_moj_series.
+   *   The $results array from a
+   *   \Drupal\Core\Entity\Query\QueryAggregateInterface.
+   *   Should contain fields field_moj_top_level_categories and
+   *   field_moj_series.
    *
    * @return array
    *   An array of taxonomy ids.
@@ -171,7 +171,7 @@ class SubTerms extends EntityResourceBase {
       }
       $top_level_id = $this->findClosestSubCategory($category_id, $top_parent_entity->id());
       if (!isset($processed_entities[$top_level_id]) && $top_level_id) {
-        $top_level_entity = isset($entities[$top_level_id]) ? $entities[$top_level_id] : Term::load($top_level_id);
+        $top_level_entity = $entities[$top_level_id] ?? Term::load($top_level_id);
         $processed_entities[$top_level_id] = $top_level_entity;
       }
     }
@@ -223,14 +223,15 @@ class SubTerms extends EntityResourceBase {
    *
    * This avoids a fatal error, as running entity queries at this stage causes
    * Drupal to break.
-   * @see \Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
-   * @todo Remove this after https://www.drupal.org/project/drupal/issues/3028976 is fixed.
    *
    * @param \Drupal\Core\Entity\Query\QueryInterface $query
    *   The query to execute to get the return results.
    *
    * @return int|array
    *   Returns the result of the query.
+   *
+   * @see \Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
+   * @todo Remove this after https://www.drupal.org/project/drupal/issues/3028976 is fixed.
    */
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
@@ -266,13 +267,13 @@ class SubTerms extends EntityResourceBase {
   /**
    * Get pagination for the request.
    *
-   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L189-202
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
    * @return \Drupal\jsonapi\Query\OffsetPage
    *   The pagination object.
+   *
+   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L189-202
    */
   private function getPagination(Request $request): OffsetPage {
     return $request->query->has('page')
@@ -282,8 +283,6 @@ class SubTerms extends EntityResourceBase {
 
   /**
    * Get pager links.
-   *
-   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L204-240
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
@@ -296,6 +295,8 @@ class SubTerms extends EntityResourceBase {
    *
    * @return \Drupal\jsonapi\JsonApiResource\LinkCollection
    *   The link collection.
+   *
+   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L204-240
    */
   protected function getPagerLinks(Request $request, OffsetPage $pagination, int $total_count, int $result_count): LinkCollection {
     $pager_links = new LinkCollection([]);
@@ -323,8 +324,6 @@ class SubTerms extends EntityResourceBase {
   /**
    * Get the query param array.
    *
-   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L242-301
-   *
    * @param string $link_id
    *   The name of the pagination link requested.
    * @param int $offset
@@ -338,6 +337,8 @@ class SubTerms extends EntityResourceBase {
    *
    * @return array
    *   The pagination query param array.
+   *
+   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L242-301
    */
   protected static function getPagerQueries($link_id, $offset, $size, array $query = [], $total = 0) {
     $extra_query = [];
@@ -386,8 +387,6 @@ class SubTerms extends EntityResourceBase {
   /**
    * Get the full URL for a given request object.
    *
-   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L303-324
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    * @param array|null $query
@@ -396,6 +395,8 @@ class SubTerms extends EntityResourceBase {
    *
    * @return \Drupal\Core\Url
    *   The full URL.
+   *
+   * @see https://git.drupalcode.org/project/jsonapi_search_api/-/blob/61cd08be71d76528564898b19a7f91f94a07aa03/src/Resource/IndexResource.php#L303-324
    */
   public static function getRequestLink(Request $request, $query = NULL) {
     if ($query === NULL) {

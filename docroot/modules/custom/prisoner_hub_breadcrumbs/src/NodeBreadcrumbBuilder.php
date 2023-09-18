@@ -15,36 +15,24 @@ use Drupal\node\NodeInterface;
  * Class NodeBreadcrumbBuilder.
  *
  * Build breadcrumbs for nodes.
+ *
  * @see \Drupal\prisoner_hub_breadcrumbs\SeriesTermBreadcrumbBuilder
  */
 class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
 
   /**
-   * The entity repository manager.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs the NodeBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityRepository = $entity_repository;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityRepositoryInterface $entityRepository,
+  ) {
   }
 
   /**
@@ -67,7 +55,7 @@ class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
-    /** @var NodeInterface $node */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $route_match->getParameter('node');
 
     $breadcrumb->addCacheableDependency($node);
@@ -107,4 +95,5 @@ class NodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     return $breadcrumb;
   }
+
 }

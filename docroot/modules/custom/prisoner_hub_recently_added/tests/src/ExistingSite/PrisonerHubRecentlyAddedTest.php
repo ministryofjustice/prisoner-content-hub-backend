@@ -12,7 +12,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the recently added JSON:API resource works correctly
+ * Test the recently added JSON:API resource works correctly.
  *
  * @group prisoner_hub_recently_added
  */
@@ -122,4 +122,5 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
       }, $response_document['data']));
     }
   }
+
 }

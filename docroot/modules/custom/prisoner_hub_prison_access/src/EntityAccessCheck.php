@@ -10,7 +10,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\taxonomy\Entity\Term;
 
 /**
  * Drupal service to be used in conjunction with hook_entity_access().
@@ -21,39 +20,23 @@ use Drupal\taxonomy\Entity\Term;
 class EntityAccessCheck {
 
   /**
-   * The route match service.
-   *
-   * @var RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * @var \Drupal\Core\Entity\EntityTypeManager
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The prison field name.
-   *
-   * @var String
-   */
-  protected $prisonFieldName;
-
-  /**
-   * The prison field name.
-   *
-   * @var String
-   */
-  protected $excludeFromPrisonFieldName;
-
-  /**
    * EntityAccessCheck constructor.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The route match service.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   *   The entity type manager.
+   * @param string $prisonFieldName
+   *   The name of the prison field.
+   * @param string $excludeFromPrisonFieldName
+   *   The name of the prison exclude field.
    */
-  public function __construct(RouteMatchInterface $route_match, EntityTypeManager $entity_type_manager, string $prison_field_name, string $exclude_from_prison_field_name) {
-    $this->routeMatch = $route_match;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->prisonFieldName = $prison_field_name;
-    $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
+  public function __construct(
+    protected RouteMatchInterface $routeMatch,
+    protected EntityTypeManager $entityTypeManager,
+    protected string $prisonFieldName,
+    protected string $excludeFromPrisonFieldName,
+  ) {
   }
 
   /**
@@ -63,6 +46,8 @@ class EntityAccessCheck {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object, note that only content entities will be handled.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Account for which we are checking access.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The AccessResult, determined by the entities prison and prison category
@@ -77,7 +62,7 @@ class EntityAccessCheck {
     $current_prison = $this->routeMatch->getParameter('prison');
     if (!$current_prison) {
       // If no prison context in the url, check if the user has permission to
-      // to view without one.  If so, return neutral, otherwise return forbidden.
+      // to view without one. If so, return neutral, otherwise return forbidden.
       return AccessResult::forbiddenIf($account->hasPermission('view entity without prison context') == FALSE);
     }
 
@@ -90,7 +75,7 @@ class EntityAccessCheck {
           return AccessResult::neutral();
         }
         foreach ($current_prison->get('parent') as $parent) {
-          if ($this->fieldValueExists($entity->get($this->prisonFieldName), (int)$parent->target_id)) {
+          if ($this->fieldValueExists($entity->get($this->prisonFieldName), (int) $parent->target_id)) {
             return AccessResult::neutral();
           }
         }
@@ -101,11 +86,11 @@ class EntityAccessCheck {
   }
 
   /**
-   * Check whether multivalue field contains a specific value.
+   * Check whether multi-value field contains a specific value.
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $field
    *   The field to check for the existence of a value.
-   * @param $value
+   * @param string|int|null $value
    *   The value to check.
    *
    * @return bool
@@ -118,4 +103,5 @@ class EntityAccessCheck {
     });
     return $field_copy->count() > 0;
   }
+
 }

@@ -10,12 +10,11 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
-
 /**
  * Processes a request for content suggestions.
  *
  * For more info on how this class works, see examples in
- * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource
+ * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource.
  *
  * @internal
  */
@@ -26,7 +25,7 @@ class ContentSuggestions extends EntityQueryResourceBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   * @param NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node.
    *
    * @return \Drupal\jsonapi\ResourceResponse
@@ -62,7 +61,8 @@ class ContentSuggestions extends EntityQueryResourceBase {
       $query->condition($series_condition_group);
     }
 
-    // Add a query tag so that we can apply random sorting via hook_query_TAG_alter().
+    // Add a query tag so that we can apply random sorting via
+    // hook_query_TAG_alter().
     // See https://drupal.stackexchange.com/a/249153/4831
     $query->addTag('sort_by_random');
 
@@ -115,4 +115,5 @@ class ContentSuggestions extends EntityQueryResourceBase {
   public function getRouteResourceTypes(Route $route, string $route_name): array {
     return $this->getResourceTypesByEntityTypeId('node');
   }
+
 }

@@ -4,4 +4,10 @@ parameters:
 services:
   prisoner_hub_prison_access_cms.entity_edit_access:
     class: Drupal\prisoner_hub_prison_access_cms\EntityEditAccess
-    arguments: ['@current_user', '%prisoner_hub_prison_access_cms.prison_owner_field_name%', '%prisoner_hub_prison_access_cms.user_prison_field_name%', '%prisoner_hub_prison_access.prison_field_name%', '%prisoner_hub_prison_access.exclude_from_prison_field_name%']
+    arguments:
+      - '@current_user'
+      - '%prisoner_hub_prison_access_cms.prison_owner_field_name%'
+      - '%prisoner_hub_prison_access_cms.user_prison_field_name%'
+      - '%prisoner_hub_prison_access.prison_field_name%'
+      - '%prisoner_hub_prison_access.exclude_from_prison_field_name%'
+      - '@entity_type.manager'

@@ -6,9 +6,10 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
- * Test that the correct access is applied when accessing entities directly
- * through JSON:API.  We only care about the http status code, since the
- * contents of the response is up to the jsonapi module.
+ * Test the access control when accessing entities directly through JSON:API.
+ *
+ * We only care about the http status code, since the contents of the response
+ * is up to the jsonapi module.
  *
  * @group prisoner_hub_prison_access
  */
@@ -19,7 +20,7 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
    *
    * @var string[]
    */
-  static $entityTypes = ['node', 'taxonomy_term'];
+  static private array $entityTypes = ['node', 'taxonomy_term'];
 
   /**
    * An array of bundles to check for, keyed by entity type.
@@ -46,9 +47,9 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
    * @param string $entity_type_id
    *   The entity type id, e.g. "node".
    * @param string $bundle
-   *  The bundle, e.g. "page".
+   *   The bundle, e.g. "page".
    * @param string $uuid
-   *  The uuid to check for.
+   *   The uuid to check for.
    *
    * @return \Drupal\Core\Url
    *   A url object that be used to make the request.
@@ -57,10 +58,8 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
     return Url::fromUri('internal:/jsonapi/prison/' . $prison_name . '/' . $entity_type_id . '/' . $bundle . '/' . $uuid);
   }
 
-
   /**
-   * Test that we cannot access the entities, when not tagged with a prison
-   * or a prison category.
+   * Test access denied for entities not tagged with a prison or category.
    */
   public function testEntitiesTaggedWithoutPrisonOrCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -73,8 +72,7 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
-   * Test that we can access the correct entities, when tagged with a prison
-   * (but no category).
+   * Test access for entities tagged with a prison (but no category).
    */
   public function testEntitiesTaggedWithPrisonButNoCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -91,8 +89,7 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
-   * Test that we can access the correct entities, when tagged with a category
-   * (but no prison).
+   * Test access for entities tagged with a category (but no prison).
    */
   public function testEntitesTaggedWithCategoryButNoPrison() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -109,17 +106,22 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
-   * Test that we can access the correct entities, when tagged with both a
-   * prison and a category.
+   * Test access for entities tagged with both a prison and a category.
    */
   public function testContentTaggedWithPrisonAndCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle) {
-        $uuid_to_check_is_200 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id(), $this->prisonCategoryTerm->id()]);
+        $uuid_to_check_is_200 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [
+          $this->prisonTerm->id(),
+          $this->prisonCategoryTerm->id(),
+        ]);
         $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_200);
         $this->assertJsonApiResponseByStatusCode($url, 200);
 
-        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id(), $this->anotherPrisonCategoryTerm->id()]);
+        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [
+          $this->anotherPrisonTerm->id(),
+          $this->anotherPrisonCategoryTerm->id(),
+        ]);
         $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_403);
         $this->assertJsonApiResponseByStatusCode($url, 403);
       }
@@ -127,13 +129,15 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
-   * Test that we can access the correct entities, when tagged with both a
-   * prison and a category.
+   * Test access for unpublished entities tagged with a prison and a category.
    */
   public function testContentTaggedWithPrisonAndCategoryUnpublished() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle) {
-        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id(), $this->prisonCategoryTerm->id()], NodeInterface::NOT_PUBLISHED);
+        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [
+          $this->prisonTerm->id(),
+          $this->prisonCategoryTerm->id(),
+        ], NodeInterface::NOT_PUBLISHED);
         $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_403);
         $this->assertJsonApiResponseByStatusCode($url, 403);
       }
@@ -141,8 +145,7 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
-   * Test that we can access the correct entities, when tagged with a
-   * prison and excluded from that prison.
+   * Test access for entities tagged with and excluded from a prison.
    */
   public function testContentTaggedWithPrisonAndExcluded() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -155,8 +158,7 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
-   * Test that we can access the correct entities, when tagged with a
-   * prison category and excluded from that prison.
+   * Test entity access when tagged with a prison category and excluded.
    */
   public function testContentTaggedWithPrisonCategoryAndExcluded() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -169,13 +171,16 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
   }
 
   /**
+   * Helper function to assert status codes for JSON:API requests.
+   *
    * @param \Drupal\Core\Url $url
    *   The url object to use for the JSON:API request.
    * @param int $status_code
    *   The status code to check for, e.g. 200.
    */
-  function assertJsonApiResponseByStatusCode(Url $url, int $status_code) {
+  public function assertJsonApiResponseByStatusCode(Url $url, int $status_code) {
     $response = $this->getJsonApiResponse($url);
     $this->assertSame($status_code, $response->getStatusCode(), $url->toString() . ' returns a ' . $status_code . ' response.');
   }
+
 }

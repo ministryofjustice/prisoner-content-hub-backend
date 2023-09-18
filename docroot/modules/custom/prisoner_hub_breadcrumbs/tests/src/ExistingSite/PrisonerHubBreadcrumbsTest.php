@@ -4,9 +4,7 @@ namespace Drupal\Tests\prisoner_hub_breadcrumbs\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\user\Entity\Role;
@@ -17,7 +15,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the breadcrumb suggestions JSON:API resource works correctly
+ * Test the breadcrumb suggestions JSON:API resource works correctly.
  *
  * @group prisoner_hub_breadcrumbs
  */
@@ -49,7 +47,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
 
     $vocab_categories = Vocabulary::load('moj_categories');
     $parentTerm = $this->createTerm($vocab_categories, [
-      'name' => 'Parent category term'
+      'name' => 'Parent category term',
     ]);
     $subCategoryTerm = $this->createTerm($vocab_categories, [
       'name' => 'Sub category term',
@@ -60,13 +58,13 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     $subSubCategoryTerm = $this->createTerm($vocab_categories, [
       'name' => 'Sub sub category term',
       'parent' => [
-        ['target_id' => $subCategoryTerm->id(),],
+        ['target_id' => $subCategoryTerm->id()],
       ],
     ]);
     $this->createNode([
       'name' => 'Series term',
       'field_moj_top_level_categories' => [
-        ['target_id' => $subSubCategoryTerm->id()]
+        ['target_id' => $subSubCategoryTerm->id()],
       ],
       'field_not_in_series' => 1,
     ]);
@@ -81,14 +79,14 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $this->seriesTerm ->id()]
+        ['target_id' => $this->seriesTerm->id()],
       ],
       'field_not_in_series' => 0,
     ]);
 
     // Allow anonymous user to access entities without prison context.
     // As we're not testing the prison context part, this is unnecessary.
-    // @TODO: Remove this when tests are refactored, and a single way of
+    // @todo Remove this when tests are refactored, and a single way of
     // creating entities (that includes adding relevant prisons) is used across
     // our tests.
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -165,19 +163,20 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
         'uri' => '/topics',
         'title' => 'Browse all topics',
         'options' => [],
-      ]
+      ],
     ];
-    $this->assertSame($expected_breadcrumbs, $response_document['data']['attributes']['breadcrumbs'],$message);
+    $this->assertSame($expected_breadcrumbs, $response_document['data']['attributes']['breadcrumbs'], $message);
   }
 
   /**
-   * Helper function to assert that a jsonapi response returns the expected
-   * entities.
+   * Helper function to assert a jsonapi response returns the expected entities.
    *
-   * @param array $entities_to_check
-   *   A list of entity uuids to check for in the JSON response.
-   * @param NodeInterface $node
-   *   The node to check suggestions for.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to check.
+   * @param \Drupal\Core\Entity\ContentEntityInterface[] $breadcrumb_entities
+   *   The expected breadcrumb entities.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function assertJsonApiBreadcrumbResponse(ContentEntityInterface $entity, array $breadcrumb_entities) {
     $url = Url::fromUri('internal:/jsonapi/' . $entity->getEntityTypeId() . '/' . $entity->bundle() . '/' . $entity->uuid());
@@ -197,7 +196,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
           'options' => [],
         ],
       ];
-      /** @var ContentEntityInterface $breadcrumb_entity */
       foreach ($breadcrumb_entities as $breadcrumb_entity) {
         $breadcrumbs[] = [
           'uri' => $breadcrumb_entity->toUrl()->toString(),
@@ -218,7 +216,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  protected function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);

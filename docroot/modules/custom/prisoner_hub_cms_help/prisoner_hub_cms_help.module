@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Render\HtmlEscapedText;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
@@ -14,7 +16,7 @@ use Drupal\node\NodeInterface;
  *
  * Hide the default book navigation, as we are using our own via a block.
  */
-function prisoner_hub_cms_help_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function prisoner_hub_cms_help_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if (isset($build['book_navigation'])) {
     hide($build['book_navigation']);
   }
@@ -38,9 +40,9 @@ function prisoner_hub_cms_help_preprocess_menu(&$variables) {
     }
   }
 
-  foreach ($variables['items'] as $key => $item) {
+  foreach ($variables['items'] as $item) {
     /** @var \Drupal\Core\Menu\MenuLinkDefault $menu_link */
-    $menu_link = isset($item['original_link']) ? $item['original_link'] : NULL;
+    $menu_link = $item['original_link'] ?? NULL;
     if ($menu_link && in_array($menu_link->getUrlObject()->toUriString(), $book_urls)) {
       /** @var \Drupal\Core\Url $url */
       $url = $item['url'];
@@ -69,7 +71,8 @@ function prisoner_hub_cms_help_preprocess_page_title(&$vars) {
  *
  * Set help page links for single value form elements.  These are rendered via
  * the theme.
- * @see prisconhub_preprocess_form_element().
+ *
+ * @see prisconhub_preprocess_form_element()
  */
 function prisoner_hub_cms_help_preprocess_form_element(&$variables) {
   if (isset($variables['element']['#name']) && $variables['element']['#name'] == 'field_large_update_tile[0][target_id]') {
@@ -82,7 +85,8 @@ function prisoner_hub_cms_help_preprocess_form_element(&$variables) {
  *
  * Set help page links for multiple value form elements.  These are rendered via
  * the theme.
- * @see prisconhub_preprocess_field_multiple_value_form().
+ *
+ * @see prisconhub_preprocess_field_multiple_value_form()
  */
 function prisoner_hub_cms_help_preprocess_field_multiple_value_form(&$variables) {
   if ($variables['element']['#field_name'] == 'field_key_info_tiles') {

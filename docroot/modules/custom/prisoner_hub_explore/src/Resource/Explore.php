@@ -4,7 +4,6 @@ namespace Drupal\prisoner_hub_explore\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\ResourceResponse;
-use Drupal\jsonapi_resources\Entity\Query\PaginatorMetadata;
 use Drupal\jsonapi_resources\Resource\EntityQueryResourceBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +13,7 @@ use Symfony\Component\Routing\Route;
  * Processes a request for exploring content.
  *
  * For more info on how this class works, see examples in
- * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource
+ * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource.
  *
  * @internal
  */
@@ -25,7 +24,13 @@ class Explore extends EntityQueryResourceBase {
    *
    * @var array|string[]
    */
-  static array $content_types = ['moj_radio_item', 'page', 'link', 'moj_pdf_item', 'moj_video_item'];
+  static private array $contentTypes = [
+    'moj_radio_item',
+    'page',
+    'link',
+    'moj_pdf_item',
+    'moj_video_item',
+  ];
 
   /**
    * Process the resource request.
@@ -51,11 +56,12 @@ class Explore extends EntityQueryResourceBase {
     // Exclude unpublished content as this isn't added by default to the query.
     $query->condition('status', NodeInterface::PUBLISHED);
 
-    // Add a query tag so that we can apply random sorting via hook_query_TAG_alter().
+    // Add a query tag so that we can apply random sorting via
+    // hook_query_TAG_alter().
     // See https://drupal.stackexchange.com/a/249153/4831
     $query->addTag('prisoner_hub_explore_sort_by_random');
 
-    $query->condition('type', self::$content_types, 'IN');
+    $query->condition('type', self::$contentTypes, 'IN');
 
     $data = $this->loadResourceObjectDataFromEntityQuery($query, $cacheability);
 
@@ -73,4 +79,5 @@ class Explore extends EntityQueryResourceBase {
   public function getRouteResourceTypes(Route $route, string $route_name): array {
     return $this->getResourceTypesByEntityTypeId('node');
   }
+
 }

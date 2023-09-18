@@ -18,49 +18,26 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class QueryAccessSubscriber implements EventSubscriberInterface {
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The route match service.
-   *
-   * @var RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The prison field name.
-   *
-   * @var String
-   */
-  protected $prisonFieldName;
-
-  /**
-   * The prison field name.
-   *
-   * @var String
-   */
-  protected $excludeFromPrisonFieldName;
-
-  /**
    * QueryAccessSubscriber constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The route match service.
+   * @param string $prisonFieldName
+   *   The prison field name.
+   * @param string $excludeFromPrisonFieldName
+   *   The name of the field specifying prisons to exclude.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, string $prison_field_name, string $exclude_from_prison_field_name) {
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->routeMatch = $route_match;
-    $this->prisonFieldName = $prison_field_name;
-    $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
+  public function __construct(
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected RouteMatchInterface $routeMatch,
+    protected string $prisonFieldName,
+    protected string $excludeFromPrisonFieldName,
+  ) {
   }
 
   /**
@@ -73,15 +50,17 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * This method is called when the entity.query_access.prison_categories is dispatched.
+   * Called when the entity.query_access.prison_categories is dispatched.
    *
-   * @param \Symfony\Component\EventDispatcher\Event $event
+   * @param \Drupal\entity\QueryAccess\QueryAccessEvent $event
    *   The dispatched event.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function entityQueryAccessPrisonCategories(QueryAccessEvent $event) {
     $operations = ['view', 'view label'];
 
-    /* @var \Drupal\taxonomy\TermInterface $current_prison */
+    /** @var \Drupal\taxonomy\TermInterface $current_prison */
     $current_prison = $this->routeMatch->getParameter('prison');
     if (!in_array($event->getOperation(), $operations) || !$current_prison) {
       return;
@@ -100,7 +79,8 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     $prisons_condition_group->addCondition($entity_type->getKey('bundle'), $bundles, 'NOT IN');
 
     // Load parents (aka prison categories) and filter by them as well.
-    // Note that only initial parents will be loaded (i.e. not parents of parents).
+    // Note that only initial parents will be loaded (i.e. not parents of
+    // parents).
     // To load all parents, use:
     // $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($current_prison->id());
     // Whilst this works, it finds parents via another entity query,

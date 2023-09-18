@@ -15,21 +15,19 @@ use Symfony\Component\Routing\Route;
 class PrisonContext implements ParamConverterInterface {
 
   /**
-   * Drupal\Core\Entity\EntityTypeManagerInterface definition.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new PrisonContext object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function convert($value, $definition, $name, array $defaults) {
     if (!empty($value)) {
@@ -51,7 +49,7 @@ class PrisonContext implements ParamConverterInterface {
    * @param string $name
    *   Machine name of prison term.
    *
-   * @return \Drupal\core\entity\EntityInterface|null
+   * @return \Drupal\Core\Entity\EntityInterface|null
    *   Term entity represented by the passed machine name, or null if it could
    *   not be loaded.
    *

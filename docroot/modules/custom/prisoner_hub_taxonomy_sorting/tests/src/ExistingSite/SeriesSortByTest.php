@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\prisoner_hub_taxonomy_sorting\ExistingSite;
 
-use DateTime;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -24,13 +23,18 @@ class SeriesSortByTest extends ExistingSiteBase {
   use TaxonomyCreationTrait;
 
   /**
+   * Term created to facilitate testing.
+   *
    * @var \Drupal\taxonomy\Entity\Term
    */
   protected $seriesTerm;
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() : void {
     parent::setUp();
-    // Create a series
+    // Create a series.
     $vocab = Vocabulary::load('series');
     $this->seriesTerm = $this->createTerm($vocab);
 
@@ -46,31 +50,31 @@ class SeriesSortByTest extends ExistingSiteBase {
         'field_release_date' => '2018-06-10',
         'field_moj_season' => 1,
         'field_moj_episode' => 2,
-        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]]
+        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]],
       ],
       [
         'field_release_date' => '2018-09-10',
         'field_moj_season' => 1,
         'field_moj_episode' => 5,
-        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]]
+        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]],
       ],
       [
         'field_release_date' => '2019-01-02',
         'field_moj_season' => 4,
         'field_moj_episode' => 12,
-        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]]
+        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]],
       ],
       [
         'field_release_date' => '2020-02-12',
         'field_moj_season' => 11,
         'field_moj_episode' => 22,
-        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]]
+        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]],
       ],
       [
         'field_release_date' => '2029-06-10',
         'field_moj_season' => 40,
         'field_moj_episode' => 202,
-        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]]
+        'field_moj_series' => [['target_id' => $this->seriesTerm->id()]],
       ],
     ];
     foreach ($node_values as $node_value) {
@@ -79,7 +83,7 @@ class SeriesSortByTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that correct sorting is applied for series sorted by "Episode number (oldest first)".
+   * Test sorting for series by "Episode number (oldest first)".
    */
   public function testSortBySeasonAndEpisodeAsc() {
     $this->seriesTerm->set('field_sort_by', 'season_and_episode_asc');
@@ -101,7 +105,7 @@ class SeriesSortByTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that correct sorting is applied for series sorted by "Episode number (newest first)".
+   * Test sorting for series by "Episode number (newest first)".
    */
   public function testSortBySeasonAndEpisodeDesc() {
     $this->seriesTerm->set('field_sort_by', 'season_and_episode_desc');
@@ -123,7 +127,7 @@ class SeriesSortByTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that correct sorting is applied for series sorted by "Release date (oldest first)".
+   * Test sorting for series by "Release date (oldest first)".
    */
   public function testSortByReleaseDateAsc() {
     $this->seriesTerm->set('field_sort_by', 'release_date_asc');
@@ -135,7 +139,7 @@ class SeriesSortByTest extends ExistingSiteBase {
     $response_document = Json::decode((string) $response->getBody());
 
     foreach ($response_document['data'] as $item) {
-      $current_release_date = DateTime::createFromFormat('Y-m-d', $item['attributes']['field_release_date']);
+      $current_release_date = \DateTime::createFromFormat('Y-m-d', $item['attributes']['field_release_date']);
       if (isset($previous_release_date)) {
         $this->assertGreaterThanOrEqual($previous_release_date, $current_release_date);
       }
@@ -144,7 +148,7 @@ class SeriesSortByTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that correct sorting is applied for series sorted by "Release date (newest first)".
+   * Test sorting for series by "Release date (newest first)".
    */
   public function testSortByReleaseDateDesc() {
     $this->seriesTerm->set('field_sort_by', 'release_date_desc');
@@ -156,11 +160,12 @@ class SeriesSortByTest extends ExistingSiteBase {
     $response_document = Json::decode((string) $response->getBody());
 
     foreach ($response_document['data'] as $item) {
-      $current_release_date = DateTime::createFromFormat('Y-m-d', $item['attributes']['field_release_date']);
+      $current_release_date = \DateTime::createFromFormat('Y-m-d', $item['attributes']['field_release_date']);
       if (isset($previous_release_date)) {
         $this->assertLessThanOrEqual($previous_release_date, $current_release_date);
       }
       $previous_release_date = $current_release_date;
     }
   }
+
 }

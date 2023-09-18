@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Route;
  * Processes a request for recently added content/series.
  *
  * For more info on how this class works, see examples in
- * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource
+ * jsonapi_resources/tests/modules/jsonapi_resources_test/src/Resource.
  *
  * @internal
  */
@@ -31,7 +31,13 @@ class RecentlyAdded extends EntityResourceBase {
    *
    * @var array|string[]
    */
-  static array $content_types = ['moj_radio_item', 'page', 'link', 'moj_pdf_item', 'moj_video_item'];
+  static public array $contentTypes = [
+    'moj_radio_item',
+    'page',
+    'link',
+    'moj_pdf_item',
+    'moj_video_item',
+  ];
 
   /**
    * Process the resource request.
@@ -49,7 +55,8 @@ class RecentlyAdded extends EntityResourceBase {
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheContexts(['url.path']);
 
-    // This is a custom cache tag that is invalidated in prisoner_hub_recently_added_node_update().
+    // This is a custom cache tag that is invalidated in
+    // prisoner_hub_recently_added_node_update().
     $cache_tag = 'prisoner_hub_recently_added';
     $prison = \Drupal::routeMatch()->getParameter('prison');
     if ($prison) {
@@ -99,8 +106,6 @@ class RecentlyAdded extends EntityResourceBase {
    *
    * @param array $timestamps_and_entities
    *   The array of content entities, passed in by reference, to be appended to.
-   * @param array $published_at_timestamps
-   *   The array of timestamps, passed in by reference, to be appended to.
    * @param int $size
    *   The size requested.
    *
@@ -113,14 +118,14 @@ class RecentlyAdded extends EntityResourceBase {
     $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
     $query->groupBy('field_moj_series');
     $query->sortAggregate('published_at', 'MAX', 'DESC');
-    $query->condition('type', self::$content_types, 'IN');
+    $query->condition('type', self::$contentTypes, 'IN');
 
     // Only query for content that _is_ in a series.
     $query->condition('field_moj_series', NULL, 'IS NOT NULL');
 
     // Ensure we only check for published content.
     // Note that prison category rules are automatically applied to the query.
-    // See \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
+    // @see \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber.
     $query->condition('status', NodeInterface::PUBLISHED);
 
     // If already have enough entities set, ensure we only query for newer
@@ -156,14 +161,14 @@ class RecentlyAdded extends EntityResourceBase {
    */
   protected function loadContentEntities(array &$timestamps_and_entities, int $size) {
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
-    $query->condition('type', self::$content_types, 'IN');
+    $query->condition('type', self::$contentTypes, 'IN');
 
     // Only get back content not in a series.
     $query->condition('field_moj_series', NULL, 'IS NULL');
 
     // Ensure we only check for published content.
     // Note that prison category rules are automatically applied to the query.
-    // See \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber
+    // @see \Drupal\prisoner_hub_prison_access\EventSubscriber\QueryAccessSubscriber.
     $query->condition('status', NodeInterface::PUBLISHED);
 
     // If already have enough entities set, ensure we only query for newer
@@ -189,14 +194,15 @@ class RecentlyAdded extends EntityResourceBase {
    *
    * This avoids a fatal error, as running entity queries at this stage causes
    * Drupal to break.
-   * @see \Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
-   * @todo Remove this after https://www.drupal.org/project/drupal/issues/3028976 is fixed.
    *
    * @param \Drupal\Core\Entity\Query\QueryInterface $query
    *   The query to execute to get the return results.
    *
    * @return int|array
    *   Returns the result of the query.
+   *
+   * @see \Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
+   * @todo Remove this after https://www.drupal.org/project/drupal/issues/3028976 is fixed.
    */
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
@@ -229,8 +235,9 @@ class RecentlyAdded extends EntityResourceBase {
    */
   public function getRouteResourceTypes(Route $route, string $route_name): array {
     return array_filter($this->resourceTypeRepository->all(), function (ResourceType $type) {
-      return $type->getEntityTypeId() == 'node' && in_array($type->getBundle(), self::$content_types) ||
+      return $type->getEntityTypeId() == 'node' && in_array($type->getBundle(), self::$contentTypes) ||
         $type->getEntityTypeId() == 'taxonomy_term' && $type->getBundle() == 'series';
     });
   }
+
 }
