@@ -33,7 +33,7 @@ class SubTerms extends EntityResourceBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   * @param \Drupal\taxonomy\Entity\TermInterface $taxonomy_term
+   * @param \Drupal\taxonomy\TermInterface $taxonomy_term
    *   The taxonomy term.
    *
    * @return \Drupal\jsonapi\ResourceResponse
@@ -76,7 +76,7 @@ class SubTerms extends EntityResourceBase {
       ->condition('field_moj_top_level_categories.entity:taxonomy_term.parent', $tids, 'IN')
 
       // Assigned to a series that is assigned to the current category (or one
-      // of it's children).
+      // of its children).
       ->condition('field_moj_series.entity:taxonomy_term.field_category', $tids, 'IN');
 
     $query->condition($condition_group);
@@ -99,7 +99,7 @@ class SubTerms extends EntityResourceBase {
 
     $pagination = $this->getPagination($request);
     if ($pagination->getSize() <= 0) {
-      throw new CacheableBadRequestHttpException($cacheability, sprintf('The page size needs to be a positive integer.'));
+      throw new CacheableBadRequestHttpException($cacheability, 'The page size needs to be a positive integer.');
     }
 
     $results = $this->executeQueryInRenderContext($query);
@@ -130,7 +130,7 @@ class SubTerms extends EntityResourceBase {
    */
   protected function getTaxonomyIdsFromQueryResults($results) {
     return array_map(static function ($item) {
-      // Return either category id or series id, first non NULL value.
+      // Return either category id or series id, first non-NULL value.
       return $item['field_moj_top_level_categories_target_id'] ?? $item['field_moj_series_target_id'];
     }, $results);
   }
@@ -152,6 +152,11 @@ class SubTerms extends EntityResourceBase {
    *
    * @return array
    *   An array of filtered entities.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the entity type doesn't exist.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *   Thrown if the storage handler couldn't be loaded.
    */
   protected function filterClosestSubCategoriesAndSeries(array $entities, TermInterface $top_parent_entity) {
     $processed_entities = [];
@@ -191,9 +196,14 @@ class SubTerms extends EntityResourceBase {
    *
    * @return mixed
    *   Either the taxonomy term id if found, or NULL.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the entity type doesn't exist.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *   Thrown if the storage handler couldn't be loaded.
    */
   protected function findClosestSubCategory($id, $top_parent_id) {
-    // It's okay to call loadTree() multiple times, as it has it's own cache.
+    // It's okay to call loadTree() multiple times, as it has its own cache.
     $tree = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('moj_categories', $top_parent_id);
     foreach ($tree as $term_result) {
       if ($term_result->tid == $id) {
@@ -202,7 +212,7 @@ class SubTerms extends EntityResourceBase {
         }
         else {
           foreach ($term_result->parents as $parent_id) {
-            $id = $this->findClosestSubCategory($parent_id, $top_parent_id, $tree);
+            $id = $this->findClosestSubCategory($parent_id, $top_parent_id);
             if ($id) {
               return $id;
             }
@@ -235,10 +245,9 @@ class SubTerms extends EntityResourceBase {
    */
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
-    $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
+    return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
       return $query->execute();
     });
-    return $results;
   }
 
   /**
@@ -300,7 +309,7 @@ class SubTerms extends EntityResourceBase {
    */
   protected function getPagerLinks(Request $request, OffsetPage $pagination, int $total_count, int $result_count): LinkCollection {
     $pager_links = new LinkCollection([]);
-    $size = (int) $pagination->getSize();
+    $size = $pagination->getSize();
     $offset = $pagination->getOffset();
     $query = (array) $request->query->getIterator();
 
