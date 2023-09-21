@@ -224,11 +224,9 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
     $this->assertSame(200, $response->getStatusCode());
     $response_document = Json::decode((string) $response->getBody());
-    foreach ($response_document['data'] as $item) {
-      $this->assertEquals($correct_order_sub_terms, array_map(static function (array $data) {
-        return $data['id'];
-      }, $response_document['data']));
-    }
+    $this->assertEquals($correct_order_sub_terms, array_map(static function (array $data) {
+      return $data['id'];
+    }, $response_document['data']));
   }
 
   /**
