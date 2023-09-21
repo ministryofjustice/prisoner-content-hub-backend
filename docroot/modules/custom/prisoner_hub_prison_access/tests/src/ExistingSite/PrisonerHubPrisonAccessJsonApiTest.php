@@ -27,7 +27,7 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
    *
    * @var array
    */
-  protected $bundlesByEntityType;
+  protected array $bundlesByEntityType;
 
   /**
    * Setup the correct bundles to test for.

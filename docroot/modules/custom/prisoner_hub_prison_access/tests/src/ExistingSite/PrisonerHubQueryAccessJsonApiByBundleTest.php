@@ -24,10 +24,10 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
    *
    * @var array
    */
-  protected $bundlesByEntityType;
+  protected array $bundlesByEntityType;
 
   /**
-   * Setup the correct bundles to test for.
+   * Set up the correct bundles to test for.
    */
   protected function setUp(): void {
     parent::setUp();
@@ -73,7 +73,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   /**
    * Test entities are returned when tagged with a category (but no prison).
    */
-  public function testEntitesTaggedWithCategoryButNoPrison() {
+  public function testEntitiesTaggedWithCategoryButNoPrison() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle) {
         $entities_to_check = $this->setupEntitiesTaggedWithCategoryButNoPrison($entity_type_id, $bundle);
@@ -121,7 +121,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   /**
    * Test a group OR filter on two different entity reference fields works.
    *
-   * @covers prisoner_hub_prison_access_jsonapi_entity_filter_access().
+   * @covers ::prisoner_hub_prison_access_jsonapi_entity_filter_access().
    * @see https://www.drupal.org/project/drupal/issues/3072384
    */
   public function testJsonApiGroupFilters() {

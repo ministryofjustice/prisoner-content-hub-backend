@@ -15,7 +15,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the content suggestions JSON:API resource works correctly.
+ * Test the content suggestions JSON:API resource works correctly.
  *
  * @group prisoner_hub_content_suggestions
  */
@@ -117,7 +117,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
    * Test that content with no topic or category returns an empty result.
    */
   public function testContentWithNoTagOrCategory() {
-    $node = $this->createNode([]);
+    $node = $this->createNode();
     $this->assertJsonApiSuggestionsResponse([], $node);
   }
 

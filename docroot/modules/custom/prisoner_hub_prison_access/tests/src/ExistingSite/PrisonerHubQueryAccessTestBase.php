@@ -38,7 +38,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @param string $entity_type_id
    *   The entity type id, e.g. "node".
    * @param string $bundle
-   *   The bundle (i.e. content type, vocabulary etc) id.
+   *   The bundle (i.e. content type, vocabulary etc.) id.
    * @param array $values
    *   An array of field values.
    *

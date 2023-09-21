@@ -33,7 +33,7 @@ class PageCachePersistCommands extends DrushCommands {
   }
 
   /**
-   * Force delete of all cache's including the page cache..
+   * Force delete of all cache's including the page cache.
    *
    * @command cache:force-clear-all
    *

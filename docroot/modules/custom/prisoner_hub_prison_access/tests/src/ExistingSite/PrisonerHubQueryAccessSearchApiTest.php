@@ -90,7 +90,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   /**
    * Test that entities are returned when tagged with a category but no prison.
    */
-  public function testEntitesTaggedWithCategoryButNoPrison() {
+  public function testEntitiesTaggedWithCategoryButNoPrison() {
     $entities_to_check = [];
     foreach ($this->bundles as $bundle) {
       $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithCategoryButNoPrison($this->entityTypeId, $bundle));

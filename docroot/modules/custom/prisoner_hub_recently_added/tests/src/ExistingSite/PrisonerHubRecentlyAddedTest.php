@@ -27,14 +27,14 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
    *
    * @var \Drupal\Core\Url
    */
-  protected $jsonApiUrl;
+  protected Url $jsonApiUrl;
 
   /**
    * An array of uuids in the correct oder.
    *
    * @var array
    */
-  protected $correctOrderUuids;
+  protected array $correctOrderUuids;
 
   /**
    * Set up content and taxonomy terms to test with.

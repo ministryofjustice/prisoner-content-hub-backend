@@ -25,6 +25,9 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
 
   /**
    * Test the default menu is used for primary nav when none selected.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures an exception is thrown.
    */
   public function testDefaultPrimaryNav() {
     // Add some content to the default primary nav.
@@ -60,6 +63,9 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
 
   /**
    * Test a specific menu is used when specified in field_primary_navigation.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures an exception is thrown.
    */
   public function testPrisonPrimaryNav() {
     $menu = Menu::create([

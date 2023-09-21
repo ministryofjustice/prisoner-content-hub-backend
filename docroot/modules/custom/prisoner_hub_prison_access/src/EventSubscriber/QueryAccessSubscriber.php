@@ -71,7 +71,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
     $prisons_condition_group = new ConditionGroup('OR');
     $prisons_condition_group->addCondition($this->prisonFieldName, $current_prison->id());
 
-    // Exclude bundles (e.g. content types, vocabs, etc).  That do not have the
+    // Exclude bundles (e.g. content types, vocabs, etc.). That do not have the
     // field enabled.  To do this we get a list of all bundles the field is
     // enabled, and add a 'NOT IN' condition.
     $entity_type = $this->entityTypeManager->getDefinition($event->getEntityTypeId());
@@ -119,7 +119,7 @@ class QueryAccessSubscriber implements EventSubscriberInterface {
    * @return array
    *   A flat array, containing each bundle name as a string.
    */
-  protected function getFieldBundles($entity_type_id, $field_name) {
+  protected function getFieldBundles(string $entity_type_id, string $field_name) {
     $map = $this->entityFieldManager->getFieldMap();
     if (isset($map[$entity_type_id][$field_name]['bundles'])) {
       return $map[$entity_type_id][$field_name]['bundles'];

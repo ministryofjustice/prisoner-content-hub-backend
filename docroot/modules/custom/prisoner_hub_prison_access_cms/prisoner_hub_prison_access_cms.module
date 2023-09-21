@@ -35,7 +35,7 @@ function prisoner_hub_prison_access_cms_field_widget_form_alter(&$element, FormS
     // another url after submit.
     if (empty($form_state->getUserInput())) {
       // Set a different message when using views_entity_form_field.
-      if (substr($form_state->getFormObject()->getFormId(), 0, strlen('views_form')) == 'views_form') {
+      if (str_starts_with($form_state->getFormObject()->getFormId(), 'views_form')) {
         \Drupal::messenger()->addWarning(t('You cannot update values for some of the content on this page, as they are owned by another prison.'));
       }
       else {
@@ -132,7 +132,7 @@ function prisoner_hub_prison_access_cms_entity_presave(EntityInterface $entity) 
  * Make the exclude_from_prison field_group details element open (expanded), if
  * this is the only field the user can access.
  *
- * This is a UX improvement.  By default the exclude_from_prison field group is
+ * This is a UX improvement.  By default, the exclude_from_prison field group is
  * closed (using the field_group_open_non_empty formatter).  If this is the only
  * field a user can access, we want to always show as open.
  */

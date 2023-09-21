@@ -66,10 +66,10 @@ class RecentlyAdded extends EntityResourceBase {
 
     $pagination = $this->getPagination($request);
     if ($pagination->getOffset() != 0) {
-      throw new CacheableBadRequestHttpException($cacheability, sprintf('This resource does not currently support and offset greater than 0.'));
+      throw new CacheableBadRequestHttpException($cacheability, 'This resource does not currently support and offset greater than 0.');
     }
     if ($pagination->getSize() <= 0) {
-      throw new CacheableBadRequestHttpException($cacheability, sprintf('The page size needs to be a positive integer.'));
+      throw new CacheableBadRequestHttpException($cacheability, 'The page size needs to be a positive integer.');
     }
 
     // Multidimensional array, each item containing a 'published_at' timestamp
@@ -206,10 +206,9 @@ class RecentlyAdded extends EntityResourceBase {
    */
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
-    $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
+    return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
       return $query->execute();
     });
-    return $results;
   }
 
   /**

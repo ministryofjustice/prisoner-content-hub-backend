@@ -11,6 +11,12 @@ use Drupal\prisoner_hub_recently_added\Resource\RecentlyAdded;
 
 /**
  * Implements hook_ENTITY_TYPE_update().
+ *
+ * @param NodeInterface $entity
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
 function prisoner_hub_recently_added_node_update(NodeInterface $entity) {
   if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$contentTypes)) {
@@ -24,6 +30,9 @@ function prisoner_hub_recently_added_node_update(NodeInterface $entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  */
 function prisoner_hub_recently_added_node_insert(NodeInterface $entity) {
   if ($entity->isPublished() && in_array($entity->bundle(), RecentlyAdded::$contentTypes)) {

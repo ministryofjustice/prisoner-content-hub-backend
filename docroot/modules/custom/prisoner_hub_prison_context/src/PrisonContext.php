@@ -60,7 +60,7 @@ class PrisonContext implements ParamConverterInterface {
     $tid = $this->entityTypeManager->getStorage('taxonomy_term')
       ->getQuery()
       ->condition('machine_name', $name)
-      ->accessCheck(TRUE)
+      ->accessCheck()
       ->execute();
 
     if ($tid) {

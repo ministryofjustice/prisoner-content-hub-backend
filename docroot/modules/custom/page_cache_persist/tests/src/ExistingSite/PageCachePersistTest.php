@@ -22,7 +22,7 @@ class PageCachePersistTest extends ExistingSiteBase {
    *
    * @var string
    */
-  protected $nodeUrlString;
+  protected string $nodeUrlString;
 
   /**
    * Set up content and generate cache.

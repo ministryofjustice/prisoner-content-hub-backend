@@ -42,6 +42,11 @@ class EntityEditAccess {
    *   The field name of the excluded prisons, added to ContentEntities.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the entity type doesn't exist.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *   Thrown if the storage handler couldn't be loaded.
    */
   public function __construct(
     AccountInterface $account,
@@ -67,7 +72,7 @@ class EntityEditAccess {
    *   TRUE if the user can edit the field, otherwise FALSE.
    */
   public function hasFieldAccess(string $fieldName, ContentEntityInterface $entity) {
-    // If the entity is being created, then assume we have access to all of
+    // If the entity is being created, then assume we have access to all
     // the fields.  I.e. we only restrict access for existing entities (that are
     // potentially created by other users/prisons).
     if ($entity->isNew()) {
@@ -163,6 +168,11 @@ class EntityEditAccess {
    *
    * @return bool
    *   TRUE if the user has access to the prison $id, otherwise FALSE.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the entity type doesn't exist.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *   Thrown if the storage handler couldn't be loaded.
    */
   public function hasPrisonTermAccess(int $id) {
     $storage = $this->entityTypeManager->getStorage('taxonomy_term');

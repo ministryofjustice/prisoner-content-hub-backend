@@ -61,7 +61,7 @@ class EntityAccessCheck {
     /** @var \Drupal\taxonomy\TermInterface $current_prison */
     $current_prison = $this->routeMatch->getParameter('prison');
     if (!$current_prison) {
-      // If no prison context in the url, check if the user has permission to
+      // If no prison context in the url, check if the user has permission
       // to view without one. If so, return neutral, otherwise return forbidden.
       return AccessResult::forbiddenIf($account->hasPermission('view entity without prison context') == FALSE);
     }
