@@ -9,39 +9,29 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
 
+/**
+ * Cache tag invalidator for sub-terms.
+ */
 class SubTermsCacheTagInvalidator {
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
 
   /**
    * SubTermsCacheTagInvalidator constructor.
    *
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tag invalidator service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    */
-  public function __construct(CacheTagsInvalidatorInterface $cache_tag_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    $this->cacheTagsInvalidator = $cache_tag_invalidator;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**
    * Invalidate appropriate cachetag(s) based on $entity.
    *
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The $entity being inserted or updated.
    */
   public function invalidate($entity) {
@@ -111,7 +101,7 @@ class SubTermsCacheTagInvalidator {
     }
     $referenced_entity = $this->getCategoryFromEntity($entity) ?: $this->getSeriesFromEntity($entity);
     $previous_referenced_entity = $this->getCategoryFromEntity($entity->original) ?: $this->getSeriesFromEntity($entity->original);
-    
+
     $previous_entity_id = $previous_referenced_entity ? $previous_referenced_entity->id() : NULL;
     $current_entity_id = $referenced_entity ? $referenced_entity->id() : NULL;
     return $previous_entity_id != $current_entity_id;
@@ -121,8 +111,9 @@ class SubTermsCacheTagInvalidator {
    * Get the category taxonomy term from $entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   Entity for which we are getting the taxonomy term.
    *
-   * @return TermInterface|false
+   * @return \Drupal\taxonomy\TermInterface|false
    *   Either the category taxonomy term entity, or FALSE if not found.
    */
   protected function getCategoryFromEntity(ContentEntityInterface $entity) {
@@ -139,8 +130,9 @@ class SubTermsCacheTagInvalidator {
    * Get the series taxonomy term from $entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   Entity for which we are getting the taxonomy term.
    *
-   * @return TermInterface|false
+   * @return \Drupal\taxonomy\TermInterface|false
    *   Either the series taxonomy term entity, or FALSE if not found.
    */
   protected function getSeriesFromEntity(ContentEntityInterface $entity) {
@@ -188,4 +180,5 @@ class SubTermsCacheTagInvalidator {
     $cache_tags = ['prisoner_hub_sub_terms:' . $term->get('field_category')->target_id];
     $this->cacheTagsInvalidator->invalidateTags($cache_tags);
   }
+
 }

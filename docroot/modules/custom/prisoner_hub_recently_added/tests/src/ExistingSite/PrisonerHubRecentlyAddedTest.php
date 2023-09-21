@@ -12,7 +12,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the recently added JSON:API resource works correctly
+ * Test the recently added JSON:API resource works correctly.
  *
  * @group prisoner_hub_recently_added
  */
@@ -27,14 +27,14 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
    *
    * @var \Drupal\Core\Url
    */
-  protected $jsonApiUrl;
+  protected Url $jsonApiUrl;
 
   /**
    * An array of uuids in the correct oder.
    *
    * @var array
    */
-  protected $correctOrderUuids;
+  protected array $correctOrderUuids;
 
   /**
    * Set up content and taxonomy terms to test with.
@@ -116,10 +116,9 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
     $response = $this->request('GET', $this->jsonApiUrl, $request_options);
     $this->assertSame(200, $response->getStatusCode());
     $response_document = Json::decode((string) $response->getBody());
-    foreach ($response_document['data'] as $item) {
-      $this->assertEquals($correct_order_uuids, array_map(static function (array $data) {
-        return $data['id'];
-      }, $response_document['data']));
-    }
+    $this->assertEquals($correct_order_uuids, array_map(static function (array $data) {
+      return $data['id'];
+    }, $response_document['data']));
   }
+
 }

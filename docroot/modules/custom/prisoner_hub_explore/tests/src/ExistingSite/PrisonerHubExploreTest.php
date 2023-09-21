@@ -10,7 +10,7 @@ use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the explore JSON:API resource works correctly
+ * Test the the explore JSON:API resource works correctly.
  *
  * @group prisoner_hub_explore
  */
@@ -50,7 +50,7 @@ class PrisonerHubExploreTest extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  public function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);

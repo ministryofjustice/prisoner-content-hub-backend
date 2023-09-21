@@ -32,15 +32,14 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     $this->createPrisonTaxonomyTerms();
   }
 
-
   /**
    * Create an entity.
    *
    * @param string $entity_type_id
    *   The entity type id, e.g. "node".
    * @param string $bundle
-   *   The bundle (i.e. content type, vocabulary etc) id.
-   * @param $values
+   *   The bundle (i.e. content type, vocabulary etc.) id.
+   * @param array $values
    *   An array of field values.
    *
    * @return int
@@ -58,12 +57,12 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
         // Series and categories require available content to be accessible
         // (via prisoner_hub_taxonomy_access module).
-        // TODO: Refactor all tests across custom modules to use the same entity creation process.
+        // @todo Refactor all tests across custom modules to use the same entity creation process.
         if ($bundle == 'series') {
           $this->createNode([
             'field_moj_series' => ['target_id' => $term->id()],
             $this->prisonFieldName => [
-              ['target_id' => $this->prisonTerm->id()]
+              ['target_id' => $this->prisonTerm->id()],
             ],
           ]);
         }
@@ -72,7 +71,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
             'field_not_in_series' => 1,
             'field_moj_top_level_categories' => ['target_id' => $term->id()],
             $this->prisonFieldName => [
-              ['target_id' => $this->prisonTerm->id()]
+              ['target_id' => $this->prisonTerm->id()],
             ],
           ]);
         }
@@ -81,7 +80,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Setup entities that are _not_ tagged with eith a prison or a category.
+   * Setup entities that are _not_ tagged with either a prison or a category.
    *
    * @return array
    *   An array of entities to check for.
@@ -136,7 +135,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
       $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], NodeInterface::NOT_PUBLISHED);
     }
 
-   return $entities_to_check;
+    return $entities_to_check;
   }
 
   /**
@@ -168,12 +167,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   protected function setupContentTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
     for ($i = 0; $i < $amount; $i++) {
-      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id(), $this->prisonCategoryTerm->id()]);
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [
+        $this->prisonTerm->id(),
+        $this->prisonCategoryTerm->id(),
+      ]);
     }
 
     // Also create some content tagged with a different category and prison.
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id(), $this->anotherPrisonCategoryTerm->id()]);
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [
+        $this->anotherPrisonTerm->id(),
+        $this->anotherPrisonCategoryTerm->id(),
+      ]);
     }
 
     return $entities_to_check;
@@ -220,15 +225,15 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Helper function to assert that a jsonapi response returns the expected entities.
+   * Helper function to assert a jsonapi response returns the expected entities.
    *
    * Note this only works with JSON:API responses that return multiple rows.
    * I.e. /jsonapi/node/page, and *not* /jsonapi/node/page/uuid.
    *
    * @param array $entities_to_check
    *   A list of entity uuids to check for in the JSON response.
-   * @param string $bundle
-   *   The bundle machine name to check for.
+   * @param \Drupal\Core\Url $url
+   *   The URL for the JSON:API request being tested.
    */
   protected function assertJsonApiListResponse(array $entities_to_check, Url $url) {
     $response = $this->getJsonApiResponse($url);
@@ -254,7 +259,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  public function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);

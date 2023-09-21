@@ -5,6 +5,7 @@
  * Contains text_editor_refresh_images.module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
 
 /**
@@ -19,7 +20,7 @@ use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
  * To fix this, we apply the editor_file_reference output filter on the input
  * text.  This refreshes the image urls (including signatures).
  */
-function text_editor_refresh_images_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function text_editor_refresh_images_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
   if ($context['widget'] instanceof TextareaWidget && $element['#type'] == 'text_format' && !empty($element['#default_value'])) {
     $filter_manager = \Drupal::service('plugin.manager.filter');
     $filter = $filter_manager->createInstance('editor_file_reference');

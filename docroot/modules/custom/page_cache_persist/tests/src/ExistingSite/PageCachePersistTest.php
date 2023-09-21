@@ -22,7 +22,7 @@ class PageCachePersistTest extends ExistingSiteBase {
    *
    * @var string
    */
-  protected $nodeUrlString;
+  protected string $nodeUrlString;
 
   /**
    * Set up content and generate cache.
@@ -31,7 +31,7 @@ class PageCachePersistTest extends ExistingSiteBase {
     parent::setUp();
     // Allow anonymous user to access entities without prison context.
     // As we're not testing the prison context part, this is unnecessary.
-    // @TODO: Remove this when tests are refactored, and a single way of
+    // @todo Remove this when tests are refactored, and a single way of
     // creating entities (that includes adding relevant prisons) is used across
     // our tests.
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -65,8 +65,7 @@ class PageCachePersistTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that the page cache isn't cleared when drupal_flush_all_caches() is
-   * called.
+   * Test the page cache isn't cleared when drupal_flush_all_caches() called.
    */
   public function testCacheClearAll() {
     drupal_flush_all_caches();
@@ -76,7 +75,7 @@ class PageCachePersistTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that we can still clear the page cache using drush cache:force-clear-page.
+   * Test we can still clear the page cache using drush cache:force-clear-page.
    */
   public function testDrushForceCacheClearPage() {
     $this->drush('cache:force-clear-page');
@@ -85,7 +84,7 @@ class PageCachePersistTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that we can still clear the page cache using drush cache:force-clear-page.
+   * Test we can still clear the page cache using drush cache:force-clear-all.
    */
   public function testDrushForceCacheClearAll() {
     $this->drush('cache:force-clear-all');
@@ -94,10 +93,9 @@ class PageCachePersistTest extends ExistingSiteBase {
   }
 
   /**
-   * Helper function to get the cache item for the node jsonapi page we are
-   * testing with.
+   * Helper function to get the cache item for a node jsonapi page.
    *
-   * @return FALSE|object
+   * @return false|object
    *   Either the cache object if found, otherwise FALSE.
    */
   private function getCacheItem() {

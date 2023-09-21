@@ -1,6 +1,6 @@
 # Prisoner Hub Prison Access CMS
 
-This module provides entity access rules relating to CMS access.  I.e. whether or not a user
+This module provides entity access rules relating to CMS access.  I.e. whether a user
 can make edits to a piece of content.
 
 It uses the value from the user Prison field (field_user_prisons) and matches this with

@@ -3,7 +3,6 @@
 namespace Drupal\prisoner_hub_taxonomy_field_ux;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\taxonomy\Entity\Term;
 
 /**
  * A service to add conditional states to taxonomy fields.
@@ -12,13 +11,6 @@ use Drupal\taxonomy\Entity\Term;
  * https://www.drupal.org/docs/drupal-apis/form-api/conditional-form-fields.
  */
 class EntityFormStates {
-
-  /**
-   * Drupal\Core\Entity\EntityTypeManagerInterface definition.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
 
   /**
    * An array of Drupal conditional form states.
@@ -42,9 +34,11 @@ class EntityFormStates {
 
   /**
    * Constructs a new EntityFormStates object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   Entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {
     $this->generateStatesForTermsWithSorting();
   }
 
@@ -62,7 +56,8 @@ class EntityFormStates {
       ->accessCheck(TRUE)
       ->exists('field_sort_by')
       ->execute();
-    $terms = Term::loadMultiple($result);
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $terms = $term_storage->loadMultiple($result);
     foreach ($terms as $term) {
       /** @var \Drupal\taxonomy\TermInterface $term */
       $sort_by_value = $term->get('field_sort_by')->getValue();
@@ -99,12 +94,12 @@ class EntityFormStates {
       ];
       $form['field_moj_season']['widget'][0]['value']['#states']['required'] = [
         ':input[name="field_moj_series"]' => $this->episodeSortingStates,
-        'and',
+        0 => 'and',
         ':input[name="field_not_in_series[value]"]' => ['checked' => FALSE],
       ];
       $form['field_moj_episode']['widget'][0]['value']['#states']['required'] = [
         ':input[name="field_moj_series"]' => $this->episodeSortingStates,
-        'and',
+        0 => 'and',
         ':input[name="field_not_in_series[value]"]' => ['checked' => FALSE],
       ];
     }

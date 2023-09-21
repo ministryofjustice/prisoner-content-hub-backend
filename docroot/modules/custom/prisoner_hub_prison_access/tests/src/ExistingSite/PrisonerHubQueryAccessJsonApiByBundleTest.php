@@ -6,8 +6,7 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
- * Test that the JSON:API responses for taxonomy terms tagged with prisons and
- * prison categories return the correct response.
+ * Test responses for terms tagged with prisons and prison categories.
  *
  * @group prisoner_hub_prison_access
  */
@@ -18,17 +17,17 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
    *
    * @var string[]
    */
-  static $entityTypes = ['node', 'taxonomy_term'];
+  static private array $entityTypes = ['node', 'taxonomy_term'];
 
   /**
    * An array of bundles to check for, keyed by entity type.
    *
    * @var array
    */
-  protected $bundlesByEntityType;
+  protected array $bundlesByEntityType;
 
   /**
-   * Setup the correct bundles to test for.
+   * Set up the correct bundles to test for.
    */
   protected function setUp(): void {
     parent::setUp();
@@ -47,10 +46,8 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
     return Url::fromUri('internal:/jsonapi/prison/' . $prison_name . '/' . $entity_type_id . '/' . $bundle, $options);
   }
 
-
   /**
-   * Test that no entities are returned in the JSON response, when nothing is
-   * tagged with a prison or a prison category.
+   * Test empty response when nothing is tagged with a prison or a category.
    */
   public function testEntitiesTaggedWithoutPrisonOrCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -62,8 +59,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * prison (but no category).
+   * Test entities are returned when tagged with a prison (but no category).
    */
   public function testEntitiesTaggedWithPrisonButNoCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -75,10 +71,9 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * category (but no prison).
+   * Test entities are returned when tagged with a category (but no prison).
    */
-  public function testEntitesTaggedWithCategoryButNoPrison() {
+  public function testEntitiesTaggedWithCategoryButNoPrison() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle) {
         $entities_to_check = $this->setupEntitiesTaggedWithCategoryButNoPrison($entity_type_id, $bundle);
@@ -88,8 +83,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * category and a prison.
+   * Test entities are returned when tagged with a category and a prison.
    */
   public function testContentTaggedWithPrisonAndCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -101,8 +95,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that correct entities are returned in the JSON response, when tagged
-   * with a prison and also excluded by that prison.
+   * Test entities returned when tagged with and excluded from a prison.
    */
   public function testContentTaggedWithPrisonButExcluded() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -114,8 +107,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that correct entities are returned in the JSON response, when tagged
-   * with a prison category and also excluded by that prison.
+   * Test entities returned when tagged with a category and excluded.
    */
   public function testContentTaggedWithPrisonCategoryButExcluded() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
@@ -127,9 +119,9 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   }
 
   /**
-   * Test that a group OR filter on two different entity reference fields works as expected.
+   * Test a group OR filter on two different entity reference fields works.
    *
-   * @covers prisoner_hub_prison_access_jsonapi_entity_filter_access().
+   * @covers ::prisoner_hub_prison_access_jsonapi_entity_filter_access().
    * @see https://www.drupal.org/project/drupal/issues/3072384
    */
   public function testJsonApiGroupFilters() {
@@ -172,4 +164,5 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
       $this->assertJsonApiListResponse($entities_to_check, $uri);
     }
   }
+
 }

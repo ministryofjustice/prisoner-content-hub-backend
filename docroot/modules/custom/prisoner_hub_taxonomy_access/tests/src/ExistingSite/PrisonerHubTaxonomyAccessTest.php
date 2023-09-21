@@ -2,11 +2,9 @@
 
 namespace Drupal\Tests\prisoner_hub_taxonomy_access\ExistingSite;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -30,7 +28,8 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
    * Allow anonymous user to access entities without prison context.
    *
    * As we're not testing the prison context part, this is unnecessary.
-   * @TODO: Remove this when tests are refactored, and a single way of creating
+   *
+   * @todo Remove this when tests are refactored, and a single way of creating
    * entities (that includes adding relevant prisons) is used across our tests.
    */
   public function setUp(): void {
@@ -47,7 +46,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     $series = $this->createTerm($vocab_series);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $series->id()]
+        ['target_id' => $series->id()],
       ],
       'status' => NodeInterface::NOT_PUBLISHED,
     ]);
@@ -64,7 +63,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     $series = $this->createTerm($vocab_series);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $series->id()]
+        ['target_id' => $series->id()],
       ],
       'status' => NodeInterface::PUBLISHED,
     ]);
@@ -81,7 +80,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     $category = $this->createTerm($vocab_categories);
     $this->createNode([
       'field_moj_top_level_categories' => [
-        ['target_id' => $category->id()]
+        ['target_id' => $category->id()],
       ],
       'status' => NodeInterface::NOT_PUBLISHED,
     ]);
@@ -94,7 +93,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $series->id()]
+        ['target_id' => $series->id()],
       ],
       'status' => NodeInterface::NOT_PUBLISHED,
     ]);
@@ -112,7 +111,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     $category = $this->createTerm($vocab_categories);
     $this->createNode([
       'field_moj_top_level_categories' => [
-        ['target_id' => $category->id()]
+        ['target_id' => $category->id()],
       ],
       'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
@@ -124,7 +123,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
   }
 
   /**
-   * Test a category with content assigned to a series that is assigned to that category.
+   * Test a category with content in a series that is assigned to that category.
    */
   public function testCategoryWithSeriesContent() {
     $vocab_categories = Vocabulary::load('moj_categories');
@@ -138,7 +137,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $series->id()]
+        ['target_id' => $series->id()],
       ],
       'status' => NodeInterface::PUBLISHED,
     ]);
@@ -157,11 +156,11 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     $sub_category = $this->createTerm($vocab_categories, [
       'parent' => [
         ['target_id' => $category->id()],
-      ]
+      ],
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [
-        ['target_id' => $sub_category->id()]
+        ['target_id' => $sub_category->id()],
       ],
       'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
@@ -180,16 +179,16 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
     $sub_category = $this->createTerm($vocab_categories, [
       'parent' => [
         ['target_id' => $category->id()],
-      ]
+      ],
     ]);
     $sub_sub_category = $this->createTerm($vocab_categories, [
       'parent' => [
         ['target_id' => $sub_category->id()],
-      ]
+      ],
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [
-        ['target_id' => $sub_sub_category->id()]
+        ['target_id' => $sub_sub_category->id()],
       ],
       'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
@@ -208,9 +207,10 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  public function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);
   }
+
 }

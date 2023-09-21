@@ -46,15 +46,29 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
    *
    * @var string[]
    */
-  protected static $studioAdminContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item', 'link'];
+  protected static $studioAdminContentTypes = [
+    'moj_radio_item',
+    'page',
+    'moj_video_item',
+    'moj_pdf_item',
+    'link',
+  ];
 
   /**
    * Content types to test on for local content managers.
    *
    * @var string[]
    */
-  protected static $localContentManagerContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'];
+  protected static $localContentManagerContentTypes = [
+    'moj_radio_item',
+    'page',
+    'moj_video_item',
+    'moj_pdf_item',
+  ];
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 
@@ -79,12 +93,18 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
     // Create taxonomy terms with field_sort_by values.
     // These will be automatically cleaned up at the end of the test.
     $vocab = Vocabulary::load('series');
-    $this->episodeNumberTerm = $this->createTerm($vocab, ['name' => 'Series 1', 'field_sort_by' => 'season_and_episode_asc']);
-    $this->releaseDateTerm = $this->createTerm($vocab, ['name' => 'Series 2', 'field_sort_by' => 'release_date_desc']);
+    $this->episodeNumberTerm = $this->createTerm($vocab, [
+      'name' => 'Series 1',
+      'field_sort_by' => 'season_and_episode_asc',
+    ]);
+    $this->releaseDateTerm = $this->createTerm($vocab, [
+      'name' => 'Series 2',
+      'field_sort_by' => 'release_date_desc',
+    ]);
   }
 
   /**
-   * Test the correct series sorting fields appear when logged in as a studio admin.
+   * Test the correct series sorting fields appear for studio admins.
    */
   public function testSeriesSortingFieldsStudioAdmin() {
     $this->drupalLogin($this->studioAdministrator);
@@ -104,7 +124,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
   }
 
   /**
-   * Test the correct series sorting fields appear when logged in as a local content mamager..
+   * Test the correct series sorting fields appear for local content managers.
    */
   public function testSeriesSortingFieldsLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
@@ -114,7 +134,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
   }
 
   /**
-   * Test that the category field appears when logged in as a local content manager.
+   * Test the category field appears when logged in as a local content manager.
    */
   public function testCategoryFieldLocalContentManager() {
     $this->drupalLogin($this->localContentManagerUser);
