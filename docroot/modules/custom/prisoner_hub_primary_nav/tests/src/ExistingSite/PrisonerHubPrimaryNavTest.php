@@ -5,7 +5,6 @@ namespace Drupal\Tests\prisoner_hub_primary_nav\ExistingSite;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\node\NodeInterface;
 use Drupal\system\Entity\Menu;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\TermInterface;
@@ -15,7 +14,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the primary nav JSON:API resource works correctly
+ * Test the primary nav JSON:API resource works correctly.
  *
  * @group prisoner_hub_primary_nav
  */
@@ -25,8 +24,10 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
   use TaxonomyCreationTrait;
 
   /**
-   * Test that the default menu is used for the primary nav when none is
-   * selected for the prison.
+   * Test the default menu is used for primary nav when none selected.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures an exception is thrown.
    */
   public function testDefaultPrimaryNav() {
     // Add some content to the default primary nav.
@@ -54,15 +55,23 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
     // Create a prison without a value for field_primary_navigation, so that
     // it picks up the default.
     $prison = $this->createTerm($vocab);
-    $this->assertJsonApiSuggestionsResponse($prison, [$menu_link_1, $menu_link_2]);
+    $this->assertJsonApiSuggestionsResponse($prison, [
+      $menu_link_1,
+      $menu_link_2,
+    ]);
   }
 
   /**
-   * Test that a specific menu is used when specified in
-   * field_primary_navigation.
+   * Test a specific menu is used when specified in field_primary_navigation.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures an exception is thrown.
    */
   public function testPrisonPrimaryNav() {
-    $menu = Menu::create(['id' => 'test-prisoner-hub-primary-nav', 'label' => 'Test primary nav menu (for automated tests)']);
+    $menu = Menu::create([
+      'id' => 'test-prisoner-hub-primary-nav',
+      'label' => 'Test primary nav menu (for automated tests)',
+    ]);
     $menu->save();
     $this->cleanupEntities[] = $menu;
 
@@ -90,17 +99,19 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
         ['target_id' => $menu->id()],
       ],
     ]);
-    $this->assertJsonApiSuggestionsResponse($prison, [$menu_link_1, $menu_link_2]);
+    $this->assertJsonApiSuggestionsResponse($prison, [
+      $menu_link_1,
+      $menu_link_2,
+    ]);
   }
 
   /**
-   * Helper function to assert that a jsonapi response returns the expected
-   * menu items.
+   * Helper function to assert a response returns the expected menu items.
    *
-   * @param array $entities_to_check
-   *   A list of entity uuids to check for in the JSON response.
-   * @param NodeInterface $node
-   *   The node to check suggestions for.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   Term used to construct the JSON:API we are testing.
+   * @param \Drupal\Core\Menu\MenuLinkInterface[] $menu_items_to_check
+   *   A list of menu links to check for in the JSON response.
    */
   protected function assertJsonApiSuggestionsResponse(TermInterface $term, array $menu_items_to_check) {
     $url = Url::fromUri('internal:/jsonapi/prison/' . $term->get('machine_name')->getValue()[0]['value'] . '/primary_navigation');
@@ -132,7 +143,7 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  public function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);

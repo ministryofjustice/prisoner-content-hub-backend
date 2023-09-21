@@ -7,6 +7,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+/**
+ * Controller for redirecting node views to node edits.
+ */
 class EntityViewOverride extends EntityViewController {
 
   /**
@@ -14,20 +17,27 @@ class EntityViewOverride extends EntityViewController {
    *
    * @var string[]
    */
-  static $excludedContentTypes = ['help_page'];
+  static private array $excludedContentTypes = ['help_page'];
 
   /**
    * The view node handler.
    *
    * This must be in its own function, as Drupal uses a reflector class to
    * extract the variable names, i.e. $node.
-   * @see \Drupal\Core\Entity->setParametersFromReflection();
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node object.
+   * @param string $view_mode
+   *   The view mode.
+   * @param null $langcode
+   *   The language code.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
    *   The redirect response, to take the user to the edit page.
+   *   Or a render array if the node being viewed is not of a bundle that is
+   *   appropriate to redirect, for example, help pages.
+   *
+   * @see \Drupal\Core\Entity->setParametersFromReflection();
    */
   public function viewNode(EntityInterface $node, $view_mode = 'full', $langcode = NULL) {
     if (in_array($node->bundle(), self::$excludedContentTypes)) {
@@ -55,4 +65,5 @@ class EntityViewOverride extends EntityViewController {
     $options['absolute'] = TRUE;
     return new RedirectResponse(Url::fromRoute('entity.' . $entity->getEntityTypeId() . '.edit_form', [$entity->getEntityTypeId() => $entity->id()], $options)->toString());
   }
+
 }

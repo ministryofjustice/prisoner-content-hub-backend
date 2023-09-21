@@ -11,7 +11,7 @@ use Drupal\taxonomy\TermInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Processes a request for the primary navigation
+ * Processes a request for the primary navigation.
  */
 class PrimaryNavResource extends MenuItemsResource {
 
@@ -25,10 +25,14 @@ class PrimaryNavResource extends MenuItemsResource {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param \Drupal\system\MenuInterface|NULL $menu
+   * @param \Drupal\system\MenuInterface|null $menu
    *   (Optional) The menu object.  This will _always_ be NULL, as our route
    *   isn't defined with the menu parameter.  We declare it as an argument so
-   *   that this class is still compatible with \Drupal\jsonapi_menu_items\Resource\MenuItemsResource.
+   *   that this class is still compatible with
+   *   \Drupal\jsonapi_menu_items\Resource\MenuItemsResource.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function process(Request $request, MenuInterface $menu = NULL): ResourceResponse {
     $cacheability = new CacheableMetadata();

@@ -41,4 +41,5 @@ class TopicsTermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     return $breadcrumb;
   }
+
 }

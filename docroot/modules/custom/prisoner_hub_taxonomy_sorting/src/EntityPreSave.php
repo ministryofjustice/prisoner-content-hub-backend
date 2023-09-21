@@ -2,14 +2,26 @@
 
 namespace Drupal\prisoner_hub_taxonomy_sorting;
 
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 
 /**
- * Class EntityPreSave
+ * Service for manipulating sorting information on save.
  *
  * @package Drupal\prisoner_hub_taxonomy_sorting
  */
 class EntityPreSave {
+  use StringTranslationTrait;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   Messenger service.
+   */
+  public function __construct(protected MessengerInterface $messenger) {
+  }
 
   /**
    * Update 'series_sort_value' on nodes.
@@ -18,6 +30,7 @@ class EntityPreSave {
    * series_sort_value field.
    *
    * @param \Drupal\node\NodeInterface $entity
+   *   Entity being saved.
    */
   public function updatesSeriesSortValue(NodeInterface $entity) {
     if (!$entity->hasField('field_moj_series')) {
@@ -41,17 +54,19 @@ class EntityPreSave {
           // upto 999.  E.g. season 1 episode 15 could be mixed up
           // with season 11 episode 5.
           $episode_number_padded = str_pad($episode_number, 3, '0', STR_PAD_LEFT);
-          $calculated_sort_value = (int)$season_number . $episode_number_padded;
+          $calculated_sort_value = (int) $season_number . $episode_number_padded;
         }
         else {
           // If either season or episode number are out of range, set the value
           // to 0 and warn the user.  This should only ever happen if content is
           // being bulk updated. (As when editing the content directly, the
-          // fields are made mandatory and dont allow numbers outside the range).
-          \Drupal::messenger()->addWarning(t('Missing season or episode number for :content. This could effect how the content is sorted within a series.', [':content' => $entity->label()]));
+          // fields are made mandatory and don't allow numbers outside the
+          // range).
+          $this->messenger->addWarning($this->t('Missing season or episode number for :content. This could effect how the content is sorted within a series.', [':content' => $entity->label()]));
           $calculated_sort_value = 0;
         }
         break;
+
       case 'release_date_asc':
       case 'release_date_desc':
         if ($entity->field_release_date->date) {
@@ -62,7 +77,7 @@ class EntityPreSave {
           // warn the user.  This should only ever happen if content is being
           // bulk updated. (As when editing the content directly, the field is
           // made mandatory).
-          \Drupal::messenger()->addWarning(t('Missing release date for :content. This could effect how the content is sorted within a series.', [':content' => $entity->label()]));
+          $this->messenger->addWarning($this->t('Missing release date for :content. This could effect how the content is sorted within a series.', [':content' => $entity->label()]));
           $calculated_sort_value = 0;
         }
         break;

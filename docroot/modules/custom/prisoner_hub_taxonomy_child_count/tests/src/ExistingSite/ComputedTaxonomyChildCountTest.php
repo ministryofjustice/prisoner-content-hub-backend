@@ -8,6 +8,8 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
+ * Test class for the computed field for counting taxonomy children.
+ *
  * @group prisoner_hub_taxonomy_child_count
  */
 class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
@@ -22,16 +24,16 @@ class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
     $parent_1 = $this->createTerm($vocab);
     $parent_2 = $this->createTerm($vocab);
 
-    $child_1 = $this->createTerm($vocab, [
+    $this->createTerm($vocab, [
       'parent' => [
         'target_id' => $parent_1->id(),
-      ]
+      ],
     ]);
 
-    $child_2 = $this->createTerm($vocab, [
+    $this->createTerm($vocab, [
       'parent' => [
         'target_id' => $parent_1->id(),
-      ]
+      ],
     ]);
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $this->grantPermissions($role, ['view entity without prison context']);

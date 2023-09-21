@@ -7,7 +7,7 @@ services:
     class: Drupal\page_cache_persist\EventSubscriber\CacheRouterRebuildSubscriber
     decorates: cache_router_rebuild_subscriber
   page_cache_persist.commands:
-    class: \Drupal\page_cache_persist\Commands\PageCachePersistCommands
+    class: Drupal\page_cache_persist\Commands\PageCachePersistCommands
     arguments: ['@cache.page']
     tags:
       - { name: drush.command }

@@ -15,7 +15,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the content suggestions JSON:API resource works correctly
+ * Test the content suggestions JSON:API resource works correctly.
  *
  * @group prisoner_hub_content_suggestions
  */
@@ -106,7 +106,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
 
     // Allow anonymous user to access entities without prison context.
     // As we're not testing the prison context part, this is unnecessary.
-    // @TODO: Remove this when tests are refactored, and a single way of
+    // @todo Remove this when tests are refactored, and a single way of
     // creating entities (that includes adding relevant prisons) is used across
     // our tests.
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -117,43 +117,43 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
    * Test that content with no topic or category returns an empty result.
    */
   public function testContentWithNoTagOrCategory() {
-    $node = $this->createNode([]);
+    $node = $this->createNode();
     $this->assertJsonApiSuggestionsResponse([], $node);
   }
 
   /**
-   * Test that content with topic but no category returns content with the same topic.
+   * Test content with topic but no category returns content with that topic.
    */
   public function testContentWithTopicButNoCategory() {
     $node = $this->createNode([
       'field_topics' => [
-        ['target_id' => $this->topicsTerm->id()]
-      ]
+        ['target_id' => $this->topicsTerm->id()],
+      ],
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithTopic], $node);
   }
 
   /**
-   * Test that content with series but no topic returns content from the same
-   * category (but *not* the same series).
+   * Test content with series but no topic returns content from that category.
+   *
+   * But *not* the same series.
    */
   public function testContentWithSeriesButNoTag() {
     $node = $this->createNode([
       'field_moj_series' => [
-        ['target_id' => $this->anotherSeriesTerm->id()]
-      ]
+        ['target_id' => $this->anotherSeriesTerm->id()],
+      ],
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithSeries], $node);
   }
 
   /**
-   * Test that content with a category but no topic returns content from the same
-   * category.
+   * Test content with category but no topic returns content from that category.
    */
   public function testContentWithCategoryButNoTag() {
     $node = $this->createNode([
       'field_moj_top_level_categories' => [
-        ['target_id' => $this->categoryTerm->id()]
+        ['target_id' => $this->categoryTerm->id()],
       ],
       'field_not_in_series' => TRUE,
     ]);
@@ -161,50 +161,55 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that content with topic and series returns content with the same topic
-   * and the same category as the series (but *not* content in the same series).
+   * Test content with topic and series returns appropriate content.
+   *
+   * This content should have the same topic and the same category
+   * as the series (but *not* content in the same series).
    */
   public function testContentWithTagAndSeries() {
     $node = $this->createNode([
       'field_topics' => [
-        ['target_id' => $this->topicsTerm->id()]
+        ['target_id' => $this->topicsTerm->id()],
       ],
       'field_moj_series' => [
-        ['target_id' => $this->anotherSeriesTerm->id()]
+        ['target_id' => $this->anotherSeriesTerm->id()],
       ],
     ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithSeries, $this->nodeWithTopic], $node);
+    $this->assertJsonApiSuggestionsResponse([
+      $this->nodeWithSeries,
+      $this->nodeWithTopic,
+    ], $node);
   }
 
-
   /**
-   * Test that content with topic and a category returns content with the same
-   * topic and category.
+   * Test content with topic and category returns content with the same.
    */
   public function testContentWithTagAndCategory() {
     $node = $this->createNode([
       'field_topics' => [
-        ['target_id' => $this->topicsTerm->id()]
+        ['target_id' => $this->topicsTerm->id()],
       ],
       'field_moj_top_level_categories' => [
-        ['target_id' => $this->categoryTerm->id()]
+        ['target_id' => $this->categoryTerm->id()],
       ],
       'field_not_in_series' => TRUE,
     ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory, $this->nodeWithTopic], $node);
+    $this->assertJsonApiSuggestionsResponse([
+      $this->nodeWithCategory,
+      $this->nodeWithTopic,
+    ], $node);
   }
 
-
   /**
-   * Helper function to assert that a jsonapi response returns the expected entities.
+   * Helper function to assert a jsonapi response returns the expected entities.
    *
    * @param array $entities_to_check
    *   A list of entity uuids to check for in the JSON response.
-   * @param NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node to check suggestions for.
    */
   protected function assertJsonApiSuggestionsResponse(array $entities_to_check, NodeInterface $node) {
-    $url = Url::fromUri('internal:/jsonapi/node/' . $node->getType() . '/' . $node->uuid(). '/suggestions', ['query' => ['page[limit]' => 4]]);
+    $url = Url::fromUri('internal:/jsonapi/node/' . $node->getType() . '/' . $node->uuid() . '/suggestions', ['query' => ['page[limit]' => 4]]);
     $response = $this->getJsonApiResponse($url);
     $this->assertSame(200, $response->getStatusCode(), $url->toString() . ' returns a 200 response.');
     $response_document = Json::decode((string) $response->getBody());
@@ -228,7 +233,7 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  public function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);

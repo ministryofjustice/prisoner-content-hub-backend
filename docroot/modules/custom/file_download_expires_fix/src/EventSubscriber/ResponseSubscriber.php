@@ -25,10 +25,11 @@ class ResponseSubscriber implements EventSubscriberInterface {
    *
    * By removing the headers, we allow mod_expires to set cache headers from
    * Drupal's htaccess.
-   * @see https://www.drupal.org/project/drupal/issues/3263593
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   Response event.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3263593
    */
   public function onResponse(ResponseEvent $event): void {
     $response = $event->getResponse();
@@ -37,4 +38,5 @@ class ResponseSubscriber implements EventSubscriberInterface {
       $response->headers->remove('Expires');
     }
   }
+
 }

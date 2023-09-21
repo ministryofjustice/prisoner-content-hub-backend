@@ -13,30 +13,22 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * @var string
-   *
-   * The jsonapi base path.
-   */
-  protected $jsonapiBasePath;
-
-  /**
    * RouteSubscriber constructor.
    *
-   * @param string $jsonapi_base_path
+   * @param string $jsonapiBasePath
    *   The jsonapi base path parameter.
    */
-  public function __construct(string $jsonapi_base_path) {
-    $this->jsonapiBasePath = $jsonapi_base_path;
+  public function __construct(protected string $jsonapiBasePath) {
   }
 
   /**
-   * Copy jsonapi routes as new routes with the prison as a parameter.
+   * {@inheritdoc}
    *
-   * @param \Symfony\Component\Routing\RouteCollection $collection
+   * Copy jsonapi routes as new routes with the prison as a parameter.
    */
   public function alterRoutes(RouteCollection $collection) {
     foreach ($collection as $name => $route) {
-      /* @var \Symfony\Component\Routing\Route $route */
+      /** @var \Symfony\Component\Routing\Route $route */
       if (self::isJsonApiRoute($route)) {
         $new_route = clone($route);
         $this->addPrisonContextToRoute($new_route, str_replace($this->jsonapiBasePath, $this->jsonapiBasePath . '/prison/{prison}', $route->getPath()));
@@ -72,13 +64,14 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * Check to see if a route is a JSON:API request, that should be copied.
    *
-   * @param $route
+   * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
    *
    * @return bool
    *   TRUE if the route is for JsonAPI, FALSE if otherwise.
    */
-  static public function isJsonApiRoute($route) {
+  public static function isJsonApiRoute(Route $route) {
     return Routes::isJsonApiRequest($route->getDefaults()) || !empty($route->getDefault('_jsonapi_resource'));
   }
+
 }

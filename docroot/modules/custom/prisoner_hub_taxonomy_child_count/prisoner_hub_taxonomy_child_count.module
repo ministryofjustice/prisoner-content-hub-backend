@@ -5,6 +5,7 @@
  * Primary hook implementations for Prisoner hub taxonomy sorting module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
@@ -12,7 +13,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *
  * Create the child_term_count base field.
  */
-function prisoner_hub_taxonomy_child_count_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function prisoner_hub_taxonomy_child_count_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() == 'taxonomy_term') {
     $fields['child_term_count'] = BaseFieldDefinition::create('child_term_count')
@@ -24,4 +25,3 @@ function prisoner_hub_taxonomy_child_count_entity_base_field_info(\Drupal\Core\E
   }
   return $fields;
 }
-

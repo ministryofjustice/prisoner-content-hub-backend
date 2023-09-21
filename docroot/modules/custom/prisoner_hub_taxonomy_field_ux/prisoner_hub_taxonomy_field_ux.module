@@ -5,14 +5,15 @@
  * Contains prisoner_hub_taxonomy_field_ux.module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_field_group_form_process_build_alter().
  *
- * Apply form conditional states via the Drupal\prisoner_hub_taxonomy_field_ux\EntityFormStates service.
+ * Apply form conditional states via the
+ * Drupal\prisoner_hub_taxonomy_field_ux\EntityFormStates service.
  */
 function prisoner_hub_taxonomy_field_ux_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
   if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
@@ -25,7 +26,7 @@ function prisoner_hub_taxonomy_field_ux_field_group_form_process_build_alter(arr
  *
  * Clear out series/category data.
  */
-function prisoner_hub_taxonomy_field_ux_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+function prisoner_hub_taxonomy_field_ux_entity_presave(EntityInterface $entity) {
   if ($entity instanceof NodeInterface && $entity->hasField('field_not_in_series')) {
     if ($entity->field_not_in_series->value) {
       $entity->set('field_moj_series', NULL);

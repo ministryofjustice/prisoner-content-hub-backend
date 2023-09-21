@@ -16,20 +16,12 @@ use Drupal\Core\Cache\CacheBackendInterface;
 class PageCachePersist implements CacheBackendInterface {
 
   /**
-   * The "inner" cache bin.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * PageCacheOverride constructor.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The "inner" cache backend service.
    */
-  public function __construct(CacheBackendInterface $cache) {
-    $this->cache = $cache;
+  public function __construct(protected CacheBackendInterface $cache) {
   }
 
   /**
@@ -51,7 +43,7 @@ class PageCachePersist implements CacheBackendInterface {
   /**
    * We do not currently need to override invalidateAll().
    *
-   * There is no where in Drupal core that calls this on the page cache.  So
+   * There is nowhere in Drupal core that calls this on the page cache.  So
    * for now we will leave it working as normal.
    */
   public function invalidateAll() {
@@ -59,72 +51,73 @@ class PageCachePersist implements CacheBackendInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
     return $this->cache->get($cid, $allow_invalid);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
     return $this->cache->getMultiple($cids, $allow_invalid);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     return $this->cache->set($cid, $data, $expire, $tags);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setMultiple(array $items) {
     return $this->cache->setMultiple($items);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function delete($cid) {
     $this->cache->delete($cid);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function deleteMultiple(array $cids) {
     $this->cache->deleteMultiple($cids);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function invalidate($cid) {
     $this->cache->invalidate($cid);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function invalidateMultiple(array $cids) {
     $this->cache->invalidateMultiple($cids);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function garbageCollection() {
     return $this->cache->garbageCollection();
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function removeBin() {
     return $this->cache->removeBin();
   }
+
 }

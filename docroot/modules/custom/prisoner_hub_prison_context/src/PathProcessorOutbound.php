@@ -7,11 +7,11 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\prisoner_hub_prison_context\Routing\RouteSubscriber;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 
 /**
- * Processes the inbound path to use the prison context, passing it forward
- * from the current request.
+ * Processes the inbound path to use the prison context.
+ *
+ * The prison is inferred from the current request.
  *
  * This was primarily required for the decoupled_router module, so that JSON:API
  * urls would reflect the current prison.  But should work for any url that is
@@ -20,35 +20,23 @@ use Symfony\Component\Routing\Route;
 class PathProcessorOutbound implements OutboundPathProcessorInterface {
 
   /**
-   * The routematch service.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The JsonApi base path parameter.  This is normally '/jsonapi'.
-   *
-   * @var string
-   */
-  protected $jsonApiBasePath;
-
-  /**
    * PathProcessorOutbound constructor.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match service.
-   * @param string $jsonapi_base_path
-   *   The jsonapi base path parameter.
+   * @param string $jsonApiBasePath
+   *   The jsonapi base path parameter. This is normally '/jsonapi'.
    */
-  public function __construct(RouteMatchInterface $route_match, string $jsonapi_base_path) {
-    $this->routeMatch = $route_match;
-    $this->jsonApiBasePath = $jsonapi_base_path;
+  public function __construct(
+    protected RouteMatchInterface $routeMatch,
+    protected string $jsonApiBasePath,
+  ) {
   }
 
   /**
-   * Process outbound urls, i.e. paths that are being generated in the current
-   * request.
+   * Process outbound urls.
+   *
+   * I.E. paths that are being generated in the current request.
    */
   public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     $prison = $this->routeMatch->getParameter('prison');

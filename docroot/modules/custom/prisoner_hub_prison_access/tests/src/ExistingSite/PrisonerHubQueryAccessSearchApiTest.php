@@ -7,8 +7,7 @@ use Drupal\elasticsearch_connector\Entity\Cluster;
 use Drupal\search_api\Entity\Index;
 
 /**
- * Test that the jsonapi responses for nodes tagged with prisons and
- * prison categories return the correct response.
+ * Tests jsonapi responses for nodes tagged with prisons and prison categories.
  *
  * @group prisoner_hub_prison_access
  */
@@ -68,8 +67,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
-   * Test that no entities are returned in the JSON response, when nothing is
-   * tagged with a prison or a prison category.
+   * Test empty response when nothing is tagged with a prison or category.
    */
   public function testEntitiesTaggedWithoutPrisonOrCategory() {
     foreach ($this->bundles as $bundle) {
@@ -79,8 +77,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * prison (but no category).
+   * Test entities are returned when tagged with a prison but no category.
    */
   public function testEntitiesTaggedWithPrisonButNoCategory() {
     $entities_to_check = [];
@@ -91,10 +88,9 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
-   * Test that entities are returned in the JSON response, when tagged with a
-   * category (but no prison).
+   * Test that entities are returned when tagged with a category but no prison.
    */
-  public function testEntitesTaggedWithCategoryButNoPrison() {
+  public function testEntitiesTaggedWithCategoryButNoPrison() {
     $entities_to_check = [];
     foreach ($this->bundles as $bundle) {
       $entities_to_check = array_merge($entities_to_check, $this->setupEntitiesTaggedWithCategoryButNoPrison($this->entityTypeId, $bundle));
@@ -103,8 +99,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
-   * Test that  entities are returned in the JSON response, when tagged with a
-   * category and a prison.
+   * Test entities are returned when tagged with a category and a prison.
    */
   public function testContentTaggedWithPrisonAndCategory() {
     $entities_to_check = [];
@@ -115,8 +110,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
-   * Test that correct entities are returned in the JSON response, when tagged
-   * with a prison and excluded from that prison.
+   * Test correct entities are returned when tagged with an excluded prison.
    */
   public function testContentTaggedWithPrisonAndExcluded() {
     $entities_to_check = [];
@@ -127,8 +121,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
   }
 
   /**
-   * Test that correct entities are returned in the JSON response, when tagged
-   * with a prison category and excluded from that prison.
+   * Test response entities when tagged with a prison category and excluded.
    */
   public function testContentTaggedWithPrisonCategoryAndExcluded() {
     $entities_to_check = [];

@@ -12,7 +12,7 @@ use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the content suggestions JSON:API resource works correctly
+ * Test the the content suggestions JSON:API resource works correctly.
  *
  * @group prisoner_hub_content_suggestions
  */
@@ -72,7 +72,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
   /**
    * Test the resource returns the correct taxonomy terms, in the correct order.
    *
-   * @Todo split this out into several more discrete tests.
+   * @todo split this out into several more discrete tests.
    */
   public function testSubTermsHaveCorrectSorting() {
     $vocab_categories = Vocabulary::load('moj_categories');
@@ -123,7 +123,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $second_series = $this->createTerm($vocab_series, [
       'field_category' => [
         'target_id' => $second_term->id(),
-      ]
+      ],
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $second_series->id()]],
@@ -147,8 +147,8 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Ensure it is displayed in the correct position.
     $fourth_term = $this->createTerm($vocab_series, [
       'field_category' => [
-        'target_id' => $this->categoryTerm->id()
-      ]
+        'target_id' => $this->categoryTerm->id(),
+      ],
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $fourth_term->id()]],
@@ -164,13 +164,13 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $fifth_subcategory = $this->createTerm($vocab_categories, [
       'parent' => [
-        'target_id' => $fifth_term->id()
-      ]
+        'target_id' => $fifth_term->id(),
+      ],
     ]);
     $fifth_subsubcategory = $this->createTerm($vocab_categories, [
       'parent' => [
-        'target_id' => $fifth_subcategory->id()
-      ]
+        'target_id' => $fifth_subcategory->id(),
+      ],
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
@@ -224,18 +224,16 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
     $this->assertSame(200, $response->getStatusCode());
     $response_document = Json::decode((string) $response->getBody());
-    foreach ($response_document['data'] as $item) {
-      $this->assertEquals($correct_order_sub_terms, array_map(static function (array $data) {
-        return $data['id'];
-      }, $response_document['data']));
-    }
+    $this->assertEquals($correct_order_sub_terms, array_map(static function (array $data) {
+      return $data['id'];
+    }, $response_document['data']));
   }
 
   /**
    * Test that the correct cache tags are invalidated.
    */
   public function testCacheTagInvalidation() {
-    // Create some content in the new subCategory, and ensure we get a cache HIT.
+    // Create some content in the new subCategory and ensure we get a cache HIT.
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
       'field_not_in_series' => 1,
@@ -250,7 +248,8 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
       $this->markTestSkipped('Page cache module not installed, test can be removed.');
     }
 
-    // We should have one cache tag invalidation, as we created one piece of content.
+    // We should have one cache tag invalidation, as we created one piece of
+    // content.
     $cache_tag = 'prisoner_hub_sub_terms:' . $this->categoryTerm->id();
     $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum([$cache_tag]);
     $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
@@ -299,9 +298,10 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  function getJsonApiResponse(Url $url) {
+  public function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);
   }
+
 }
