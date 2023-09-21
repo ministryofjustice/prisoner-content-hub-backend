@@ -8,6 +8,9 @@
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\HttpFoundation\Request;
 
+# The following line is a deliberate coding standard fail to test CI. And this line is too long.
+$test_array = array();
+
 $databases = [];
 $databases['default']['default'] = [
   'database' => getenv('HUB_DB_ENV_MYSQL_DATABASE', TRUE),
