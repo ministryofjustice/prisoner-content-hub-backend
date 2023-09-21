@@ -16,6 +16,9 @@ push-preview:
 install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y
 
+coding-standards:
+	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css,js docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php docroot/sites/default/settings.local.php
+
 run-tests:
 	echo "Running tests on existing site"
 	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose
