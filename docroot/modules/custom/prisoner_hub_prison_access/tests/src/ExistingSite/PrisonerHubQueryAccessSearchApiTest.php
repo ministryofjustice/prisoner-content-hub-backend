@@ -62,7 +62,7 @@ class PrisonerHubQueryAccessSearchApiTest extends PrisonerHubQueryAccessTestBase
       $this->bundles = array_merge($this->bundles, array_keys($datasource->getBundles()));
     }
     $this->jsonApiUrl = Url::fromUri('internal:/jsonapi/prison/' . $this->prisonTerm->get('machine_name')->getValue()[0]['value'] . '/index/content_for_search');
-    $cluster = Cluster::load('elasticsearch');
+    $cluster = Cluster::load('opensearch');
     $this->client = $this->container->get('elasticsearch_connector.client_manager')->getClientForCluster($cluster);
   }
 
