@@ -1,12 +1,12 @@
-uuid: 57b5b06b-a960-4a2c-aa23-33f9e126af6a
+uuid: 74bee59b-96aa-43c3-b8fc-806228d6a5af
 langcode: en
-status: '0'
+status: '1'
 dependencies: {  }
-cluster_id: elasticsearch
-name: Elasticsearch
-url: 'http://hub-elasticsearch:9200'
+cluster_id: opensearch
+name: OpenSearch
+url: ''
 options:
-  multiple_nodes_connection: false
+  multiple_nodes_connection: true
   use_authentication: false
   authentication_type: Basic
   username: ''

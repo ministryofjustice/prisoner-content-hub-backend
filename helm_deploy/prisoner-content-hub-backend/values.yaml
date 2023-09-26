@@ -35,6 +35,7 @@ application:
     cnameIsBucket: true
   redisSecretName: drupal-redis
   govUkSecretName: govuknotify
+  openSearchSecretName: pfs-opensearch-proxy-url
 
 volumes:
   - name: apache-cache
