@@ -24,20 +24,24 @@ services:
     networks:
       - prisoner_content_hub
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
+  opensearch:
+    image: opensearchproject/opensearch:2.7.0
     environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.type=single-node"
-      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      - "DISABLE_SECURITY_PLUGIN=true"
+      - '9200:9200'
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    ports:
-      - 9200:9200
+      nofile:
+        soft: 65536
+        hard: 65536
     networks:
       - prisoner_content_hub
+
   chrome:
     image: previousnext/chrome-headless:65
     ports:
