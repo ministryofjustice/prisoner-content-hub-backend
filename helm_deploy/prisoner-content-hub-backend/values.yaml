@@ -25,8 +25,6 @@ application:
     phpUploadMaxFileSize: 500M
     phpPostMaxSize: 500M
     xDebugIp: 127.0.0.1
-    elasticsearchCluster: elasticsearch
-    elasticsearchServiceName: aws-es-proxy-service
   dbSecretName: drupal-rds
   s3:
     secretName: drupal-s3-2

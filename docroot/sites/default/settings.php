@@ -121,8 +121,6 @@ $settings['file_scan_ignore_directories'] = [
 $settings['entity_update_batch_size'] = 50;
 $settings['entity_update_backup'] = TRUE;
 $settings['file_public_base_url'] = getenv('FILE_PUBLIC_BASE_URL', TRUE);
-$elasticsearch_cluster = getenv("ELASTICSEARCH_CLUSTER", TRUE);
-$config['elasticsearch_connector.cluster.' . $elasticsearch_cluster]['url'] = getenv("ELASTICSEARCH_HOST", TRUE);
 $config['elasticsearch_connector.cluster.opensearch']['url'] = getenv('OPENSEARCH_HOST', TRUE);
 
 // Raven (sentry integration) module allows for setting values via environment

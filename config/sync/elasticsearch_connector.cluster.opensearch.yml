@@ -4,7 +4,7 @@ status: '1'
 dependencies: {  }
 cluster_id: opensearch
 name: OpenSearch
-url: ''
+url: 'http://opensearch:9020'
 options:
   multiple_nodes_connection: true
   use_authentication: false

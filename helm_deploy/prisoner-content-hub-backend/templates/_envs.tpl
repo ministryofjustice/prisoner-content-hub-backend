@@ -61,10 +61,6 @@ env:
     value: {{ .Values.application.config.xDebugIp }}
   - name: SERVER_PORT
     value: {{ .Values.application.port | quote }}
-  - name: ELASTICSEARCH_CLUSTER
-    value: {{ .Values.application.config.elasticsearchCluster }}
-  - name: ELASTICSEARCH_HOST
-    value: {{ include "prisoner-content-hub-backend.elasticsearchServiceHost" . }}
   - name: OPENSEARCH_HOST
     valueFrom:
       secretKeyRef:
