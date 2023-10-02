@@ -65,6 +65,11 @@ env:
     value: {{ .Values.application.config.elasticsearchCluster }}
   - name: ELASTICSEARCH_HOST
     value: {{ include "prisoner-content-hub-backend.elasticsearchServiceHost" . }}
+  - name: OPENSEARCH_HOST
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.openSearchSecretName }}
+        key: proxy_url
   - name: SENTRY_DSN
     value: {{ .Values.application.sentry_dsn }}
   - name: SENTRY_ENVIRONMENT
