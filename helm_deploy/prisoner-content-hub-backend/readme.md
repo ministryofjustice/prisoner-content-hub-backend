@@ -9,7 +9,7 @@ Documentation for installing Helm can be found [here](https://helm.sh/docs/intro
 ## Dependencies
 
 ```
-- Elasticsearch >= 7
+- Opensearch >= 2.7
 - MariaDB >= 7
 - AWS S3 Bucket
 ```

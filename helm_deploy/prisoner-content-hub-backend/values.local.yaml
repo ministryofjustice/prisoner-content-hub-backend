@@ -1,9 +1,6 @@
 image:
   pullPolicy: Never
 
-application:
-  elasticsearchServiceName: hub-elasticsearch-elasticsearch-coordinating-only
-
 ingress:
   enabled: false
   tlsEnabled: true
