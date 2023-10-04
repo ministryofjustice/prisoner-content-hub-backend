@@ -4278,26 +4278,26 @@
         },
         {
             "name": "drupal/optgroup_taxonomy_select",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/optgroup_taxonomy_select.git",
-                "reference": "8.x-1.2"
+                "reference": "8.x-1.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/optgroup_taxonomy_select-8.x-1.2.zip",
-                "reference": "8.x-1.2",
-                "shasum": "a0090cf40a2be9cf6a87c8fa31a5e80144359015"
+                "url": "https://ftp.drupal.org/files/projects/optgroup_taxonomy_select-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "8b3b151c590f9f5578b87e4bc66c0569a5598c2f"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.2",
-                    "datestamp": "1590139090",
+                    "version": "8.x-1.3",
+                    "datestamp": "1696422488",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -4306,22 +4306,30 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0-or-later"
+                "GPL-2.0+"
             ],
             "authors": [
                 {
-                    "name": "Swetha_Bapanah",
-                    "homepage": "https://www.drupal.org/user/3632594"
-                },
-                {
                     "name": "baskaran",
                     "homepage": "https://www.drupal.org/user/2423304"
+                },
+                {
+                    "name": "Eli-T",
+                    "homepage": "https://www.drupal.org/user/516878"
+                },
+                {
+                    "name": "Swetha_Bapanah",
+                    "homepage": "https://www.drupal.org/user/3632594"
                 }
             ],
             "description": "This module will provide the OptGroup Select widget on Entity Reference(Term).",
             "homepage": "https://www.drupal.org/project/optgroup_taxonomy_select",
+            "keywords": [
+                "Drupal"
+            ],
             "support": {
-                "source": "https://git.drupalcode.org/project/optgroup_taxonomy_select"
+                "source": "http://cgit.drupalcode.org/optgroup_taxonomy_select",
+                "issues": "https://www.drupal.org/project/issues/optgroup_taxonomy_select"
             }
         },
         {
