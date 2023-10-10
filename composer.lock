@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5af3763901f5f444df6a743c7f526f93",
+    "content-hash": "c009942d869a7da137d062bb49cc822e",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -4278,17 +4278,17 @@
         },
         {
             "name": "drupal/optgroup_taxonomy_select",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/optgroup_taxonomy_select.git",
-                "reference": "8.x-1.3"
+                "reference": "8.x-1.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/optgroup_taxonomy_select-8.x-1.3.zip",
-                "reference": "8.x-1.3",
-                "shasum": "8b3b151c590f9f5578b87e4bc66c0569a5598c2f"
+                "url": "https://ftp.drupal.org/files/projects/optgroup_taxonomy_select-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "c81a9422287fcae6f8ed83006575efc2be9942b5"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
@@ -4296,11 +4296,11 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.3",
-                    "datestamp": "1696422488",
+                    "version": "8.x-1.4",
+                    "datestamp": "1696960219",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
