@@ -193,7 +193,7 @@
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-18.patch"
             },
             "drupal/linkit": {
-                "Issue #2877535: Link shown after the autocomplete selection is the bare node/xxx link, not the alias": "patches/linkit-2877535-link-shown-after-autocomplete-is-bare-41.patch"
+                "Issue #2877535: Link shown after the autocomplete selection is the bare node/xxx link, not the alias": "patches/linkit-2877535-64.patch"
             },
             "drupal/views_data_export": {
                 "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
