@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d302c169141ac53eaef6f0e926f5cb0",
+    "content-hash": "df5e03b0b3d6fa99a1bc39076b9ab4c4",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -3143,17 +3143,11 @@
         },
         {
             "name": "drupal/flysystem_s3",
-            "version": "2.0.0",
+            "version": "dev-3118456-possibility-to-sanitize",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/project/flysystem_s3.git",
-                "reference": "2.0.0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flysystem_s3-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "0f63fe1e680192c78931963dab21626255bd1f2f"
+                "url": "https://git.drupalcode.org/issue/flysystem_s3-3118456.git",
+                "reference": "b566f4d50562a685358f0848c7597d8c55fdac08"
             },
             "require": {
                 "drupal/core": "^9.2 || ^10",
@@ -3162,52 +3156,16 @@
                 "league/flysystem-aws-s3-v3": "^1.0, !=1.0.12, !=1.0.13"
             },
             "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1697141468",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
                 "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "cweagans",
-                    "homepage": "https://www.drupal.org/user/404732"
-                },
-                {
-                    "name": "Eli-T",
-                    "homepage": "https://www.drupal.org/user/516878"
-                },
-                {
-                    "name": "Leon Kessler",
-                    "homepage": "https://www.drupal.org/user/595374"
-                },
-                {
-                    "name": "MiSc",
-                    "homepage": "https://www.drupal.org/user/382892"
-                },
-                {
-                    "name": "twistor",
-                    "homepage": "https://www.drupal.org/user/473738"
-                },
-                {
-                    "name": "vijaycs85",
-                    "homepage": "https://www.drupal.org/user/93488"
-                }
             ],
             "description": "Provides an Amazon S3 plugin for Flysystem.",
             "homepage": "https://drupal.org/project/flysystem_s3",
             "support": {
-                "source": "https://git.drupalcode.org/project/flysystem_s3",
-                "issues": "https://drupal.org/project/issues/flysystem_s3"
-            }
+                "issues": "https://drupal.org/project/issues/flysystem_s3",
+                "source": "https://git.drupalcode.org/project/flysystem_s3"
+            },
+            "time": "2023-02-22T12:39:03+00:00"
         },
         {
             "name": "drupal/form_state_empty",
@@ -5295,6 +5253,61 @@
             "homepage": "https://www.drupal.org/project/token",
             "support": {
                 "source": "https://git.drupalcode.org/project/token"
+            }
+        },
+        {
+            "name": "drupal/transliterate_filenames",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/transliterate_filenames.git",
+                "reference": "2.0.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/transliterate_filenames-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "204bcd65f79eeb6c4a43b3c63d0bbd325edfb127"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.2",
+                    "datestamp": "1698338671",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Dubovskoy",
+                    "homepage": "https://www.drupal.org/u/adubovskoy",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Andrei Ivnitskii",
+                    "homepage": "https://www.drupal.org/u/ivnish",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Krzysztof Domański",
+                    "homepage": "https://www.drupal.org/user/3572982"
+                }
+            ],
+            "description": "Transliteration for all uploading files (includes fields and ckeditor inline upload)",
+            "homepage": "https://www.drupal.org/project/transliterate_filenames",
+            "support": {
+                "source": "https://git.drupalcode.org/project/transliterate_filenames",
+                "issues": "https://www.drupal.org/project/issues/transliterate_filenames"
             }
         },
         {
@@ -18713,6 +18726,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/entity_clone": 10,
+        "drupal/flysystem_s3": 20,
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_filter_cache_tags": 10,
         "drupal/jsonapi_search_api": 5,

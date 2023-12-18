@@ -26,7 +26,7 @@
         "drupal/file_mime_validator": "^2.0",
         "drupal/flood_control": "^2.3",
         "drupal/flysystem": "^2.0",
-        "drupal/flysystem_s3": "^2.0",
+        "drupal/flysystem_s3": "dev-3118456-possibility-to-sanitize",
         "drupal/form_state_empty": "^1.0@alpha",
         "drupal/google_analytics": "^4.0",
         "drupal/govuk_notify": "^2.1",
@@ -60,6 +60,7 @@
         "drupal/taxonomy_machine_name": "^2.0",
         "drupal/term_reference_tree": "^2.0",
         "drupal/token": "^1.5",
+        "drupal/transliterate_filenames": "^2.0",
         "drupal/upgrade_status": "^4.0",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
@@ -211,6 +212,10 @@
         }
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/flysystem_s3-3118456.git"
+        },
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"

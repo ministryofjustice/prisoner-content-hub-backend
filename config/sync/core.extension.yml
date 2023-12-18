@@ -106,6 +106,7 @@ module:
   token: 0
   toolbar: 0
   tour: 0
+  transliterate_filenames: 0
   update: 0
   user: 0
   view_unpublished: 0
