@@ -3147,7 +3147,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/issue/flysystem_s3-3118456.git",
-                "reference": "b566f4d50562a685358f0848c7597d8c55fdac08"
+                "reference": "9081a4eb01a49d61ee19597ed0c3c64df82a788a"
             },
             "require": {
                 "drupal/core": "^9.2 || ^10",
@@ -3165,7 +3165,7 @@
                 "issues": "https://drupal.org/project/issues/flysystem_s3",
                 "source": "https://git.drupalcode.org/project/flysystem_s3"
             },
-            "time": "2023-02-22T12:39:03+00:00"
+            "time": "2023-12-18T12:18:18+00:00"
         },
         {
             "name": "drupal/form_state_empty",
