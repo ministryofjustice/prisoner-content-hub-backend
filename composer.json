@@ -26,7 +26,7 @@
         "drupal/file_mime_validator": "^2.0",
         "drupal/flood_control": "^2.3",
         "drupal/flysystem": "^2.0",
-        "drupal/flysystem_s3": "^2.0",
+        "drupal/flysystem_s3": "dev-3409514-fix-phpcs-phpstan",
         "drupal/form_state_empty": "^1.0@alpha",
         "drupal/google_analytics": "^4.0",
         "drupal/govuk_notify": "^2.1",
@@ -147,7 +147,7 @@
         },
         "patches": {
             "drupal/flysystem_s3": {
-                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-MR-presigned_urls.patch",
+                "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847_based_on_3409514_branch.patch",
                 "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-MR.patch",
                 "Issue #3271681 - Improve performance when generating image style urls": "patches/flysystem_s3-3271681-improve-performance-when-generating-image-style-urls-2.patch"
             },
@@ -211,6 +211,10 @@
         }
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/flysystem_s3-3409514.git"
+        },
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
