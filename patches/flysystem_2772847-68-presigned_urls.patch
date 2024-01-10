@@ -1,0 +1,212 @@
+diff --git a/README.md b/README.md
+index 13811fc..2e07163 100644
+--- a/README.md
++++ b/README.md
+@@ -39,7 +39,7 @@ $schemes = [
+       // Optional configuration settings.
+
+       // 'options' => [
+-      //   'ACL' => 'public-read',
++      //   'ACL' => 'public-read',   // If bucket is private, set to 'private'
+       //   'StorageClass' => 'REDUCED_REDUNDANCY',
+       // ],
+
+@@ -66,6 +66,12 @@ $schemes = [
+       // 'public' => TRUE,                        // Set to TRUE to link to files
+                                                   // using direct links.
+
++      // 'expires' => strtotime('600 seconds'),  // An optional expiry timestamp
++                                                  // to use when generating
++                                                  // presigned URLs for private
++                                                  // files. Default is 3600
++                                                  // seconds (one hour).
++
+       // 'cors' => TRUE,                          // Set to TRUE if CORS upload
+                                                   // support is enabled for the
+                                                   // bucket.
+@@ -77,3 +83,16 @@ $schemes = [
+
+ $settings['flysystem'] = $schemes;
+ ```
++
++## Pre-signed urls
++To enable pre-signed urls, set:
++```php
++$settings['flysystem']['s3']['config']['options']['ACL'] = 'private';
++$settings['flysystem']['s3']['config']['public'] = TRUE;
++```
++
++You must then add the following to your settings.php file:
++```php
++$config['image.settings']['suppress_itok_output'] = TRUE;
++```
++As the itok parameter will interfere with the signature in the url.
+diff --git a/flysystem_s3.module b/flysystem_s3.module
+index 6db5014..2ebca94 100644
+--- a/flysystem_s3.module
++++ b/flysystem_s3.module
+@@ -5,6 +5,10 @@
+  * Contains flysystem_s3.module.
+  */
+
++use Drupal\Core\Cache\CacheableMetadata;
++use Drupal\Core\Site\Settings;
++use Drupal\Core\StreamWrapper\StreamWrapperManager;
++use Drupal\file\FileInterface;
+ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
+
+ /**
+@@ -13,3 +17,28 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
+ function flysystem_s3_element_info_alter(array &$types) {
+   S3CorsManagedFileHelper::alterInfo($types);
+ }
++
++/**
++ * Implements hook_ENTITY_TYPE_load().
++ *
++ * Set a cache max-age for s3 urls that contain a time sensitive signature.
++ */
++function flysystem_s3_file_load(array $entities) {
++  foreach ($entities as $entity) {
++    assert($entity instanceof FileInterface);
++    $settings = Settings::get('flysystem');
++    $url = $entity->get('uri');
++    $scheme = StreamWrapperManager::getScheme($url->value);
++    if (isset($settings[$scheme]) && isset($settings[$scheme]['config']['expires'])) {
++      // We calculate the remaining max-age from the expires config.
++      // This means that the value in "expires" must be an exact timestamp, and
++      // not a relative value, e.g. "+3600 seconds".
++      if (is_int($settings[$scheme]['config']['expires'])) {
++        $entity->addCacheableDependency(
++          (new CacheableMetadata())->setCacheMaxAge($settings[$scheme]['config']['expires'] - \Drupal::time()
++            ->getRequestTime())
++        );
++      }
++    }
++  }
++}
+diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
+index 9492660..f06a648 100644
+--- a/src/Flysystem/S3.php
++++ b/src/Flysystem/S3.php
+@@ -12,12 +12,14 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+ use Drupal\Core\Logger\LoggerChannelInterface;
+ use Drupal\Core\Logger\RfcLogLevel;
+ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Drupal\Core\Utility\Error;
+ use Drupal\flysystem\Flysystem\Adapter\MissingAdapter;
+ use Drupal\flysystem\Plugin\FlysystemPluginInterface;
+ use Drupal\flysystem\Plugin\FlysystemUrlTrait;
+ use Drupal\flysystem\Plugin\ImageStyleGenerationTrait;
+ use Drupal\flysystem_s3\AwsCacheAdapter;
+ use Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter;
++use League\Flysystem\AdapterInterface;
+ use League\Flysystem\Config;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+
+@@ -42,7 +44,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+   /**
+    * The S3 client.
+    *
+-   * @var \Aws\S3\S3Client
++   * @var \Aws\S3\S3ClientInterface
+    */
+   protected $client;
+
+@@ -67,6 +69,13 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+    */
+   protected $urlPrefix;
+
++  /**
++   * The amount of time presigned URLs are valid for, such as '+60 seconds'.
++   *
++   * @var string
++   */
++  protected $expires;
++
+   /**
+    * Whether the stream is set to public.
+    *
+@@ -102,6 +111,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+     $this->prefix = $config->get('prefix', '');
+     $this->isPublic = $config->get('public', FALSE);
+     $this->options = $config->get('options', []);
++    $this->expires = $config->get('expires', strtotime('+3600 seconds'));
+
+     $this->urlPrefix = $this->calculateUrlPrefix($config);
+     $this->loggerChannel = $loggerChannelFactory->get('flysystem_s3');
+@@ -227,6 +237,35 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+       $this->generateImageStyle($target);
+     }
+
++    if (isset($this->options['ACL']) && $this->options['ACL'] != 'public-read') {
++      // This method can only return FALSE if the wrapper does not exist, and
++      // not if there is an error in generating the URL. If an asset is missing
++      // on S3, then the getVisibility() call will throw an exception. In that
++      // case, we log it and return an unsigned URL so we don't break the
++      // expected return or completely break the response.
++      try {
++        if ($this->getAdapter()->getVisibility($target)['visibility'] == AdapterInterface::VISIBILITY_PRIVATE) {
++          // Use getCommand() so we don't actually make a request yet.
++          $command = $this->client->getCommand('getObject', [
++            'Bucket' => $this->bucket,
++            'Key' => $target,
++          ]);
++          $request = $this->client->createPresignedRequest($command, $this->expires);
++
++          return (string) $request->getUri();
++        }
++      }
++      catch (S3Exception $e) {
++        // Inline watchdog_exception() so we can use it with our injected
++        // service.
++        // Use a default value if $message is not set.
++        $message = '%type: @message in %function (line %line of %file).';
++        $variables = Error::decodeException($e);
++
++        $this->loggerChannel->error($message, $variables);
++      }
++    }
++
+     return $this->urlPrefix . '/' . UrlHelper::encodePath($target);
+   }
+
+diff --git a/tests/src/Unit/Flysystem/S3Test.php b/tests/src/Unit/Flysystem/S3Test.php
+index 776eb5d..1234783 100644
+--- a/tests/src/Unit/Flysystem/S3Test.php
++++ b/tests/src/Unit/Flysystem/S3Test.php
+@@ -12,6 +12,7 @@ use Drupal\Core\Logger\LoggerChannel;
+ use Drupal\Core\Logger\LoggerChannelFactory;
+ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+ use Drupal\Core\Logger\RfcLogLevel;
++use Drupal\Core\Routing\UrlGeneratorInterface;
+ use Drupal\flysystem_s3\Flysystem\S3;
+ use Drupal\Tests\UnitTestCase;
+ use League\Flysystem\AdapterInterface;
+@@ -52,6 +53,18 @@ class S3Test extends UnitTestCase {
+     $this->loggerFactory = $loggerFactoryProphecy->reveal();
+   }
+
++  /**
++   * {@inheritdoc}
++   */
++  public function setUp(): void {
++    parent::setUp();
++    $container = new ContainerBuilder();
++    $url_generator = $this->prophesize(UrlGeneratorInterface::class);
++    $url_generator->generateFromRoute(Argument::cetera())->willReturn('download');
++    $container->set('url_generator', $url_generator->reveal());
++    \Drupal::setContainer($container);
++  }
++
+   /**
+    * @covers ::__construct
+    * @covers ::getExternalUrl
+@@ -124,6 +137,7 @@ class S3Test extends UnitTestCase {
+       'bucket' => 'example-bucket',
+     ];
+
++    $container->set('logger.channel.flysystem', $this->logger);
+     $plugin = S3::create($container, $configuration, '', '');
+     $this->assertInstanceOf(S3::class, $plugin);
+   }

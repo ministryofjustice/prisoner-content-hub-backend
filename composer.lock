@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d302c169141ac53eaef6f0e926f5cb0",
+    "content-hash": "a38fa0e3e8bfd4b23a4161ec6186fcd4",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -3143,19 +3143,20 @@
         },
         {
             "name": "drupal/flysystem_s3",
-            "version": "2.0.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flysystem_s3.git",
-                "reference": "2.0.0"
+                "reference": "2.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flysystem_s3-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "0f63fe1e680192c78931963dab21626255bd1f2f"
+                "url": "https://ftp.drupal.org/files/projects/flysystem_s3-2.1.1.zip",
+                "reference": "2.1.1",
+                "shasum": "357d59a8516eeb5ca9cb56e99bcb4e5ad552ab10"
             },
             "require": {
+                "aws/aws-sdk-php": "^3.220.0",
                 "drupal/core": "^9.2 || ^10",
                 "drupal/flysystem": "^2.0",
                 "league/flysystem": "^1.0.20",
@@ -3164,8 +3165,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1697141468",
+                    "version": "2.1.1",
+                    "datestamp": "1704813954",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
