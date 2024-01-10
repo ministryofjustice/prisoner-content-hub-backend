@@ -4,17 +4,17 @@ index 13811fc..2e07163 100644
 +++ b/README.md
 @@ -39,7 +39,7 @@ $schemes = [
        // Optional configuration settings.
- 
+
        // 'options' => [
 -      //   'ACL' => 'public-read',
-+      //   'ACL' => 'public-read',   // If bucket is private, set to 'private'      
++      //   'ACL' => 'public-read',   // If bucket is private, set to 'private'
        //   'StorageClass' => 'REDUCED_REDUNDANCY',
        // ],
- 
+
 @@ -66,6 +66,12 @@ $schemes = [
        // 'public' => TRUE,                        // Set to TRUE to link to files
                                                    // using direct links.
- 
+
 +      // 'expires' => strtotime('600 seconds'),  // An optional expiry timestamp
 +                                                  // to use when generating
 +                                                  // presigned URLs for private
@@ -25,7 +25,7 @@ index 13811fc..2e07163 100644
                                                    // support is enabled for the
                                                    // bucket.
 @@ -77,3 +83,16 @@ $schemes = [
- 
+
  $settings['flysystem'] = $schemes;
  ```
 +
@@ -48,13 +48,13 @@ index 6db5014..2ebca94 100644
 @@ -5,6 +5,10 @@
   * Contains flysystem_s3.module.
   */
- 
+
 +use Drupal\Core\Cache\CacheableMetadata;
 +use Drupal\Core\Site\Settings;
 +use Drupal\Core\StreamWrapper\StreamWrapperManager;
 +use Drupal\file\FileInterface;
  use Drupal\flysystem_s3\S3CorsManagedFileHelper;
- 
+
  /**
 @@ -13,3 +17,28 @@ use Drupal\flysystem_s3\S3CorsManagedFileHelper;
  function flysystem_s3_element_info_alter(array &$types) {
@@ -86,10 +86,10 @@ index 6db5014..2ebca94 100644
 +  }
 +}
 diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
-index 9492660..9745538 100644
+index 9492660..f06a648 100644
 --- a/src/Flysystem/S3.php
 +++ b/src/Flysystem/S3.php
-@@ -12,13 +12,16 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+@@ -12,12 +12,14 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
  use Drupal\Core\Logger\LoggerChannelInterface;
  use Drupal\Core\Logger\RfcLogLevel;
  use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -102,11 +102,9 @@ index 9492660..9745538 100644
  use Drupal\flysystem_s3\Flysystem\Adapter\S3Adapter;
 +use League\Flysystem\AdapterInterface;
  use League\Flysystem\Config;
-+use Psr\Log\LoggerInterface;
  use Symfony\Component\DependencyInjection\ContainerInterface;
- 
- /**
-@@ -42,7 +45,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+
+@@ -42,7 +44,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
    /**
     * The S3 client.
     *
@@ -114,11 +112,11 @@ index 9492660..9745538 100644
 +   * @var \Aws\S3\S3ClientInterface
     */
    protected $client;
- 
-@@ -67,6 +70,13 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+
+@@ -67,6 +69,13 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
     */
    protected $urlPrefix;
- 
+
 +  /**
 +   * The amount of time presigned URLs are valid for, such as '+60 seconds'.
 +   *
@@ -129,18 +127,18 @@ index 9492660..9745538 100644
    /**
     * Whether the stream is set to public.
     *
-@@ -102,6 +112,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -102,6 +111,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
      $this->prefix = $config->get('prefix', '');
      $this->isPublic = $config->get('public', FALSE);
      $this->options = $config->get('options', []);
 +    $this->expires = $config->get('expires', strtotime('+3600 seconds'));
- 
+
      $this->urlPrefix = $this->calculateUrlPrefix($config);
      $this->loggerChannel = $loggerChannelFactory->get('flysystem_s3');
-@@ -227,6 +238,35 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -227,6 +237,35 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
        $this->generateImageStyle($target);
      }
- 
+
 +    if (isset($this->options['ACL']) && $this->options['ACL'] != 'public-read') {
 +      // This method can only return FALSE if the wrapper does not exist, and
 +      // not if there is an error in generating the URL. If an asset is missing
@@ -166,50 +164,29 @@ index 9492660..9745538 100644
 +        $message = '%type: @message in %function (line %line of %file).';
 +        $variables = Error::decodeException($e);
 +
-+        $this->logger->error($message, $variables);
++        $this->loggerChannel->error($message, $variables);
 +      }
 +    }
 +
      return $this->urlPrefix . '/' . UrlHelper::encodePath($target);
    }
- 
+
 diff --git a/tests/src/Unit/Flysystem/S3Test.php b/tests/src/Unit/Flysystem/S3Test.php
-index 776eb5d..27c8d3e 100644
+index 776eb5d..1234783 100644
 --- a/tests/src/Unit/Flysystem/S3Test.php
 +++ b/tests/src/Unit/Flysystem/S3Test.php
-@@ -2,22 +2,23 @@
- 
- namespace Drupal\Tests\flysystem_s3\Unit\Flysystem;
- 
-+use Aws\Command;
- use Aws\Credentials\Credentials;
-+use Aws\Result;
-+use Aws\S3\Exception\S3Exception;
- use Aws\S3\S3Client;
- use Aws\S3\S3ClientInterface;
--use Drupal\Component\Datetime\Time;
--use Drupal\Component\Datetime\TimeInterface;
- use Drupal\Core\DependencyInjection\ContainerBuilder;
--use Drupal\Core\Logger\LoggerChannel;
--use Drupal\Core\Logger\LoggerChannelFactory;
--use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+@@ -12,6 +12,7 @@ use Drupal\Core\Logger\LoggerChannel;
+ use Drupal\Core\Logger\LoggerChannelFactory;
+ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
  use Drupal\Core\Logger\RfcLogLevel;
 +use Drupal\Core\Routing\UrlGeneratorInterface;
  use Drupal\flysystem_s3\Flysystem\S3;
  use Drupal\Tests\UnitTestCase;
-+use GuzzleHttp\Psr7\Request as GuzzleRequest;
  use League\Flysystem\AdapterInterface;
- use League\Flysystem\Config;
- use Prophecy\Argument;
- use Prophecy\PhpUnit\ProphecyTrait;
-+use Psr\Log\LoggerInterface;
- use Symfony\Component\HttpFoundation\Request;
- use Symfony\Component\HttpFoundation\RequestStack;
- 
 @@ -52,6 +53,18 @@ class S3Test extends UnitTestCase {
      $this->loggerFactory = $loggerFactoryProphecy->reveal();
    }
- 
+
 +  /**
 +   * {@inheritdoc}
 +   */
@@ -228,7 +205,7 @@ index 776eb5d..27c8d3e 100644
 @@ -124,6 +137,7 @@ class S3Test extends UnitTestCase {
        'bucket' => 'example-bucket',
      ];
- 
+
 +    $container->set('logger.channel.flysystem', $this->logger);
      $plugin = S3::create($container, $configuration, '', '');
      $this->assertInstanceOf(S3::class, $plugin);
