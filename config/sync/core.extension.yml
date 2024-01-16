@@ -40,6 +40,7 @@ module:
   google_analytics: 0
   govuk_notify: 0
   health_check: 0
+  hierarchical_term_formatter: 0
   image: 0
   image_style_warmer: 0
   inline_form_errors: 0
