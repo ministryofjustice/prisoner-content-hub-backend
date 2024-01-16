@@ -22,6 +22,7 @@ dependencies:
     - taxonomy.vocabulary.topics
   module:
     - csv_serialization
+    - hierarchical_term_formatter
     - node
     - rest
     - serialization
@@ -251,69 +252,6 @@ display:
             format: custom
             format_custom_false: Unpublished
             format_custom_true: Published
-        field_category:
-          id: field_category
-          table: taxonomy_term__field_category
-          field: field_category
-          relationship: field_moj_series
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: 'Category from Series'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
         field_moj_top_level_categories:
           id: field_moj_top_level_categories
           table: node__field_moj_top_level_categories
@@ -325,7 +263,7 @@ display:
           label: Category
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: ''
             make_link: false
             path: ''
@@ -364,9 +302,13 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: entity_reference_label
+          type: hierarchical_term_formatter
           settings:
+            display: all
             link: true
+            wrap: none
+            separator: ' » '
+            reverse: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -1710,7 +1652,6 @@ display:
         - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
         - 'config:field.storage.node.field_topics'
-        - 'config:field.storage.taxonomy_term.field_category'
   data_export_1:
     id: data_export_1
     display_title: 'Data export'
@@ -1907,6 +1848,73 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_category_1:
+          id: field_category_1
+          table: taxonomy_term__field_category
+          field: field_category
+          relationship: field_moj_series
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Full Category Path'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: hierarchical_term_formatter
+          settings:
+            display: all
+            link: true
+            wrap: none
+            separator: ' » '
+            reverse: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         field_moj_top_level_categories:
           id: field_moj_top_level_categories
           table: node__field_moj_top_level_categories
@@ -1960,6 +1968,73 @@ display:
           type: entity_reference_label
           settings:
             link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_moj_top_level_categories_1:
+          id: field_moj_top_level_categories_1
+          table: node__field_moj_top_level_categories
+          field: field_moj_top_level_categories
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Full Category Path'
+          exclude: false
+          alter:
+            alter_text: true
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: '{{ field_category_1 }}'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: hierarchical_term_formatter
+          settings:
+            display: all
+            link: true
+            wrap: none
+            separator: ' » '
+            reverse: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -2765,4 +2840,3 @@ display:
         - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
         - 'config:field.storage.node.field_topics'
-        - 'config:field.storage.taxonomy_term.field_category'
