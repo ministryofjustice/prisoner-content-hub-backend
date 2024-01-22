@@ -197,6 +197,9 @@
             },
             "drupal/views_data_export": {
                 "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
+            },
+            "drupal/google_analytics": {
+                "Issue #3373921: Cannot install from existing config": "patches/google_analytics-3373921-15.patch"
             }
         },
         "patches-ignore": {
