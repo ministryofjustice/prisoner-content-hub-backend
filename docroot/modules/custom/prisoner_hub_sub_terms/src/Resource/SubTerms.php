@@ -246,7 +246,7 @@ class SubTerms extends EntityResourceBase {
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
     return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
-      return $query->execute();
+      return $query->accessCheck(TRUE)->execute();
     });
   }
 
@@ -286,7 +286,7 @@ class SubTerms extends EntityResourceBase {
    */
   private function getPagination(Request $request): OffsetPage {
     return $request->query->has('page')
-      ? OffsetPage::createFromQueryParameter($request->query->get('page'))
+      ? OffsetPage::createFromQueryParameter($request->query->all()['page'] ?? [])
       : new OffsetPage(OffsetPage::DEFAULT_OFFSET, OffsetPage::SIZE_MAX);
   }
 
