@@ -200,6 +200,9 @@
             },
             "drupal/google_analytics": {
                 "Issue #3373921: Cannot install from existing config": "patches/google_analytics-3373921-15.patch"
+            },
+            "drupal/jsonapi_filter_cache_tags": {
+                "Issue #3416953: 400 response due to BadRequestHttpException thrown with filter parameter in URL in Drupal 10": "patches/jsonapi_filter_cache_tags-3416953-BadRequestHttpException-Drupal-10.patch"
             }
         },
         "patches-ignore": {
