@@ -14,3 +14,5 @@ s3Sync:
   enabled: true
 application:
   analyticsSiteId: G-T5DWH21391
+  config:
+    phpMemoryLimit: 1024M
