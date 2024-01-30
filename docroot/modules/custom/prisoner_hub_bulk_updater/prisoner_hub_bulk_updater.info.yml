@@ -1,0 +1,5 @@
+name: Prisoner hub bulk updater
+type: module
+description: Functionality for bulk updating content
+package: Custom
+core_version_requirement: ^9 || ^10
