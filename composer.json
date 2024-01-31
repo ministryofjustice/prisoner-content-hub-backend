@@ -18,7 +18,7 @@
         "drupal/csv_serialization": "^3.0 || ^4.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
-        "drupal/dynamic_entity_reference": "dev-3.x",
+        "drupal/dynamic_entity_reference": "^3.2",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
         "drupal/entity_clone": "^2.0@beta",
