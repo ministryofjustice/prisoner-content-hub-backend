@@ -35,8 +35,9 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
     $sandbox['total'] = count($sandbox['nids']);
   }
 
-  $batch_size = 100;
+  $batch_size = 10;
   $batch_count = 0;
+  $batch_nids = [];
   while ($batch_count < $batch_size && $sandbox['current'] < $sandbox['total']) {
     $node = Node::load($sandbox['nids'][$sandbox['current']]);
     if ($node) {
@@ -49,8 +50,13 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
       $node->setRevisionUserId(1);
       try {
         $node->save();
+        $batch_nids[] = $sandbox['nids'][$sandbox['current']];
       }
       catch (Exception $e) {
+        \Drupal::logger('prisoner_hub_bulk_updater')->notice('Exception whilst saving node @nid: @text', [
+          '@nid' => $sandbox['nids'][$sandbox['current']],
+          '@text' => $e->getMessage(),
+        ]);
       }
     }
     $sandbox['current']++;
@@ -59,8 +65,9 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
 
   $sandbox['#finished'] = (float) $sandbox['current'] / $sandbox['total'];
 
-  return t("Updated @count of @total records", [
+  return t("Updated @count of @total records\nNode IDs: @nids", [
     '@count' => $sandbox['current'],
     '@total' => $sandbox['total'],
+    '@nids' => implode('|', $batch_nids),
   ]);
 }
