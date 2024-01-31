@@ -18,6 +18,7 @@ module:
   csv_serialization: 0
   ctools: 0
   datetime: 0
+  dblog: 0
   decoupled_router: 0
   diff: 0
   dynamic_entity_reference: 0
@@ -70,6 +71,7 @@ module:
   path: 0
   path_alias: 0
   pathologic: 0
+  phpass: 0
   prisoner_hub_breadcrumbs: 0
   prisoner_hub_bulk_updater: 0
   prisoner_hub_cms_help: 0

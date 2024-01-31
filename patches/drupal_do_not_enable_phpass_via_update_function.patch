@@ -1,0 +1,15 @@
+diff --git a/core/modules/system/system.post_update.php b/core/modules/system/system.post_update.php
+index 6cfd3ad7d0..6da371e0e6 100644
+--- a/core/modules/system/system.post_update.php
++++ b/core/modules/system/system.post_update.php
+@@ -101,7 +101,9 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+  * Enable the password compatibility module.
+  */
+ function system_post_update_enable_password_compatibility() {
+-  \Drupal::service('module_installer')->install(['phpass']);
++  // Removed due to error in drush when deploying.
++  // This is enabled via config import instead.
++//  \Drupal::service('module_installer')->install(['phpass']);
+ }
+ 
+ /**
