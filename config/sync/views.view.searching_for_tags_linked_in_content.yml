@@ -222,7 +222,7 @@ display:
             local_administrator: local_administrator
             administrator: administrator
       cache:
-        type: none
+        type: search_api_tag
         options: {  }
       empty: {  }
       sorts: {  }
@@ -443,7 +443,10 @@ display:
       display_extenders:
         views_ef_fieldset: {  }
       path: admin/content/content-with-tag-links-export
-      filename: content-with-tags.csv
+      displays:
+        page_1: page_1
+        default: '0'
+      filename: 'content-with-tags-export-[date:html_datetime].csv'
       automatic_download: true
       export_limit: 1000
       export_filesystem: s3
