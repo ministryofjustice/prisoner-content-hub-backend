@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - search_api.index.content_for_search
+    - system.menu.admin
     - user.role.administrator
     - user.role.local_administrator
   module:
@@ -27,7 +28,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Searching for tags linked in content'
+      title: 'Content with tag links'
       fields:
         title:
           id: title
@@ -441,11 +442,11 @@ display:
         filter_groups: false
       display_extenders:
         views_ef_fieldset: {  }
-      path: searching-for-tags-linked-in-content-export
+      path: admin/content/content-with-tag-links-export
       filename: content-with-tags.csv
-      automatic_download: false
+      automatic_download: true
       export_limit: 1000
-      export_filesystem: public
+      export_filesystem: s3
       custom_redirect_path: false
       redirect_to_display: none
       include_query_params: false
@@ -468,7 +469,16 @@ display:
     display_options:
       display_extenders:
         views_ef_fieldset: {  }
-      path: searching-for-tags-linked-in-content
+      path: admin/content/content-with-tag-links
+      menu:
+        type: normal
+        title: 'Content with tag links'
+        description: 'Shows all content that links to tags (for example categories or series) in rich text'
+        weight: 100
+        expanded: false
+        menu_name: admin
+        parent: 'views_view:views.taxonomy_overview.page_1'
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
