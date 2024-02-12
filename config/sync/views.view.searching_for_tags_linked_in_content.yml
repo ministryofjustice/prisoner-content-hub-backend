@@ -289,7 +289,7 @@ display:
           exposed: true
           expose:
             operator_id: search_api_fulltext_1_op
-            label: 'Numeric Category ID'
+            label: 'Numeric Tag ID'
             description: 'Specify the number of the tag you wish to search. Leave blank to search for all embedded tags.'
             use_operator: false
             operator: search_api_fulltext_1_op
@@ -336,6 +336,19 @@ display:
           query_tags: {  }
       relationships: {  }
       header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: "<p>This view shows all published content that contains links to tags in rich text.</p>\r\n<p>If you want to search for content that links to specific tags, then enter it in the Numeric Tag ID section below.\r\nThis is useful to find content linking to a specific category before deleting it, to avoid broken links.</p>"
+            format: basic_html
+          tokenize: false
         result:
           id: result
           table: views
