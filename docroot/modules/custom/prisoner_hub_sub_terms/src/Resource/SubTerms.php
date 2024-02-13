@@ -67,7 +67,7 @@ class SubTerms extends EntityResourceBase {
     // Use aggregate entity query, so that we can use groupBy on the category
     // and series fields.  Removing duplicate category and series ids.
     // @see https://www.drupal.org/node/1918702
-    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery()->accessCheck(TRUE);
 
     // Check for content that's...
     $condition_group = $query->orConditionGroup()
