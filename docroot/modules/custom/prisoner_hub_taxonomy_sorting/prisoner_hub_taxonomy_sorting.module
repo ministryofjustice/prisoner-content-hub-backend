@@ -6,11 +6,11 @@
  */
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\views\ViewExecutable;
  * Note that a one-off call to actually create the field is required.
  * See prisoner_hub_taxonomy_sorting_update_9001().
  */
-function prisoner_hub_taxonomy_sorting_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function prisoner_hub_taxonomy_sorting_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() === 'node') {
     $fields['series_sort_value'] = BaseFieldDefinition::create('integer')
@@ -36,7 +36,7 @@ function prisoner_hub_taxonomy_sorting_entity_base_field_info(\Drupal\Core\Entit
  *
  * Update values for sorting when content is created and updated.
  */
-function prisoner_hub_taxonomy_sorting_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+function prisoner_hub_taxonomy_sorting_entity_presave(EntityInterface $entity) {
   if ($entity instanceof NodeInterface) {
     \Drupal::service('prisoner_hub_taxonomy_sorting.entity_presave')->updatesSeriesSortValue($entity);
   }
@@ -48,9 +48,9 @@ function prisoner_hub_taxonomy_sorting_entity_presave(Drupal\Core\Entity\EntityI
  * Check to see whether the sort_by value has changed on a series.
  * If so, update all the content associated with that series.
  */
-function prisoner_hub_taxonomy_sorting_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+function prisoner_hub_taxonomy_sorting_entity_update(EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface && $entity->hasField('field_sort_by')) {
-    /** @var ContentEntityInterface $original_entity */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $original_entity */
     if ($entity->original->get('field_sort_by')->getString() != $entity->get('field_sort_by')->getString()) {
       $results = \Drupal::entityQuery('node')
         ->condition('field_moj_series', $entity->id())
@@ -65,7 +65,6 @@ function prisoner_hub_taxonomy_sorting_entity_update(Drupal\Core\Entity\EntityIn
     }
   }
 }
-
 
 /**
  * Implements hook_views_pre_build().
@@ -84,13 +83,13 @@ function prisoner_hub_taxonomy_sorting_views_pre_build(ViewExecutable $view) {
     switch ($term->get('field_sort_by')->getString()) {
       case 'season_and_episode_asc':
       case 'season_and_episode_desc':
-        $fields_to_remove[] ='form_field_field_release_date';
+        $fields_to_remove[] = 'form_field_field_release_date';
         break;
 
       case 'release_date_asc':
       case 'release_date_desc':
-      $fields_to_remove[] = 'form_field_field_moj_season';
-      $fields_to_remove[] = 'form_field_field_moj_episode';
+        $fields_to_remove[] = 'form_field_field_moj_season';
+        $fields_to_remove[] = 'form_field_field_moj_episode';
     }
 
     // @See https://stackoverflow.com/a/9895991

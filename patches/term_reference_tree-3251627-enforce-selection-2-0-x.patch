@@ -1,0 +1,167 @@
+From 1fb87c2febdb6c07563fad4c719bc5618545a867 Mon Sep 17 00:00:00 2001
+From: Leon Kessler <leon.kessler@digital.justice.gov.uk>
+Date: Mon, 29 Nov 2021 10:55:14 +0000
+Subject: [PATCH 1/2] Manual rebase of 3251627 patch onto 2.0.x
+
+---
+ config/schema/term_reference_tree.schema.yml  |  3 +++
+ .../Field/FieldWidget/TermReferenceTree.php   | 19 +++++++++++++++++++
+ term_reference_tree.js                        | 18 ++++++++++++++++--
+ term_reference_tree.module                    |  4 ++++
+ 4 files changed, 42 insertions(+), 2 deletions(-)
+
+diff --git a/config/schema/term_reference_tree.schema.yml b/config/schema/term_reference_tree.schema.yml
+index d0834a4..32ee698 100644
+--- a/config/schema/term_reference_tree.schema.yml
++++ b/config/schema/term_reference_tree.schema.yml
+@@ -14,6 +14,9 @@ field.widget.settings.term_reference_tree:
+     cascading_selection:
+       type: integer
+       label: 'Cascading selection'
++    cascading_selection_enforce:
++      type: boolean
++      label: 'Enforce cascading selection'
+     max_depth:
+       type: integer
+       label: 'Maximum Depth'
+diff --git a/src/Plugin/Field/FieldWidget/TermReferenceTree.php b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+index 06cb955..29c452c 100644
+--- a/src/Plugin/Field/FieldWidget/TermReferenceTree.php
++++ b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+@@ -37,6 +37,7 @@ class TermReferenceTree extends WidgetBase {
+       'leaves_only' => FALSE,
+       'select_parents' => FALSE,
+       'cascading_selection' => self::CASCADING_SELECTION_NONE,
++      'cascading_selection_enforce' => FALSE,
+       'max_depth' => 0,
+     ] + parent::defaultSettings();
+   }
+@@ -83,6 +84,19 @@ class TermReferenceTree extends WidgetBase {
+       ],
+     ];
+ 
++    $form['cascading_selection_enforce'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Enforce cascading selection'),
++      '#description' => $this->t('On parent selection child terms will be checked and disabled (so no further modifications can be made).  <em>This only works with "Select / deselect" option.</em>'),
++      '#default_value' => $this->getSetting('cascading_selection_enforce'),
++      '#return_value' => 1,
++      '#states' => [
++        'visible' => [
++          ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][cascading_selection]"]' => ['value' => self::CASCADING_SELECTION_BOTH]
++        ],
++      ],
++    ];
++
+     if ($this->fieldDefinition->getFieldStorageDefinition()
+       ->getCardinality() !== FieldStorageConfig::CARDINALITY_UNLIMITED) {
+       $form['select_parents']['#disabled'] = TRUE;
+@@ -134,6 +148,10 @@ class TermReferenceTree extends WidgetBase {
+       $summary[] = sprintf('%s (%s)', $this->t('Cascading selection'), $this->t('Only deselect'));
+     }
+ 
++    if ($this->getSetting('cascading_selection_enforce')) {
++      $summary[] = $this->t('Enforce cascading selection');
++    }
++
+     if ($this->getSetting('max_depth')) {
+       $summary[] = $this->formatPlural($this->getSetting('max_depth'), 'Maximum Depth: @count level', 'Maximum Depth: @count levels');
+     }
+@@ -156,6 +174,7 @@ class TermReferenceTree extends WidgetBase {
+     $element['#leaves_only'] = $this->getSetting('leaves_only');
+     $element['#select_parents'] = $this->getSetting('select_parents');
+     $element['#cascading_selection'] = $this->getSetting('cascading_selection');
++    $element['#cascading_selection_enforce'] = $this->getSetting('cascading_selection_enforce');
+     $element['#value_key'] = 'target_id';
+     $element['#max_depth'] = $this->getSetting('max_depth');
+     $element['#start_minimized'] = $this->getSetting('start_minimized');
+diff --git a/term_reference_tree.js b/term_reference_tree.js
+index 88203c1..93fcfea 100644
+--- a/term_reference_tree.js
++++ b/term_reference_tree.js
+@@ -113,6 +113,7 @@
+         if (tree.hasClass('term-reference-tree-cascading-selection')) {
+           var mode_select = tree.hasClass('term-reference-tree-cascading-selection-mode-select');
+           var mode_deselect = tree.hasClass('term-reference-tree-cascading-selection-mode-deselect');
++          var enforce_select = tree.hasClass('term-reference-tree-cascading-selection-enforce');
+ 
+           //Check children when checkboxes are clicked.
+           tree.find('.form-checkbox').change(function (event) {
+@@ -123,10 +124,20 @@
+ 
+             if (!mode_select && !mode_deselect) {
+               if (event_target_checked) {
+-                $(children).filter(':not(:checked)').click().trigger('change');
++                if (enforce_select) {
++                  $(children).prop('checked', true).attr('disabled', 'disabled').trigger('change');
++                }
++                else {
++                  $(children).filter(':not(:checked)').click().trigger('change');
++                }
+               }
+               else {
+-                $(children).filter(':checked').click().trigger('change');
++                if (enforce_select) {
++                  $(children).prop('checked', false).removeAttr('disabled').trigger('change');
++                }
++                else {
++                  $(children).filter(':checked').click().trigger('change');
++                }
+               }
+             }
+             else if (mode_select && event_target_checked) {
+@@ -136,6 +147,9 @@
+               $(children).filter(':checked').click().trigger('change');
+             }
+           });
++          if (enforce_select) {
++            $(this).find('.form-checkbox:checked').trigger('change');
++          }
+           //End process checkbox changes.
+         } //End Want a cascading checking.
+ 
+diff --git a/term_reference_tree.module b/term_reference_tree.module
+index 9e5e870..26cc4ba 100644
+--- a/term_reference_tree.module
++++ b/term_reference_tree.module
+@@ -111,6 +111,10 @@ function template_preprocess_checkbox_tree(array &$variables) {
+     }
+   }
+ 
++  if (!empty($variables['element']['#cascading_selection_enforce'])) {
++    $attributes['class'][] = 'term-reference-tree-cascading-selection-enforce';
++  }
++
+   if (!empty($element['#attributes']['class'])) {
+     $attributes['class'] = array_merge($attributes['class'], $element['#attributes']['class']);
+   }
+-- 
+GitLab
+
+
+From bfafc89cd17f8c8e06395e888aa4f723775aa19e Mon Sep 17 00:00:00 2001
+From: Leon Kessler <leon.kessler@digital.justice.gov.uk>
+Date: Mon, 29 Nov 2021 11:45:42 +0000
+Subject: [PATCH 2/2] Adding to widget field description that child terms will
+ not be submitted when parent terms are selected.
+
+---
+ src/Plugin/Field/FieldWidget/TermReferenceTree.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Plugin/Field/FieldWidget/TermReferenceTree.php b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+index 29c452c..eaeaf90 100644
+--- a/src/Plugin/Field/FieldWidget/TermReferenceTree.php
++++ b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+@@ -87,7 +87,7 @@ class TermReferenceTree extends WidgetBase {
+     $form['cascading_selection_enforce'] = [
+       '#type' => 'checkbox',
+       '#title' => $this->t('Enforce cascading selection'),
+-      '#description' => $this->t('On parent selection child terms will be checked and disabled (so no further modifications can be made).  <em>This only works with "Select / deselect" option.</em>'),
++      '#description' => $this->t('On parent selection child terms will be checked and disabled (so no further modifications can be made).  Note that disabled fields are not submitted, so only parent terms will be saved if selected.  <em>This only works with "Select / deselect" option.</em>'),
+       '#default_value' => $this->getSetting('cascading_selection_enforce'),
+       '#return_value' => 1,
+       '#states' => [
+-- 
+GitLab
+

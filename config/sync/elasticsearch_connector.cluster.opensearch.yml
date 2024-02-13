@@ -1,0 +1,19 @@
+uuid: 74bee59b-96aa-43c3-b8fc-806228d6a5af
+langcode: en
+status: '1'
+dependencies: {  }
+cluster_id: opensearch
+name: OpenSearch
+url: 'http://opensearch:9020'
+options:
+  multiple_nodes_connection: true
+  use_authentication: false
+  authentication_type: Basic
+  username: ''
+  password: ''
+  timeout: 3
+  rewrite:
+    rewrite_index: false
+    index:
+      prefix: ''
+      suffix: ''

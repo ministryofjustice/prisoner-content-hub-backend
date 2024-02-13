@@ -64,10 +64,11 @@ env:
     value: {{ .Values.application.config.xDebugIp }}
   - name: SERVER_PORT
     value: {{ .Values.application.port | quote }}
-  - name: ELASTICSEARCH_CLUSTER
-    value: {{ .Values.application.config.elasticsearchCluster }}
-  - name: ELASTICSEARCH_HOST
-    value: {{ include "prisoner-content-hub-backend.elasticsearchServiceHost" . }}
+  - name: OPENSEARCH_HOST
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Values.application.openSearchSecretName }}
+        key: proxy_url
   - name: SENTRY_DSN
     value: {{ .Values.application.sentry_dsn }}
   - name: SENTRY_ENVIRONMENT
@@ -167,32 +168,4 @@ env:
         key: bucket_name
   - name: S3_SOURCE_REGION
     value: {{ .Values.s3Sync.source_region }}
-{{- end -}}
-
-{{- define "s3-sync-temp.envs" }}
-env:
-  - name: S3_DESTINATION_KEY_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3temp.secretName }}
-        key: access_key_id
-  - name: S3_DESTINATION_SECRET_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3temp.secretName }}
-        key: secret_access_key
-  - name: S3_DESTINATION_REGION_TEMP
-    value: {{ .Values.application.s3temp.region }}
-  - name: S3_DESTINATION_BUCKET_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: {{ .Values.application.s3temp.secretName }}
-        key: bucket_name
-  - name: S3_SOURCE_BUCKET_TEMP
-    valueFrom:
-      secretKeyRef:
-        name: drupal-s3-output
-        key: bucket_name
-  - name: S3_SOURCE_REGION_TEMP
-    value: {{ .Values.s3SyncTemp.source_region }}
 {{- end -}}

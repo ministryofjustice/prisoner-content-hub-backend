@@ -3,10 +3,9 @@
 namespace Drupal\prisoner_hub_prison_access_cms;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\TermInterface;
-use Drupal\user\Entity\User;
 
 /**
  * The EntityEditAccess service.
@@ -24,30 +23,47 @@ class EntityEditAccess {
   protected $user;
 
   /**
+   * The prison entities assigned to the user.
+   */
+  protected array $userPrisons;
+
+  /**
    * EntityEditAccess constructor.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
-   * @param string $prison_owner_field_name
+   * @param string $prisonOwnerFieldName
    *   The field name of the prison owner field, added to ContentEntities.
-   * @param string $user_prison_field_name
-   *   The field name where the users prisons are stored, on the user entity.s
-   * @param string $exclude_from_prison_field_name
+   * @param string $userPrisonFieldName
+   *   The field name where the users prisons are stored, on the user entity.
+   * @param string $prisonFieldName
+   *   The field name of the included prisons, added to ContentEntities.
+   * @param string $excludeFromPrisonFieldName
    *   The field name of the excluded prisons, added to ContentEntities.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the entity type doesn't exist.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *   Thrown if the storage handler couldn't be loaded.
    */
-  public function __construct(AccountInterface $account, string $prison_owner_field_name, string $user_prison_field_name, string $prison_field_name, string $exclude_from_prison_field_name) {
-    $this->user = User::load($account->id());
-    $this->prisonOwnerFieldName = $prison_owner_field_name;
-    $this->userPrisonFieldName = $user_prison_field_name;
-    $this->prisonFieldName = $prison_field_name;
-    $this->excludeFromPrisonFieldName = $exclude_from_prison_field_name;
+  public function __construct(
+    AccountInterface $account,
+    protected string $prisonOwnerFieldName,
+    protected string $userPrisonFieldName,
+    protected string $prisonFieldName,
+    protected string $excludeFromPrisonFieldName,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
+    $this->user = $this->entityTypeManager->getStorage('user')->load($account->id());
     $this->userPrisons = $this->user->hasField($this->userPrisonFieldName) ? $this->user->get($this->userPrisonFieldName)->referencedEntities() : [];
   }
 
   /**
-   * Checks whether the current user has access to a specific field
+   * Checks whether the current user has access to a specific field.
    *
-   * @param string $fieldDefinition
+   * @param string $fieldName
    *   The field name of the field to check.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity to check the user has access to.
@@ -56,7 +72,7 @@ class EntityEditAccess {
    *   TRUE if the user can edit the field, otherwise FALSE.
    */
   public function hasFieldAccess(string $fieldName, ContentEntityInterface $entity) {
-    // If the entity is being created, then assume we have access to all of
+    // If the entity is being created, then assume we have access to all
     // the fields.  I.e. we only restrict access for existing entities (that are
     // potentially created by other users/prisons).
     if ($entity->isNew()) {
@@ -152,10 +168,15 @@ class EntityEditAccess {
    *
    * @return bool
    *   TRUE if the user has access to the prison $id, otherwise FALSE.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the entity type doesn't exist.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *   Thrown if the storage handler couldn't be loaded.
    */
   public function hasPrisonTermAccess(int $id) {
-    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-    /** @var TermInterface $user_prison_term */
+    $storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    /** @var \Drupal\taxonomy\TermInterface $user_prison_term */
     foreach ($this->userPrisons as $user_prison_term) {
       if ($user_prison_term->id() == $id) {
         return TRUE;
@@ -172,7 +193,8 @@ class EntityEditAccess {
   /**
    * Get the current user prisons.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   The prison entities assigned to the user.
    */
   public function getUserPrisons() {
     return $this->userPrisons;

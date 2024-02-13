@@ -1,6 +1,6 @@
 ### Context
 
-> Does this issue have a Trello card?
+> Does this issue have a Jira ticket?
 
 > If this is an issue, do we have steps to reproduce?
 

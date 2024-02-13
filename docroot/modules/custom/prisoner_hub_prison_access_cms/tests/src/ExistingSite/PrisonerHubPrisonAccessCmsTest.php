@@ -7,6 +7,9 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\prisoner_hub_prison_access\ExistingSite\PrisonerHubPrisonAccessTestTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
+/**
+ * Tests concerning access rules for prison-assigned content.
+ */
 class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
   use PrisonerHubPrisonAccessTestTrait;
@@ -16,14 +19,14 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    *
    * @var string
    */
-  static $role = 'moj_local_content_manager';
+  static private string $role = 'moj_local_content_manager';
 
   /**
    * The content types to test on, an array of bundle ids.
    *
    * @var array
    */
-  protected $contentTypes;
+  protected array $contentTypes;
 
   /**
    * The generated user for testing.
@@ -34,6 +37,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
   /**
    * Create prison taxonomy terms and a user to test with.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   If the user creation fails.
    */
   public function setUp(): void {
     parent::setUp();
@@ -46,7 +52,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
         ['target_id' => $this->prisonTerm->id()],
-      ]
+      ],
     ]);
     $this->user->addRole(self::$role);
     $this->user->save();
@@ -55,16 +61,20 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
   /**
    * Test that the user can create new content.
+   *
+   * @throws \Behat\Mink\Exception\ElementHtmlException
    */
   public function testUserCanCreateNewContent() {
     foreach ($this->contentTypes as $contentType) {
-      // Skip the homepage content type, as we do not have access to create these.
-      if (in_array($contentType, ['homepage'])) {
+      // Skip the homepage content type, as moj_local_content_manager role
+      // does not have access to create these.
+      if ($contentType == 'homepage') {
         continue;
       }
       $this->visit('/node/add/' . $contentType);
 
-      // Test that the default value for the prison owner field is the users current prison.
+      // Test that the default value for the prison owner field is the users
+      // current prison.
       $this->assertSession()->elementAttributeExists('css', 'select[name="field_prison_owner[]"] option[value="' . $this->prisonTerm->id() . '"]', 'selected');
 
       $this->assertUserCanEditNodeOnCurrentPage($contentType);
@@ -72,16 +82,19 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Tests that a user can edit content that is created by another user but assigned to their prison.
+   * Tests that a user can edit others content for their prison.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function testUserCanEditOwnPrisonContent() {
     foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
         $this->prisonOwnerFieldName => [
-          ['target_id' => $this->prisonCategoryTerm->id()]
+          ['target_id' => $this->prisonCategoryTerm->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
 
       $this->assertUserCanEditNode($node);
@@ -90,15 +103,18 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
   /**
    * Test user can edit content that is assigned to their prison category.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function testUserCanEditContentAssignedToCategory() {
     foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
-         $this->prisonOwnerFieldName => [
-          ['target_id' => $this->prisonCategoryTerm->id()]
+        $this->prisonOwnerFieldName => [
+          ['target_id' => $this->prisonCategoryTerm->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
 
       $this->assertUserCanEditNode($node);
@@ -106,7 +122,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that a user assigned to a prison category can edit content assigned to another prison in same category.
+   * Test user access to other prisons' content in their category.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testUserCanEditContentInPrisonCategory() {
     // Assign a prison category to the user.
@@ -117,7 +136,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
     $anotherPrisonInSameCategory = $this->createTerm(Vocabulary::load('prisons'), [
       'parent' => [
-        ['target_id' => $this->prisonCategoryTerm->id()]
+        ['target_id' => $this->prisonCategoryTerm->id()],
       ],
     ]);
 
@@ -125,9 +144,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $node = $this->createNode([
         'type' => $contentType,
         $this->prisonOwnerFieldName => [
-          ['target_id' => $anotherPrisonInSameCategory->id()]
+          ['target_id' => $anotherPrisonInSameCategory->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
 
       $this->assertUserCanEditNode($node);
@@ -135,10 +155,13 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that a user with multiple prisons can edit content owned by one of those prisons.
+   * Test user access to content where user has multiple prisons.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testUserWithMultiplePrisonsCanEditContent() {
-    $new_prison = $this->createTerm( Vocabulary::load('prisons'));
+    $new_prison = $this->createTerm(Vocabulary::load('prisons'));
     $this->user->set($this->userPrisonFieldName, [
       ['target_id' => $this->prisonTerm->id()],
       ['target_id' => $new_prison->id()],
@@ -149,9 +172,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $node = $this->createNode([
         'type' => $contentType,
         $this->prisonOwnerFieldName => [
-          ['target_id' => $new_prison->id()]
+          ['target_id' => $new_prison->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
 
       $this->assertUserCanEditNode($node);
@@ -159,7 +183,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test the a user can edit content that is owned by multiple prisons.
+   * Test a user can edit content that is owned by multiple prisons.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function testUserCanEditContentInMultiplePrisons() {
     foreach ($this->contentTypes as $contentType) {
@@ -169,7 +195,8 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
           ['target_id' => $this->prisonTerm->id()],
           ['target_id' => $this->anotherPrisonTerm->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
 
       $this->assertUserCanEditNode($node);
@@ -177,7 +204,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that a user with 'bypass prison ownership edit access' can edit content.
+   * Test a user with 'bypass prison ownership edit access' can edit content.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testUserWithByPassPermissionCanEditContent() {
     $this->drupalLogout();
@@ -192,9 +222,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $node = $this->createNode([
         'type' => $contentType,
         $this->prisonOwnerFieldName => [
-          ['target_id' => $this->prisonTerm->id()]
+          ['target_id' => $this->prisonTerm->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
 
       $this->assertUserCanEditNode($node);
@@ -202,7 +233,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test the a user can edit their own content even if it's not owned by a prison.
+   * Test a user can edit their own content even if it's not owned by a prison.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function testUserCanEditOwnAuthoredContent() {
     foreach ($this->contentTypes as $contentType) {
@@ -217,15 +250,20 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
   /**
    * Tests that a user cannot make changes to content owned by another prison.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testUserCannotEditOtherUserPrisonContent() {
     foreach ($this->contentTypes as $contentType) {
       $node = $this->createNode([
         'type' => $contentType,
         $this->prisonOwnerFieldName => [
-          ['target_id' => $this->anotherPrisonTerm->id()]
+          ['target_id' => $this->anotherPrisonTerm->id()],
         ],
-        'uid' => 1, // Set to admin user 1, i.e. NOT the test user.
+        // Set to admin user 1, i.e. NOT the test user.
+        'uid' => 1,
       ]);
       $edit_url = $node->toUrl('edit-form');
       $this->visit($edit_url->toString());
@@ -251,14 +289,19 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that a user making changes to prison fields does not wipe previous values.
+   * Test a user making changes to prison fields does not wipe previous values.
    *
-   * @covers prisoner_hub_prison_access_cms_entity_presave()
+   * @covers ::prisoner_hub_prison_access_cms_entity_presave()
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ResponseTextException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testOtherPrisonsDoNotGetRemoved() {
     $category_tern = $this->createTerm(Vocabulary::load('moj_categories'));
     $node = $this->createNode([
-      // Only test on basic pages for now, as other content types have file fields
+      // Only test on basic pages, as other content types have file fields
       // that we would need to fill out in our tests.
       'type' => 'page',
       'field_exclude_from_prison' => [
@@ -281,14 +324,14 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'value' => 1,
       ],
       'field_moj_top_level_categories' => [
-        ['target_id' => $category_tern->id()]
-      ]
+        ['target_id' => $category_tern->id()],
+      ],
 
     ]);
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
 
-    // Update the the prison field.
+    // Update the prison field.
     $prisonFieldElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
     $prisonFieldElement->checkField($this->prisonTerm->label());
 
@@ -309,14 +352,19 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that a user without the assign prisons to users cannot add prisons to a user.
+   * Test a user without the assign prisons to users cannot do so.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testUserCannotEditUserPrisons() {
     $user_edit_url = $this->user->toUrl('edit-form');
     $this->visit($user_edit_url->toString());
     $fieldUserPrisonsElement = $this->assertSession()->elementExists('css', '#edit-field-user-prisons');
 
-    // First check the user prison field is on the page. (I.e. there are some checkboxes).
+    // First check the user prison field is on the page.
+    // I.E. there are some checkboxes.
     $this->assertSession()->elementExists('css', 'input[type="checkbox"]', $fieldUserPrisonsElement);
 
     // Check that they are all disabled, we don't want to find any checkboxes
@@ -328,6 +376,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * Asserts that the user can make edits to the $node.
    *
    * @param \Drupal\node\NodeInterface $node
+   *   Node to be tested.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function assertUserCanEditNode(NodeInterface $node) {
     $edit_url = $node->toUrl('edit-form');
@@ -363,4 +414,5 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       $this->fail("Unable to use prison fields on the $contentType content type. Error message: " . $e->getMessage());
     }
   }
+
 }

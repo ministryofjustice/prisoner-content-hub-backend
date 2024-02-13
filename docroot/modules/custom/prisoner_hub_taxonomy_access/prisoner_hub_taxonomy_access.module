@@ -6,7 +6,9 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -15,7 +17,7 @@ use Drupal\node\NodeInterface;
  * Prevents access to series and categories if there is no available content
  * within.
  */
-function prisoner_hub_taxonomy_access_taxonomy_term_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function prisoner_hub_taxonomy_access_taxonomy_term_access(EntityInterface $entity, $operation, AccountInterface $account) {
   // Don't act on other taxonomy types.
   if (!in_array($entity->bundle(), ['moj_categories', 'series'])) {
     return AccessResult::neutral();
@@ -62,7 +64,7 @@ function prisoner_hub_taxonomy_access_taxonomy_term_access(\Drupal\Core\Entity\E
   $query->condition('status', NodeInterface::PUBLISHED);
 
   // Query must be executed in render context to avoid 500 errors when
-  // being run through JSON:API.  For more info
+  // being run through JSON:API.  For more info.
   // @See \Drupal\jsonapi\Controller\EntityResource::executeQueryInRenderContext()
   $context = new RenderContext();
   $results = \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {

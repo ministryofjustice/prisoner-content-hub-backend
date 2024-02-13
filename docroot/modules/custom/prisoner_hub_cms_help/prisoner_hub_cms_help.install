@@ -9,6 +9,9 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
  * Add Help button the main nav.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ *   In case of failures an exception is thrown.
  */
 function prisoner_hub_cms_help_update_9001(&$sandbox) {
   $item = MenuLinkContent::create([

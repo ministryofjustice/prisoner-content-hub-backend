@@ -7,8 +7,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * A views field handler to show the parent category for both subcategories and
- * series.
+ * A handler to show the parent category for both subcategories and series.
  *
  * @ingroup views_field_handlers
  *
@@ -16,7 +15,10 @@ use Drupal\views\ResultRow;
  */
 class DynamicParentCategoryViewsField extends FieldPluginBase {
 
-  function getValue(ResultRow $values, $field = NULL) {
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue(ResultRow $values, $field = NULL) {
     if ($values->_entity instanceof TermInterface) {
       if ($values->_entity->hasField('field_category')) {
         return $values->_entity->field_category->target_id;
@@ -35,4 +37,5 @@ class DynamicParentCategoryViewsField extends FieldPluginBase {
     // This function exists to override parent query function.
     // Do nothing.
   }
+
 }

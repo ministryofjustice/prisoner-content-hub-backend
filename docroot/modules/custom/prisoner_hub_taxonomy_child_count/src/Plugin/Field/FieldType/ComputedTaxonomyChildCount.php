@@ -14,9 +14,9 @@ class ComputedTaxonomyChildCount extends FieldItemList implements FieldItemListI
   use ComputedItemListTrait;
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
-  function computeValue() {
+  public function computeValue() {
     $entity = $this->getEntity();
     if ($entity->isNew()) {
       return NULL;
@@ -49,4 +49,5 @@ class ComputedTaxonomyChildCount extends FieldItemList implements FieldItemListI
 
     $this->list[0] = $this->createItem(0, $result);
   }
+
 }

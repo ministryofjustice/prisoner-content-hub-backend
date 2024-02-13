@@ -8,6 +8,7 @@ dependencies:
     - field.storage.node.field_prison_owner
     - field.storage.node.field_prisons
     - field.storage.node.field_topics
+    - field.storage.taxonomy_term.field_category
     - node.type.help_page
     - node.type.homepage
     - node.type.link
@@ -21,6 +22,7 @@ dependencies:
     - taxonomy.vocabulary.topics
   module:
     - csv_serialization
+    - hierarchical_term_formatter
     - node
     - rest
     - serialization
@@ -295,14 +297,18 @@ display:
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
-          empty: ''
+          empty: '{{ field_category }}'
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: entity_reference_label
+          type: hierarchical_term_formatter
           settings:
+            display: all
             link: true
+            wrap: none
+            separator: ' » '
+            reverse: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -1619,6 +1625,15 @@ display:
           admin_label: author
           plugin_id: standard
           required: true
+        field_moj_series:
+          id: field_moj_series
+          table: node__field_moj_series
+          field: field_moj_series
+          relationship: none
+          group_type: group
+          admin_label: series
+          plugin_id: standard
+          required: false
       show_admin_links: false
       display_extenders: {  }
     cache_metadata:
@@ -1770,6 +1785,136 @@ display:
             format: custom
             format_custom_false: Unpublished
             format_custom_true: Published
+        field_category:
+          id: field_category
+          table: taxonomy_term__field_category
+          field: field_category
+          relationship: field_moj_series
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Category
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_category_1:
+          id: field_category_1
+          table: taxonomy_term__field_category
+          field: field_category
+          relationship: field_moj_series
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Full Category Path'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: hierarchical_term_formatter
+          settings:
+            display: all
+            link: true
+            wrap: none
+            separator: ' » '
+            reverse: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         field_moj_top_level_categories:
           id: field_moj_top_level_categories
           table: node__field_moj_top_level_categories
@@ -1815,7 +1960,7 @@ display:
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
-          empty: ''
+          empty: '{{ field_category }}'
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
@@ -1823,6 +1968,73 @@ display:
           type: entity_reference_label
           settings:
             link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_moj_top_level_categories_1:
+          id: field_moj_top_level_categories_1
+          table: node__field_moj_top_level_categories
+          field: field_moj_top_level_categories
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Full Category Path'
+          exclude: false
+          alter:
+            alter_text: true
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: '{{ field_category_1 }}'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: hierarchical_term_formatter
+          settings:
+            display: all
+            link: true
+            wrap: none
+            separator: ' » '
+            reverse: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -2351,6 +2563,7 @@ display:
         - 'config:field.storage.node.field_prison_owner'
         - 'config:field.storage.node.field_prisons'
         - 'config:field.storage.node.field_topics'
+        - 'config:field.storage.taxonomy_term.field_category'
   page_1:
     id: page_1
     display_title: Page
@@ -2360,243 +2573,243 @@ display:
       display_extenders:
         views_ef_fieldset:
           views_ef_fieldset:
-            enabled: 1
+            enabled: true
             options:
               sort:
                 root:
                   container_type: details
-                  title: Filter
-                  description: ''
-                  open: '1'
-                  weight: '0'
-                  id: root
-                  pid: ''
                   depth: '0'
+                  description: ''
+                  id: root
+                  open: true
+                  pid: ''
+                  title: Filter
                   type: container
+                  weight: '0'
                 container-2:
                   container_type: details
-                  title: General
-                  description: ''
-                  open: '1'
-                  weight: '-29'
-                  id: container-2
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-2
+                  open: true
+                  pid: root
+                  title: General
                   type: container
+                  weight: '-29'
                 title:
-                  weight: '-33'
+                  depth: '2'
                   id: title
                   pid: container-2
-                  depth: '2'
                   type: filter
+                  weight: '-33'
                 nid:
-                  weight: '-32'
+                  depth: '2'
                   id: nid
                   pid: container-2
-                  depth: '2'
                   type: filter
+                  weight: '-32'
                 type:
-                  weight: '-31'
+                  depth: '2'
                   id: type
                   pid: container-2
-                  depth: '2'
                   type: filter
+                  weight: '-31'
                 status:
-                  weight: '-30'
+                  depth: '2'
                   id: status
                   pid: container-2
-                  depth: '2'
                   type: filter
+                  weight: '-30'
                 uid:
-                  weight: '-28'
+                  depth: '2'
                   id: uid
                   pid: container-2
-                  depth: '2'
                   type: filter
+                  weight: '-28'
                 container-6:
                   container_type: details
-                  title: Description
-                  description: ''
-                  open: '1'
-                  weight: '-28'
-                  id: container-6
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-6
+                  open: true
+                  pid: root
+                  title: Description
                   type: container
+                  weight: '-28'
                 field_description_value:
-                  weight: '-29'
+                  depth: '2'
                   id: field_description_value
                   pid: container-6
-                  depth: '2'
                   type: filter
+                  weight: '-29'
                 field_summary_value:
-                  weight: '-28'
+                  depth: '2'
                   id: field_summary_value
                   pid: container-6
-                  depth: '2'
                   type: filter
+                  weight: '-28'
                 container-1:
                   container_type: details
-                  title: Taxonomy
-                  description: ''
-                  open: '1'
-                  weight: '-25'
-                  id: container-1
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-1
+                  open: true
+                  pid: root
+                  title: Taxonomy
                   type: container
+                  weight: '-25'
                 field_moj_top_level_categories_target_id:
-                  weight: '-29'
+                  depth: '2'
                   id: field_moj_top_level_categories_target_id
                   pid: container-1
-                  depth: '2'
                   type: filter
+                  weight: '-29'
                 field_moj_series_target_id:
-                  weight: '-28'
+                  depth: '2'
                   id: field_moj_series_target_id
                   pid: container-1
-                  depth: '2'
                   type: filter
+                  weight: '-28'
                 field_topics_target_id:
-                  weight: '-27'
+                  depth: '2'
                   id: field_topics_target_id
                   pid: container-1
-                  depth: '2'
                   type: filter
+                  weight: '-27'
                 container-0:
                   container_type: details
-                  title: Prisons
-                  description: ''
-                  open: '1'
-                  weight: '-24'
-                  id: container-0
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-0
+                  open: true
+                  pid: root
+                  title: Prisons
                   type: container
+                  weight: '-24'
                 field_prisons_target_id:
-                  weight: '-31'
+                  depth: '2'
                   id: field_prisons_target_id
                   pid: container-0
-                  depth: '2'
                   type: filter
+                  weight: '-31'
                 field_prisons_target_id_op:
-                  weight: '-30'
+                  depth: '2'
                   id: field_prisons_target_id_op
                   pid: container-0
-                  depth: '2'
                   type: filter
+                  weight: '-30'
                 field_prison_owner_target_id:
-                  weight: '-29'
+                  depth: '2'
                   id: field_prison_owner_target_id
                   pid: container-0
-                  depth: '2'
                   type: filter
+                  weight: '-29'
                 container-3:
                   container_type: container
-                  title: ''
-                  description: ''
-                  open: '1'
-                  weight: '-23'
-                  id: container-3
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-3
+                  open: true
+                  pid: root
+                  title: ''
                   type: container
+                  weight: '-23'
                 submit:
-                  weight: '-31'
+                  depth: '2'
                   id: submit
                   pid: container-3
-                  depth: '2'
                   type: buttons
+                  weight: '-31'
                 container-5:
                   container_type: details
-                  title: 'Prison categories'
-                  description: ''
-                  weight: '-22'
-                  open: 0
-                  id: container-5
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-5
+                  open: false
+                  pid: root
+                  title: 'Prison categories'
                   type: container
+                  weight: '-22'
                 container-4:
                   container_type: details
-                  title: 'Container 6'
-                  description: ''
-                  weight: '-21'
-                  open: 0
-                  id: container-4
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-4
+                  open: false
+                  pid: root
+                  title: 'Container 6'
                   type: container
+                  weight: '-21'
                 container-7:
                   container_type: details
-                  title: 'Container 7'
-                  description: ''
-                  weight: '-20'
-                  open: 0
-                  id: container-7
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-7
+                  open: false
+                  pid: root
+                  title: 'Container 7'
                   type: container
+                  weight: '-20'
                 container-8:
                   container_type: details
-                  title: 'Container 8'
-                  description: ''
-                  weight: '-19'
-                  open: 0
-                  id: container-8
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-8
+                  open: false
+                  pid: root
+                  title: 'Container 8'
                   type: container
+                  weight: '-19'
                 container-9:
                   container_type: details
-                  title: 'Container 9'
-                  description: ''
-                  weight: '-18'
-                  open: 0
-                  id: container-9
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-9
+                  open: false
+                  pid: root
+                  title: 'Container 9'
                   type: container
+                  weight: '-18'
                 container-10:
                   container_type: details
-                  title: 'Container 10'
-                  description: ''
-                  weight: '-17'
-                  open: 0
-                  id: container-10
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-10
+                  open: false
+                  pid: root
+                  title: 'Container 10'
                   type: container
+                  weight: '-17'
                 container-11:
                   container_type: details
-                  title: 'Container 11'
-                  description: ''
-                  weight: '-16'
-                  open: 0
-                  id: container-11
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-11
+                  open: false
+                  pid: root
+                  title: 'Container 11'
                   type: container
+                  weight: '-16'
                 container-12:
                   container_type: details
-                  title: 'Container 12'
-                  description: ''
-                  weight: '-15'
-                  open: 0
-                  id: container-12
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-12
+                  open: false
+                  pid: root
+                  title: 'Container 12'
                   type: container
+                  weight: '-15'
                 container-13:
                   container_type: details
-                  title: 'Container 13'
-                  description: ''
-                  weight: '-14'
-                  open: 0
-                  id: container-13
-                  pid: root
                   depth: '1'
+                  description: ''
+                  id: container-13
+                  open: false
+                  pid: root
+                  title: 'Container 13'
                   type: container
+                  weight: '-14'
       path: admin/content/node
       menu:
         type: 'default tab'

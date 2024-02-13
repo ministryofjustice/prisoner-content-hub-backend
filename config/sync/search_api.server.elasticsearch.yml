@@ -5,11 +5,11 @@ dependencies:
   module:
     - elasticsearch_connector
 id: elasticsearch
-name: Elasticsearch
-description: 'Elasticsearch server for Hub Content'
+name: OpenSearch
+description: 'OpenSearch server for Hub Content'
 backend: elasticsearch
 backend_config:
-  server_description: ''
   cluster_settings:
-    cluster: elasticsearch
+    cluster: opensearch
   fuzziness: '0'
+  server_description: ''

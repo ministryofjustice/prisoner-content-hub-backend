@@ -6,9 +6,9 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber as CoreCacheRouterRebuildSubscriber;
 
 /**
- * Class CacheRouterRebuildSubscriber
+ * Class CacheRouterRebuildSubscriber.
  *
- * Decorate the core CacheRouterRebuildSubscriber to prevent http_repsonse tag
+ * Decorate the core CacheRouterRebuildSubscriber to prevent http_response tag
  * being cleared.
  */
 class CacheRouterRebuildSubscriber extends CoreCacheRouterRebuildSubscriber {
@@ -21,4 +21,5 @@ class CacheRouterRebuildSubscriber extends CoreCacheRouterRebuildSubscriber {
   public function onRouterFinished() {
     Cache::invalidateTags(['4xx-response', 'route_match']);
   }
+
 }
