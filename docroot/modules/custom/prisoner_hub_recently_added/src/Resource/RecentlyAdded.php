@@ -115,7 +115,7 @@ class RecentlyAdded extends EntityResourceBase {
   protected function loadSeriesEntities(array &$timestamps_and_entities, int $size) {
     // Use aggregateQuery instead of standard entity query, so that we can group
     // by series (to remove duplicates).
-    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery()->accessCheck(TRUE);
     $query->groupBy('field_moj_series');
     $query->sortAggregate('published_at', 'MAX', 'DESC');
     $query->condition('type', self::$contentTypes, 'IN');
