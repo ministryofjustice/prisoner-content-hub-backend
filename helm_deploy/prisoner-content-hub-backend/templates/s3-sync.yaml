@@ -29,6 +29,7 @@ spec:
       activeDeadlineSeconds: 2400
       template:
         spec:
+          serviceAccountName: prisoner-content-hub
           containers:
           - name: s3-sync-cronjob
             image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
