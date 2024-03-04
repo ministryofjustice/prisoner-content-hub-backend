@@ -60,7 +60,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.17
+          version: default
           docker_layer_caching: true
       - run:
           name: Build docker images with docker compose
@@ -100,7 +100,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.17
+          version: default
           docker_layer_caching: true
       - hmpps/create_app_version
       - run:
@@ -123,7 +123,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.17
+          version: default
           docker_layer_caching: true
       - hmpps/create_app_version
       - run:
