@@ -17,7 +17,7 @@ metadata:
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "35 14 * * *"
+  schedule: "45 4 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 5
