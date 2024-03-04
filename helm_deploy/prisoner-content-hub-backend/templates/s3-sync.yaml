@@ -17,7 +17,7 @@ metadata:
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "45 4 * * *"
+  schedule: "12 0 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 5
@@ -29,6 +29,7 @@ spec:
       activeDeadlineSeconds: 2400
       template:
         spec:
+          serviceAccountName: prisoner-content-hub
           containers:
           - name: s3-sync-cronjob
             image: "ghcr.io/ministryofjustice/hmpps-mysql-tools:latest"
