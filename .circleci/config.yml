@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/workspace
   docker:
-    - image: cimg/base:2024.02
+    - image: cimg/base:2021.10
 main_branch: &main_branch
   filters:
     branches:
