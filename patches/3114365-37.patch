@@ -1,5 +1,18 @@
+diff --git a/core/modules/jsonapi/tests/src/Functional/VocabularyTest.php b/core/modules/jsonapi/tests/src/Functional/VocabularyTest.php
+index cf86bb3e77..b6209d770d 100644
+--- a/core/modules/jsonapi/tests/src/Functional/VocabularyTest.php
++++ b/core/modules/jsonapi/tests/src/Functional/VocabularyTest.php
+@@ -108,7 +108,7 @@ protected function getPostDocument() {
+    */
+   protected function getExpectedUnauthorizedAccessMessage($method) {
+     if ($method === 'GET') {
+-      return "The following permissions are required: 'access taxonomy overview' OR 'administer taxonomy'.";
++      return "The following permissions are required: 'access taxonomy overview' OR 'administer taxonomy' OR 'access content'.";
+     }
+     return parent::getExpectedUnauthorizedAccessMessage($method);
+   }
 diff --git a/core/modules/taxonomy/src/VocabularyAccessControlHandler.php b/core/modules/taxonomy/src/VocabularyAccessControlHandler.php
-index 176691408a..19598097ef 100644
+index 93fab47e5d..8df66be1b5 100644
 --- a/core/modules/taxonomy/src/VocabularyAccessControlHandler.php
 +++ b/core/modules/taxonomy/src/VocabularyAccessControlHandler.php
 @@ -20,9 +20,11 @@ class VocabularyAccessControlHandler extends EntityAccessControlHandler {
@@ -12,11 +25,24 @@ index 176691408a..19598097ef 100644
 +      case 'view':
 +        return AccessResult::allowedIfHasPermissions($account, ['access taxonomy overview', 'administer taxonomy', 'access content'], 'OR');
 +
-       default:
-         return parent::checkAccess($entity, $operation, $account);
+       case 'reset all weights':
+         return AccessResult::allowedIfHasPermissions($account, [
+           'administer taxonomy',
+diff --git a/core/modules/taxonomy/tests/src/Functional/Rest/VocabularyResourceTestBase.php b/core/modules/taxonomy/tests/src/Functional/Rest/VocabularyResourceTestBase.php
+index de8e7a5804..6703846a00 100644
+--- a/core/modules/taxonomy/tests/src/Functional/Rest/VocabularyResourceTestBase.php
++++ b/core/modules/taxonomy/tests/src/Functional/Rest/VocabularyResourceTestBase.php
+@@ -71,7 +71,7 @@ protected function getNormalizedPostEntity() {
+    */
+   protected function getExpectedUnauthorizedAccessMessage($method) {
+     if ($method === 'GET') {
+-      return "The following permissions are required: 'access taxonomy overview' OR 'administer taxonomy'.";
++      return "The following permissions are required: 'access taxonomy overview' OR 'administer taxonomy' OR 'access content'.";
      }
+     return parent::getExpectedUnauthorizedAccessMessage($method);
+   }
 diff --git a/core/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldVidTest.php b/core/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldVidTest.php
-index 1b0c88b28a..d410092fc7 100644
+index fbc253bde2..559de7600b 100644
 --- a/core/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldVidTest.php
 +++ b/core/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldVidTest.php
 @@ -4,8 +4,8 @@
@@ -37,9 +63,9 @@ index 1b0c88b28a..d410092fc7 100644
  
    /**
     * Modules to enable.
-@@ -66,12 +67,6 @@ protected function setUp($import_test_views = TRUE): void {
-     $vocabulary = $this->createVocabulary();
-     $this->term1 = $this->createTerm($vocabulary);
+@@ -72,12 +73,6 @@ protected function setUp($import_test_views = TRUE): void {
+     $term = $this->createTerm($vocabulary2);
+     $this->terms[$term->id()] = $term;
  
 -    // Create user 1 and set is as the logged in user, so that the logged in
 -    // user has the correct permissions to view the vocabulary name.
@@ -50,7 +76,7 @@ index 1b0c88b28a..d410092fc7 100644
      ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
    }
  
-@@ -85,6 +80,9 @@ public function testViewsHandlerVidField() {
+@@ -91,6 +86,9 @@ public function testViewsHandlerVidField() {
      $view = Views::getView('test_taxonomy_vid_field');
      $this->executeView($view);
  
@@ -60,10 +86,10 @@ index 1b0c88b28a..d410092fc7 100644
      $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
        return $view->field['vid']->advancedRender($view->result[0]);
      });
-@@ -92,6 +90,26 @@ public function testViewsHandlerVidField() {
-     $expected = $vocabulary->get('name');
+@@ -116,6 +114,26 @@ public function testViewsHandlerVidField() {
  
-     $this->assertEquals($expected, $actual);
+     $this->assertEquals($expected, $actual, 'Displayed vocabulary name should match that loaded from the term.');
+     $this->assertEquals('bbb', $vocabulary->id(), 'First result should be vocabulary "bbb", due to DESC sorting.');
 +
 +    // Test with user without 'access content' permission.
 +    $this->setUpCurrentUser([], []);

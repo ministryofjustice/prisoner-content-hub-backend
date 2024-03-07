@@ -67,7 +67,7 @@ class SubTerms extends EntityResourceBase {
     // Use aggregate entity query, so that we can use groupBy on the category
     // and series fields.  Removing duplicate category and series ids.
     // @see https://www.drupal.org/node/1918702
-    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery()->accessCheck(TRUE);
 
     // Check for content that's...
     $condition_group = $query->orConditionGroup()
@@ -246,7 +246,7 @@ class SubTerms extends EntityResourceBase {
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
     return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
-      return $query->execute();
+      return $query->accessCheck(TRUE)->execute();
     });
   }
 
@@ -286,7 +286,7 @@ class SubTerms extends EntityResourceBase {
    */
   private function getPagination(Request $request): OffsetPage {
     return $request->query->has('page')
-      ? OffsetPage::createFromQueryParameter($request->query->get('page'))
+      ? OffsetPage::createFromQueryParameter($request->query->all()['page'] ?? [])
       : new OffsetPage(OffsetPage::DEFAULT_OFFSET, OffsetPage::SIZE_MAX);
   }
 

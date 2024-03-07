@@ -1,0 +1,42 @@
+From 41761124e2c4c9f7eadb7848162a01b07955c328 Mon Sep 17 00:00:00 2001
+From: Elliot Ward <elliot.ward@digital.justice.gov.uk>
+Date: Thu, 18 Jan 2024 16:45:44 +0000
+Subject: [PATCH] =?UTF-8?q?#3415603:=20=F0=9F=94=A5=20=20remove=20calls=20?=
+ =?UTF-8?q?on=20deprecated=20member=20$state=20in=20CssCollectionOptimizer?=
+ =?UTF-8?q?Lazy=20and=20JsCollectionOptimizerLazy.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ src/Asset/CssCollectionOptimizerLazy.php | 1 -
+ src/Asset/JsCollectionOptimizerLazy.php  | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/src/Asset/CssCollectionOptimizerLazy.php b/src/Asset/CssCollectionOptimizerLazy.php
+index 6a85913..ace03d0 100644
+--- a/src/Asset/CssCollectionOptimizerLazy.php
++++ b/src/Asset/CssCollectionOptimizerLazy.php
+@@ -16,7 +16,6 @@ class CssCollectionOptimizerLazy extends DrupalCssCollectionOptimizerLazy {
+    * {@inheritdoc}
+    */
+   public function deleteAll() {
+-    $this->state->delete('drupal_css_cache_files');
+     try {
+       $this->fileSystem->deleteRecursive($this->getSchemeForExtension('css') . '://css');
+     } catch (FileException $fileException) {
+diff --git a/src/Asset/JsCollectionOptimizerLazy.php b/src/Asset/JsCollectionOptimizerLazy.php
+index 361bad0..33ed3c4 100644
+--- a/src/Asset/JsCollectionOptimizerLazy.php
++++ b/src/Asset/JsCollectionOptimizerLazy.php
+@@ -16,7 +16,6 @@ class JsCollectionOptimizerLazy extends DrupalJsCollectionOptimizerLazy {
+    * {@inheritdoc}
+    */
+   public function deleteAll() {
+-    $this->state->delete('system.js_cache_files');
+     try {
+       $this->fileSystem->deleteRecursive($this->getSchemeForExtension('js') . '://js');
+     } catch (FileException $fileException) {
+-- 
+GitLab
+

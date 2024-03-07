@@ -115,7 +115,7 @@ class RecentlyAdded extends EntityResourceBase {
   protected function loadSeriesEntities(array &$timestamps_and_entities, int $size) {
     // Use aggregateQuery instead of standard entity query, so that we can group
     // by series (to remove duplicates).
-    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery()->accessCheck(TRUE);
     $query->groupBy('field_moj_series');
     $query->sortAggregate('published_at', 'MAX', 'DESC');
     $query->condition('type', self::$contentTypes, 'IN');
@@ -207,7 +207,7 @@ class RecentlyAdded extends EntityResourceBase {
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
     return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
-      return $query->execute();
+      return $query->accessCheck(TRUE)->execute();
     });
   }
 
@@ -222,7 +222,7 @@ class RecentlyAdded extends EntityResourceBase {
    */
   private function getPagination(Request $request): OffsetPage {
     return $request->query->has('page')
-      ? OffsetPage::createFromQueryParameter($request->query->get('page'))
+      ? OffsetPage::createFromQueryParameter($request->query->all()['page'] ?? [])
       : new OffsetPage(OffsetPage::DEFAULT_OFFSET, OffsetPage::SIZE_MAX);
   }
 
