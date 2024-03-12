@@ -63,7 +63,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'field_moj_series:entity:name'
     type: text
-    boost: !!float 3
+    boost: 3.0
     dependencies:
       config:
         - field.storage.node.field_moj_series
@@ -74,7 +74,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: field_moj_stand_first
     type: text
-    boost: !!float 5
+    boost: 5.0
     dependencies:
       config:
         - field.storage.node.field_moj_stand_first
@@ -112,7 +112,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'field_moj_top_level_categories:entity:name'
     type: text
-    boost: !!float 3
+    boost: 3.0
     dependencies:
       config:
         - field.storage.node.field_moj_top_level_categories
@@ -123,7 +123,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: text
-    boost: !!float 13
+    boost: 13.0
     dependencies:
       module:
         - node
