@@ -38,7 +38,7 @@ tips:
     plugin: text
     label: 'Machine name'
     weight: 4
-    body: 'The internal ID to use for this field. Can safely be ignored by inexperienced users in most cases. Changing a field''s machine name requires reindexing of the index.'
+    body: "The internal ID to use for this field. Can safely be ignored by inexperienced users in most cases. Changing a field's machine name requires reindexing of the index."
     selector: '.details-wrapper:nth(0) table thead th:nth(1)'
   search-api-index-fields-property-path:
     id: search-api-index-fields-property-path

@@ -45,5 +45,5 @@ tips:
     plugin: text
     label: 'Delete all indexed data'
     weight: 5
-    body: 'This will permanently remove all data currently indexed on this server for indexes that aren''t read-only. Items are queued for reindexing. Until reindexing occurs, searches for the affected indexes will not return any results.'
+    body: "This will permanently remove all data currently indexed on this server for indexes that aren't read-only. Items are queued for reindexing. Until reindexing occurs, searches for the affected indexes will not return any results."
     selector: '#edit-clear'

@@ -87,5 +87,7 @@ content:
     weight: 0
     region: content
 hidden:
+  breadcrumbs: true
   links: true
+  published_at: true
   search_api_excerpt: true
