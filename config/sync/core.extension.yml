@@ -12,7 +12,6 @@ module:
   ckeditor5: 0
   computed_breadcrumbs: 0
   config: 0
-  config_filter: 0
   config_ignore: 0
   contextual: 0
   csv_serialization: 0

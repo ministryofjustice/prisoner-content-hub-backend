@@ -10,7 +10,8 @@
         "drupal/autocomplete_id": "^1.4",
         "drupal/book_blocks": "^1.6",
         "drupal/computed_breadcrumbs": "^1",
-        "drupal/config_ignore": "^2.3",
+        "drupal/config_filter": "^2.6",
+        "drupal/config_ignore": "^3",
         "drupal/core-composer-scaffold": "^10",
         "drupal/core-project-message": "^10",
         "drupal/core-recommended": "^10",
@@ -187,9 +188,6 @@
             },
             "drupal/jsonapi_menu_items": {
                 "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/jsonapi_menu_items-3270141-allow-other-modules-to-extend-2.patch"
-            },
-            "drupal/config_ignore": {
-                "Issue #2857247: Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
             },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-18.patch"
