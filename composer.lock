@@ -3089,20 +3089,20 @@
         },
         {
             "name": "drupal/flysystem_s3",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flysystem_s3.git",
-                "reference": "2.1.1"
+                "reference": "2.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flysystem_s3-2.1.1.zip",
-                "reference": "2.1.1",
-                "shasum": "357d59a8516eeb5ca9cb56e99bcb4e5ad552ab10"
+                "url": "https://ftp.drupal.org/files/projects/flysystem_s3-2.1.2.zip",
+                "reference": "2.1.2",
+                "shasum": "644b1c0af2c59a88f64501044aad454467437d93"
             },
             "require": {
-                "aws/aws-sdk-php": "^3.220.0",
+                "aws/aws-sdk-php": "^3.288.1",
                 "drupal/core": "^9.2 || ^10",
                 "drupal/flysystem": "^2.0",
                 "league/flysystem": "^1.0.20",
@@ -3111,8 +3111,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.1.1",
-                    "datestamp": "1704813954",
+                    "version": "2.1.2",
+                    "datestamp": "1709673059",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
