@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b19ce4370152c1a35429b72ab3d41b5b",
+    "content-hash": "9bcec53d87c474eff7b17b52af006aeb",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -3008,14 +3008,20 @@
         },
         {
             "name": "drupal/flysystem",
-            "version": "dev-2.2.x",
+            "version": "2.2.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flysystem.git",
-                "reference": "b80a66640e62769aa79f12160bb31038813f70a8"
+                "reference": "2.2.0-alpha3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/flysystem-2.2.0-alpha3.zip",
+                "reference": "2.2.0-alpha3",
+                "shasum": "b29f2aab1d34e03fb115b707e75a3081d64d6e29"
             },
             "require": {
-                "drupal/core": "^9.5 || ^10.0",
+                "drupal/core": "^10.1",
                 "league/flysystem": "^1.0.3",
                 "league/flysystem-replicate-adapter": "~1.0",
                 "php": ">=8.1",
@@ -3026,15 +3032,12 @@
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-2.2.x": "2.2.x-dev"
-                },
                 "drupal": {
-                    "version": "2.2.x-dev",
-                    "datestamp": "1701358611",
+                    "version": "2.2.0-alpha3",
+                    "datestamp": "1710713007",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
+                        "message": "Alpha releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -4417,17 +4420,17 @@
         },
         {
             "name": "drupal/pathologic",
-            "version": "2.0.0-alpha1",
+            "version": "2.0.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/pathologic.git",
-                "reference": "2.0.0-alpha1"
+                "reference": "2.0.0-alpha2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pathologic-2.0.0-alpha1.zip",
-                "reference": "2.0.0-alpha1",
-                "shasum": "be911b098ece7d1ffa55cf0d5f33d38ea40acda4"
+                "url": "https://ftp.drupal.org/files/projects/pathologic-2.0.0-alpha2.zip",
+                "reference": "2.0.0-alpha2",
+                "shasum": "59de9dbfcd770c2b8810fdb23568d9fb630310b7"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
@@ -4435,8 +4438,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0-alpha1",
-                    "datestamp": "1681263978",
+                    "version": "2.0.0-alpha2",
+                    "datestamp": "1706131021",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Alpha releases are not covered by Drupal security advisories."
@@ -5422,26 +5425,30 @@
         },
         {
             "name": "drupal/view_unpublished",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/view_unpublished.git",
-                "reference": "8.x-1.1"
+                "reference": "8.x-1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/view_unpublished-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "f9f5e88cbaf1a1e71952d94cf67ef2f180e292be"
+                "url": "https://ftp.drupal.org/files/projects/view_unpublished-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "14374dd56d841270207e21974c7b7cf8aa1804f7"
             },
             "require": {
                 "drupal/core": "^9.4 || ^10"
             },
+            "require-dev": {
+                "drupal/coder": "^8.3.18",
+                "phpcompatibility/php-compatibility": "10.x-dev@dev"
+            },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1681757575",
+                    "version": "8.x-1.2",
+                    "datestamp": "1709383642",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5455,20 +5462,8 @@
             "authors": [
                 {
                     "name": "Agnes Chisholm",
-                    "homepage": "https://www.drupal.org/user/66428",
+                    "homepage": "https://www.drupal.org/user/173461",
                     "email": "amaria@chisholmtech.com"
-                },
-                {
-                    "name": "beeradb",
-                    "homepage": "https://www.drupal.org/user/120651"
-                },
-                {
-                    "name": "elevins",
-                    "homepage": "https://www.drupal.org/user/781882"
-                },
-                {
-                    "name": "entendu",
-                    "homepage": "https://www.drupal.org/user/173461"
                 },
                 {
                     "name": "fathima.asmat",
@@ -18336,7 +18331,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/entity_clone": 10,
-        "drupal/flysystem": 20,
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_filter_cache_tags": 10,
         "drupal/jsonapi_search_api": 5,
