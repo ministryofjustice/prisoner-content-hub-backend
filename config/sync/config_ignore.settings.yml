@@ -1,15 +1,9 @@
 _core:
   default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk
-mode: intermediate
+mode: simple
 ignored_config_entities:
-  import:
-    - 'system.menu.*'
-    - ~system.menu.account
-    - ~system.menu.admin
-    - ~system.menu.default-primary-navigation
-  export:
-    - 'system.menu.*'
-    - ~system.menu.account
-    - ~system.menu.admin
-    - ~system.menu.default-primary-navigation
+  - 'system.menu.*'
+  - ~system.menu.account
+  - ~system.menu.admin
+  - ~system.menu.default-primary-navigation
 enable_export_filtering: true
