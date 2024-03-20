@@ -10,7 +10,8 @@
         "drupal/autocomplete_id": "^1.4",
         "drupal/book_blocks": "^1.6",
         "drupal/computed_breadcrumbs": "^1",
-        "drupal/config_ignore": "^2.3",
+        "drupal/config_filter": "^2.6",
+        "drupal/config_ignore": "^3",
         "drupal/core-composer-scaffold": "^10",
         "drupal/core-project-message": "^10",
         "drupal/core-recommended": "^10",
@@ -25,7 +26,7 @@
         "drupal/field_group": "^3.1",
         "drupal/file_mime_validator": "^2.0",
         "drupal/flood_control": "^2.3",
-        "drupal/flysystem": "dev-2.2.x",
+        "drupal/flysystem": "^2.2",
         "drupal/flysystem_s3": "^2",
         "drupal/form_state_empty": "^1.0@alpha",
         "drupal/google_analytics": "^4.0",
@@ -149,9 +150,6 @@
             "drupal/core": "-p2"
         },
         "patches": {
-            "drupal/flysystem": {
-                "Issue #3415603 - Remove references to deprecated state": "patches/flysystem_3415603_MR46.patch"
-            },
             "drupal/flysystem_s3": {
                 "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-68-presigned_urls.patch",
                 "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-MR.patch",
@@ -188,11 +186,8 @@
             "drupal/jsonapi_menu_items": {
                 "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/jsonapi_menu_items-3270141-allow-other-modules-to-extend-2.patch"
             },
-            "drupal/config_ignore": {
-                "Issue #2857247: Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
-            },
             "drupal/pathologic": {
-                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-18.patch"
+                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
             },
             "drupal/linkit": {
                 "Issue #2877535: Link shown after the autocomplete selection is the bare node/xxx link, not the alias": "patches/linkit-2877535-64.patch"

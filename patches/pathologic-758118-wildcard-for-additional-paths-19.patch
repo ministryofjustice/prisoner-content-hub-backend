@@ -1,8 +1,8 @@
 diff --git a/pathologic.module b/pathologic.module
-index b7e145c..63c057f 100644
+index 8dcf7d8..8fb3a61 100644
 --- a/pathologic.module
 +++ b/pathologic.module
-@@ -210,7 +210,7 @@ function _pathologic_replace($matches) {
+@@ -212,7 +212,7 @@ function _pathologic_replace($matches) {
        && strpos($parts['path'], $exploded['path']) === 0
        // And either they have the same host, or both have no host…
        && (
@@ -11,7 +11,7 @@ index b7e145c..63c057f 100644
          || (!isset($exploded['host']) && !isset($parts['host']))
        )
      ) {
-@@ -227,7 +227,7 @@ function _pathologic_replace($matches) {
+@@ -229,7 +229,7 @@ function _pathologic_replace($matches) {
      // Okay, we didn't match on path alone, or host and path together. Can we
      // match on just host? Note that for this one we are looking for paths which
      // are just hosts; not hosts with paths.
@@ -20,15 +20,15 @@ index b7e145c..63c057f 100644
        // No further editing; just continue
        $found = TRUE;
        // Break out of foreach loop
-diff --git a/src/PathologicSettingsCommon.php b/src/PathologicSettingsCommon.php
-index d279188..a55abdc 100644
---- a/src/PathologicSettingsCommon.php
-+++ b/src/PathologicSettingsCommon.php
-@@ -37,7 +37,7 @@ class PathologicSettingsCommon {
+diff --git a/src/PathologicCommonSettingsTrait.php b/src/PathologicCommonSettingsTrait.php
+index ed1c134..9da2045 100644
+--- a/src/PathologicCommonSettingsTrait.php
++++ b/src/PathologicCommonSettingsTrait.php
+@@ -51,7 +51,7 @@ trait PathologicCommonSettingsTrait {
          '#type' => 'textarea',
-         '#title' =>  $this->t('All base paths for this site'),
+         '#title' => $this->t('All base paths for this site'),
          '#default_value' => $defaults['local_paths'],
--          '#description' => $this->t('If this site is or was available at more than one base path or URL, enter them here, separated by line breaks. For example, if this site is live at <code>http://example.com/</code> but has a staging version at <code>http://dev.example.org/staging/</code>, you would enter both those URLs here. If confused, please read <a href=":docs" target="_blank">Pathologic&rsquo;s documentation</a> for more information about this option and what it affects.', [':docs' => 'https://www.drupal.org/node/257026']),
+-        '#description' => $this->t('If this site is or was available at more than one base path or URL, enter them here, separated by line breaks. For example, if this site is live at <code>http://example.com/</code> but has a staging version at <code>http://dev.example.org/staging/</code>, you would enter both those URLs here. If confused, please read <a href=":docs" target="_blank">Pathologic&rsquo;s documentation</a> for more information about this option and what it affects.', [':docs' => 'https://www.drupal.org/node/257026']),
 +        '#description' => $this->t('If this site is or was available at more than one base path or URL, enter them here, separated by line breaks. For example, if this site is live at <code>http://example.com/</code> but has a staging version at <code>http://dev.example.org/staging/</code>, you would enter both those URLs here.  Note that wildcards are also supported, e.g. <code>http://*example.com/</code> would match any subdomain for example.com.  If confused, please read <a href=":docs" target="_blank">Pathologic&rsquo;s documentation</a> for more information about this option and what it affects.', [':docs' => 'https://www.drupal.org/node/257026']),
          '#weight' => 20,
        ],

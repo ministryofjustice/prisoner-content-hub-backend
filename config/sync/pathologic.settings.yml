@@ -1,9 +1,10 @@
 _core:
   default_config_hash: EKYCulG-Y3pcObfUpVbl-D9T5DDX6d4hpQ-BVlSBAmw
-scheme_whitelist:
+scheme_allow_list:
   - http
   - https
   - files
   - internal
 protocol_style: path
 local_paths: 'https://*content-hub.prisoner.service.justice.gov.uk'
+keep_language_prefix: false
