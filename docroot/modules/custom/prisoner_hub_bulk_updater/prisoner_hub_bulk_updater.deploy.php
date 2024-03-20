@@ -5,7 +5,9 @@
  * Hooks for updating content following deployments.
  */
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Excludes specific content from Woodhill.
@@ -70,4 +72,36 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
     '@total' => $sandbox['total'],
     '@nids' => implode('|', $batch_nids),
   ]);
+}
+
+/**
+ * Renames terms.
+ *
+ * @return string
+ *   Message displayed to user after update complete.
+ */
+function prisoner_hub_bulk_updater_deploy_rename_terms() {
+  $terms_to_rename = [
+    1282 => 'TBC',
+    1285 => 'Sentence journey',
+    1286 => 'Faith',
+  ];
+
+  $terms_renamed = 0;
+  foreach ($terms_to_rename as $term_id => $new_name) {
+    if (!$term = Term::load($term_id)) {
+      continue;
+    }
+    try {
+      $term->setName($new_name)->save();
+      $terms_renamed++;
+    }
+    catch (EntityStorageException $exception) {
+      \Drupal::logger('prisoner_hub_bulk_updater')->warning('Could not save term @id with name @name', [
+        '@id' => $term_id,
+        '@name' => $new_name,
+      ]);
+    }
+  }
+  return t('Renamed @terms_renamed terms.', ['@terms_renamed' => $terms_renamed]);
 }
