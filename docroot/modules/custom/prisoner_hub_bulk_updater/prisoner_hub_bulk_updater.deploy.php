@@ -190,3 +190,61 @@ function prisoner_hub_bulk_updater_deploy_move_content() {
     }
   }
 }
+
+/**
+ * Menu changes.
+ */
+function prisoner_hub_bulk_updater_deploy_menu_changes() {
+  $menus_to_update = [
+    'default-primary-navigation',
+    'berwyn-primary-navigation',
+  ];
+  $menu_items_to_rename = [
+    18 => 'TBD',
+    26 => 'TBD',
+  ];
+  $new_menu_items = [
+    'Faith' => 1286,
+  ];
+
+  $logger = \Drupal::logger('prisoner_hub_bulk_updater');
+
+  /** @var \Drupal\menu_link_content\MenuLinkContentStorageInterface $menu_link_content_storage */
+  $menu_link_content_storage = \Drupal::service('entity_type.manager')->getStorage('menu_link_content');
+
+  foreach ($menu_items_to_rename as $menu_item_id => $new_title) {
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $menu_item */
+    $menu_item = $menu_link_content_storage->load($menu_item_id);
+    if ($menu_item) {
+      $menu_item->set('title', $new_title);
+      try {
+        $menu_item->save();
+      }
+      catch (EntityStorageException $e) {
+        $logger->warning("Could not rename menu item @menu_item_id", ['@menu_item_id' => $menu_item_id]);
+      }
+    }
+  }
+
+  foreach ($menus_to_update as $menu_name) {
+    foreach ($new_menu_items as $title => $target) {
+      $new_menu_item = $menu_link_content_storage->create([
+        'menu_name' => $menu_name,
+        'link' => [
+          'uri' => "internal:/tags/$target",
+        ],
+        'title' => $title,
+      ]);
+      try {
+        $new_menu_item->save();
+      }
+      catch (EntityStorageException $e) {
+        $logger->warning("Could not add link to @target to menu @menu_name", [
+          '@target' => $target,
+          '@menu_name' => $menu_name,
+        ]);
+      }
+    }
+  }
+
+}
