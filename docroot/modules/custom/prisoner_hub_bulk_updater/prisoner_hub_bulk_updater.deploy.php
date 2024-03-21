@@ -77,7 +77,7 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
 /**
  * Renames terms.
  *
- * @return string
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
  *   Message displayed to user after update complete.
  */
 function prisoner_hub_bulk_updater_deploy_rename_terms() {
@@ -104,4 +104,89 @@ function prisoner_hub_bulk_updater_deploy_rename_terms() {
     }
   }
   return t('Renamed @terms_renamed terms.', ['@terms_renamed' => $terms_renamed]);
+}
+
+/**
+ * Moves content and taxonomy terms between parent terms.
+ */
+function prisoner_hub_bulk_updater_deploy_move_content() {
+  /** @var \Drupal\taxonomy\TermStorageInterface $term_storage */
+  $term_storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+
+  $content_to_move = [
+    649 => 1282,
+    1337 => 1285,
+  ];
+
+  $logger = \Drupal::logger('prisoner_hub_bulk_updater');
+
+  foreach ($content_to_move as $source_tid => $destination_tid) {
+    $moved_content[$source_tid] = [];
+
+    // Move all child terms of the source term to the destination term.
+    $child_term_count = 0;
+    $child_terms = $term_storage->loadChildren($source_tid);
+    foreach ($child_terms as $child_term) {
+      $child_term->set('parent', $destination_tid);
+      try {
+        $child_term->save();
+      }
+      catch (EntityStorageException $e) {
+        $logger->warning('Could not save term @id when trying to move it from @source_tid to @destination_tid', [
+          '@id' => $child_term->id(),
+          '@source_tid' => $source_tid,
+          '@destination_tid' => $destination_tid,
+        ]);
+      }
+    }
+
+    // Move all nodes belonging to the parent content.
+    $results = \Drupal::entityQuery('node')
+      ->condition('field_moj_top_level_categories', $source_tid)
+      ->accessCheck(FALSE)
+      ->execute();
+    $nodes = Node::loadMultiple($results);
+    foreach ($nodes as $node) {
+      $node->set('field_moj_top_level_categories', $destination_tid);
+      try {
+        $node->save();
+      }
+      catch (EntityStorageException $e) {
+        $logger->warning('Could not save node @id when trying to move it from @source_tid to @destination_tid', [
+          '@id' => $node->id(),
+          '@source_tid' => $source_tid,
+          '@destination_tid' => $destination_tid,
+        ]);
+      }
+    }
+
+    // Move all series belonging to the parent content.
+    $series_count = 0;
+    $results = \Drupal::entityQuery('taxonomy_term')
+      ->condition('field_category', $source_tid)
+      ->accessCheck(FALSE)
+      ->execute();
+    $terms = Term::loadMultiple($results);
+    foreach ($terms as $term) {
+      $term->set('field_category', $destination_tid);
+      try {
+        $term->save();
+      }
+      catch (EntityStorageException $e) {
+        $logger->warning('Could not save term @id when trying to move it from @source_tid to @destination_tid', [
+          '@id' => $term->id(),
+          '@source_tid' => $source_tid,
+          '@destination_tid' => $destination_tid,
+        ]);
+      }
+    }
+
+    // Finally, delete the now-empty source term.
+    try {
+      $term_storage->delete([Term::load($source_tid)]);
+    }
+    catch (EntityStorageException $e) {
+      $logger->warning('Could not delete now empty term @id', ['@source_tid' => $source_tid]);
+    }
+  }
 }
