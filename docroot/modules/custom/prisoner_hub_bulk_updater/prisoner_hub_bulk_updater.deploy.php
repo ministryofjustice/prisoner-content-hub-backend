@@ -82,7 +82,7 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
  */
 function prisoner_hub_bulk_updater_deploy_rename_terms() {
   $terms_to_rename = [
-    1282 => 'TBC',
+    1282 => 'Inspire and entertain',
     1285 => 'Sentence journey',
     1286 => 'Faith',
   ];
@@ -198,11 +198,17 @@ function prisoner_hub_bulk_updater_deploy_menu_changes() {
     'berwyn-primary-navigation',
   ];
   $menu_items_to_rename = [
-    18 => 'TBD',
-    26 => 'TBD',
+    18 => 'Inspire and entertain',
+    26 => 'Inspire and entertain',
+    23 => 'Sentence journey',
+    30 => 'Sentence journey',
   ];
   $new_menu_items = [
     'Faith' => 1286,
+  ];
+  $menu_items_orders = [
+    [45, 17, 23, 20, 24, 18, 22],
+    [25, 30, 29, 27, 26, 32],
   ];
 
   $logger = \Drupal::logger('prisoner_hub_bulk_updater');
@@ -232,6 +238,7 @@ function prisoner_hub_bulk_updater_deploy_menu_changes() {
           'uri' => "internal:/tags/$target",
         ],
         'title' => $title,
+        'weight' => 10,
       ]);
       try {
         $new_menu_item->save();
@@ -241,6 +248,24 @@ function prisoner_hub_bulk_updater_deploy_menu_changes() {
           '@target' => $target,
           '@menu_name' => $menu_name,
         ]);
+      }
+    }
+  }
+
+  foreach ($menu_items_orders as $menu_items_order) {
+    $current_weight = 0;
+    foreach ($menu_items_order as $menu_item_id) {
+      /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $menu_item */
+      $menu_item = $menu_link_content_storage->load($menu_item_id);
+      if ($menu_item) {
+        $menu_item->set('weight', $current_weight);
+        try {
+          $menu_item->save();
+        }
+        catch (EntityStorageException $e) {
+          $logger->warning("Could not reorder menu item @menu_item_id", ['@menu_item_id' => $menu_item_id]);
+        }
+        $current_weight++;
       }
     }
   }
