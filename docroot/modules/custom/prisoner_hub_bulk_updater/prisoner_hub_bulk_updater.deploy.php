@@ -124,7 +124,6 @@ function prisoner_hub_bulk_updater_deploy_move_content() {
     $moved_content[$source_tid] = [];
 
     // Move all child terms of the source term to the destination term.
-    $child_term_count = 0;
     $child_terms = $term_storage->loadChildren($source_tid);
     foreach ($child_terms as $child_term) {
       $child_term->set('parent', $destination_tid);
@@ -161,7 +160,6 @@ function prisoner_hub_bulk_updater_deploy_move_content() {
     }
 
     // Move all series belonging to the parent content.
-    $series_count = 0;
     $results = \Drupal::entityQuery('taxonomy_term')
       ->condition('field_category', $source_tid)
       ->accessCheck(FALSE)
