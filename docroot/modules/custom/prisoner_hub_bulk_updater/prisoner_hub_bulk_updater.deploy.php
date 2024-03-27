@@ -85,6 +85,7 @@ function prisoner_hub_bulk_updater_deploy_rename_terms() {
     1282 => 'Inspire and entertain',
     1285 => 'Sentence journey',
     1286 => 'Faith',
+    1284 => 'Health and wellbeing',
   ];
 
   $terms_renamed = 0;
@@ -202,6 +203,8 @@ function prisoner_hub_bulk_updater_deploy_menu_changes() {
     26 => 'Inspire and entertain',
     23 => 'Sentence journey',
     30 => 'Sentence journey',
+    22 => 'Health and wellbeing',
+    32 => 'Health and wellbeing',
   ];
   $new_menu_items = [
     'Faith' => 1286,
