@@ -108,7 +108,9 @@ function prisoner_hub_bulk_updater_deploy_rename_terms() {
 }
 
 /**
- * Moves content and taxonomy terms between parent terms.
+ * Moves content and taxonomy terms from one term to another.
+ *
+ * The original term is then deleted.
  */
 function prisoner_hub_bulk_updater_deploy_move_content() {
   /** @var \Drupal\taxonomy\TermStorageInterface $term_storage */
@@ -273,4 +275,36 @@ function prisoner_hub_bulk_updater_deploy_menu_changes() {
     }
   }
 
+}
+
+/**
+ * Moves taxonomy terms from one parent to another.
+ *
+ * The original term and all content within it is preserved.
+ */
+function prisoner_hub_bulk_updater_deploy_move_terms() {
+  /** @var \Drupal\taxonomy\TermStorageInterface $term_storage */
+  $term_storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+  $logger = \Drupal::logger('prisoner_hub_bulk_updater');
+
+  $terms = [
+    1286 => NULL,
+  ];
+
+  foreach ($terms as $term_id => $new_parent_term_id) {
+    $term = $term_storage->load($term_id);
+    $term->set('parent', $new_parent_term_id);
+    try {
+      $term->save();
+    }
+    catch (EntityStorageException $e) {
+      $message = 'Could not move term @term_id to the top level of the vocabulary';
+      $context = ['@term_id' => $term_id];
+      if ($new_parent_term_id != NULL) {
+        $message = 'Could not move term @term_id to be a child of @new_parent_term_id';
+        $context['@new_parent_term_id'] = $new_parent_term_id;
+      }
+      $logger->warning($message, $context);
+    }
+  }
 }
