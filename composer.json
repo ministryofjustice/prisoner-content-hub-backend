@@ -159,7 +159,6 @@
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
             },
             "drupal/core": {
-                "Issue #1149078 - States API doesn't work with multiple select fields": "patches/states-api-doesnt-work-with-multiselect-fields-1149078-184.patch",
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
                 "Issue #3114365 - Vocabulary name not shown in View for Anonymous Users": "patches/3114365-37.patch",
