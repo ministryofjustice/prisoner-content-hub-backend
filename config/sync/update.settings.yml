@@ -4,10 +4,10 @@ check:
   disabled_extensions: false
   interval_days: 1
 fetch:
-  url: ''
+  url: null
   max_attempts: 2
   timeout: 30
 notification:
   emails:
-    - elliot.ward@digital.justice.gov.uk
+    - sweety.john@digital.justice.gov.uk
   threshold: security
