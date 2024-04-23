@@ -75,7 +75,7 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
 /**
  * Implements cleanse phase 1.
  */
-function prisoner_hub_bulk_updater_deploy_cleanse_1() {
+function prisoner_hub_bulk_updater_deploy_cleanse_1(array &$sandbox) {
   if (!isset($sandbox['total'])) {
     $sandbox['current'] = 0;
 
