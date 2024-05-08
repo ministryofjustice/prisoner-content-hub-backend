@@ -8,8 +8,8 @@ _core:
   default_config_hash: QeZBeCilQfeET3GeW6ZtJkEiwROADTZktFgKWwPieD4
 id: prisconhub_secondary_local_tasks
 theme: prisconhub
-region: sidebar_first
-weight: 0
+region: pre_content
+weight: -3
 provider: null
 plugin: local_tasks_block
 settings:
