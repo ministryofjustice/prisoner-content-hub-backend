@@ -1,0 +1,13 @@
+diff --git a/src/Resource/MenuItemsResource.php b/src/Resource/MenuItemsResource.php
+index 045cc8d..e5240fc 100644
+--- a/src/Resource/MenuItemsResource.php
++++ b/src/Resource/MenuItemsResource.php
+@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Route;
+  *
+  * @internal
+  */
+-final class MenuItemsResource extends ResourceBase implements ContainerInjectionInterface {
++class MenuItemsResource extends ResourceBase implements ContainerInjectionInterface {
+ 
+   /**
+    * A list of menu items.
