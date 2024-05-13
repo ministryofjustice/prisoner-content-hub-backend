@@ -197,6 +197,9 @@
             },
             "drupal/jsonapi_filter_cache_tags": {
                 "Issue #3416953: 400 response due to BadRequestHttpException thrown with filter parameter in URL in Drupal 10": "patches/jsonapi_filter_cache_tags-3416953-BadRequestHttpException-Drupal-10.patch"
+            },
+            "drupal/search_api": {
+                "Issue #3313569: Warning: Could not load the following items on index": "patches/3313569-10--referenced_entity_tracking_translations.patch"
             }
         },
         "patches-ignore": {
