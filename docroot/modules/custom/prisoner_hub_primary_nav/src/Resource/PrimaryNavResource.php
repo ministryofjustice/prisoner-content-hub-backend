@@ -4,6 +4,7 @@ namespace Drupal\prisoner_hub_primary_nav\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\jsonapi_menu_items\Resource\MenuItemsResource;
@@ -40,8 +41,22 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
    *   Resource response factory.
    * @param \Drupal\jsonapi_resources\Unstable\DocumentExtractor $documentExtractor
    *   Document extractor.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   Route match.
+   * @param string $primaryNavFieldName
+   *   Name of the field containing the primary nav.
+   * @param string $defaultMenu
+   *   Machine name of the default menu.
    */
-  public function __construct(ContainerInterface $container, ResourceTypeRepositoryInterface $resourceTypeRepository, ResourceResponseFactory $resourceResponseFactory, DocumentExtractor $documentExtractor) {
+  public function __construct(
+    ContainerInterface $container,
+    ResourceTypeRepositoryInterface $resourceTypeRepository,
+    ResourceResponseFactory $resourceResponseFactory,
+    DocumentExtractor $documentExtractor,
+    protected RouteMatchInterface $routeMatch,
+    protected string $primaryNavFieldName,
+    protected string $defaultMenu,
+  ) {
     $this->menuItemsResource = MenuItemsResource::create($container);
 
     $this->menuItemsResource->setResourceTypeRepository($resourceTypeRepository);
@@ -58,6 +73,9 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
       $container->get('jsonapi.resource_type.repository'),
       $container->get('jsonapi_resources.resource_response_factory'),
       $container->get('jsonapi_resources.document_extractor'),
+      $container->get('current_route_match'),
+      $container->getParameter('prisoner_hub_primary_nav.primary_nav_field_name'),
+      $container->getParameter('prisoner_hub_primary_nav.default_menu'),
     );
   }
 
@@ -84,17 +102,17 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
     $cacheability = new CacheableMetadata();
 
     if (is_null($menu)) {
-      $prison = \Drupal::routeMatch()->getParameter('prison');
+      $prison = $this->routeMatch->getParameter('prison');
       if ($prison instanceof TermInterface) {
         $cacheability->addCacheableDependency($prison);
-        $entities = $prison->get(\Drupal::getContainer()->getParameter('prisoner_hub_primary_nav.primary_nav_field_name'))->referencedEntities();
+        $entities = $prison->get($this->primaryNavFieldName)->referencedEntities();
         if (!empty($entities)) {
           $menu = reset($entities);
         }
       }
     }
     if (is_null($menu)) {
-      $menu = Menu::load(\Drupal::getContainer()->getParameter('prisoner_hub_primary_nav.default_menu'));
+      $menu = Menu::load($this->defaultMenu);
     }
     $response = $this->menuItemsResource->process($request, $menu);
     $response->addCacheableDependency($cacheability);
