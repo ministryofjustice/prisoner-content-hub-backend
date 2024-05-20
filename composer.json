@@ -180,9 +180,6 @@
                 "Issue #3266585: Support other entity types.": "patches/3266585-support-other-entity-types-13.patch",
                 "Issue #3243177: Allow return relative URLs.": "patches/3243177-return-relative-urls-15.patch"
             },
-            "drupal/jsonapi_menu_items": {
-                "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/3270141-allow-other-modules-to-extend-6.patch"
-            },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
             },

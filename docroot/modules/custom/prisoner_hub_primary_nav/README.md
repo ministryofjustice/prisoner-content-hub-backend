@@ -17,9 +17,8 @@ Otherwise the `default-primary-navigation` will be used.
 https://www.drupal.org/project/jsonapi_menu_items
 The jsonapi_menu_items module provides a JSON:API resource for menu items, via a route
 `/jsonapi/menu_items/{menu}`.
-This module extends the `MenuItemsResource` (currently requiring a patch from
-https://www.drupal.org/project/jsonapi_menu_items/issues/3270141). To dynamically assign
-the menu based on the current prison.
+This module decorates the `MenuItemsResource` to dynamically assign the menu
+based on the current prison.
 
 ### Prisoner hub prison context
 This module is required to modify jsonapi urls to accept the prison context.  This way
