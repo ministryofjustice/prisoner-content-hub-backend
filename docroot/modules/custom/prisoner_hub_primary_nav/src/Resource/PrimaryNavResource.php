@@ -4,6 +4,7 @@ namespace Drupal\prisoner_hub_primary_nav\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
@@ -11,7 +12,6 @@ use Drupal\jsonapi_menu_items\Resource\MenuItemsResource;
 use Drupal\jsonapi_resources\Resource\ResourceBase;
 use Drupal\jsonapi_resources\Unstable\DocumentExtractor;
 use Drupal\jsonapi_resources\Unstable\ResourceResponseFactory;
-use Drupal\system\Entity\Menu;
 use Drupal\system\MenuInterface;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,6 +47,8 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
    *   Name of the field containing the primary nav.
    * @param string $defaultMenu
    *   Machine name of the default menu.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   Entity type manager.
    */
   public function __construct(
     ContainerInterface $container,
@@ -56,6 +58,7 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
     protected RouteMatchInterface $routeMatch,
     protected string $primaryNavFieldName,
     protected string $defaultMenu,
+    protected EntityTypeManagerInterface $entityTypeManager,
   ) {
     $this->menuItemsResource = MenuItemsResource::create($container);
 
@@ -76,6 +79,7 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
       $container->get('current_route_match'),
       $container->getParameter('prisoner_hub_primary_nav.primary_nav_field_name'),
       $container->getParameter('prisoner_hub_primary_nav.default_menu'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -112,7 +116,7 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
       }
     }
     if (is_null($menu)) {
-      $menu = Menu::load($this->defaultMenu);
+      $menu = $this->entityTypeManager->getStorage('menu')->load($this->defaultMenu);
     }
     $response = $this->menuItemsResource->process($request, $menu);
     $response->addCacheableDependency($cacheability);
