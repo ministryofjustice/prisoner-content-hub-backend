@@ -4421,17 +4421,17 @@
         },
         {
             "name": "drupal/publication_date",
-            "version": "2.0.0-beta7",
+            "version": "2.0.0-beta8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/publication_date.git",
-                "reference": "8.x-2.0-beta7"
+                "reference": "8.x-2.0-beta8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/publication_date-8.x-2.0-beta7.zip",
-                "reference": "8.x-2.0-beta7",
-                "shasum": "699232945890528f97b83f49a31ea7c7831c3ca8"
+                "url": "https://ftp.drupal.org/files/projects/publication_date-8.x-2.0-beta8.zip",
+                "reference": "8.x-2.0-beta8",
+                "shasum": "1e40fc97a4582c364a8971e16448775c30441fe7"
             },
             "require": {
                 "drupal/core": "^9.1 || ^10"
@@ -4439,8 +4439,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-beta7",
-                    "datestamp": "1669679282",
+                    "version": "8.x-2.0-beta8",
+                    "datestamp": "1715850299",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -17962,5 +17962,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
