@@ -1,0 +1,736 @@
+From 60097779c898380f6bb00c0dc07f2a8ef3fa5b79 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <28650-mstrelan@users.noreply.drupalcode.org>
+Date: Tue, 7 May 2024 00:10:22 +0000
+Subject: [PATCH 01/13] Update .gitlab-ci.yml file
+
+---
+ .gitlab-ci.yml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index b426888..61c5d98 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -17,3 +17,6 @@ stylelint:
+ 
+ eslint:
+   allow_failure: false
++
++variables:
++  OPT_IN_TEST_NEXT_MINOR: 1
+\ No newline at end of file
+-- 
+GitLab
+
+
+From 784d2c1f613820d1223a7e1b54c4fddd4ff3e9f9 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <28650-mstrelan@users.noreply.drupalcode.org>
+Date: Tue, 7 May 2024 00:32:52 +0000
+Subject: [PATCH 02/13] Add MonologKernelTest
+
+---
+ tests/src/Kernel/MonologKernelTest.php | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 tests/src/Kernel/MonologKernelTest.php
+
+diff --git a/tests/src/Kernel/MonologKernelTest.php b/tests/src/Kernel/MonologKernelTest.php
+new file mode 100644
+index 0000000..e93faaa
+--- /dev/null
++++ b/tests/src/Kernel/MonologKernelTest.php
+@@ -0,0 +1,25 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Tests\monolog\Kernel;
++
++use Drupal\Core\Logger\LoggerChannelInterface;
++use Drupal\Tests\purge\Kernel\KernelTestBase;
++
++/**
++ * Tests the Monolog module.
++ */
++class MonologKernelTest extends KernelTestBase {
++
++  protected static $modules = ['monolog'];
++
++  /**
++   * Test the Monolog service.
++   */
++  public function testMonolog(): void {
++    $monolog = $this->container->get('logger.factory')->get('monolog');
++    $this->assertInstanceOf(LoggerChannelInterface::class, $monolog);
++  }
++
++}
+-- 
+GitLab
+
+
+From 2d5b0685d61906767bde3cd0b646ece94f328051 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <28650-mstrelan@users.noreply.drupalcode.org>
+Date: Tue, 7 May 2024 00:37:21 +0000
+Subject: [PATCH 03/13] Fix namespace
+
+---
+ tests/src/Kernel/MonologKernelTest.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/src/Kernel/MonologKernelTest.php b/tests/src/Kernel/MonologKernelTest.php
+index e93faaa..44c1705 100644
+--- a/tests/src/Kernel/MonologKernelTest.php
++++ b/tests/src/Kernel/MonologKernelTest.php
+@@ -5,7 +5,7 @@ declare(strict_types=1);
+ namespace Drupal\Tests\monolog\Kernel;
+ 
+ use Drupal\Core\Logger\LoggerChannelInterface;
+-use Drupal\Tests\purge\Kernel\KernelTestBase;
++use Drupal\KernelTests\KernelTestBase;
+ 
+ /**
+  * Tests the Monolog module.
+-- 
+GitLab
+
+
+From 22bdff0a7dd6a2687f72263f67d31ae75f1f7fb0 Mon Sep 17 00:00:00 2001
+From: Yaroslav Kozak <y.kozak@dev-branch.com>
+Date: Fri, 17 May 2024 16:44:44 +0300
+Subject: [PATCH 04/13] #3445588 Fixed the issue with
+ MonologLoggerChannelFactory constructor
+
+---
+ src/Logger/MonologLoggerChannelFactory.php   | 27 ++++++++++++++++----
+ src/MonologServiceProvider.php               |  7 +++++
+ tests/src/Unit/Logger/ChannelFactoryTest.php |  7 ++++-
+ 3 files changed, 35 insertions(+), 6 deletions(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index e5d357d..a91e6e0 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -4,8 +4,9 @@ declare(strict_types=1);
+ 
+ namespace Drupal\monolog\Logger;
+ 
+-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
++use Drupal\Core\Logger\LoggerChannelFactory;
+ use Drupal\Core\Messenger\MessengerInterface;
++use Drupal\Core\Session\AccountProxyInterface;
+ use Monolog\Formatter\FormatterInterface;
+ use Monolog\Handler\FormattableHandlerInterface;
+ use Monolog\Handler\HandlerInterface;
+@@ -15,11 +16,12 @@ use Psr\Log\NullLogger;
+ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
++use Symfony\Component\HttpFoundation\RequestStack;
+ 
+ /**
+  * Defines a factory for logging channels.
+  */
+-class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAwareInterface {
++class MonologLoggerChannelFactory extends LoggerChannelFactory implements ContainerAwareInterface {
+ 
+   use ContainerAwareTrait;
+ 
+@@ -40,7 +42,7 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, Cont
+    *
+    * @var \Psr\Log\LoggerInterface[]
+    */
+-  protected array $channels = [];
++  protected $channels;
+ 
+   /**
+    * Array of all instantiated handlers keyed by a hash of their configuration.
+@@ -66,10 +68,25 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, Cont
+   /**
+    * MonologLoggerChannelFactory constructor.
+    *
++   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
++   *   The request_stack service.
++   * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
++   *   The current_user service.
+    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+-   *   The Messenger service.
++   *   The messenger service.
+    */
+-  public function __construct(MessengerInterface $messenger) {
++  public function __construct(
++    RequestStack $request_stack,
++    AccountProxyInterface $account_proxy,
++    MessengerInterface $messenger
++  ) {
++    // LoggerChannelFactory has 2 args in the construct Since D10.3.
++    // So passing these args conditionally.
++    // @see https://git.drupalcode.org/project/drupal/-/blob/10.3.x/core/lib/Drupal/Core/Logger/LoggerChannelFactory.php
++    // @see \Drupal\monolog\MonologServiceProvider::alter
++    if (version_compare(\Drupal::VERSION, '10.3', '>=')) {
++      parent::__construct($request_stack, $account_proxy);
++    }
+     $this->messenger = $messenger;
+   }
+ 
+diff --git a/src/MonologServiceProvider.php b/src/MonologServiceProvider.php
+index 1bd0a8f..9ec4b96 100644
+--- a/src/MonologServiceProvider.php
++++ b/src/MonologServiceProvider.php
+@@ -31,6 +31,13 @@ class MonologServiceProvider extends ServiceProviderBase {
+    */
+   public function alter(ContainerBuilder $container) {
+     $definition = $container->getDefinition('logger.factory');
++    $arguments = $definition->getArguments();
++    if (!in_array('request_stack', $arguments)) {
++      $definition->addArgument(new Reference('request_stack'));
++    }
++    if (!in_array('current_user', $arguments)) {
++      $definition->addArgument(new Reference('current_user'));
++    }
+     $definition
+       ->setClass('Drupal\monolog\Logger\MonologLoggerChannelFactory')
+       ->addArgument(new Reference('messenger'))
+diff --git a/tests/src/Unit/Logger/ChannelFactoryTest.php b/tests/src/Unit/Logger/ChannelFactoryTest.php
+index 4ec0d91..e7c983b 100644
+--- a/tests/src/Unit/Logger/ChannelFactoryTest.php
++++ b/tests/src/Unit/Logger/ChannelFactoryTest.php
+@@ -6,6 +6,7 @@ namespace Drupal\Tests\monolog\Unit\Logger;
+ 
+ use Drupal\Core\DependencyInjection\Container;
+ use Drupal\Core\Messenger\MessengerInterface;
++use Drupal\Core\Session\AccountProxy;
+ use Drupal\monolog\Logger\Handler\DrupalHandler;
+ use Drupal\monolog\Logger\LoggerInterfacesAdapter;
+ use Drupal\monolog\Logger\MonologLoggerChannelFactory;
+@@ -17,6 +18,7 @@ use Monolog\Logger;
+ use Monolog\Processor\ProcessorInterface;
+ use Psr\Log\NullLogger;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
++use Symfony\Component\HttpFoundation\RequestStack;
+ use Symfony\Component\Yaml\Yaml;
+ 
+ /**
+@@ -42,7 +44,10 @@ class ChannelFactoryTest extends UnitTestCase {
+   ): void {
+     $messenger = $this->createMock(MessengerInterface::class);
+ 
+-    $channelFactory = new MonologLoggerChannelFactory($messenger);
++    // @see \Drupal\monolog\Logger\MonologLoggerChannelFactory::__construct
++    $request_stack = $this->createMock(RequestStack::class);
++    $account_proxy = $this->createMock(AccountProxy::class);
++    $channelFactory = new MonologLoggerChannelFactory($request_stack, $account_proxy, $messenger);
+     $channelFactory
+       ->setContainer(
+         $this->getMockContainer(
+-- 
+GitLab
+
+
+From b29d7773c1ddfd2d46efd0c07ae005ff64161a48 Mon Sep 17 00:00:00 2001
+From: Yaroslav Kozak <y.kozak@dev-branch.com>
+Date: Fri, 17 May 2024 16:53:28 +0300
+Subject: [PATCH 05/13] #3445588 Fixed phpstan + phpcs
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 9 +++------
+ src/MonologServiceProvider.php             | 4 ++--
+ 2 files changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index a91e6e0..f91c0d2 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -42,7 +42,7 @@ class MonologLoggerChannelFactory extends LoggerChannelFactory implements Contai
+    *
+    * @var \Psr\Log\LoggerInterface[]
+    */
+-  protected $channels;
++  protected $channels = [];
+ 
+   /**
+    * Array of all instantiated handlers keyed by a hash of their configuration.
+@@ -75,16 +75,13 @@ class MonologLoggerChannelFactory extends LoggerChannelFactory implements Contai
+    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+    *   The messenger service.
+    */
+-  public function __construct(
+-    RequestStack $request_stack,
+-    AccountProxyInterface $account_proxy,
+-    MessengerInterface $messenger
+-  ) {
++  public function __construct(RequestStack $request_stack, AccountProxyInterface $account_proxy, MessengerInterface $messenger) {
+     // LoggerChannelFactory has 2 args in the construct Since D10.3.
+     // So passing these args conditionally.
+     // @see https://git.drupalcode.org/project/drupal/-/blob/10.3.x/core/lib/Drupal/Core/Logger/LoggerChannelFactory.php
+     // @see \Drupal\monolog\MonologServiceProvider::alter
+     if (version_compare(\Drupal::VERSION, '10.3', '>=')) {
++      // @phpstan-ignore-next-line
+       parent::__construct($request_stack, $account_proxy);
+     }
+     $this->messenger = $messenger;
+diff --git a/src/MonologServiceProvider.php b/src/MonologServiceProvider.php
+index 9ec4b96..96986a0 100644
+--- a/src/MonologServiceProvider.php
++++ b/src/MonologServiceProvider.php
+@@ -32,10 +32,10 @@ class MonologServiceProvider extends ServiceProviderBase {
+   public function alter(ContainerBuilder $container) {
+     $definition = $container->getDefinition('logger.factory');
+     $arguments = $definition->getArguments();
+-    if (!in_array('request_stack', $arguments)) {
++    if (!in_array('request_stack', $arguments, FALSE)) {
+       $definition->addArgument(new Reference('request_stack'));
+     }
+-    if (!in_array('current_user', $arguments)) {
++    if (!in_array('current_user', $arguments, FALSE)) {
+       $definition->addArgument(new Reference('current_user'));
+     }
+     $definition
+-- 
+GitLab
+
+
+From fd5ba66d4f2c03f28794b33768b86489ae580cb8 Mon Sep 17 00:00:00 2001
+From: Yaroslav Kozak <y.kozak@dev-branch.com>
+Date: Mon, 20 May 2024 11:25:35 +0300
+Subject: [PATCH 06/13] #3445588 Simplified a fix for incompatibility with
+ D10.3
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 27 ++++++++++++++++++----
+ src/MonologServiceProvider.php             |  4 ++++
+ tests/src/Kernel/MonologKernelTest.php     |  3 +++
+ 3 files changed, 29 insertions(+), 5 deletions(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index f91c0d2..52700ac 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -4,7 +4,6 @@ declare(strict_types=1);
+ 
+ namespace Drupal\monolog\Logger;
+ 
+-use Drupal\Core\Logger\LoggerChannelFactory;
+ use Drupal\Core\Messenger\MessengerInterface;
+ use Drupal\Core\Session\AccountProxyInterface;
+ use Monolog\Formatter\FormatterInterface;
+@@ -21,7 +20,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
+ /**
+  * Defines a factory for logging channels.
+  */
+-class MonologLoggerChannelFactory extends LoggerChannelFactory implements ContainerAwareInterface {
++class MonologLoggerChannelFactory implements ContainerAwareInterface {
+ 
+   use ContainerAwareTrait;
+ 
+@@ -65,6 +64,20 @@ class MonologLoggerChannelFactory extends LoggerChannelFactory implements Contai
+    */
+   private MessengerInterface $messenger;
+ 
++  /**
++   * Request stack service.
++   *
++   * @var \Symfony\Component\HttpFoundation\RequestStack
++   */
++  protected RequestStack $requestStack;
++
++  /**
++   * Current user service.
++   *
++   * @var \Drupal\Core\Session\AccountProxyInterface
++   */
++  protected AccountProxyInterface $currentUser;
++
+   /**
+    * MonologLoggerChannelFactory constructor.
+    *
+@@ -75,14 +88,18 @@ class MonologLoggerChannelFactory extends LoggerChannelFactory implements Contai
+    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+    *   The messenger service.
+    */
+-  public function __construct(RequestStack $request_stack, AccountProxyInterface $account_proxy, MessengerInterface $messenger) {
++  public function __construct(
++    RequestStack $request_stack,
++    AccountProxyInterface $account_proxy,
++    MessengerInterface $messenger,
++  ) {
+     // LoggerChannelFactory has 2 args in the construct Since D10.3.
+     // So passing these args conditionally.
+     // @see https://git.drupalcode.org/project/drupal/-/blob/10.3.x/core/lib/Drupal/Core/Logger/LoggerChannelFactory.php
+     // @see \Drupal\monolog\MonologServiceProvider::alter
+     if (version_compare(\Drupal::VERSION, '10.3', '>=')) {
+-      // @phpstan-ignore-next-line
+-      parent::__construct($request_stack, $account_proxy);
++      $this->requestStack = $request_stack;
++      $this->currentUser = $account_proxy;
+     }
+     $this->messenger = $messenger;
+   }
+diff --git a/src/MonologServiceProvider.php b/src/MonologServiceProvider.php
+index 96986a0..e8529ca 100644
+--- a/src/MonologServiceProvider.php
++++ b/src/MonologServiceProvider.php
+@@ -32,9 +32,13 @@ class MonologServiceProvider extends ServiceProviderBase {
+   public function alter(ContainerBuilder $container) {
+     $definition = $container->getDefinition('logger.factory');
+     $arguments = $definition->getArguments();
++    // There should be no strict check cuz otherwise the check behaves not as
++    // expected.
++    // @phpstan-ignore-next-line
+     if (!in_array('request_stack', $arguments, FALSE)) {
+       $definition->addArgument(new Reference('request_stack'));
+     }
++    // @phpstan-ignore-next-line
+     if (!in_array('current_user', $arguments, FALSE)) {
+       $definition->addArgument(new Reference('current_user'));
+     }
+diff --git a/tests/src/Kernel/MonologKernelTest.php b/tests/src/Kernel/MonologKernelTest.php
+index 44c1705..5926d94 100644
+--- a/tests/src/Kernel/MonologKernelTest.php
++++ b/tests/src/Kernel/MonologKernelTest.php
+@@ -12,6 +12,9 @@ use Drupal\KernelTests\KernelTestBase;
+  */
+ class MonologKernelTest extends KernelTestBase {
+ 
++  /**
++   * {@inheritdoc}
++   */
+   protected static $modules = ['monolog'];
+ 
+   /**
+-- 
+GitLab
+
+
+From 314e16365960ae1e01177d4faac6b9226a30916c Mon Sep 17 00:00:00 2001
+From: Yaroslav Kozak <y.kozak@dev-branch.com>
+Date: Mon, 20 May 2024 12:12:16 +0300
+Subject: [PATCH 07/13] #3445588 Reverted back implements
+ LoggerChannelFactoryInterface entry
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index 52700ac..38aaf45 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -4,6 +4,7 @@ declare(strict_types=1);
+ 
+ namespace Drupal\monolog\Logger;
+ 
++use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+ use Drupal\Core\Messenger\MessengerInterface;
+ use Drupal\Core\Session\AccountProxyInterface;
+ use Monolog\Formatter\FormatterInterface;
+@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
+ /**
+  * Defines a factory for logging channels.
+  */
+-class MonologLoggerChannelFactory implements ContainerAwareInterface {
++class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAwareInterface {
+ 
+   use ContainerAwareTrait;
+ 
+-- 
+GitLab
+
+
+From b8bc4b79acf8c1bb6d87893b42358c3db3cf3790 Mon Sep 17 00:00:00 2001
+From: Luca Lusso <lussoluca@gmail.com>
+Date: Fri, 24 May 2024 12:02:13 +0200
+Subject: [PATCH 08/13] Inject the service container manually
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 17 ++++++++++++-----
+ src/MonologServiceProvider.php             |  1 +
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index 38aaf45..5b5cc95 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -13,17 +13,13 @@ use Monolog\Handler\HandlerInterface;
+ use Monolog\Handler\ProcessableHandlerInterface;
+ use Psr\Log\LoggerInterface;
+ use Psr\Log\NullLogger;
+-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+ use Symfony\Component\HttpFoundation\RequestStack;
+ 
+ /**
+  * Defines a factory for logging channels.
+  */
+-class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAwareInterface {
+-
+-  use ContainerAwareTrait;
++class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface {
+ 
+   private const HANDLERS_KEY = 'monolog.channel_handlers';
+ 
+@@ -79,6 +75,13 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, Cont
+    */
+   protected AccountProxyInterface $currentUser;
+ 
++  /**
++   * The service container.
++   *
++   * @var \Symfony\Component\DependencyInjection\ContainerInterface
++   */
++  protected ContainerInterface $container;
++
+   /**
+    * MonologLoggerChannelFactory constructor.
+    *
+@@ -88,11 +91,14 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, Cont
+    *   The current_user service.
+    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+    *   The messenger service.
++   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
++   *   The service container.
+    */
+   public function __construct(
+     RequestStack $request_stack,
+     AccountProxyInterface $account_proxy,
+     MessengerInterface $messenger,
++    ContainerInterface $container
+   ) {
+     // LoggerChannelFactory has 2 args in the construct Since D10.3.
+     // So passing these args conditionally.
+@@ -103,6 +109,7 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface, Cont
+       $this->currentUser = $account_proxy;
+     }
+     $this->messenger = $messenger;
++    $this->container = $container;
+   }
+ 
+   /**
+diff --git a/src/MonologServiceProvider.php b/src/MonologServiceProvider.php
+index e8529ca..d4fc2ea 100644
+--- a/src/MonologServiceProvider.php
++++ b/src/MonologServiceProvider.php
+@@ -45,6 +45,7 @@ class MonologServiceProvider extends ServiceProviderBase {
+     $definition
+       ->setClass('Drupal\monolog\Logger\MonologLoggerChannelFactory')
+       ->addArgument(new Reference('messenger'))
++      ->addArgument(new Reference('service_container'))
+       ->clearTags();
+ 
+     // Allow existing Drupal loggers to be added as handlers.
+-- 
+GitLab
+
+
+From 571913b43ae3e465c52ef05d8f5559c00942db47 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <mstrelan@gmail.com>
+Date: Tue, 28 May 2024 13:32:12 +1000
+Subject: [PATCH 09/13] Restore setContainer for backwards compatibility
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index 5b5cc95..b540dca 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -112,6 +112,13 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface {
+     $this->container = $container;
+   }
+ 
++  /**
++   * Set the container.
++   */
++  public function setContainer(ContainerInterface $container): void {
++    $this->container = $container;
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+-- 
+GitLab
+
+
+From a56005da59b14e50df29daf2e5acfe982cffdabd Mon Sep 17 00:00:00 2001
+From: Michael Strelan <mstrelan@gmail.com>
+Date: Tue, 28 May 2024 13:32:21 +1000
+Subject: [PATCH 10/13] Fix unit test
+
+---
+ tests/src/Unit/Logger/ChannelFactoryTest.php | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tests/src/Unit/Logger/ChannelFactoryTest.php b/tests/src/Unit/Logger/ChannelFactoryTest.php
+index e7c983b..bd1f9b9 100644
+--- a/tests/src/Unit/Logger/ChannelFactoryTest.php
++++ b/tests/src/Unit/Logger/ChannelFactoryTest.php
+@@ -43,11 +43,10 @@ class ChannelFactoryTest extends UnitTestCase {
+     $drupal_push_processor,
+   ): void {
+     $messenger = $this->createMock(MessengerInterface::class);
+-
+-    // @see \Drupal\monolog\Logger\MonologLoggerChannelFactory::__construct
++    $container = $this->createMock(ContainerInterface::class);
+     $request_stack = $this->createMock(RequestStack::class);
+     $account_proxy = $this->createMock(AccountProxy::class);
+-    $channelFactory = new MonologLoggerChannelFactory($request_stack, $account_proxy, $messenger);
++    $channelFactory = new MonologLoggerChannelFactory($request_stack, $account_proxy, $messenger, $container);
+     $channelFactory
+       ->setContainer(
+         $this->getMockContainer(
+-- 
+GitLab
+
+
+From eede4cc17bfeb46f7d2bcf847aa5e925150fddf4 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <mstrelan@gmail.com>
+Date: Tue, 28 May 2024 13:33:22 +1000
+Subject: [PATCH 11/13] Use constructor property promotion
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 49 +++-------------------
+ 1 file changed, 5 insertions(+), 44 deletions(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index b540dca..dd94284 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -54,34 +54,6 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface {
+    */
+   protected array $enabledProcessors;
+ 
+-  /**
+-   * The Messenger service.
+-   *
+-   * @var \Drupal\Core\Messenger\MessengerInterface
+-   */
+-  private MessengerInterface $messenger;
+-
+-  /**
+-   * Request stack service.
+-   *
+-   * @var \Symfony\Component\HttpFoundation\RequestStack
+-   */
+-  protected RequestStack $requestStack;
+-
+-  /**
+-   * Current user service.
+-   *
+-   * @var \Drupal\Core\Session\AccountProxyInterface
+-   */
+-  protected AccountProxyInterface $currentUser;
+-
+-  /**
+-   * The service container.
+-   *
+-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+-   */
+-  protected ContainerInterface $container;
+-
+   /**
+    * MonologLoggerChannelFactory constructor.
+    *
+@@ -95,22 +67,11 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface {
+    *   The service container.
+    */
+   public function __construct(
+-    RequestStack $request_stack,
+-    AccountProxyInterface $account_proxy,
+-    MessengerInterface $messenger,
+-    ContainerInterface $container
+-  ) {
+-    // LoggerChannelFactory has 2 args in the construct Since D10.3.
+-    // So passing these args conditionally.
+-    // @see https://git.drupalcode.org/project/drupal/-/blob/10.3.x/core/lib/Drupal/Core/Logger/LoggerChannelFactory.php
+-    // @see \Drupal\monolog\MonologServiceProvider::alter
+-    if (version_compare(\Drupal::VERSION, '10.3', '>=')) {
+-      $this->requestStack = $request_stack;
+-      $this->currentUser = $account_proxy;
+-    }
+-    $this->messenger = $messenger;
+-    $this->container = $container;
+-  }
++    protected RequestStack $request_stack,
++    protected AccountProxyInterface $account_proxy,
++    protected MessengerInterface $messenger,
++    protected ContainerInterface $container,
++  ) { }
+ 
+   /**
+    * Set the container.
+-- 
+GitLab
+
+
+From 27c45cba995c3a006a8c6d237cc8517706f68185 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <mstrelan@gmail.com>
+Date: Tue, 28 May 2024 13:41:24 +1000
+Subject: [PATCH 12/13] Just set all arguments
+
+---
+ src/MonologServiceProvider.php | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/src/MonologServiceProvider.php b/src/MonologServiceProvider.php
+index d4fc2ea..61e3f70 100644
+--- a/src/MonologServiceProvider.php
++++ b/src/MonologServiceProvider.php
+@@ -31,21 +31,14 @@ class MonologServiceProvider extends ServiceProviderBase {
+    */
+   public function alter(ContainerBuilder $container) {
+     $definition = $container->getDefinition('logger.factory');
+-    $arguments = $definition->getArguments();
+-    // There should be no strict check cuz otherwise the check behaves not as
+-    // expected.
+-    // @phpstan-ignore-next-line
+-    if (!in_array('request_stack', $arguments, FALSE)) {
+-      $definition->addArgument(new Reference('request_stack'));
+-    }
+-    // @phpstan-ignore-next-line
+-    if (!in_array('current_user', $arguments, FALSE)) {
+-      $definition->addArgument(new Reference('current_user'));
+-    }
+     $definition
+       ->setClass('Drupal\monolog\Logger\MonologLoggerChannelFactory')
+-      ->addArgument(new Reference('messenger'))
+-      ->addArgument(new Reference('service_container'))
++      ->setArguments([
++        new Reference('request_stack'),
++        new Reference('current_user'),
++        new Reference('messenger'),
++        new Reference('service_container'),
++      ])
+       ->clearTags();
+ 
+     // Allow existing Drupal loggers to be added as handlers.
+-- 
+GitLab
+
+
+From d273b292d1478cb17058f4402f0889273fa0fc85 Mon Sep 17 00:00:00 2001
+From: Michael Strelan <mstrelan@gmail.com>
+Date: Tue, 28 May 2024 13:48:56 +1000
+Subject: [PATCH 13/13] phpcs
+
+---
+ src/Logger/MonologLoggerChannelFactory.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Logger/MonologLoggerChannelFactory.php b/src/Logger/MonologLoggerChannelFactory.php
+index dd94284..bfd4efa 100644
+--- a/src/Logger/MonologLoggerChannelFactory.php
++++ b/src/Logger/MonologLoggerChannelFactory.php
+@@ -71,7 +71,7 @@ class MonologLoggerChannelFactory implements LoggerChannelFactoryInterface {
+     protected AccountProxyInterface $account_proxy,
+     protected MessengerInterface $messenger,
+     protected ContainerInterface $container,
+-  ) { }
++  ) {}
+ 
+   /**
+    * Set the container.
+-- 
+GitLab
+

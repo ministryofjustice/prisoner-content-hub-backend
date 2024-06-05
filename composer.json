@@ -43,7 +43,7 @@
         "drupal/linkit": "^6.0",
         "drupal/maintenance_exempt": "^1.3",
         "drupal/maxlength": "^3.0",
-        "drupal/monolog": "^2.0",
+        "drupal/monolog": "^3",
         "drupal/node_edit_protection": "^1.0",
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/pathauto": "^1.8",
@@ -196,6 +196,9 @@
             },
             "drupal/search_api": {
                 "Issue #3313569: Warning: Could not load the following items on index": "patches/3313569-10--referenced_entity_tracking_translations.patch"
+            },
+            "drupal/monolog": {
+                "Issue #3366135: Compatibility with Drupal 10.3": "patches/3445588-20.patch"
             }
         },
         "patches-ignore": {
