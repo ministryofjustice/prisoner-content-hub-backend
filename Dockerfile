@@ -104,7 +104,7 @@ WORKDIR /var/www/html
 
 RUN mkdir -p /var/www/.local/bin
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=$HOME/.local/bin --filename=composer --version=2.4.2 \
+  && php composer-setup.php --install-dir=$HOME/.local/bin --filename=composer --version=2.7.7 \
   && php -r "unlink('composer-setup.php');"
 
 # Add the composer bin directory to the path.
