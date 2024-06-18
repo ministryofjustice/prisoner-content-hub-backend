@@ -1,0 +1,21 @@
+uuid: 603d10c0-7b96-470a-9232-4ad92190297d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_editorial
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.field_editorial
+field_name: field_editorial
+entity_type: node
+bundle: moj_pdf_item
+label: 'Editorial compliance check'
+description: 'By selecting this tick box you confirm that the piece of content you’re uploading complies with editorial guidelines, both for the edits themselves and the content in full.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Certified compliant'
+  off_label: 'Not certified compliant'
+field_type: boolean

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_editorial
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
     - field.field.node.page.field_main_body_content
@@ -31,6 +32,16 @@ targetEntityType: node
 bundle: page
 mode: default
 content:
+  field_editorial:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 25
+    region: content
   field_exclude_feedback:
     type: boolean
     label: above

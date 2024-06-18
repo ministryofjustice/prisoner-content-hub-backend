@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.moj_pdf_item.field_editorial
     - field.field.node.moj_pdf_item.field_exclude_from_prison
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
@@ -29,6 +30,16 @@ targetEntityType: node
 bundle: moj_pdf_item
 mode: default
 content:
+  field_editorial:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 25
+    region: content
   field_exclude_from_prison:
     type: entity_reference_label
     label: above

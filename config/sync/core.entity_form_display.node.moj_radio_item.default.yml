@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_radio_item.field_description
+    - field.field.node.moj_radio_item.field_editorial
     - field.field.node.moj_radio_item.field_exclude_feedback
     - field.field.node.moj_radio_item.field_exclude_from_prison
     - field.field.node.moj_radio_item.field_moj_audio
@@ -153,6 +154,13 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_editorial:
+    type: boolean_checkbox
+    weight: 27
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox

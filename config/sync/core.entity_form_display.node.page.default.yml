@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_editorial
     - field.field.node.page.field_exclude_feedback
     - field.field.node.page.field_exclude_from_prison
     - field.field.node.page.field_main_body_content
@@ -143,6 +144,13 @@ content:
     weight: 7
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_editorial:
+    type: boolean_checkbox
+    weight: 27
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
