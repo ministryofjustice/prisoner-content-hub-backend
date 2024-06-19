@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Prisoner Hub Editorial Compliance Check module.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function prisoner_hub_editorial_compliance_check_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Exit early if this form isn't for a content type subject to editorial
+  // control.
+  $editorial_compliance_form_ids = [
+
+  ];
+  if (!in_array($form_id, $editorial_compliance_form_ids)) {
+    return;
+  }
+}

@@ -1,0 +1,5 @@
+name: 'Prisoner Hub Editorial Compliance Check'
+type: module
+description: 'Ensures content is marked as editorially compliant before it can be published.'
+package: Custom
+core_version_requirement: ^10
