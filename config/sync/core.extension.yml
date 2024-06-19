@@ -16,6 +16,7 @@ module:
   contextual: 0
   csv_serialization: 0
   ctools: 0
+  database_ssl_check: 0
   datetime: 0
   decoupled_router: 0
   diff: 0

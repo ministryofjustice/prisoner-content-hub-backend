@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95d21c71f85a7e5b11b9f4287c12d541",
+    "content-hash": "9f81b25b5cfe60b027f62a59dd66a93b",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -2411,6 +2411,62 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/ctools",
                 "issues": "https://www.drupal.org/project/issues/ctools"
+            }
+        },
+        {
+            "name": "drupal/database_ssl_check",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/database_ssl_check.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/database_ssl_check-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "99afe4dd307b945d22ffc7fca09f327c6122d091"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1717157589",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "John Franklin",
+                    "homepage": "https://www.drupal.org/u/john-franklin",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "John Shortess",
+                    "homepage": "https://www.drupal.org/u/johnshortess",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Displays the SSL connection parameters to your database.",
+            "homepage": "https://www.drupal.org/project/database_ssl_check",
+            "keywords": [
+                "Database",
+                "Drupal",
+                "SSL"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/database_ssl_check",
+                "issues": "https://drupal.org/project/issues/database_ssl_check"
             }
         },
         {
