@@ -18,10 +18,10 @@ $databases['default']['default'] = [
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
-//  'pdo' => [
-//    PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/root.pem',
-//    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
-//  ],
+  'pdo' => [
+    PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/root.crt',
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
+  ],
 ];
 
 $settings['trusted_host_patterns'] = [
