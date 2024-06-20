@@ -20,6 +20,14 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
 ];
 
+$rds_certificate = getenv('RDS_CERTIFICATE', TRUE);
+if ($rds_certificate) {
+  $databases['default']['default']['pdo'] = [
+    PDO::MYSQL_ATTR_SSL_CA => $rds_certificate,
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
+  ];
+}
+
 $settings['trusted_host_patterns'] = [
   getenv('TRUSTED_HOSTS', TRUE),
   getenv('TRUSTED_HOSTS_JSONAPI', TRUE),

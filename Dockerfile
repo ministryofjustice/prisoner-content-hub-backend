@@ -120,6 +120,13 @@ COPY --chown=www-data:www-data config config
 COPY ./apache/ /etc/apache2/
 
 ###########################################################################################
+# Copy AWS RDS Certificate
+###########################################################################################
+USER root
+RUN curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem > /etc/ssl/certs/root.crt
+USER 33
+
+###########################################################################################
 # Create test image
 ###########################################################################################
 FROM base AS test

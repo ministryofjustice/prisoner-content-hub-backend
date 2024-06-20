@@ -17,6 +17,7 @@
         "drupal/core-recommended": "^10",
         "drupal/core-vendor-hardening": "^10",
         "drupal/csv_serialization": "^3.0 || ^4.0",
+        "drupal/database_ssl_check": "^2.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
         "drupal/dynamic_entity_reference": "^3.2",
