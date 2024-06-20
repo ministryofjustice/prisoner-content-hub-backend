@@ -18,11 +18,15 @@ $databases['default']['default'] = [
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
-  'pdo' => [
-    PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/root.crt',
-    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
-  ],
 ];
+
+$rds_certificate = getenv('RDS_CERTIFICATE', TRUE);
+if ($rds_certificate) {
+  $databases['default']['default']['pdo'] = [
+    PDO::MYSQL_ATTR_SSL_CA => $rds_certificate,
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
+  ];
+}
 
 $settings['trusted_host_patterns'] = [
   getenv('TRUSTED_HOSTS', TRUE),
