@@ -135,8 +135,6 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       }
     }
 
-    $this->logger()->success(dt('Achievement unlocked.'));
-
     return new RowsOfFields($rows);
   }
 
