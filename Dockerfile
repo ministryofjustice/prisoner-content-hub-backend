@@ -8,7 +8,7 @@
 
 # Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
 # of the things we run, like kubectl.
-FROM --platform=linux/amd64 php:8.1.11-apache-buster AS base
+FROM --platform=linux/amd64 php:8.1.29-apache-bookworm AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -46,6 +46,7 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark; \
 	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
 		| awk '/=>/ { print $3 }' \
+    | awk '{print $1} {system("realpath " $1)}' \
 		| sort -u \
 		| xargs -r dpkg-query -S \
 		| cut -d: -f1 \
