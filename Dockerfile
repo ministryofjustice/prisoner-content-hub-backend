@@ -25,6 +25,7 @@ RUN set -eux; \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
+    libwebp-dev \
 		libzip-dev \
 	; \
 	\
