@@ -27,6 +27,7 @@ RUN set -eux; \
 		libpq-dev \
     libwebp-dev \
 		libzip-dev \
+    php-apcu \
 	; \
 	\
 	docker-php-ext-configure gd \
