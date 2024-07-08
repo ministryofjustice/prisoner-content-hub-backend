@@ -31,6 +31,7 @@ RUN set -eux; \
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
+    --with-webp=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
