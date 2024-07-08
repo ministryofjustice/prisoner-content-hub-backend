@@ -36,8 +36,7 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
-		apcu \
-    gd \
+		gd \
 		opcache \
 		pdo_mysql \
 		pdo_pgsql \
