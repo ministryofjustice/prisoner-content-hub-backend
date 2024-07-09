@@ -138,4 +138,47 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     return new RowsOfFields($rows);
   }
 
+  /**
+   * Searches for nodes with duplicate prison fields, and dedupes them.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  #[CLI\Command(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', aliases: ['phdpf'])]
+  #[CLI\Usage(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', description: 'Run with no arguments to scan all nodes and correct any with duplicated values in the prison fields.')]
+  public function dedupePrisonFields() {
+    $node_storage = $this->entityTypeManager->getStorage('node');
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', [
+        'homepage',
+        'link',
+        'moj_pdf_item',
+        'moj_radio_item',
+        'moj_video_item',
+        'page',
+        'urgent_banner',
+      ], 'IN')
+      ->accessCheck(FALSE);
+    $results = $query->execute();
+
+    foreach ($results as $result) {
+      /** @var \Drupal\node\Entity\Node $n */
+      $n = $node_storage->load($result);
+      $prisons = $n->get('field_prisons')->referencedEntities();
+      $unique_prisons = array_unique($prisons, SORT_REGULAR);
+      $excluded_prisons = $n->get('field_exclude_from_prison')->referencedEntities();
+      $unique_excluded_prisons = array_unique($excluded_prisons, SORT_REGULAR);
+      if (count($prisons) != count($unique_prisons) || count($excluded_prisons) != count($unique_excluded_prisons)) {
+        $n->set('field_prisons', array_map(function ($prison) {
+          return ['target_id' => $prison->id()];
+        }, $unique_prisons));
+        $n->set('field_exclude_from_prison', array_map(function ($prison) {
+          return ['target_id' => $prison->id()];
+        }, $excluded_prisons));
+        $n->save();
+      }
+    }
+  }
+
 }
