@@ -4,6 +4,7 @@ namespace Drupal\prisoner_hub_bulk_updater\Drush\Commands;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -23,6 +24,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     private readonly ModuleExtensionList $extensionListModule,
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly TimeInterface $time,
+    private readonly Connection $database,
   ) {
     parent::__construct();
   }
@@ -35,6 +37,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $container->get('extension.list.module'),
       $container->get('entity_type.manager'),
       $container->get('datetime.time'),
+      $container->get('database'),
     );
   }
 
@@ -149,6 +152,12 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
   #[CLI\Usage(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', description: 'Run with no arguments to scan all nodes and correct any with duplicated values in the prison fields.')]
   public function dedupePrisonFields() {
     $node_storage = $this->entityTypeManager->getStorage('node');
+
+    $duplicate_prison_node_ids = $this->database->query('select distinct(nid) from (select n.nid, f.field_prisons_target_id, count(*) as duplicate_count from node n left join node__field_prisons f on n.nid = f.entity_id group by n.nid, f.field_prisons_target_id) as some_alias where duplicate_count > 1')->fetchCol();
+    $duplicate_prison_exclusion_ids = $this->database->query('select distinct(nid) from (select n.nid, f.field_exclude_from_prison_target_id, count(*) as duplicate_count from node n left join node__field_exclude_from_prison f on n.nid = f.entity_id group by n.nid, f.field_exclude_from_prison_target_id) as some_alias where duplicate_count > 1')->fetchCol();
+
+    $node_set = array_unique(array_merge($duplicate_prison_node_ids, $duplicate_prison_exclusion_ids));
+
     $query = \Drupal::entityQuery('node')
       ->condition('type', [
         'homepage',
@@ -159,6 +168,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
         'page',
         'urgent_banner',
       ], 'IN')
+      ->condition('nid', $node_set, 'IN')
       ->accessCheck(FALSE);
     $results = $query->execute();
 
