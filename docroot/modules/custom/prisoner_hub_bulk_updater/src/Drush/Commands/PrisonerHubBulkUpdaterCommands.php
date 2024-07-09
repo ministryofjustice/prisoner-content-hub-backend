@@ -151,11 +151,10 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
   #[CLI\Command(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', aliases: ['phdpf'])]
   #[CLI\Usage(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', description: 'Run with no arguments to scan all nodes and correct any with duplicated values in the prison fields.')]
   public function dedupePrisonFields() {
-    $node_storage = $this->entityTypeManager->getStorage('node');
-
+    // Calculate all nodes that have field_prisons duplicate values, and/or
+    // field_exclude_from_prison duplicate values.
     $duplicate_prison_node_ids = $this->database->query('select distinct(nid) from (select n.nid, f.field_prisons_target_id, count(*) as duplicate_count from node n left join node__field_prisons f on n.nid = f.entity_id group by n.nid, f.field_prisons_target_id) as some_alias where duplicate_count > 1')->fetchCol();
     $duplicate_prison_exclusion_ids = $this->database->query('select distinct(nid) from (select n.nid, f.field_exclude_from_prison_target_id, count(*) as duplicate_count from node n left join node__field_exclude_from_prison f on n.nid = f.entity_id group by n.nid, f.field_exclude_from_prison_target_id) as some_alias where duplicate_count > 1')->fetchCol();
-
     $node_set = array_unique(array_merge($duplicate_prison_node_ids, $duplicate_prison_exclusion_ids));
 
     $query = \Drupal::entityQuery('node')
@@ -172,22 +171,30 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       ->accessCheck(FALSE);
     $results = $query->execute();
 
+    $node_storage = $this->entityTypeManager->getStorage('node');
+
+    // Go through every node identified by our query..
     foreach ($results as $result) {
-      /** @var \Drupal\node\Entity\Node $n */
-      $n = $node_storage->load($result);
-      $prisons = $n->get('field_prisons')->referencedEntities();
+      /** @var \Drupal\node\Entity\Node $node */
+      $node = $node_storage->load($result);
+      // ..and dedupe both fields.
+      $prisons = $node->get('field_prisons')->referencedEntities();
       $unique_prisons = array_unique($prisons, SORT_REGULAR);
-      $excluded_prisons = $n->get('field_exclude_from_prison')->referencedEntities();
+      $excluded_prisons = $node->get('field_exclude_from_prison')->referencedEntities();
       $unique_excluded_prisons = array_unique($excluded_prisons, SORT_REGULAR);
-      if (count($prisons) != count($unique_prisons) || count($excluded_prisons) != count($unique_excluded_prisons)) {
-        $n->set('field_prisons', array_map(function ($prison) {
-          return ['target_id' => $prison->id()];
-        }, $unique_prisons));
-        $n->set('field_exclude_from_prison', array_map(function ($prison) {
-          return ['target_id' => $prison->id()];
-        }, $unique_excluded_prisons));
-        $n->save();
-      }
+      $node->set('field_prisons', array_map(function ($prison) {
+        return ['target_id' => $prison->id()];
+      }, $unique_prisons));
+      $node->set('field_exclude_from_prison', array_map(function ($prison) {
+        return ['target_id' => $prison->id()];
+      }, $unique_excluded_prisons));
+      // Create a new revision for traceability, but don't update the last
+      // changed time.
+      $node->setNewRevision(TRUE);
+      $node->setRevisionCreationTime($node->getChangedTime());
+      $node->setRevisionLogMessage('Bulk update to remove duplicate prison field values.');
+      $node->setRevisionUserId(1);
+      $node->save();
     }
   }
 
