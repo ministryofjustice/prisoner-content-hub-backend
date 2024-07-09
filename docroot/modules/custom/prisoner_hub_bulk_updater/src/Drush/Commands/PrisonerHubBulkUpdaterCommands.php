@@ -185,7 +185,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
         }, $unique_prisons));
         $n->set('field_exclude_from_prison', array_map(function ($prison) {
           return ['target_id' => $prison->id()];
-        }, $excluded_prisons));
+        }, $unique_excluded_prisons));
         $n->save();
       }
     }
