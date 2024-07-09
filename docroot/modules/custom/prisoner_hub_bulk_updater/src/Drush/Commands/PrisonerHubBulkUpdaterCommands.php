@@ -55,8 +55,8 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     'status' => 'Status',
   ])]
   #[CLI\DefaultTableFields(fields: ['nid', 'status'])]
-  #[CLI\Usage(name: 'prisoner_hub_bulk_updater:apply-red-list chelmsford cookhamwood_red_nids.csv', description: 'Usage description')]
-  public function commandName($prison, $list): RowsOfFields {
+  #[CLI\Usage(name: 'prisoner_hub_bulk_updater:apply-red-list chelmsford cookhamwood_red_nids.csv', description: 'Specify a prison machine name and a csv file of node IDs to exclude all the content in the CSV from given prison.')]
+  public function applyRedList($prison, $list): RowsOfFields {
     // First check we have a valid prison, and a readable csv file.
     $module_path = $this->extensionListModule->getPath('prisoner_hub_bulk_updater');
     $red_csv_path = "{$module_path}/files/{$list}";
