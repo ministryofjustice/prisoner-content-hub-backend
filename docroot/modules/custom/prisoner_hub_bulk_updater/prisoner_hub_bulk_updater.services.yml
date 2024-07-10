@@ -1,0 +1,4 @@
+services:
+  logger.channel.prisoner_hub_bulk_updater:
+    parent: logger.channel_base
+    arguments: ['prisoner_hub_bulk_updater']
