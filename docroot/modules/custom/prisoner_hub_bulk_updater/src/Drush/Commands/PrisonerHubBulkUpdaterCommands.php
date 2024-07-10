@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,7 +25,6 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly TimeInterface $time,
     private readonly Connection $database,
-    private readonly LoggerInterface $logger,
   ) {
     parent::__construct();
   }
@@ -40,7 +38,6 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $container->get('entity_type.manager'),
       $container->get('datetime.time'),
       $container->get('database'),
-      $container->get('logger.channel.prisoner_hub_bulk_updater'),
     );
   }
 
@@ -168,7 +165,8 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
 
     // These two sets will overlap, so remove duplicates and sort so that the
     // order of operation is predictable.
-    $nids = sort(array_unique(array_merge($duplicate_prison_node_ids, $duplicate_prison_exclusion_ids)), SORT_NUMERIC);
+    $nids = array_unique(array_merge($duplicate_prison_node_ids, $duplicate_prison_exclusion_ids));
+    sort($nids, SORT_NUMERIC);
 
     $this->logger->info("Found @count nodes requiring deduping", ['@count' => count($nids)]);
     $this->logger->info("Nodes to dedupe are: @nids", ['@nids' => print_r($nids, TRUE)]);
