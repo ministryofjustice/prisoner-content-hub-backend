@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,6 +26,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly TimeInterface $time,
     private readonly Connection $database,
+    private readonly LoggerInterface $logger,
   ) {
     parent::__construct();
   }
@@ -38,6 +40,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $container->get('entity_type.manager'),
       $container->get('datetime.time'),
       $container->get('database'),
+      $container->get('logger.channel.prisoner_hub_bulk_updater'),
     );
   }
 
@@ -144,6 +147,12 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
   /**
    * Searches for nodes with duplicate prison fields, and dedupes them.
    *
+   * These problematic nodes were caused by a bug in a hook_entity_presave()
+   * that caused the contents of the field item lists for field_prisons
+   * and field_exclude_from_prison to duplicate themselves whenever a node
+   * was saved programmatically rather than through the node edit form in
+   * the GUI.
+   *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -151,33 +160,27 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
   #[CLI\Command(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', aliases: ['phdpf'])]
   #[CLI\Usage(name: 'prisoner_hub_bulk_updater:dedupe-prison-fields', description: 'Run with no arguments to scan all nodes and correct any with duplicated values in the prison fields.')]
   public function dedupePrisonFields() {
+    $this->logger->info("Deduping prison fields");
     // Calculate all nodes that have field_prisons duplicate values, and/or
     // field_exclude_from_prison duplicate values.
     $duplicate_prison_node_ids = $this->database->query('select distinct(nid) from (select n.nid, f.field_prisons_target_id, count(*) as duplicate_count from node n left join node__field_prisons f on n.nid = f.entity_id group by n.nid, f.field_prisons_target_id) as some_alias where duplicate_count > 1')->fetchCol();
     $duplicate_prison_exclusion_ids = $this->database->query('select distinct(nid) from (select n.nid, f.field_exclude_from_prison_target_id, count(*) as duplicate_count from node n left join node__field_exclude_from_prison f on n.nid = f.entity_id group by n.nid, f.field_exclude_from_prison_target_id) as some_alias where duplicate_count > 1')->fetchCol();
-    $node_set = array_unique(array_merge($duplicate_prison_node_ids, $duplicate_prison_exclusion_ids));
 
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', [
-        'homepage',
-        'link',
-        'moj_pdf_item',
-        'moj_radio_item',
-        'moj_video_item',
-        'page',
-        'urgent_banner',
-      ], 'IN')
-      ->condition('nid', $node_set, 'IN')
-      ->accessCheck(FALSE);
-    $results = $query->execute();
+    // These two sets will overlap, so remove duplicates and sort so that the
+    // order of operation is predictable.
+    $nids = sort(array_unique(array_merge($duplicate_prison_node_ids, $duplicate_prison_exclusion_ids)), SORT_NUMERIC);
+
+    $this->logger->info("Found @count nodes requiring deduping", ['@count' => count($nids)]);
+    $this->logger->info("Nodes to dedupe are: @nids", ['@nids' => print_r($nids, TRUE)]);
 
     $node_storage = $this->entityTypeManager->getStorage('node');
 
-    // Go through every node identified by our query..
-    foreach ($results as $result) {
+    // Go through every node that has duplicates in either field...
+    foreach ($nids as $nid) {
+      $this->logger->info("Deduping node ID @nid", ['@nid' => $nid]);
       /** @var \Drupal\node\Entity\Node $node */
-      $node = $node_storage->load($result);
-      // ..and dedupe both fields.
+      $node = $node_storage->load($nid);
+      // ...and dedupe both fields.
       $prisons = $node->get('field_prisons')->referencedEntities();
       $unique_prisons = array_unique($prisons, SORT_REGULAR);
       $excluded_prisons = $node->get('field_exclude_from_prison')->referencedEntities();
@@ -195,6 +198,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $node->setRevisionLogMessage('Bulk update to remove duplicate prison field values.');
       $node->setRevisionUserId(1);
       $node->save();
+      $this->logger->info("Successfully saved node ID @nid", ['@nid' => $nid]);
     }
   }
 
