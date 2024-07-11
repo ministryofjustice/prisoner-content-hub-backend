@@ -197,4 +197,78 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     }
   }
 
+  /**
+   * Cleanses a set list of content..
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  #[CLI\Command(name: 'prisoner_hub_bulk_updater:cleanse-content', aliases: ['phcc'])]
+  #[CLI\Argument(name: 'list', description: 'Name of the CSV file in this module\'s files folder that comprises the content to cleanse.')]
+  #[CLI\FieldLabels(labels: [
+    'nid' => 'Node ID',
+    'status' => 'Status',
+  ])]
+  #[CLI\DefaultTableFields(fields: ['nid', 'status'])]
+  #[CLI\Usage(name: 'prisoner_hub_bulk_updater:cleanse-content cleanse_3.csv', description: 'Specify a csv file of node IDs to cleanse all the content in the CSV from the system.')]
+  public function contentCleanse($list): RowsOfFields {
+    // First check we have a readable csv file.
+    $module_path = $this->extensionListModule->getPath('prisoner_hub_bulk_updater');
+    $csv_path = "{$module_path}/files/{$list}";
+    if (!is_readable($csv_path)) {
+      throw new \InvalidArgumentException("The file $csv_path does not exist, or is not readable.");
+    }
+    $csv_file = fopen($csv_path, 'r');
+    if (!$csv_file) {
+      throw new \InvalidArgumentException("Could not open $csv_file for reading.");
+    }
+
+    $rows = [];
+
+    // Arguments are valid, so proceed to exclude content.
+    $node_storage = $this->entityTypeManager->getStorage('node');
+
+    // For every line in the CSV...
+    while (($line = fgets($csv_file)) !== FALSE) {
+      $nid = intval($line);
+      // ...check this line has a valid node id, and skip if not.
+      if (!$nid) {
+        $rows[] = [
+          'nid' => $line,
+          'status' => 'Non-numeric node ID',
+        ];
+        continue;
+      }
+      /** @var \Drupal\Node\NodeInterface $node */
+      $node = $node_storage->load($nid);
+      if (!$node) {
+        $rows[] = [
+          'nid' => $nid,
+          'status' => 'Could not be loaded',
+        ];
+        continue;
+      }
+      $node->setUnpublished();
+      $node->setNewRevision(TRUE);
+      $node->setRevisionCreationTime($this->time->getCurrentTime());
+      $node->setRevisionLogMessage('Bulk update to unpublish content');
+      $node->setRevisionUserId(1);
+      try {
+        $node->save();
+        $rows[] = [
+          'nid' => $nid,
+          'status' => "Successfully unpublished",
+        ];
+      }
+      catch (EntityStorageException $e) {
+        $rows[] = [
+          'nid' => $nid,
+          'status' => "Could not be saved",
+        ];
+      }
+    }
+
+    return new RowsOfFields($rows);
+  }
+
 }
