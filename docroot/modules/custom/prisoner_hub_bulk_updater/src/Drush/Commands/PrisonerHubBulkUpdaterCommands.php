@@ -198,20 +198,25 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
   }
 
   /**
-   * Cleanses a set list of content..
+   * Cleanses a set list of content.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   #[CLI\Command(name: 'prisoner_hub_bulk_updater:cleanse-content', aliases: ['phcc'])]
   #[CLI\Argument(name: 'list', description: 'Name of the CSV file in this module\'s files folder that comprises the content to cleanse.')]
+  #[CLI\Option(name: 'mode', description: 'Whether to unpublish or delete content', suggestedValues: ['unpublish, delete'])]
   #[CLI\FieldLabels(labels: [
     'nid' => 'Node ID',
     'status' => 'Status',
   ])]
   #[CLI\DefaultTableFields(fields: ['nid', 'status'])]
   #[CLI\Usage(name: 'prisoner_hub_bulk_updater:cleanse-content cleanse_3.csv', description: 'Specify a csv file of node IDs to cleanse all the content in the CSV from the system.')]
-  public function contentCleanse($list): RowsOfFields {
+  public function contentCleanse($list, $mode = 'unpublish'): RowsOfFields {
+    if (!in_array($mode, ['unpublish', 'delete'])) {
+      throw new \InvalidArgumentException("Unsupported mode '$mode'.");
+    }
+
     // First check we have a readable csv file.
     $module_path = $this->extensionListModule->getPath('prisoner_hub_bulk_updater');
     $csv_path = "{$module_path}/files/{$list}";
@@ -248,23 +253,47 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
         ];
         continue;
       }
-      $node->setUnpublished();
-      $node->setNewRevision(TRUE);
-      $node->setRevisionCreationTime($this->time->getCurrentTime());
-      $node->setRevisionLogMessage('Bulk update to unpublish content');
-      $node->setRevisionUserId(1);
-      try {
-        $node->save();
-        $rows[] = [
-          'nid' => $nid,
-          'status' => "Successfully unpublished",
-        ];
+      if ($mode == 'unpublish') {
+        if (!$node->isPublished()) {
+          $rows[] = [
+            'nid' => $nid,
+            'status' => 'Node already unpublished',
+          ];
+          continue;
+        }
+        $node->setUnpublished();
+        $node->setNewRevision(TRUE);
+        $node->setRevisionCreationTime($this->time->getCurrentTime());
+        $node->setRevisionLogMessage('Bulk update to unpublish content');
+        $node->setRevisionUserId(1);
+        try {
+          $node->save();
+          $rows[] = [
+            'nid' => $nid,
+            'status' => "Successfully unpublished",
+          ];
+        }
+        catch (EntityStorageException $e) {
+          $rows[] = [
+            'nid' => $nid,
+            'status' => "Could not be saved",
+          ];
+        }
       }
-      catch (EntityStorageException $e) {
-        $rows[] = [
-          'nid' => $nid,
-          'status' => "Could not be saved",
-        ];
+      if ($mode == 'delete') {
+        try {
+          $node->delete();
+          $rows[] = [
+            'nid' => $nid,
+            'status' => "Successfully deleted",
+          ];
+        }
+        catch (EntityStorageException $e) {
+          $rows[] = [
+            'nid' => $nid,
+            'status' => "Could not be deleted",
+          ];
+        }
       }
     }
 
