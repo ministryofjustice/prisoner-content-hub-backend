@@ -67,6 +67,11 @@ RUN { \
 		echo 'opcache.revalidate_freq=60'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+RUN { \
+    echo 'output_buffering=On'; \
+  } > /usr/local/etc/php/conf.d/output-buffering.ini
+
 ###########################################################################################
 # Finish copy Dockerhub Drupal image
 ###########################################################################################
