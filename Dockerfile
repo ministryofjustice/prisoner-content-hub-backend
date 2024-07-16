@@ -173,6 +173,9 @@ USER root
 RUN pecl install xdebug-3.1.5 \
   && docker-php-ext-enable xdebug
 
+RUN pecl install apcu-5.1.23 \
+  && docker-php-ext-enable apcu
+
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
 
 # Set to www-data user.
