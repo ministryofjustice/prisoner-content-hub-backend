@@ -86,6 +86,9 @@ RUN pecl install uploadprogress \
 RUN pecl install redis \
   && docker-php-ext-enable redis
 
+RUN pecl install apcu-5.1.23 \
+  && docker-php-ext-enable apcu
+
 # Enable apache modules that are used in Drupal's htaccess.
 RUN a2enmod expires headers
 
@@ -172,9 +175,6 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.8.8.zip" -o "aw
 USER root
 RUN pecl install xdebug-3.1.5 \
   && docker-php-ext-enable xdebug
-
-RUN pecl install apcu-5.1.23 \
-  && docker-php-ext-enable apcu
 
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
 
