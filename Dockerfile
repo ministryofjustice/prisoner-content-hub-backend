@@ -8,7 +8,7 @@
 
 # Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
 # of the things we run, like kubectl.
-FROM --platform=linux/amd64 php:8.1.29-apache-bookworm AS base
+FROM --platform=linux/amd64 php:8.3.9-apache-bookworm AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -25,12 +25,14 @@ RUN set -eux; \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
+    libwebp-dev \
 		libzip-dev \
 	; \
 	\
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
+    --with-webp=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -65,6 +67,11 @@ RUN { \
 		echo 'opcache.revalidate_freq=60'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+RUN { \
+    echo 'output_buffering=On'; \
+  } > /usr/local/etc/php/conf.d/output-buffering.ini
+
 ###########################################################################################
 # Finish copy Dockerhub Drupal image
 ###########################################################################################
@@ -83,6 +90,9 @@ RUN pecl install uploadprogress \
 
 RUN pecl install redis \
   && docker-php-ext-enable redis
+
+RUN pecl install apcu-5.1.23 \
+  && docker-php-ext-enable apcu
 
 # Enable apache modules that are used in Drupal's htaccess.
 RUN a2enmod expires headers
