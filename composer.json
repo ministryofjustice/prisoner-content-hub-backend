@@ -177,10 +177,6 @@
             "drupal/elasticsearch_connector": {
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
             },
-            "drupal/computed_breadcrumbs": {
-                "Issue #3266585: Support other entity types.": "patches/3266585-support-other-entity-types-13.patch",
-                "Issue #3243177: Allow return relative URLs.": "patches/3243177-return-relative-urls-15.patch"
-            },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
             },
@@ -192,9 +188,6 @@
             },
             "drupal/google_analytics": {
                 "Issue #3373921: Cannot install from existing config": "patches/google_analytics-3373921-15.patch"
-            },
-            "drupal/jsonapi_filter_cache_tags": {
-                "Issue #3416953: 400 response due to BadRequestHttpException thrown with filter parameter in URL in Drupal 10": "patches/jsonapi_filter_cache_tags-3416953-BadRequestHttpException-Drupal-10.patch"
             },
             "drupal/search_api": {
                 "Issue #3313569: Warning: Could not load the following items on index": "patches/3313569-10--referenced_entity_tracking_translations.patch"
