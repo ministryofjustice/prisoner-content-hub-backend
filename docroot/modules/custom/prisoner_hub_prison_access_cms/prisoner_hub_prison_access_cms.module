@@ -91,6 +91,14 @@ function prisoner_hub_prison_access_cms_field_widget_single_element_form_alter(&
  * This function checks to see if there are any that should be added back in.
  */
 function prisoner_hub_prison_access_cms_entity_presave(EntityInterface $entity) {
+  // This whole logic only applies when saving via the form.
+  // Nodes can also be saved programmatically, and applying this logic then
+  // causes nodes to be included and excluded from the same prison multiple
+  // times in the database.
+  if (\Drupal::routeMatch()->getRouteName() != 'entity.node.edit_form') {
+    return;
+  }
+
   $entity_edit_access = \Drupal::service('prisoner_hub_prison_access_cms.entity_edit_access');
   $prison_field_names = [
     \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name'),
