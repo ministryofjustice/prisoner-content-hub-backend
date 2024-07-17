@@ -1,0 +1,14 @@
+uuid: aff2815c-b743-4167-bfb1-8da90cb4e10d
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.comms_live_service_hq
+  module:
+    - user
+id: user_remove_role_action.comms_live_service_hq
+label: 'Remove the Comms &amp; Live Service HQ role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: comms_live_service_hq
