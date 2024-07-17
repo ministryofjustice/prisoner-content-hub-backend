@@ -1,0 +1,5 @@
+name: 'Prisoner hub priority content'
+type: module
+description: 'Module for handling special considerations around priority content.'
+package: Custom
+core_version_requirement: ^10

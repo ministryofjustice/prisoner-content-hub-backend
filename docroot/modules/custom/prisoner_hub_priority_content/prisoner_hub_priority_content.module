@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Prisoner hub priority content module.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Sets the default value for the priority field based on user role.
+ */
+function prisoner_hub_priority_content_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+  /** @var $node \Drupal\node\NodeInterface */
+  $node = $form_state->getFormObject()->getEntity();
+
+  // We only care about new node.
+  if (!$node->isNew()) {
+    return;
+  }
+
+  // We only care about node types with the priority field.
+  if (!$node->hasField('field_prioritise_on_recently_add')) {
+    return;
+  }
+
+  if (in_array('comms_live_service_hq', \Drupal::currentUser()->getRoles())) {
+    $form['field_prioritise_on_recently_add']['widget']['value']['#default_value'] = TRUE;
+  }
+
+}

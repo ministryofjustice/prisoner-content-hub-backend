@@ -80,6 +80,7 @@ module:
   prisoner_hub_explore: 0
   prisoner_hub_linkit_matcher: 0
   prisoner_hub_primary_nav: 0
+  prisoner_hub_priority_content: 0
   prisoner_hub_prison_access: 0
   prisoner_hub_prison_access_cms: 0
   prisoner_hub_prison_context: 0
