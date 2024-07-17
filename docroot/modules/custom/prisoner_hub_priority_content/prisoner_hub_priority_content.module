@@ -5,13 +5,15 @@
  * Primary module hooks for Prisoner hub priority content module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_form_FORM_ID_alter().
  *
  * Sets the default value for the priority field based on user role.
  */
-function prisoner_hub_priority_content_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
-  /** @var $node \Drupal\node\NodeInterface */
+function prisoner_hub_priority_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
   // We only care about new node.
