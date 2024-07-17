@@ -19,6 +19,7 @@ dependencies:
     - actions_permissions
     - book
     - entity_clone
+    - field_permissions
     - filter
     - node
     - prisoner_hub_prison_access_cms
@@ -142,12 +143,14 @@ permissions:
   - 'use text format full_html'
   - 'view all revisions'
   - 'view any unpublished content'
+  - 'view field_prioritise_on_recently_add'
   - 'view help_page revisions'
   - 'view homepage revisions'
   - 'view link revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
   - 'view moj_video_item revisions'
+  - 'view own field_prioritise_on_recently_add'
   - 'view own unpublished content'
   - 'view page revisions'
   - 'view scheduled content'
