@@ -178,7 +178,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.8.8.zip" -o "aw
     && ./aws/install -i ~/.local/aws-cli -b ~/.local/bin
 
 USER root
-RUN pecl install xdebug-3.1.5 \
+RUN pecl install xdebug-3.3.2 \
   && docker-php-ext-enable xdebug
 
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
