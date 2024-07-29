@@ -25,7 +25,6 @@ dependencies:
     - prisoner_hub_prison_access_cms
     - publication_date
     - raven
-    - role_delegation
     - scheduler
     - system
     - taxonomy
@@ -48,8 +47,6 @@ permissions:
   - 'administer menu'
   - 'administer nodes'
   - 'administer users'
-  - 'assign local_administrator role'
-  - 'assign moj_local_content_manager role'
   - 'assign prisons to users'
   - 'bypass node access'
   - 'bypass prison ownership edit access'
