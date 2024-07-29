@@ -479,3 +479,21 @@ function prisoner_hub_bulk_updater_deploy_cleanse_2(array &$sandbox) {
     '@nids' => implode('|', $batch_nids),
   ]);
 }
+
+/**
+ * Deploy hook to assign comms role to specific accounts.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function prisoner_hub_bulk_updater_deploy_assign_comms_roles() {
+  $comms_uids = [1003, 959, 1001, 1010, 1002, 1033];
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  foreach ($comms_uids as $uid) {
+    /** @var \Drupal\user\UserInterface $user */
+    $user = $user_storage->load($uid);
+    $user->addRole('comms_live_service_hq');
+    $user->save();
+  }
+}
