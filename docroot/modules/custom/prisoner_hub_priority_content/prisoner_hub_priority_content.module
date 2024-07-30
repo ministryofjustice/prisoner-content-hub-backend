@@ -16,7 +16,7 @@ function prisoner_hub_priority_content_form_node_form_alter(&$form, FormStateInt
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
-  // We only care about new node.
+  // We only care about new nodes.
   if (!$node->isNew()) {
     return;
   }
