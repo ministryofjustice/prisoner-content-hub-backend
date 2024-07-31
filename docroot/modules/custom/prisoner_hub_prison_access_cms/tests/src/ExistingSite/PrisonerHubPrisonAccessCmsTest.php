@@ -38,7 +38,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   /**
    * Name of the field denoting the prison that owns the content.
    */
-  protected string $prisonerOwnerFieldName;
+  protected string $prisonOwnerFieldName;
 
   /**
    * Name of the field denoting to which prison a user belongs.
