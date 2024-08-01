@@ -9,6 +9,7 @@ use Drupal\system\Entity\Menu;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use GuzzleHttp\RequestOptions;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
@@ -21,6 +22,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
+  use JsonApiTrait;
   use TaxonomyCreationTrait;
 
   /**
@@ -132,21 +134,6 @@ class PrisonerHubPrimaryNavTest extends ExistingSiteBase {
         $this->assertSame($menu_item->getUrlObject()->toString(), $last_menu_item_in_response['attributes']['url']);
       }
     }
-  }
-
-  /**
-   * Get a response from a JSON:API url.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The url object to use for the JSON:API request.
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   *   The response object.
-   */
-  public function getJsonApiResponse(Url $url) {
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    return $this->request('GET', $url, $request_options);
   }
 
 }

@@ -22,7 +22,7 @@ trait JsonApiTrait {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  public function getJsonApiResponse(Url $url) {
+  protected function getJsonApiResponse(Url $url) {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     return $this->request('GET', $url, $request_options);
