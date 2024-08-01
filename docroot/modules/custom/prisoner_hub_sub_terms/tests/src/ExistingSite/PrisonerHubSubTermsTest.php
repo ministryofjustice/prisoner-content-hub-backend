@@ -7,7 +7,6 @@ use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
-use GuzzleHttp\RequestOptions;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
