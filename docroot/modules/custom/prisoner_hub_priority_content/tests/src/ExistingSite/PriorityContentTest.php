@@ -122,7 +122,6 @@ class PriorityContentTest extends ExistingSiteBase {
       $node = $this->createNode([
         'title' => "Priority Node $index",
         'field_prioritise_on_recently_add' => 1,
-        'field_prisons' => ['1603'],
       ]);
       $node->save();
     }
@@ -132,12 +131,11 @@ class PriorityContentTest extends ExistingSiteBase {
       $node = $this->createNode([
         'title' => "Non-Priority Node $index",
         'field_prioritise_on_recently_add' => 0,
-        'field_prisons' => ['1603'],
       ]);
       $node->save();
     }
 
-    $url = Url::fromUri('internal:/jsonapi/prison/thestudio/recently-added?page[limit]=4');
+    $url = Url::fromUri('internal:/jsonapi/recently-added?page[limit]=4');
     $response = $this->getJsonApiResponse($url);
     $response_document = Json::decode((string) $response->getBody());
     $this->assertEquals(4, count($response_document['data']));
