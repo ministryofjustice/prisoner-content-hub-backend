@@ -10,7 +10,6 @@ use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use GuzzleHttp\RequestOptions;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
