@@ -1,0 +1,21 @@
+uuid: 13f8d78b-9f78-4e86-a567-90b664162594
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_prioritise_on_recently_add
+    - node.type.moj_radio_item
+id: node.moj_radio_item.field_prioritise_on_recently_add
+field_name: field_prioritise_on_recently_add
+entity_type: node
+bundle: moj_radio_item
+label: 'Prioritise on Recently Added section of home pages'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

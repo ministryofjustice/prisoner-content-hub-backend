@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.link.field_moj_thumbnail_image
     - field.field.node.link.field_moj_top_level_categories
     - field.field.node.link.field_not_in_series
+    - field.field.node.link.field_prioritise_on_recently_add
     - field.field.node.link.field_prisons
     - field.field.node.link.field_release_date
     - field.field.node.link.field_show_interstitial_page
@@ -39,6 +40,7 @@ hidden:
   field_moj_thumbnail_image: true
   field_moj_top_level_categories: true
   field_not_in_series: true
+  field_prioritise_on_recently_add: true
   field_prisons: true
   field_release_date: true
   field_show_interstitial_page: true

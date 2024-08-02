@@ -36,6 +36,16 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected $user;
 
   /**
+   * Name of the field denoting the prison that owns the content.
+   */
+  protected string $prisonOwnerFieldName;
+
+  /**
+   * Name of the field denoting to which prison a user belongs.
+   */
+  protected string $userPrisonFieldName;
+
+  /**
    * Create prison taxonomy terms and a user to test with.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException

@@ -1,0 +1,27 @@
+From 70593e694ee9f245efb777fbb63fdd7bb3fe0519 Mon Sep 17 00:00:00 2001
+From: Camilo Ernesto Escobar Bedoya <escobar@urbaninsight.com>
+Date: Wed, 10 Jan 2024 23:42:23 -0500
+Subject: [PATCH] field_permissions_jsonapi_entity_field_filter_access -
+ Drupal\field_permissions\FieldPermissionsService::fieldGetPermissionType():
+ Argument #1 () must be of type Drupal\field\FieldStorageConfigInterface
+
+---
+ field_permissions.module | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/field_permissions.module b/field_permissions.module
+index 84c5e78..48cf0a7 100644
+--- a/field_permissions.module
++++ b/field_permissions.module
+@@ -47,7 +47,7 @@ function field_permissions_entity_field_access($operation, FieldDefinitionInterf
+  * Implements hook_jsonapi_entity_field_filter_access().
+  */
+ function field_permissions_jsonapi_entity_field_filter_access(FieldDefinitionInterface $field_definition, AccountInterface $account) {
+-  if (!$field_definition->isDisplayConfigurable('view')) {
++  if (!$field_definition->isDisplayConfigurable('view') || !is_a($field_definition->getFieldStorageDefinition(), '\Drupal\field\FieldStorageConfigInterface')) {
+     return AccessResult::neutral();
+   }
+ 
+-- 
+GitLab
+

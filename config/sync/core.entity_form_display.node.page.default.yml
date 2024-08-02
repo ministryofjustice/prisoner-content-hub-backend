@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
     - field.field.node.page.field_not_in_series
+    - field.field.node.page.field_prioritise_on_recently_add
     - field.field.node.page.field_prison_owner
     - field.field.node.page.field_prisons
     - field.field.node.page.field_release_date
@@ -224,6 +225,13 @@ content:
   field_not_in_series:
     type: boolean_checkbox
     weight: 15
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_prioritise_on_recently_add:
+    type: boolean_checkbox
+    weight: 27
     region: content
     settings:
       display_label: true

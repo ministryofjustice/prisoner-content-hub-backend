@@ -8,7 +8,7 @@ use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use GuzzleHttp\RequestOptions;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -20,6 +20,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
+  use JsonApiTrait;
   use NodeCreationTrait;
   use TaxonomyCreationTrait;
   use PrisonerHubPrisonAccessTestTrait;
@@ -248,21 +249,6 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         return $data['id'];
       }, $response_document['data']), $message);
     }
-  }
-
-  /**
-   * Get a response from a JSON:API url.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The url object to use for the JSON:API request.
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   *   The response object.
-   */
-  public function getJsonApiResponse(Url $url) {
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    return $this->request('GET', $url, $request_options);
   }
 
 }

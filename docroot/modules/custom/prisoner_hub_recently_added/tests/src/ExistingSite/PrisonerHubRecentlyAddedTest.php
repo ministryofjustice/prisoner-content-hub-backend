@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use GuzzleHttp\RequestOptions;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
@@ -19,6 +20,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
+  use JsonApiTrait;
   use NodeCreationTrait;
   use TaxonomyCreationTrait;
 
@@ -81,7 +83,22 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
    * Test the resource returns the correct entities, in the correct order.
    */
   public function testRecentlyAddedCorrectSorting() {
-    $this->assertJsonResponse($this->correctOrderUuids);
+    // Up to 50% of the response from the end point may come from prioritised
+    // content, rather than new content. So all we can test is that two of
+    // our test pieces of content are present and in the right order.
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
+    $this->assertSame(200, $response->getStatusCode());
+
+    $response_document = Json::decode((string) $response->getBody());
+    $this->assertEquals(4, count($response_document['data']));
+
+    $response_ids = array_map(static function (array $data) {
+      return $data['id'];
+    }, $response_document['data']);
+
+    $this->assertContains($this->correctOrderUuids[0], $response_ids);
+    $this->assertContains($this->correctOrderUuids[1], $response_ids);
+    $this->assertGreaterThan(array_search($this->correctOrderUuids[0], $response_ids), array_search($this->correctOrderUuids[1], $response_ids));
   }
 
   /**
@@ -100,25 +117,13 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
       'field_not_in_series' => 1,
       'published_at' => strtotime('+1 second'),
     ]);
-    $this->correctOrderUuids = array_merge([$new_entity->uuid()], array_slice($this->correctOrderUuids, 0, 3));
-    $this->assertJsonResponse($this->correctOrderUuids);
-  }
 
-  /**
-   * Asserts the jsonapi response.
-   *
-   * @param array $correct_order_uuids
-   *   An array of uuids, in the correct order, to check for.
-   */
-  protected function assertJsonResponse(array $correct_order_uuids) {
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $response = $this->request('GET', $this->jsonApiUrl, $request_options);
-    $this->assertSame(200, $response->getStatusCode());
+    $response = $this->getJsonApiResponse($this->jsonApiUrl);
     $response_document = Json::decode((string) $response->getBody());
-    $this->assertEquals($correct_order_uuids, array_map(static function (array $data) {
+    $response_ids = array_map(static function (array $data) {
       return $data['id'];
-    }, $response_document['data']));
+    }, $response_document['data']);
+    $this->assertContains($new_entity->uuid(), $response_ids);
   }
 
 }
