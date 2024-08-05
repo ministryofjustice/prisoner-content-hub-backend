@@ -3,9 +3,12 @@
 namespace Drupal\prisoner_hub_recently_added\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
@@ -13,6 +16,7 @@ use Drupal\jsonapi_resources\Resource\EntityResourceBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -24,7 +28,7 @@ use Symfony\Component\Routing\Route;
  *
  * @internal
  */
-class RecentlyAdded extends EntityResourceBase {
+class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInterface {
 
   /**
    * Array of content types to use in the resource.
@@ -38,6 +42,27 @@ class RecentlyAdded extends EntityResourceBase {
     'moj_pdf_item',
     'moj_video_item',
   ];
+
+  /**
+   * RecentlyAdded resource constructor.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   Current route match.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Renderer.
+   */
+  public function __construct(protected RouteMatchInterface $routeMatch, protected RendererInterface $renderer) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_route_match'),
+      $container->get('renderer'),
+    );
+  }
 
   /**
    * Process the resource request.
@@ -58,7 +83,7 @@ class RecentlyAdded extends EntityResourceBase {
     // This is a custom cache tag that is invalidated in
     // prisoner_hub_recently_added_node_update().
     $cache_tag = 'prisoner_hub_recently_added';
-    $prison = \Drupal::routeMatch()->getParameter('prison');
+    $prison = $this->routeMatch->getParameter('prison');
     if ($prison) {
       $cache_tag .= ':' . $prison->get('machine_name')->getString();
     }
@@ -251,7 +276,7 @@ class RecentlyAdded extends EntityResourceBase {
    */
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
-    return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
+    return $this->renderer->executeInRenderContext($context, function () use ($query) {
       return $query->accessCheck(TRUE)->execute();
     });
   }
