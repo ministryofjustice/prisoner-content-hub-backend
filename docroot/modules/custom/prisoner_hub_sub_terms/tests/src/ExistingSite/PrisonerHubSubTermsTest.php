@@ -6,19 +6,20 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
-use GuzzleHttp\RequestOptions;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the content suggestions JSON:API resource works correctly.
+ * Test that the content suggestions JSON:API resource works correctly.
  *
  * @group prisoner_hub_content_suggestions
  */
 class PrisonerHubSubTermsTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
+  use JsonApiTrait;
   use NodeCreationTrait;
   use TaxonomyCreationTrait;
 
@@ -287,21 +288,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum(['prisoner_hub_sub_terms:' . $new_category->id()]);
     $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
 
-  }
-
-  /**
-   * Get a response from a JSON:API url.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The url object to use for the JSON:API request.
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   *   The response object.
-   */
-  public function getJsonApiResponse(Url $url) {
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    return $this->request('GET', $url, $request_options);
   }
 
 }

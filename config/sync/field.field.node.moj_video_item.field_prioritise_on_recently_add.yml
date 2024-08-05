@@ -1,0 +1,21 @@
+uuid: 5beaadd7-04bd-4fe7-9bb6-684946b49a46
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_prioritise_on_recently_add
+    - node.type.moj_video_item
+id: node.moj_video_item.field_prioritise_on_recently_add
+field_name: field_prioritise_on_recently_add
+entity_type: node
+bundle: moj_video_item
+label: 'Prioritise on Recently Added section of home pages'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

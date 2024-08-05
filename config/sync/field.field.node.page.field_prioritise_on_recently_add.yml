@@ -1,0 +1,21 @@
+uuid: c2db1df8-4540-45d0-9b7b-1ae628ecc647
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_prioritise_on_recently_add
+    - node.type.page
+id: node.page.field_prioritise_on_recently_add
+field_name: field_prioritise_on_recently_add
+entity_type: node
+bundle: page
+label: 'Prioritise on Recently Added section of home pages'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
