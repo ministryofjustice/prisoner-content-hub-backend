@@ -1,5 +1,5 @@
 name: 'Prisoner Hub Edit Only'
 type: module
 description: 'Redirect the "view" route of an entity, with the edit route.'
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10 || ^11
 package: 'Custom'
