@@ -218,8 +218,12 @@
     "require-dev": {
         "dmore/chrome-mink-driver": "^2.7",
         "drupal/core-dev": "^10",
+        "mglaman/phpstan-drupal": "^1.2",
         "palantirnet/drupal-rector": "^0.15.1",
         "phpspec/prophecy-phpunit": "^2",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
         "weitzman/drupal-test-traits": "^2"
     }
 }
