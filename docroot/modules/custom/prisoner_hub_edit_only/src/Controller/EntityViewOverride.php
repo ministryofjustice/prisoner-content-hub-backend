@@ -4,8 +4,12 @@ namespace Drupal\prisoner_hub_edit_only\Controller;
 
 use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Controller for redirecting node views to node edits.
@@ -18,6 +22,31 @@ class EntityViewOverride extends EntityViewController {
    * @var string[]
    */
   static private array $excludedContentTypes = ['help_page'];
+
+  /**
+   * Creates an EntityViewOverride object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, protected RequestStack $requestStack) {
+    parent::__construct($entity_type_manager, $renderer);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('renderer'),
+      $container->get('request_stack'),
+    );
+  }
 
   /**
    * The view node handler.
@@ -58,9 +87,9 @@ class EntityViewOverride extends EntityViewController {
   protected function redirectToEditForm(EntityInterface $entity) {
     $options = [];
     // Copy of destination parameter if it is in the request.
-    if ($destination = \Drupal::request()->query->get('destination')) {
+    if ($destination = $this->requestStack->getCurrentRequest()->query->get('destination')) {
       $options['query']['destination'] = $destination;
-      \Drupal::request()->query->remove('destination');
+      $this->requestStack->getCurrentRequest()->query->remove('destination');
     }
     $options['absolute'] = TRUE;
     return new RedirectResponse(Url::fromRoute('entity.' . $entity->getEntityTypeId() . '.edit_form', [$entity->getEntityTypeId() => $entity->id()], $options)->toString());
