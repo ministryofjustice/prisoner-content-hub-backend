@@ -46,7 +46,6 @@ class SubTerms extends EntityResourceBase implements ContainerInjectionInterface
     return new static($container->get('renderer'));
   }
 
-
   /**
    * Process the resource request.
    *
