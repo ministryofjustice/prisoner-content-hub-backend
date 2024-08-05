@@ -43,7 +43,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @param array $values
    *   An array of field values.
    *
-   * @return int
+   * @return null|string
    *   The uuid of the created entity.
    */
   protected function createEntity(string $entity_type_id, string $bundle, array $values) {
