@@ -15,7 +15,6 @@ use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_resources\Resource\EntityResourceBase;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,7 +121,7 @@ class SubTerms extends EntityResourceBase implements ContainerInjectionInterface
 
     $results = $this->executeQueryInRenderContext($query);
     $taxonomy_ids = $this->getTaxonomyIdsFromQueryResults($results);
-    $entities = Term::loadMultiple($taxonomy_ids);
+    $entities = $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($taxonomy_ids);
     $processed_entities = $this->filterClosestSubCategoriesAndSeries($entities, $taxonomy_term);
 
     $result_entities = array_slice($processed_entities, $pagination->getOffset(), $pagination->getSize());
@@ -194,7 +193,7 @@ class SubTerms extends EntityResourceBase implements ContainerInjectionInterface
       }
       $top_level_id = $this->findClosestSubCategory($category_id, $top_parent_entity->id());
       if (!isset($processed_entities[$top_level_id]) && $top_level_id) {
-        $top_level_entity = $entities[$top_level_id] ?? Term::load($top_level_id);
+        $top_level_entity = $entities[$top_level_id] ?? $this->entityTypeManager->getStorage('taxonomy_term')->load($top_level_id);
         $processed_entities[$top_level_id] = $top_level_entity;
       }
     }

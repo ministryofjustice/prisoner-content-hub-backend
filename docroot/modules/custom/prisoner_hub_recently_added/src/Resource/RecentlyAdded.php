@@ -13,9 +13,7 @@ use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi_resources\Resource\EntityResourceBase;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -192,7 +190,7 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
     $query->range(0, $size);
     $results = $this->executeQueryInRenderContext($query);
     foreach ($results as $result) {
-      $term = Term::load($result['field_moj_series_target_id']);
+      $term = $this->entityTypeManager->getStorage('taxonomy_term')->load($result['field_moj_series_target_id']);
       if ($term) {
         $timestamps_and_entities[] = [
           'published_at' => (int) $result['published_at_max'],
@@ -250,7 +248,7 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
     $query->sort('published_at', 'DESC');
     $query->range(0, $size);
     $result = $this->executeQueryInRenderContext($query);
-    $nodes = Node::loadMultiple($result);
+    $nodes = $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($result);
     foreach ($nodes as $node) {
       $timestamps_and_entities[] = [
         'published_at' => (int) $node->get('published_at')->value,
