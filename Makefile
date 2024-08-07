@@ -20,7 +20,7 @@ coding-standards:
 	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css,js docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php
 
 php-stan:
-	vendor/bin/phpstan.phar
+	vendor/bin/phpstan analyze -c ./phpstan.neon
 
 run-tests:
 	echo "Running tests on existing site"
