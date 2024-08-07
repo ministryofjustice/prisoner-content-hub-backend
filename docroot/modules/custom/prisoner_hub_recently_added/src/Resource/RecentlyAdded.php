@@ -248,7 +248,7 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
     $query->sort('published_at', 'DESC');
     $query->range(0, $size);
     $result = $this->executeQueryInRenderContext($query);
-    $nodes = $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($result);
+    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($result);
     foreach ($nodes as $node) {
       $timestamps_and_entities[] = [
         'published_at' => (int) $node->get('published_at')->value,
