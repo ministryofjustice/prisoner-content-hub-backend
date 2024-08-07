@@ -82,6 +82,7 @@ jobs:
           command: |
             set -x
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make coding-standards
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make php-stan
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make install-drupal
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make run-tests
       - run:
