@@ -19,6 +19,9 @@ install-drupal:
 coding-standards:
 	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css,js docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php
 
+php-stan:
+	vendor/bin/phpstan analyze
+
 run-tests:
 	echo "Running tests on existing site"
 	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose

@@ -123,7 +123,7 @@ ENV PATH="/var/www/html/vendor/bin:/var/www/.local/bin:$PATH"
 
 # Copy Project files.
 # Copy with chown as otherwise files are owned by root.
-COPY --chown=www-data:www-data composer.json composer.lock Makefile ./
+COPY --chown=www-data:www-data composer.json composer.lock Makefile phpstan.neon ./
 COPY --chown=www-data:www-data patches patches
 COPY --chown=www-data:www-data docroot docroot
 COPY --chown=www-data:www-data config config
