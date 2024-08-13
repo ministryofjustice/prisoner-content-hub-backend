@@ -47,7 +47,6 @@ third_party_settings:
     group_series:
       children:
         - field_moj_series
-        - field_not_in_series
         - group_season_and_episode_number
         - group_release_date
       label: 'Does this content fit into a Series?'
