@@ -12,7 +12,6 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_subtitles
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
-    - field.field.node.moj_video_item.field_not_in_series
     - field.field.node.moj_video_item.field_prioritise_on_recently_add
     - field.field.node.moj_video_item.field_prison_owner
     - field.field.node.moj_video_item.field_prisons
@@ -222,13 +221,6 @@ content:
       autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
-    third_party_settings: {  }
-  field_not_in_series:
-    type: boolean_checkbox
-    weight: 13
-    region: content
-    settings:
-      display_label: true
     third_party_settings: {  }
   field_prioritise_on_recently_add:
     type: boolean_checkbox
