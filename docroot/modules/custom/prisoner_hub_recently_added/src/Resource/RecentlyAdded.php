@@ -112,6 +112,12 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
       return $b['published_at'] <=> $a['published_at'];
     });
 
+    // Because the series entities and content entities have been independently
+    // loaded, we may have too many entries in the
+    // $priority_timestamps_and_entities array. Make sure we have
+    // $priority_count at most.
+    $priority_timestamps_and_entities = array_slice($priority_timestamps_and_entities, 0, $priority_count);
+
     // Then get the content non-priority content.
     $non_priority_timestamps_and_entities = [];
     $non_priority_count = $pagination->getSize() - count($priority_timestamps_and_entities);
@@ -154,6 +160,10 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function loadSeriesEntities(array &$timestamps_and_entities, int $size, bool $priority) {
+    if ($size == 0) {
+      return;
+    }
+
     // Use aggregateQuery instead of standard entity query, so that we can group
     // by series (to remove duplicates).
     $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery()->accessCheck(TRUE);
@@ -216,6 +226,10 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function loadContentEntities(array &$timestamps_and_entities, int $size, bool $priority) {
+    if ($size == 0) {
+      return;
+    }
+
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
     $query->condition('type', self::$contentTypes, 'IN');
 
