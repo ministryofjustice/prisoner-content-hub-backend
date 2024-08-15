@@ -102,7 +102,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
 
     $this->nodeWithCategory = $this->createNode([
       'field_moj_top_level_categories' => $this->categoryTerm->id(),
-      'field_not_in_series' => TRUE,
     ])->uuid();
 
     // Allow anonymous user to access entities without prison context.
@@ -156,7 +155,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()],
       ],
-      'field_not_in_series' => TRUE,
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory], $node);
   }
@@ -193,7 +191,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()],
       ],
-      'field_not_in_series' => TRUE,
     ]);
     $this->assertJsonApiSuggestionsResponse([
       $this->nodeWithCategory,

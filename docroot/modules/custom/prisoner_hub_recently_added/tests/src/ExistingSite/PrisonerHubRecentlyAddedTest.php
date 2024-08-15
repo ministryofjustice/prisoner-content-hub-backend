@@ -50,7 +50,6 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
 
     $current_time = time();
     $first_entity = $this->createNode([
-      'field_not_in_series' => 1,
       'published_at' => $current_time,
     ]);
 
@@ -67,7 +66,6 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
     ]);
 
     $fourth_entity = $this->createNode([
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-7 seconds', $current_time),
     ]);
 
@@ -114,7 +112,6 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
     $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
 
     $new_entity = $this->createNode([
-      'field_not_in_series' => 1,
       'published_at' => strtotime('+1 second'),
     ]);
 

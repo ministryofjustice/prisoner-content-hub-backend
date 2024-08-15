@@ -330,9 +330,6 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'field_prison_owner' => [
         ['target_id' => $this->prisonTerm->id()],
       ],
-      'field_not_in_series' => [
-        'value' => 1,
-      ],
       'field_moj_top_level_categories' => [
         ['target_id' => $category_tern->id()],
       ],

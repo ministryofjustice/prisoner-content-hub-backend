@@ -69,7 +69,6 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
         }
         elseif ($bundle == 'moj_categories') {
           $this->createNode([
-            'field_not_in_series' => 1,
             'field_moj_top_level_categories' => ['target_id' => $term->id()],
             $this->prisonFieldName => [
               ['target_id' => $this->prisonTerm->id()],
