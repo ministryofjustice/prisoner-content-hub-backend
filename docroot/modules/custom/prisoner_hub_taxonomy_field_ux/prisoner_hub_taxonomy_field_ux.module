@@ -47,7 +47,7 @@ function prisoner_hub_taxonomy_field_ux_entity_presave(EntityInterface $entity) 
  */
 function prisoner_hub_taxonomy_field_ux_views_data_alter(array &$data) {
   if (isset($data['taxonomy_term_data'])) {
-    // Add the current company computed field to Views.
+    // Add the parent category computed field to Views.
     $data['taxonomy_term_data']['dynamic_parent_category'] = [
       'title' => t('Dynamic parent category'),
       'field' => [
