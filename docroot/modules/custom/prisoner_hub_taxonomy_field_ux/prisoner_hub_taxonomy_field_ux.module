@@ -15,12 +15,11 @@ use Drupal\node\NodeInterface;
  * Apply form conditional states via the
  * Drupal\prisoner_hub_taxonomy_field_ux\EntityFormStates service.
  */
-// We still need to keep this, just change what it does
-//function prisoner_hub_taxonomy_field_ux_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
-//  if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
-//    \Drupal::service('prisoner_hub_taxonomy_field_ux.entity_form_states')->applyToForm($element);
-//  }
-//}
+function prisoner_hub_taxonomy_field_ux_field_group_form_process_build_alter(array &$element, FormStateInterface $form_state, &$complete_form) {
+  if (isset($element['group_season_and_episode_number']) && isset($element['group_release_date'])) {
+    \Drupal::service('prisoner_hub_taxonomy_field_ux.entity_form_states')->applyToForm($element);
+  }
+}
 
 /**
  * Implements hook_entity_presave().
