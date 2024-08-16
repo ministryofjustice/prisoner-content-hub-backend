@@ -27,17 +27,14 @@ function prisoner_hub_taxonomy_field_ux_field_group_form_process_build_alter(arr
  * Clear out series/category data.
  */
 function prisoner_hub_taxonomy_field_ux_entity_presave(EntityInterface $entity) {
-  if ($entity instanceof NodeInterface && $entity->hasField('field_not_in_series')) {
-    // Should we keep this explicit flag? We could just rely on no series being selected?
-    if ($entity->field_not_in_series->value) {
-      $entity->set('field_moj_series', NULL);
+  if ($entity instanceof NodeInterface
+    && $entity->hasField('field_moj_series')
+    && $entity->hasField('field_moj_top_level_categories')) {
+    if (empty($entity->field_moj_series->value)) {
       $entity->set('field_moj_episode', NULL);
       $entity->set('field_moj_season', NULL);
       $entity->set('field_release_date', NULL);
     }
-//    else {
-//      $entity->set('field_moj_top_level_categories', NULL);
-//    }
   }
 }
 
