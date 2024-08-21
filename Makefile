@@ -41,8 +41,6 @@ sync:
 	# Downloading latest db backup from S3
 	docker-compose exec drupal scripts/downloadDBFromBackup.sh
 	# Download complete
-	# Clearing Drupal db of existing data
-	docker-compose exec -it drupal drush sql-drop -y
 	# Importing db backup to Drupal DB
 	docker-compose exec drupal scripts/importDBFromBackup.sh
 	# Import complete
