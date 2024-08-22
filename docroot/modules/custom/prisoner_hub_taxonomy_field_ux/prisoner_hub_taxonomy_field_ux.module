@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use \Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
@@ -52,7 +52,7 @@ function prisoner_hub_taxonomy_field_ux_entity_presave_clear_series_data(NodeInt
 /**
  * Ensure all relevant node types are validated.
  *
- * @param NodeInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   Entity being saved.
  *
  * @throws Exception
@@ -93,6 +93,7 @@ function prisoner_hub_taxonomy_field_ux_views_data_alter(array &$data) {
  * Defines the bundles which must have a category or field set.
  *
  * @return string[]
+ *   List of the bundle machine names which must have a category or field set.
  */
 function prisoner_hub_taxonomy_field_ux_category_series_bundles(): array {
   return [
