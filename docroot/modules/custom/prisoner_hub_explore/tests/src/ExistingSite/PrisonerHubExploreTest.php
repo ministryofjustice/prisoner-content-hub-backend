@@ -6,7 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
-use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\NodeCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -22,6 +22,9 @@ class PrisonerHubExploreTest extends ExistingSiteBase {
 
   /**
    * Test that the /jsonapi/explore resource returns some content.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testExploreContent() {
     $limit = 4;
@@ -31,7 +34,7 @@ class PrisonerHubExploreTest extends ExistingSiteBase {
     // Because of that, and that the order is random, we only check for the
     // quantity of results, not that specific IDs are returned.
     for ($i = 1; $i <= $limit; $i++) {
-      $this->createNode();
+      $this->createCategorisedNode();
     }
     $url = Url::fromUri('internal:/jsonapi/explore/node', ['query' => ['page[limit]' => $limit]]);
     $response = $this->getJsonApiResponse($url);
