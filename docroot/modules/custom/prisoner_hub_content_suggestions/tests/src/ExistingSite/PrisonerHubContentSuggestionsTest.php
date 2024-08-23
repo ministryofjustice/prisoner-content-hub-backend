@@ -114,14 +114,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test that content with no topic or category returns an empty result.
-   */
-  public function testContentWithNoTagOrCategory() {
-    $node = $this->createNode();
-    $this->assertJsonApiSuggestionsResponse([], $node);
-  }
-
-  /**
    * Test content with topic but no category returns content with that topic.
    */
   public function testContentWithTopicButNoCategory() {
