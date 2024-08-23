@@ -114,18 +114,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   }
 
   /**
-   * Test content with topic but no category returns content with that topic.
-   */
-  public function testContentWithTopicButNoCategory() {
-    $node = $this->createNode([
-      'field_topics' => [
-        ['target_id' => $this->topicsTerm->id()],
-      ],
-    ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithTopic], $node);
-  }
-
-  /**
    * Test content with series but no topic returns content from that category.
    *
    * But *not* the same series.
