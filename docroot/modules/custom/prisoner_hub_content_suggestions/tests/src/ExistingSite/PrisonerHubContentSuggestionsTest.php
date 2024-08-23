@@ -55,13 +55,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   protected $anotherSeriesTerm;
 
   /**
-   * The uuid of a generated node that references $this->topicsTerm.
-   *
-   * @var string
-   */
-  protected $nodeWithTopic;
-
-  /**
    * The uuid of a generated node that references $this->seriesTerm.
    *
    * @var string
@@ -92,10 +85,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     $this->anotherSeriesTerm = $this->createTerm($vocab_series, ['field_category' => ['target_id' => $this->categoryTerm->id()]]);
 
     // Create some content for each.
-    $this->nodeWithTopic = $this->createNode([
-      'field_topics' => $this->topicsTerm->id(),
-    ])->uuid();
-
     $this->nodeWithSeries = $this->createNode([
       'field_moj_series' => $this->seriesTerm->id(),
     ])->uuid();
@@ -156,7 +145,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     ]);
     $this->assertJsonApiSuggestionsResponse([
       $this->nodeWithSeries,
-      $this->nodeWithTopic,
     ], $node);
   }
 
@@ -174,7 +162,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     ]);
     $this->assertJsonApiSuggestionsResponse([
       $this->nodeWithCategory,
-      $this->nodeWithTopic,
     ], $node);
   }
 
