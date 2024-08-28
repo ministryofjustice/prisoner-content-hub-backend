@@ -7,8 +7,9 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\NodeCreationTrait as PrisonerHubNodeCreationTrait;
+use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -24,6 +25,7 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   use NodeCreationTrait;
   use TaxonomyCreationTrait;
   use PrisonerHubPrisonAccessTestTrait;
+  use PrisonerHubNodeCreationTrait;
 
   /**
    * Sets up prison and prison category terms, to be used later when testing.
@@ -45,12 +47,17 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    *
    * @return null|string
    *   The uuid of the created entity.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function createEntity(string $entity_type_id, string $bundle, array $values) {
     switch ($entity_type_id) {
       case 'node':
         $values['type'] = $bundle;
-        return $this->createNode($values)->uuid();
+        // Create a node with a content category due to constraint that content
+        // should always have a category or series.
+        return $this->createCategorisedNode($values)->uuid();
 
       case 'taxonomy_term':
         $vocabulary = Vocabulary::load($bundle);
