@@ -89,8 +89,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   /**
    * Setup entities that are _not_ tagged with either a prison or a category.
    *
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param int $amount
+   *   Number of entities to create.
+   *
    * @return array
    *   An array of entities to check for.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithoutPrisonOrCategory(string $entity_type_id, string $bundle, int $amount = 5) {
     // Create some entities that have no values.
@@ -101,10 +111,26 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   }
 
   /**
-   * Create an entity tagged with a prison but no category.
+   * Create an entity tagged with a prison(s) but no category.
    *
-   * @return int
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param array $prison_ids
+   *   Set of term IDs for the prisons for which the entity should be tagged.
+   * @param int $status
+   *   Whether entity should be published. Should be either
+   *   NodeInterface::PUBLISHED or NodeInterface::NOT_PUBLISHED.
+   * @param array $excluded_prisons
+   *   Optional set of term IDs for the prisons from which the entity should be
+   *   excluded.
+   *
+   * @return string
    *   The uuid of the created entity.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = []) {
     $values = [
@@ -123,8 +149,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   /**
    * Setup entities that are tagged with a prison but _no_ category.
    *
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param int $amount
+   *   Number of entities to create.
+   *
    * @return array
-   *   An array of entities to check for.
+   *   The entities to check.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
@@ -148,8 +184,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   /**
    * Setup entities that are tagged with a category but _no_ prison.
    *
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param int $amount
+   *   Number of entities to create.
+   *
    * @return array
    *   An array of entities to check for.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithCategoryButNoPrison(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
@@ -168,8 +214,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   /**
    * Setup entities that are tagged with a prison _and_ a category.
    *
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param int $amount
+   *   Number of entities to create.
+   *
    * @return array
    *   An array of entities to check for.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupContentTaggedWithPrisonAndCategory(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
@@ -194,8 +250,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   /**
    * Setup entities that are tagged with a prison and excluded.
    *
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param int $amount
+   *   Number of entities to create.
+   *
    * @return array
    *   An array of entities to check for.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithPrisonAndExcluded(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
@@ -214,8 +280,18 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   /**
    * Setup entities that are tagged with a prison and excluded.
    *
+   * @param string $entity_type_id
+   *   Entity type ID, eg 'node' or 'taxonomy_term'.
+   * @param string $bundle
+   *   Bundle to create, eg 'page'.
+   * @param int $amount
+   *   Number of entities to create.
+   *
    * @return array
    *   An array of entities to check for.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithPrisonCategoryAndExcluded(string $entity_type_id, string $bundle, int $amount = 5) {
     $entities_to_check = [];
