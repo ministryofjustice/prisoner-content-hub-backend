@@ -329,7 +329,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testOtherPrisonsDoNotGetRemoved() {
-    $category_tern = $this->createTerm(Vocabulary::load('moj_categories'));
+    $series = $this->createTerm(Vocabulary::load('series'));
     $node = $this->createNode([
       // Only test on basic pages, as other content types have file fields
       // that we would need to fill out in our tests.
@@ -350,10 +350,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'field_prison_owner' => [
         ['target_id' => $this->prisonTerm->id()],
       ],
-      'field_moj_top_level_categories' => [
-        ['target_id' => $category_tern->id()],
+      'field_moj_series' => [
+        ['target_id' => $series->id()],
       ],
-
     ]);
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
