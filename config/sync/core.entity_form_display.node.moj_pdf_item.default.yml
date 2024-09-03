@@ -57,7 +57,7 @@ third_party_settings:
       format_settings:
         classes: ''
         id: ''
-        description: 'Select the series this content belongs to. Then enter either a season and episode number or the date of release.'
+        description: 'Please select a Series or Category the content fits into. If content fits into both, please also select a category.'
         required_fields: true
     group_season_and_episode_number:
       children:
