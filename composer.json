@@ -161,7 +161,6 @@
             "drupal/core": {
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
-                "Issue #3114365 - Vocabulary name not shown in View for Anonymous Users": "patches/3114365-37.patch",
                 "Issue #3090131 - Use per-bundle entity list cache tags to potentially increase caching and performance": "patches/drupal-3090131-16.patch",
                 "No Issue - Do not enable phpass module in Drupal 10 upgrade": "patches/drupal_do_not_enable_phpass_via_update_function.patch"
             },
