@@ -38,6 +38,11 @@ do
   fi
 done
 
+# Drop and recreate the database before importing the backup.
+# This ensures any tables in the current database that don't exist in the
+# backup are removed.
+mysqladmin drop ${HUB_DB_ENV_MYSQL_DATABASE} -f
+mysqladmin create ${HUB_DB_ENV_MYSQL_DATABASE} -f
 mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/${filenameExtracted}
 rm ~/${filenameExtracted}
 echo "Successfully imported database ${filenameExtracted}"

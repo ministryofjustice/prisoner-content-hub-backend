@@ -27,7 +27,7 @@ do
 done
 
 filename="db_backup_$(date +"%F-%H%M%S").sql.gz"
-mysqldump --add-drop-database --databases ${HUB_DB_ENV_MYSQL_DATABASE} | gzip -9 -c > ~/${filename}
+mysqldump ${HUB_DB_ENV_MYSQL_DATABASE} | gzip -9 -c > ~/${filename}
 
 mkdir ~/.aws/
 echo "[default]" > ~/.aws/credentials
