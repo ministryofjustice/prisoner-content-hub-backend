@@ -24,6 +24,12 @@ echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
 echo "password=${HUB_DB_ENV_MYSQL_PASSWORD}" >> ~/.my.cnf
 echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
 
+echo "[mysqladmin]" >> ~/.my.cnf
+echo "user=${HUB_DB_ENV_MYSQL_USER}" >> ~/.my.cnf
+echo "password=${HUB_DB_ENV_MYSQL_PASSWORD}" >> ~/.my.cnf
+echo "host=${HUB_DB_PORT_3306_TCP_ADDR}" >> ~/.my.cnf
+
+
 # Make 8 maximum attempts to connect to the database.  This mitigates intermittent DNS issues.
 # See https://mojdt.slack.com/archives/C57UPMZLY/p1664264969450269
 # See https://mojdt.slack.com/archives/C57UPMZLY/p1666708074467369
@@ -41,8 +47,8 @@ done
 # Drop and recreate the database before importing the backup.
 # This ensures any tables in the current database that don't exist in the
 # backup are removed.
-mysqladmin drop ${HUB_DB_ENV_MYSQL_DATABASE} -f -h "${HUB_DB_PORT_3306_TCP_ADDR}"
-mysqladmin create ${HUB_DB_ENV_MYSQL_DATABASE} -f -h "${HUB_DB_PORT_3306_TCP_ADDR}"
+mysqladmin drop ${HUB_DB_ENV_MYSQL_DATABASE} -f
+mysqladmin create ${HUB_DB_ENV_MYSQL_DATABASE} -f
 mysql ${HUB_DB_ENV_MYSQL_DATABASE} < ~/${filenameExtracted}
 rm ~/${filenameExtracted}
 echo "Successfully imported database ${filenameExtracted}"
