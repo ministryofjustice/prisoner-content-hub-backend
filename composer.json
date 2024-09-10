@@ -9,6 +9,7 @@
         "cweagans/composer-patches": "~1.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
+        "drupal/book": "^1.0",
         "drupal/book_blocks": "^1.6",
         "drupal/computed_breadcrumbs": "^1",
         "drupal/config_filter": "^2.6",
