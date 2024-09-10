@@ -62,6 +62,7 @@ module:
   menu_ui: 0
   monolog: 0
   mysql: 0
+  navigation: 0
   node: 0
   node_edit_protection: 0
   optgroup_taxonomy_select: 0
@@ -110,7 +111,6 @@ module:
   text_editor_refresh_images: 0
   token: 0
   toolbar: 0
-  tour: 0
   update: 0
   uploaded_file_filename_randomizer: 0
   user: 0
