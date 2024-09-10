@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed6f5be36c3bd2f9174e0698f3a3b701",
+    "content-hash": "69039bff03ddfe9497fd4781800c5ec6",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -1144,29 +1144,30 @@
         },
         {
             "name": "consolidation/site-process",
-            "version": "5.2.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consolidation/site-process.git",
-                "reference": "6c44638d7af8a8b4abe12c3180701243f480539d"
+                "reference": "71cd4b36881cdef21730a6543b46ab52d04642d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consolidation/site-process/zipball/6c44638d7af8a8b4abe12c3180701243f480539d",
-                "reference": "6c44638d7af8a8b4abe12c3180701243f480539d",
+                "url": "https://api.github.com/repos/consolidation/site-process/zipball/71cd4b36881cdef21730a6543b46ab52d04642d6",
+                "reference": "71cd4b36881cdef21730a6543b46ab52d04642d6",
                 "shasum": ""
             },
             "require": {
-                "consolidation/config": "^2",
+                "consolidation/config": "^2 || ^3",
                 "consolidation/site-alias": "^3 || ^4",
                 "php": ">=8.0.14",
-                "symfony/console": "^5.4 || ^6",
-                "symfony/process": "^6"
+                "symfony/console": "^5.4 || ^6 || ^7",
+                "symfony/process": "^6 || ^7"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9",
                 "squizlabs/php_codesniffer": "^3"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1178,7 +1179,31 @@
                     "Consolidation\\SiteProcess\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Consolidation\\SiteProcess\\": "tests/src"
+                }
+            },
+            "scripts": {
+                "cs": [
+                    "phpcs --standard=PSR2 -n src"
+                ],
+                "cbf": [
+                    "phpcbf --standard=PSR2 -n src"
+                ],
+                "unit": [
+                    "phpunit --colors=always"
+                ],
+                "lint": [
+                    "find src -name '*.php' -print0 | xargs -0 -n1 php -l",
+                    "find tests/src -name '*.php' -print0 | xargs -0 -n1 php -l"
+                ],
+                "test": [
+                    "@lint",
+                    "@unit",
+                    "@cs"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -1194,10 +1219,10 @@
             ],
             "description": "A thin wrapper around the Symfony Process Component that allows applications to use the Site Alias library to specify the target for a remote call.",
             "support": {
-                "issues": "https://github.com/consolidation/site-process/issues",
-                "source": "https://github.com/consolidation/site-process/tree/5.2.0"
+                "source": "https://github.com/consolidation/site-process/tree/main",
+                "issues": "https://github.com/consolidation/site-process/issues"
             },
-            "time": "2022-12-06T17:57:16+00:00"
+            "time": "2024-07-23T15:40:34+00:00"
         },
         {
             "name": "cweagans/composer-patches",
@@ -18061,6 +18086,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "consolidation/site-process": 20,
         "drupal/entity_clone": 10,
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_filter_cache_tags": 10,
@@ -18074,5 +18100,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

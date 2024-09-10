@@ -5,6 +5,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.2",
+        "consolidation/site-process": "dev-main",
         "cweagans/composer-patches": "~1.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
@@ -194,6 +195,9 @@
             },
             "drupal/field_permissions": {
                 "Issue #3411976: 500 error with JSONAPI on Base Entity Fields": "patches/file_permissions.3411976-25.patch"
+            },
+            "consolidation/site-process": {
+                "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
             }
         },
         "patches-ignore": {
@@ -205,6 +209,10 @@
         }
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:consolidation/site-process.git"
+        },
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
