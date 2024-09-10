@@ -55,7 +55,7 @@ class SubTermsCacheTagInvalidator {
       }
     }
 
-    $category_entity = $this->getCategoryFromEntity($entity);
+    $category_entity = $this->getCategoriesFromEntity($entity);
     if ($category_entity) {
       $this->invalidateCategoryParent($category_entity);
     }
@@ -87,7 +87,7 @@ class SubTermsCacheTagInvalidator {
   }
 
   /**
-   * Check whether content is being updated to have a different series/category.
+   * Check if content is updated to have a different series/ set of categories.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The content entity to check.
@@ -96,34 +96,57 @@ class SubTermsCacheTagInvalidator {
    *   TRUE if the content is changing category or series, otherwise FALSE.
    */
   protected function checkEntityIsChangingCategoryOrSeries(ContentEntityInterface $entity) {
-    if (!isset($entity->original) || !$entity->isPublished()) {
+    // We don't care about new content...
+    if (!isset($entity->original)) {
       return FALSE;
     }
-    $referenced_entity = $this->getCategoryFromEntity($entity) ?: $this->getSeriesFromEntity($entity);
-    $previous_referenced_entity = $this->getCategoryFromEntity($entity->original) ?: $this->getSeriesFromEntity($entity->original);
+    // ...or content that isn't published.
+    if (!$entity->isPublished()) {
+      return FALSE;
+    }
+    if ($this->getSeriesFromEntity($entity) != $this->getSeriesFromEntity($entity->original)) {
+      // Content has been put in a different series, or content has been
+      // removed from a series, or content has been put in a series when it
+      // wasn't previously in one.
+      return TRUE;
+    }
 
-    $previous_entity_id = $previous_referenced_entity ? $previous_referenced_entity->id() : NULL;
-    $current_entity_id = $referenced_entity ? $referenced_entity->id() : NULL;
-    return $previous_entity_id != $current_entity_id;
+    // Compare all the categories before and after saving.
+    // We don't care if they are re-ordered; just if they are different sets.
+    $category_ids = $this->getCategoryIdsFromEntity($entity);
+    $previous_category_ids = $this->getCategoryIdsFromEntity($entity->original);
+
+    // If these were large sets, it would be more efficient to sort these sets
+    // and step though. However, at the time of writing, categories max out at
+    // 3, so let's keep it simple.
+    if (array_diff($category_ids, $previous_category_ids)) {
+      return TRUE;
+    }
+    if (array_diff($previous_category_ids, $category_ids)) {
+      return TRUE;
+    }
+
+    // If we get to here, we haven't found any changes.
+    return FALSE;
   }
 
   /**
-   * Get the category taxonomy term from $entity.
+   * Get the category taxonomy terms from $entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   Entity for which we are getting the taxonomy term.
    *
-   * @return \Drupal\taxonomy\TermInterface|false
-   *   Either the category taxonomy term entity, or FALSE if not found.
+   * @return array
+   *   Array of term IDs (if any).
    */
-  protected function getCategoryFromEntity(ContentEntityInterface $entity) {
+  protected function getCategoryIdsFromEntity(ContentEntityInterface $entity) {
+    $ids = [];
     if ($entity->hasField('field_moj_top_level_categories') && !$entity->get('field_moj_top_level_categories')->isEmpty()) {
-      $entities = $entity->get('field_moj_top_level_categories')->referencedEntities();
-      if (!empty($entities)) {
-        return $entities[0];
+      foreach ($entity->get('field_moj_top_level_categories')->getValue() as $value) {
+        $ids[] = $value['target_id'];
       }
     }
-    return FALSE;
+    return $ids;
   }
 
   /**
