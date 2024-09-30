@@ -5,8 +5,8 @@ namespace Drupal\Tests\prisoner_hub_priority_content;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\NodeCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -96,10 +96,13 @@ class PriorityContentTest extends ExistingSiteBase {
    * Test comms can see the flag for content created by other users.
    *
    * It should not be set.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testCommsSeeFlagOnOthersContent(): void {
     $this->drupalLogin($this->nonCommsUser);
-    $node = $this->createNode();
+    $node = $this->createCategorisedNode();
     $this->drupalLogout();
 
     $this->drupalLogin($this->commsUser);
@@ -115,11 +118,13 @@ class PriorityContentTest extends ExistingSiteBase {
    * returned content, even when more is available.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testPrioritisedContentIsPrioritised(): void {
     // Create 4 priority nodes.
     for ($index = 1; $index < 5; $index++) {
-      $node = $this->createNode([
+      $node = $this->createCategorisedNode([
         'title' => "Priority Node $index",
         'field_prioritise_on_recently_add' => 1,
       ]);
@@ -128,7 +133,7 @@ class PriorityContentTest extends ExistingSiteBase {
 
     // Create 4 non-priority nodes.
     for ($index = 1; $index < 5; $index++) {
-      $node = $this->createNode([
+      $node = $this->createCategorisedNode([
         'title' => "Non-Priority Node $index",
         'field_prioritise_on_recently_add' => 0,
       ]);

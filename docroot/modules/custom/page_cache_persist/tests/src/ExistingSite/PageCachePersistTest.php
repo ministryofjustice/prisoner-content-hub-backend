@@ -3,9 +3,11 @@
 namespace Drupal\Tests\page_cache_persist\ExistingSite;
 
 use Drupal\Core\Url;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\NodeCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drush\TestTraits\DrushTestTrait;
+use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
@@ -16,6 +18,8 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 class PageCachePersistTest extends ExistingSiteBase {
 
   use DrushTestTrait;
+  use TaxonomyCreationTrait;
+  use NodeCreationTrait;
 
   /**
    * The url of the node.
@@ -26,6 +30,9 @@ class PageCachePersistTest extends ExistingSiteBase {
 
   /**
    * Set up content and generate cache.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setUp(): void {
     parent::setUp();
@@ -37,7 +44,7 @@ class PageCachePersistTest extends ExistingSiteBase {
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $this->grantPermissions($role, ['view entity without prison context']);
 
-    $node = $this->createNode();
+    $node = $this->createCategorisedNode();
     $url = Url::fromRoute('jsonapi.node.individual', ['entity' => $node->uuid()]);
     $url->setAbsolute(TRUE);
     $this->nodeUrlString = $url->toString();

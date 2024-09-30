@@ -67,7 +67,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $subSubCategoryTerm->id()],
       ],
-      'field_not_in_series' => 1,
     ]);
 
     $this->categoryTerms = [$parentTerm, $subCategoryTerm, $subSubCategoryTerm];
@@ -82,7 +81,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $this->seriesTerm->id()],
       ],
-      'field_not_in_series' => 0,
     ]);
 
     // Allow anonymous user to access entities without prison context.
@@ -123,7 +121,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $category->id()],
       ],
-      'field_not_in_series' => 1,
     ]);
     $this->assertJsonApiBreadcrumbResponse($node, $this->categoryTerms);
   }
@@ -136,7 +133,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $this->seriesTerm->id()],
       ],
-      'field_not_in_series' => 0,
     ]);
     $breadcrumbs = $this->categoryTerms;
     $breadcrumbs[] = $this->seriesTerm;

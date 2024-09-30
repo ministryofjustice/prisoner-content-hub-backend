@@ -88,7 +88,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $first_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => time(),
     ]);
 
@@ -101,7 +100,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-2 years'),
     ]);
 
@@ -109,7 +107,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // sorting.
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => time(),
       'status' => 0,
     ]);
@@ -140,7 +137,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $third_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-1 week'),
     ]);
 
@@ -175,7 +171,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-7 months'),
     ]);
 
@@ -193,7 +188,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $another_category = $this->createTerm($vocab_categories);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $another_category->id()]],
-      'field_not_in_series' => 1,
     ]);
 
     $another_sub_category = $this->createTerm($vocab_categories, [
@@ -203,7 +197,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $another_sub_category->id()]],
-      'field_not_in_series' => 1,
     ]);
 
     $another_series = $this->createTerm($vocab_series, [
@@ -219,7 +212,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // this also isn't returned (we should only receive sub-terms).
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->categoryTerm->id()]],
-      'field_not_in_series' => 1,
     ]);
 
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
@@ -237,7 +229,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Create some content in the new subCategory and ensure we get a cache HIT.
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
-      'field_not_in_series' => 1,
     ]);
     // Run the request twice, so the first one generates a cache.
     $this->getJsonApiResponse($this->jsonApiUrl);
@@ -258,7 +249,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Create a new node, and check for a MISS.
     $node = $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
-      'field_not_in_series' => 1,
     ]);
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
     if (\Drupal::moduleHandler()->moduleExists('page_cache')) {

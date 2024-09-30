@@ -114,7 +114,6 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $category->id()],
       ],
-      'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
     ]);
 
@@ -163,7 +162,6 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $sub_category->id()],
       ],
-      'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
     ]);
     $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
@@ -191,7 +189,6 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $sub_sub_category->id()],
       ],
-      'field_not_in_series' => 1,
       'status' => NodeInterface::PUBLISHED,
     ]);
     $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());

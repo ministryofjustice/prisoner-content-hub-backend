@@ -20,7 +20,7 @@ class EntityFormStates {
    *
    * @var array
    */
-  protected $episodeSortingStates;
+  protected array $episodeSortingStates;
 
   /**
    * An array of Drupal conditional form states.
@@ -30,13 +30,16 @@ class EntityFormStates {
    *
    * @var array
    */
-  protected $releaseDateSortingStates;
+  protected array $releaseDateSortingStates;
 
   /**
    * Constructs a new EntityFormStates object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity type manager.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {
     $this->generateStatesForTermsWithSorting();
@@ -46,6 +49,9 @@ class EntityFormStates {
    * Generate $this->episodeSortingStates and $this->releaseDateSortingState.
    *
    * These are to be used as #states.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function generateStatesForTermsWithSorting() {
     $this->episodeSortingStates = [];
@@ -94,13 +100,9 @@ class EntityFormStates {
       ];
       $form['field_moj_season']['widget'][0]['value']['#states']['required'] = [
         ':input[name="field_moj_series"]' => $this->episodeSortingStates,
-        0 => 'and',
-        ':input[name="field_not_in_series[value]"]' => ['checked' => FALSE],
       ];
       $form['field_moj_episode']['widget'][0]['value']['#states']['required'] = [
         ':input[name="field_moj_series"]' => $this->episodeSortingStates,
-        0 => 'and',
-        ':input[name="field_not_in_series[value]"]' => ['checked' => FALSE],
       ];
     }
 
@@ -116,17 +118,6 @@ class EntityFormStates {
       // However, this field has a default value (of the current date),
       // so it's less likely to not be set.
     }
-
-    // Apply states to the category field and group, based on
-    // field_not_in_series.
-    $form['group_category']['#states']['visible'][':input[name="field_not_in_series[value]"]']['checked'] = TRUE;
-    $form['field_moj_top_level_categories']['widget']['#states']['required'][':input[name="field_not_in_series[value]"]']['checked'] = TRUE;
-    $form['field_moj_top_level_categories']['widget']['#states']['empty'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
-
-    // Apply states to the series field and group, based on field_not_in_series.
-    $form['field_moj_series']['#states']['visible'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
-    $form['field_moj_series']['widget']['#states']['required'][':input[name="field_not_in_series[value]"]']['checked'] = FALSE;
-    $form['field_moj_series']['#states']['empty'][':input[name="field_not_in_series[value]"]']['checked'] = TRUE;
   }
 
 }

@@ -37,7 +37,6 @@ module:
   flood_control: 0
   flysystem: 0
   flysystem_s3: 0
-  form_state_empty: 0
   google_analytics: 0
   govuk_notify: 0
   health_check: 0

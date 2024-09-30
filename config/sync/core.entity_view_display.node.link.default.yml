@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.link.field_moj_series
     - field.field.node.link.field_moj_thumbnail_image
     - field.field.node.link.field_moj_top_level_categories
-    - field.field.node.link.field_not_in_series
     - field.field.node.link.field_prioritise_on_recently_add
     - field.field.node.link.field_prisons
     - field.field.node.link.field_release_date
@@ -78,16 +77,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 110
-    region: content
-  field_not_in_series:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 109
     region: content
   field_prioritise_on_recently_add:
     type: boolean
