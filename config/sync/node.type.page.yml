@@ -27,7 +27,7 @@ _core:
 name: 'Basic page'
 type: page
 description: 'Use <em>basic pages</em> to create pages of text and images, such as a news article or notice.'
-help: ''
+help: null
 new_revision: true
 preview_mode: 0
 display_submitted: false

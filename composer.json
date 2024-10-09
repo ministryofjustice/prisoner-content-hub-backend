@@ -5,9 +5,11 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.2",
+        "consolidation/site-process": "dev-main",
         "cweagans/composer-patches": "~1.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
+        "drupal/book": "^1.0",
         "drupal/book_blocks": "^1.6",
         "drupal/computed_breadcrumbs": "^1",
         "drupal/config_filter": "^2.6",
@@ -45,7 +47,7 @@
         "drupal/linkit": "^6.0",
         "drupal/maintenance_exempt": "^1.3",
         "drupal/maxlength": "^3.0",
-        "drupal/monolog": "^2.0",
+        "drupal/monolog": "^3",
         "drupal/node_edit_protection": "^1.0",
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/pathauto": "^1.8",
@@ -161,7 +163,6 @@
             "drupal/core": {
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
-                "Issue #3114365 - Vocabulary name not shown in View for Anonymous Users": "patches/3114365-37.patch",
                 "Issue #3090131 - Use per-bundle entity list cache tags to potentially increase caching and performance": "patches/drupal-3090131-16.patch",
                 "No Issue - Do not enable phpass module in Drupal 10 upgrade": "patches/drupal_do_not_enable_phpass_via_update_function.patch"
             },
@@ -195,6 +196,9 @@
             },
             "drupal/field_permissions": {
                 "Issue #3411976: 500 error with JSONAPI on Base Entity Fields": "patches/file_permissions.3411976-25.patch"
+            },
+            "consolidation/site-process": {
+                "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
             }
         },
         "patches-ignore": {
@@ -206,6 +210,10 @@
         }
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:consolidation/site-process.git"
+        },
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"

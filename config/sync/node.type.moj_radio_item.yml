@@ -29,7 +29,7 @@ _core:
 name: Audio
 type: moj_radio_item
 description: 'Use <em>audio</em> to add audio content such as audiobooks, music and podcasts  - use mp3 files.'
-help: ''
+help: null
 new_revision: true
 preview_mode: 0
 display_submitted: false

@@ -26,7 +26,7 @@ third_party_settings:
 name: 'Help page'
 type: help_page
 description: 'Use <em>help pages</em> to add an entry into the <a href="/admin/help">Help</a> section, these have a built-in hierarchical navigation. '
-help: ''
+help: null
 new_revision: true
 preview_mode: 1
 display_submitted: false

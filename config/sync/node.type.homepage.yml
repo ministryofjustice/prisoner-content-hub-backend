@@ -25,7 +25,7 @@ third_party_settings:
 name: Homepage
 type: homepage
 description: 'Use the <em>Homepage</em> content type to control certain components on a prisons homepage.  There is normally one <em>Homepage</em> per prison, and these are created when the prison is first added to Drupal.'
-help: ''
+help: null
 new_revision: true
 preview_mode: 0
 display_submitted: true
