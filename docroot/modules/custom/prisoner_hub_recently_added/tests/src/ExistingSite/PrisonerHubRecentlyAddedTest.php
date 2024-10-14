@@ -7,8 +7,8 @@ use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\NodeCreationTrait;
 use GuzzleHttp\RequestOptions;
-use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
@@ -49,8 +49,7 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
     $vocab_series = Vocabulary::load('series');
 
     $current_time = time();
-    $first_entity = $this->createNode([
-      'field_not_in_series' => 1,
+    $first_entity = $this->createCategorisedNode([
       'published_at' => $current_time,
     ]);
 
@@ -66,8 +65,7 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
       'published_at' => strtotime('-1 second', $current_time),
     ]);
 
-    $fourth_entity = $this->createNode([
-      'field_not_in_series' => 1,
+    $fourth_entity = $this->createCategorisedNode([
       'published_at' => strtotime('-7 seconds', $current_time),
     ]);
 
@@ -103,6 +101,9 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
 
   /**
    * Test that new content is immediately updated on the resource.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function testRecentlyAddedCacheClear() {
     $request_options = [];
@@ -113,8 +114,7 @@ class PrisonerHubRecentlyAddedTest extends ExistingSiteBase {
     $response = $this->request('GET', $this->jsonApiUrl, $request_options);
     $this->assertSame($response->getHeader('X-Drupal-Cache')[0], 'HIT');
 
-    $new_entity = $this->createNode([
-      'field_not_in_series' => 1,
+    $new_entity = $this->createCategorisedNode([
       'published_at' => strtotime('+1 second'),
     ]);
 
