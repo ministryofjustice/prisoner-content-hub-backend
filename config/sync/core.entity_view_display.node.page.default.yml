@@ -12,7 +12,6 @@ dependencies:
     - field.field.node.page.field_moj_stand_first
     - field.field.node.page.field_moj_thumbnail_image
     - field.field.node.page.field_moj_top_level_categories
-    - field.field.node.page.field_not_in_series
     - field.field.node.page.field_prioritise_on_recently_add
     - field.field.node.page.field_prison_owner
     - field.field.node.page.field_prisons
@@ -108,16 +107,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 1
-    region: content
-  field_not_in_series:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 16
     region: content
   field_prioritise_on_recently_add:
     type: boolean

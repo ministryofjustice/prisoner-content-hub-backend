@@ -55,13 +55,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
   protected $anotherSeriesTerm;
 
   /**
-   * The uuid of a generated node that references $this->topicsTerm.
-   *
-   * @var string
-   */
-  protected $nodeWithTopic;
-
-  /**
    * The uuid of a generated node that references $this->seriesTerm.
    *
    * @var string
@@ -92,17 +85,12 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     $this->anotherSeriesTerm = $this->createTerm($vocab_series, ['field_category' => ['target_id' => $this->categoryTerm->id()]]);
 
     // Create some content for each.
-    $this->nodeWithTopic = $this->createNode([
-      'field_topics' => $this->topicsTerm->id(),
-    ])->uuid();
-
     $this->nodeWithSeries = $this->createNode([
       'field_moj_series' => $this->seriesTerm->id(),
     ])->uuid();
 
     $this->nodeWithCategory = $this->createNode([
       'field_moj_top_level_categories' => $this->categoryTerm->id(),
-      'field_not_in_series' => TRUE,
     ])->uuid();
 
     // Allow anonymous user to access entities without prison context.
@@ -112,26 +100,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     // our tests.
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $this->grantPermissions($role, ['view entity without prison context']);
-  }
-
-  /**
-   * Test that content with no topic or category returns an empty result.
-   */
-  public function testContentWithNoTagOrCategory() {
-    $node = $this->createNode();
-    $this->assertJsonApiSuggestionsResponse([], $node);
-  }
-
-  /**
-   * Test content with topic but no category returns content with that topic.
-   */
-  public function testContentWithTopicButNoCategory() {
-    $node = $this->createNode([
-      'field_topics' => [
-        ['target_id' => $this->topicsTerm->id()],
-      ],
-    ]);
-    $this->assertJsonApiSuggestionsResponse([$this->nodeWithTopic], $node);
   }
 
   /**
@@ -156,7 +124,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()],
       ],
-      'field_not_in_series' => TRUE,
     ]);
     $this->assertJsonApiSuggestionsResponse([$this->nodeWithCategory], $node);
   }
@@ -178,7 +145,6 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
     ]);
     $this->assertJsonApiSuggestionsResponse([
       $this->nodeWithSeries,
-      $this->nodeWithTopic,
     ], $node);
   }
 
@@ -193,11 +159,9 @@ class PrisonerHubContentSuggestionsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $this->categoryTerm->id()],
       ],
-      'field_not_in_series' => TRUE,
     ]);
     $this->assertJsonApiSuggestionsResponse([
       $this->nodeWithCategory,
-      $this->nodeWithTopic,
     ], $node);
   }
 
