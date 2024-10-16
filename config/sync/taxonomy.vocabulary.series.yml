@@ -6,3 +6,4 @@ name: Series
 vid: series
 description: 'The series the content fits in to'
 weight: 0
+new_revision: false

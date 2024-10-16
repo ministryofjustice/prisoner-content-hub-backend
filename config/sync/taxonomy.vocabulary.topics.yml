@@ -6,3 +6,4 @@ name: Topics
 vid: topics
 description: 'A <em>topic</em> groups content from different categories which all relate to one cohesive topic.'
 weight: 0
+new_revision: false

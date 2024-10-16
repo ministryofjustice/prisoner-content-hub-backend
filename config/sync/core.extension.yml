@@ -109,7 +109,6 @@ module:
   text_editor_refresh_images: 0
   token: 0
   toolbar: 0
-  tour: 0
   update: 0
   uploaded_file_filename_randomizer: 0
   user: 0
