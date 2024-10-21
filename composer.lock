@@ -1737,26 +1737,26 @@
         },
         {
             "name": "drupal/book_blocks",
-            "version": "1.14.0",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/book_blocks.git",
-                "reference": "8.x-1.14"
+                "reference": "8.x-1.16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/book_blocks-8.x-1.14.zip",
-                "reference": "8.x-1.14",
-                "shasum": "b1e762225d3c33f48279a483d9a90ec5aea0928f"
+                "url": "https://ftp.drupal.org/files/projects/book_blocks-8.x-1.16.zip",
+                "reference": "8.x-1.16",
+                "shasum": "516bc077f56126301dcf3f1c765c2e03302f6b48"
             },
             "require": {
-                "drupal/core": "^8 || ^9 || ^10"
+                "drupal/core": "^8 || ^9 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.14",
-                    "datestamp": "1698343544",
+                    "version": "8.x-1.16",
+                    "datestamp": "1725723069",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
