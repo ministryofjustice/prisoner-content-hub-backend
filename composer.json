@@ -194,9 +194,6 @@
             "drupal/search_api": {
                 "Issue #3313569: Warning: Could not load the following items on index": "patches/3313569-10--referenced_entity_tracking_translations.patch"
             },
-            "drupal/field_permissions": {
-                "Issue #3411976: 500 error with JSONAPI on Base Entity Fields": "patches/file_permissions.3411976-25.patch"
-            },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
             }
