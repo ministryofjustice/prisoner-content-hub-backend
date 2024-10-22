@@ -2493,26 +2493,26 @@
         },
         {
             "name": "drupal/database_ssl_check",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/database_ssl_check.git",
-                "reference": "2.0.0"
+                "reference": "2.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/database_ssl_check-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "99afe4dd307b945d22ffc7fca09f327c6122d091"
+                "url": "https://ftp.drupal.org/files/projects/database_ssl_check-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "83e0bc2fda8a809694324f399b89223b7bd0fda6"
             },
             "require": {
-                "drupal/core": "^8 || ^9 || ^10 || ^11"
+                "drupal/core": "^9 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1717157589",
+                    "version": "2.0.1",
+                    "datestamp": "1721831709",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2521,30 +2521,22 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
-                    "name": "John Franklin",
-                    "homepage": "https://www.drupal.org/u/john-franklin",
-                    "role": "Maintainer"
+                    "name": "john franklin",
+                    "homepage": "https://www.drupal.org/user/683430"
                 },
                 {
-                    "name": "John Shortess",
-                    "homepage": "https://www.drupal.org/u/johnshortess",
-                    "role": "Maintainer"
+                    "name": "johnshortess",
+                    "homepage": "https://www.drupal.org/user/1022888"
                 }
             ],
             "description": "Displays the SSL connection parameters to your database.",
             "homepage": "https://www.drupal.org/project/database_ssl_check",
-            "keywords": [
-                "Database",
-                "Drupal",
-                "SSL"
-            ],
             "support": {
-                "source": "https://git.drupalcode.org/project/database_ssl_check",
-                "issues": "https://drupal.org/project/issues/database_ssl_check"
+                "source": "https://git.drupalcode.org/project/database_ssl_check"
             }
         },
         {
