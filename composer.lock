@@ -3961,26 +3961,26 @@
         },
         {
             "name": "drupal/jsonapi_page_limit",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_page_limit.git",
-                "reference": "8.x-1.1"
+                "reference": "8.x-1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_page_limit-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "6fa79991a7b34e32e8e021d340f3bae521de63ba"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_page_limit-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "908da365b231fbbb9c974e0d5edcc242f32aae63"
             },
             "require": {
-                "drupal/core": "^9 || ^10"
+                "drupal/core": "^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1689290765",
+                    "version": "8.x-1.2",
+                    "datestamp": "1726406330",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3998,7 +3998,7 @@
                     "email": "weitzman@tejasa.com"
                 },
                 {
-                    "name": "Eli-T",
+                    "name": "eli-t",
                     "homepage": "https://www.drupal.org/user/516878"
                 },
                 {
