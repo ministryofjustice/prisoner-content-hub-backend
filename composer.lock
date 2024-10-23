@@ -4078,31 +4078,31 @@
         },
         {
             "name": "drupal/jsonapi_search_api",
-            "version": "1.0.0-rc3",
+            "version": "1.0.0-rc4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_search_api.git",
-                "reference": "8.x-1.0-rc3"
+                "reference": "8.x-1.0-rc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_search_api-8.x-1.0-rc3.zip",
-                "reference": "8.x-1.0-rc3",
-                "shasum": "96441cd7355eb1cf3623e4406ca4b237c6d66651"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_search_api-8.x-1.0-rc4.zip",
+                "reference": "8.x-1.0-rc4",
+                "shasum": "ad8327829e832b4a3c68e5fae1d6dd456a52c2cd"
             },
             "require": {
-                "drupal/core": "^9.1 || ^10",
+                "drupal/core": "^9.1 || ^10 || ^11",
                 "drupal/jsonapi_resources": "^1.0@beta",
                 "drupal/search_api": "^1.0"
             },
             "require-dev": {
-                "drupal/facets": "^1.0"
+                "drupal/facets": "^1.6 || ^2.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-rc3",
-                    "datestamp": "1674556268",
+                    "version": "8.x-1.0-rc4",
+                    "datestamp": "1728306634",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
