@@ -4198,26 +4198,26 @@
         },
         {
             "name": "drupal/maintenance_exempt",
-            "version": "1.3.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/maintenance_exempt.git",
-                "reference": "8.x-1.3"
+                "reference": "8.x-1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/maintenance_exempt-8.x-1.3.zip",
-                "reference": "8.x-1.3",
-                "shasum": "2df8e76732a8ea1a6a1dbad4942eb85a913bac1d"
+                "url": "https://ftp.drupal.org/files/projects/maintenance_exempt-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "1cd49ad155c68475171a8471ea17779dad1846f5"
             },
             "require": {
-                "drupal/core": "^9.4 || ^10"
+                "drupal/core": "^9.4 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.3",
-                    "datestamp": "1686672273",
+                    "version": "8.x-1.5",
+                    "datestamp": "1728895715",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4230,7 +4230,7 @@
             ],
             "authors": [
                 {
-                    "name": "Eli-T",
+                    "name": "eli-t",
                     "homepage": "https://www.drupal.org/user/516878"
                 },
                 {
@@ -4238,7 +4238,7 @@
                     "homepage": "https://www.drupal.org/user/418511"
                 },
                 {
-                    "name": "RandallKent",
+                    "name": "randallkent",
                     "homepage": "https://www.drupal.org/user/164904"
                 },
                 {
