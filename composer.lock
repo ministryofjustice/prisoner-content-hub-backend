@@ -3778,26 +3778,26 @@
         },
         {
             "name": "drupal/jsonapi_filter_cache_tags",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_filter_cache_tags.git",
-                "reference": "1.1.1"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_filter_cache_tags-1.1.1.zip",
-                "reference": "1.1.1",
-                "shasum": "5ee34ab3a68fdc2421390b64c00fd27688763350"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_filter_cache_tags-1.2.0.zip",
+                "reference": "1.2.0",
+                "shasum": "3bd0eedd9fe9680d34529b0b22d70930164acfc5"
             },
             "require": {
-                "drupal/core": "^10"
+                "drupal/core": "^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.1.1",
-                    "datestamp": "1726147609",
+                    "version": "1.2.0",
+                    "datestamp": "1729002383",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
