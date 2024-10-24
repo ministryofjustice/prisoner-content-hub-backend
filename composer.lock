@@ -1635,26 +1635,26 @@
         },
         {
             "name": "drupal/autocomplete_id",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/autocomplete_id.git",
-                "reference": "8.x-1.6"
+                "reference": "8.x-1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/autocomplete_id-8.x-1.6.zip",
-                "reference": "8.x-1.6",
-                "shasum": "3319a174b416e2bdb8a8713a670235d2bc3a0c03"
+                "url": "https://ftp.drupal.org/files/projects/autocomplete_id-8.x-1.7.zip",
+                "reference": "8.x-1.7",
+                "shasum": "bfec815b2004ad6e8e59bdd32ea5b4e23ae92539"
             },
             "require": {
-                "drupal/core": "^8 || ^9 || ^10"
+                "drupal/core": "^9 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.6",
-                    "datestamp": "1701801283",
+                    "version": "8.x-1.7",
+                    "datestamp": "1724353544",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
