@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "927ca9f6f82515783af9292aded98169",
+    "content-hash": "701c93eab4968833641713f3f2eb2aef",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -5687,7 +5687,7 @@
                     "homepage": "https://www.drupal.org/u/graber"
                 },
                 {
-                    "name": "Graber",
+                    "name": "graber",
                     "homepage": "https://www.drupal.org/user/1599440"
                 },
                 {
