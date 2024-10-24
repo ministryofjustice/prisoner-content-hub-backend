@@ -68,7 +68,7 @@
         "drupal/uploaded_file_filename_randomizer": "^1.0",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^2.5",
-        "drupal/views_bulk_operations": "^4.2",
+        "drupal/views_bulk_operations": "~4.2.7",
         "drupal/views_data_export": "^1.2",
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
@@ -193,9 +193,6 @@
             },
             "drupal/search_api": {
                 "Issue #3313569: Warning: Could not load the following items on index": "patches/3313569-10--referenced_entity_tracking_translations.patch"
-            },
-            "drupal/field_permissions": {
-                "Issue #3411976: 500 error with JSONAPI on Base Entity Fields": "patches/file_permissions.3411976-25.patch"
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
