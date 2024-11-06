@@ -114,8 +114,6 @@ permissions:
   - 'execute entity:save_action user'
   - 'execute entity:unpublish_action node'
   - 'execute entity:unpublish_action taxonomy_term'
-  - 'execute node_assign_owner_action node'
-  - 'execute node_unpublish_by_keyword_action node'
   - 'execute user_add_role_action user'
   - 'execute user_block_user_action user'
   - 'execute user_remove_role_action user'
