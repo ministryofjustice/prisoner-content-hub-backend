@@ -19,7 +19,7 @@
 ### Checklist
 
 - [ ] This PR contains **only** changes related to the above card
-- [ ] This deployment has been tested for cache invalidation https://dsdmoj.atlassian.net/wiki/spaces/HUB/pages/3757342835/Caching+in+Drupal#Testing-if-a-deployment-will-stop-pages-being-served-from-cache
+- [ ] This deployment has been tested [for cache invalidation](https://dsdmoj.atlassian.net/wiki/spaces/HUB/pages/3757342835/Caching+in+Drupal#Testing-if-a-deployment-will-stop-pages-being-served-from-cache)
 - [ ] Tests have been added/updated to cover the change
 - [ ] Documentation has been updated where appropriate
 - [ ] Tested in Development
