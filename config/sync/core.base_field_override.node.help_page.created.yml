@@ -1,0 +1,18 @@
+uuid: 917a8cc7-b86e-415c-96ac-b22f1d8a3014
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.help_page
+id: node.help_page.created
+field_name: created
+entity_type: node
+bundle: help_page
+label: 'Authored on'
+description: 'The date and time that the content was created.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

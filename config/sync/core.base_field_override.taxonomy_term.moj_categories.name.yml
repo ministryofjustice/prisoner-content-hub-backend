@@ -1,0 +1,18 @@
+uuid: f4a908d6-6270-49c4-b475-c6b38e77bd70
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+id: taxonomy_term.moj_categories.name
+field_name: name
+entity_type: taxonomy_term
+bundle: moj_categories
+label: Name
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

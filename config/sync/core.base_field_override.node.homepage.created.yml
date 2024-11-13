@@ -1,0 +1,18 @@
+uuid: de9076cd-49e7-4abe-87dc-73fe7a1c209c
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.homepage
+id: node.homepage.created
+field_name: created
+entity_type: node
+bundle: homepage
+label: 'Authored on'
+description: 'The date and time that the content was created.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

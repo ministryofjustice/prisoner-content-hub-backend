@@ -1,0 +1,20 @@
+uuid: f0be681d-384e-4242-8b56-20b62891d0b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prisons
+  module:
+    - path
+id: taxonomy_term.prisons.path
+field_name: path
+entity_type: taxonomy_term
+bundle: prisons
+label: 'URL alias'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

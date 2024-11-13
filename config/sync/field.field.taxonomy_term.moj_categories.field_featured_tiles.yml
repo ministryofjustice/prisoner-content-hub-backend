@@ -20,7 +20,7 @@ bundle: moj_categories
 label: 'Featured tiles list'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -56,9 +56,6 @@ settings:
     handler_settings: {  }
   search_api_task:
     handler: 'default:search_api_task'
-    handler_settings: {  }
-  shortcut:
-    handler: 'default:shortcut'
     handler_settings: {  }
   path_alias:
     handler: 'default:path_alias'

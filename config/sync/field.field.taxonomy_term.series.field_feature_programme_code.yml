@@ -12,7 +12,7 @@ bundle: series
 label: 'Featured media programme code'
 description: 'Field used for featured audio if they need tracking'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }

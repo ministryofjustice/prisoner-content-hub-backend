@@ -1,0 +1,18 @@
+uuid: ad4773bb-1520-4879-9d0c-2d96639e3279
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prisons
+id: taxonomy_term.prisons.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: prisons
+label: Changed
+description: 'The time that the term was last edited.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

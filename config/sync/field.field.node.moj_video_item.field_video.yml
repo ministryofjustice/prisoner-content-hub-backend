@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_video
     - node.type.moj_video_item
   module:
+    - content_translation
     - file
+third_party_settings:
+  content_translation:
+    translation_sync:
+      target_id: target_id
+      display: display
+      description: description
 id: node.moj_video_item.field_video
 field_name: field_video
 entity_type: node

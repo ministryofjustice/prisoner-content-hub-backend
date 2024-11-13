@@ -1,0 +1,22 @@
+uuid: 65a3f013-cb85-4e54-8911-a125314f4b5a
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prisons
+id: taxonomy_term.prisons.status
+field_name: status
+entity_type: taxonomy_term
+bundle: prisons
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

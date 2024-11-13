@@ -14,7 +14,7 @@ bundle: series
 label: 'Sort by'
 description: "Select how you'd like to order your episodes within a series.<br/>\r\nTo edit the episodes within a series, go to <a href=\"change-episode-order\">Change episode order</a>."
 required: true
-translatable: false
+translatable: true
 default_value:
   -
     value: release_date_desc

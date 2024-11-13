@@ -1,0 +1,22 @@
+uuid: 437e1140-0e56-45df-ae89-587125821d74
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prisons
+  module:
+    - computed_breadcrumbs
+id: taxonomy_term.prisons.breadcrumbs
+field_name: breadcrumbs
+entity_type: taxonomy_term
+bundle: prisons
+label: Breadcrumbs
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: computed_breadcrumbs

@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_moj_pdf
     - node.type.moj_pdf_item
   module:
+    - content_translation
     - file
+third_party_settings:
+  content_translation:
+    translation_sync:
+      target_id: target_id
+      display: display
+      description: description
 _core:
   default_config_hash: vZ123I_anlvBBs4dx0qWV8ARHG_-iHm8ypuFP7MMbR4
 id: node.moj_pdf_item.field_moj_pdf
@@ -16,7 +23,7 @@ bundle: moj_pdf_item
 label: PDF
 description: ''
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

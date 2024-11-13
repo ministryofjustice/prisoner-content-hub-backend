@@ -17,7 +17,7 @@ bundle: urgent_banner
 label: 'More info page'
 description: "Set a page that the \"more info\" text should link to. This can be left empty, and no link we be displayed. <br/>\r\nNote that the page needs to have been already created.  To add a new page, <a href=\"/node/add\" target=\"_blank\">click here</a>."
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

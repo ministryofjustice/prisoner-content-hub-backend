@@ -1,0 +1,18 @@
+uuid: 1f078141-c10d-4818-8cf3-c03892310a40
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prisons
+id: taxonomy_term.prisons.name
+field_name: name
+entity_type: taxonomy_term
+bundle: prisons
+label: Name
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

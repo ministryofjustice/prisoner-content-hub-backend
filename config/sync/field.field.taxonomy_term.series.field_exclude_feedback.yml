@@ -12,7 +12,7 @@ bundle: series
 label: 'Exclude feedback'
 description: 'Select to hide the feedback form when viewing this series.'
 required: false
-translatable: false
+translatable: true
 default_value:
   -
     value: 0

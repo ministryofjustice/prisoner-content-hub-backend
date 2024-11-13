@@ -1,0 +1,20 @@
+uuid: 884cd451-a631-45cf-95f8-20a4d4862259
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+  module:
+    - prisoner_hub_taxonomy_child_count
+id: taxonomy_term.moj_categories.child_term_count
+field_name: child_term_count
+entity_type: taxonomy_term
+bundle: moj_categories
+label: 'Child term count'
+description: 'A count of the amount of child taxonomy terms.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: child_term_count

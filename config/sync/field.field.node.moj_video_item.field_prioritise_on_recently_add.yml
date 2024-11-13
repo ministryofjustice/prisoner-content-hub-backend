@@ -12,7 +12,7 @@ bundle: moj_video_item
 label: 'Prioritise on Recently Added section of home pages'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
