@@ -46,6 +46,7 @@ hidden:
   field_release_date: true
   field_summary: true
   field_topics: true
+  langcode: true
   links: true
   published_at: true
   search_api_excerpt: true

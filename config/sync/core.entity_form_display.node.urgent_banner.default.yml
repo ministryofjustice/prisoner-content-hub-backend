@@ -133,6 +133,13 @@ content:
       cascading_selection_enforce: false
       max_depth: 0
     third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
     weight: 1

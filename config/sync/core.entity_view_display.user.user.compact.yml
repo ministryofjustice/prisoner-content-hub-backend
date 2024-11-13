@@ -15,6 +15,8 @@ bundle: user
 mode: compact
 content: {  }
 hidden:
+  breadcrumbs: true
   field_user_prisons: true
+  langcode: true
   member_for: true
   search_api_excerpt: true
