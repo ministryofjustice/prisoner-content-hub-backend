@@ -34,3 +34,4 @@ cloneable_entities:
   - entity_view_display
   - entity_view_mode
   - base_field_override
+  - password_policy
