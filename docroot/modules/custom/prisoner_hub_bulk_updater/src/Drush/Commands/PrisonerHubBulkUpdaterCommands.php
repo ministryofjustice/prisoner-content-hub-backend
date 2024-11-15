@@ -248,8 +248,8 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $node_ids[] = $nid;
     }
     // Bulk load all nodes by their IDs.
-      $nodes = $node_storage->loadMultiple($node_ids);
-      foreach ($node_ids as $nid) {
+    $nodes = $node_storage->loadMultiple($node_ids);
+    foreach ($node_ids as $nid) {
       if (!isset($nodes[$nid])) {
         $rows[] = [
           'nid' => $nid,
