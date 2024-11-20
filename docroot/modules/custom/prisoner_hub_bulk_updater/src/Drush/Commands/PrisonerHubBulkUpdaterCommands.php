@@ -229,6 +229,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     }
 
     $rows = [];
+    $node_ids = [];
 
     // Arguments are valid, so proceed to exclude content.
     $node_storage = $this->entityTypeManager->getStorage('node');
@@ -244,15 +245,20 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
         ];
         continue;
       }
-      /** @var \Drupal\Node\NodeInterface $node */
-      $node = $node_storage->load($nid);
-      if (!$node) {
+      $node_ids[] = $nid;
+    }
+    // Bulk load all nodes by their IDs.
+    $nodes = $node_storage->loadMultiple($node_ids);
+    foreach ($node_ids as $nid) {
+      if (!isset($nodes[$nid])) {
         $rows[] = [
           'nid' => $nid,
           'status' => 'Could not be loaded',
         ];
         continue;
       }
+      /** @var \Drupal\Node\NodeInterface $node */
+      $node = $nodes[$nid];
       if ($mode == 'unpublish') {
         if (!$node->isPublished()) {
           $rows[] = [
