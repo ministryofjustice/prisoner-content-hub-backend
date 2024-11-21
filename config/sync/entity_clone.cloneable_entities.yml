@@ -34,3 +34,5 @@ cloneable_entities:
   - entity_view_display
   - entity_view_mode
   - base_field_override
+  - configurable_language
+  - language_content_settings

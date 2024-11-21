@@ -43,5 +43,6 @@ hidden:
   field_release_date: true
   field_show_interstitial_page: true
   field_url: true
+  langcode: true
   published_at: true
   search_api_excerpt: true

@@ -122,4 +122,5 @@ content:
 hidden:
   breadcrumbs: true
   field_category: true
+  langcode: true
   search_api_excerpt: true

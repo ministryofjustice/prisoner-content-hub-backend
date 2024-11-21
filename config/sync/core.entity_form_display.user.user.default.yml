@@ -36,7 +36,13 @@ content:
       cascading_selection_enforce: true
       max_depth: 0
     third_party_settings: {  }
+  google_analytics:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
+  langcode: true
   language: true
   path: true
   timezone: true
