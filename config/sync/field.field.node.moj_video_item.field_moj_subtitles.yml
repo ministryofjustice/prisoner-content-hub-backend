@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_moj_subtitles
     - node.type.moj_video_item
   module:
+    - content_translation
     - file
+third_party_settings:
+  content_translation:
+    translation_sync:
+      target_id: target_id
+      display: display
+      description: description
 _core:
   default_config_hash: XpSff0-Wh0Lglx7cde4tc1n5cPq8tDV3vxQEcrpfelo
 id: node.moj_video_item.field_moj_subtitles

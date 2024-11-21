@@ -1,0 +1,20 @@
+uuid: bf448dbf-9f20-49bf-a2ee-0238599ce997
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+  module:
+    - publication_date
+id: node.moj_radio_item.published_at
+field_name: published_at
+entity_type: node
+bundle: moj_radio_item
+label: 'Published on'
+description: 'Keep the publication timestamp for each node.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: published_at

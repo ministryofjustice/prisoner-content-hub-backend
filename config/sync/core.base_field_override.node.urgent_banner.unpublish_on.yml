@@ -1,0 +1,18 @@
+uuid: 505e9ada-d779-4c9c-8e7d-fc53737f345c
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+id: node.urgent_banner.unpublish_on
+field_name: unpublish_on
+entity_type: node
+bundle: urgent_banner
+label: 'Unpublish on'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

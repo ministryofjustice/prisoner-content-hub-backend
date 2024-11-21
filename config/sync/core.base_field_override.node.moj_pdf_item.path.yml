@@ -1,0 +1,20 @@
+uuid: b42d0401-b1c7-4c44-93c1-de8f2143760f
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+  module:
+    - path
+id: node.moj_pdf_item.path
+field_name: path
+entity_type: node
+bundle: moj_pdf_item
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

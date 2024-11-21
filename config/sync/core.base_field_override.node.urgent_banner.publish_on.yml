@@ -1,0 +1,18 @@
+uuid: 1cc77b40-17b6-4b71-a6a3-3a164158583b
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+id: node.urgent_banner.publish_on
+field_name: publish_on
+entity_type: node
+bundle: urgent_banner
+label: 'Publish on'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

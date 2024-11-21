@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_moj_audio
     - node.type.moj_radio_item
   module:
+    - content_translation
     - file
+third_party_settings:
+  content_translation:
+    translation_sync:
+      target_id: target_id
+      display: display
+      description: description
 _core:
   default_config_hash: IELynr2Klsy51UA2BqFYwo_zW7u20yeCEvxYRpv0FS8
 id: node.moj_radio_item.field_moj_audio
@@ -16,7 +23,7 @@ bundle: moj_radio_item
 label: Audio
 description: ''
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:

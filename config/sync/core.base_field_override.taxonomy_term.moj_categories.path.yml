@@ -1,0 +1,20 @@
+uuid: af8618f2-3b1f-414c-87d6-4ee0eec1bbdf
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+  module:
+    - path
+id: taxonomy_term.moj_categories.path
+field_name: path
+entity_type: taxonomy_term
+bundle: moj_categories
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

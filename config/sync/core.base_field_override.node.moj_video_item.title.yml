@@ -1,0 +1,18 @@
+uuid: 19581386-d2b2-4c9b-a9b3-d7aa96215a80
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+id: node.moj_video_item.title
+field_name: title
+entity_type: node
+bundle: moj_video_item
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

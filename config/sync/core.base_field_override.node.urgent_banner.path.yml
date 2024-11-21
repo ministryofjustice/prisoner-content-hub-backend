@@ -1,0 +1,20 @@
+uuid: 331951ae-2b8d-42c4-aeab-0b93b43c0135
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+  module:
+    - path
+id: node.urgent_banner.path
+field_name: path
+entity_type: node
+bundle: urgent_banner
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

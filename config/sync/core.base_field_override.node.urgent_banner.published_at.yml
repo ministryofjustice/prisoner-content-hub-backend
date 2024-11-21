@@ -1,0 +1,20 @@
+uuid: d493414f-8223-4f5f-86c1-45675d513e92
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+  module:
+    - publication_date
+id: node.urgent_banner.published_at
+field_name: published_at
+entity_type: node
+bundle: urgent_banner
+label: 'Published on'
+description: 'Keep the publication timestamp for each node.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: published_at

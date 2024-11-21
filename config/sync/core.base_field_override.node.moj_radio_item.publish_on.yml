@@ -1,0 +1,18 @@
+uuid: ecaec940-ab40-4c31-b50f-8f58d077af5e
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.publish_on
+field_name: publish_on
+entity_type: node
+bundle: moj_radio_item
+label: 'Publish on'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

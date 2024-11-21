@@ -1,0 +1,18 @@
+uuid: 393194ea-4dd6-4d25-86ed-65d2906e3f49
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: false
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: taxonomy_term.moj_categories
+target_entity_type_id: taxonomy_term
+target_bundle: moj_categories
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,22 @@
+uuid: f815bdbb-9118-430d-84af-553ad7579df3
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.sticky
+field_name: sticky
+entity_type: node
+bundle: moj_radio_item
+label: 'Sticky at top of lists'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

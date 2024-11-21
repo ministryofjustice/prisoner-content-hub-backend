@@ -1,0 +1,22 @@
+uuid: 3bc18268-e86e-44f9-a72a-07b3872429a2
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.status
+field_name: status
+entity_type: node
+bundle: moj_pdf_item
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
