@@ -6,6 +6,8 @@ url:
   source: path_prefix
   prefixes:
     en: ''
+    cy: cy
   domains:
     en: ''
+    cy: ''
 selected_langcode: site_default
