@@ -183,6 +183,8 @@ parameters:
 
   jsonapi_page_limit.size_max:
     /jsonapi/*: 100
+    /cy/jsonapi/*: 100
+
 services:
   monolog.handler.stream:
     class: Monolog\Handler\StreamHandler
