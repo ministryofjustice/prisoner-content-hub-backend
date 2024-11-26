@@ -10,6 +10,7 @@
 @pdf_uuid = 569e381b-300f-487f-90f5-c433f3c3c4a8
 @link_uuid = 8be7944d-db0a-431a-ae7e-c8d450ee332c
 @radio_uuid = 02bb3b40-9d1a-4194-ad8c-1054b7b3b1d8
+@search_text = prison
 
 ###
 # @name GetCategory
@@ -265,3 +266,14 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{video_uuid}}/sug
 
 > test_cache_hit.js
 
+###
+# @name SearchSuggestions
+GET {{address}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=5
+
+> test_cache_hit.js
+
+###
+# @name SearchResults
+GET {{address}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=15
+
+> test_cache_hit.js
