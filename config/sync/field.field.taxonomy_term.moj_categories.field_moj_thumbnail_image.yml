@@ -6,7 +6,14 @@ dependencies:
     - field.storage.taxonomy_term.field_moj_thumbnail_image
     - taxonomy.vocabulary.moj_categories
   module:
+    - content_translation
     - image
+third_party_settings:
+  content_translation:
+    translation_sync:
+      file: file
+      alt: '0'
+      title: '0'
 id: taxonomy_term.moj_categories.field_moj_thumbnail_image
 field_name: field_moj_thumbnail_image
 entity_type: taxonomy_term

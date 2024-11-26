@@ -1,0 +1,22 @@
+uuid: 135b15b4-28ae-415c-8374-5e914c6563cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.status
+field_name: status
+entity_type: node
+bundle: moj_radio_item
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

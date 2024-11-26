@@ -1,0 +1,20 @@
+uuid: 115291db-ec24-40f7-b4c2-62d58091bd09
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.help_page
+  module:
+    - path
+id: node.help_page.path
+field_name: path
+entity_type: node
+bundle: help_page
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

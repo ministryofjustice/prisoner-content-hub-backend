@@ -1,0 +1,20 @@
+uuid: e78c43ec-d5e0-4ba1-b314-51b223061e82
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+  module:
+    - publication_date
+id: node.moj_pdf_item.published_at
+field_name: published_at
+entity_type: node
+bundle: moj_pdf_item
+label: 'Published on'
+description: 'Keep the publication timestamp for each node.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: published_at

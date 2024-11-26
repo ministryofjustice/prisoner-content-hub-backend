@@ -1,0 +1,20 @@
+uuid: aa83df11-753e-47d3-a2b1-71b27860c7a4
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+  module:
+    - path
+id: node.moj_radio_item.path
+field_name: path
+entity_type: node
+bundle: moj_radio_item
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

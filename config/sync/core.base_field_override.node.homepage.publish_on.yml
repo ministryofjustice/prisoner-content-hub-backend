@@ -1,0 +1,18 @@
+uuid: 452a8a78-9209-4d92-984c-7128fda66792
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.homepage
+id: node.homepage.publish_on
+field_name: publish_on
+entity_type: node
+bundle: homepage
+label: 'Publish on'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

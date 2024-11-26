@@ -1,0 +1,22 @@
+uuid: 7bd37fad-2c00-4186-85a6-219643b7aa70
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+id: node.moj_video_item.status
+field_name: status
+entity_type: node
+bundle: moj_video_item
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

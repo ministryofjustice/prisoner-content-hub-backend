@@ -1,0 +1,18 @@
+uuid: f7bf0294-abe6-412f-a15f-b79dbbb5d4b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+id: node.moj_video_item.created
+field_name: created
+entity_type: node
+bundle: moj_video_item
+label: 'Authored on'
+description: 'The date and time that the content was created.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

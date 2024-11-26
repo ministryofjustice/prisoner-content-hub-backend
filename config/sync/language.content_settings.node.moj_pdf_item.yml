@@ -1,0 +1,18 @@
+uuid: 27184f96-4aff-4110-b65c-e83aa0218dc5
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '1'
+id: node.moj_pdf_item
+target_entity_type_id: node
+target_bundle: moj_pdf_item
+default_langcode: site_default
+language_alterable: false

@@ -12,7 +12,7 @@ bundle: series
 label: 'Include in homepage updates'
 description: 'Select to include the content from this series in the <em>homepage updates</em> component.'
 required: false
-translatable: true
+translatable: false
 default_value:
   -
     value: 0

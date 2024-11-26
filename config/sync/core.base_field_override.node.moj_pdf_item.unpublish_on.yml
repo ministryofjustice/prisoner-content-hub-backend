@@ -1,0 +1,18 @@
+uuid: 234d9415-b2f8-4a8f-87d0-708695dab687
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.unpublish_on
+field_name: unpublish_on
+entity_type: node
+bundle: moj_pdf_item
+label: 'Unpublish on'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

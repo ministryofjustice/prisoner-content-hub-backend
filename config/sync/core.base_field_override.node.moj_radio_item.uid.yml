@@ -1,0 +1,20 @@
+uuid: 4ff99cb5-c95a-47c2-9b54-82f75e5758b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.uid
+field_name: uid
+entity_type: node
+bundle: moj_radio_item
+label: 'Authored by'
+description: 'The username of the content author.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: 'Drupal\node\Entity\Node::getDefaultEntityOwner'
+settings:
+  handler: default
+  handler_settings: {  }
+field_type: entity_reference

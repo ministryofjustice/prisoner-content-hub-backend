@@ -1,0 +1,22 @@
+uuid: ddf18271-e1ad-401f-86d7-a84ac344c90d
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+id: taxonomy_term.moj_categories.status
+field_name: status
+entity_type: taxonomy_term
+bundle: moj_categories
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

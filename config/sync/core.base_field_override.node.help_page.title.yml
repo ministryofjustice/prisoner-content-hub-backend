@@ -1,0 +1,18 @@
+uuid: ea6932aa-85fd-44bd-9423-deae96026bb4
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.help_page
+id: node.help_page.title
+field_name: title
+entity_type: node
+bundle: help_page
+label: Title
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

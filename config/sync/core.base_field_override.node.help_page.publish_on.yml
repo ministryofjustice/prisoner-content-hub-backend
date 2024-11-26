@@ -1,0 +1,18 @@
+uuid: b2ae5e5c-937e-4f8a-963a-6bf23e087325
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.help_page
+id: node.help_page.publish_on
+field_name: publish_on
+entity_type: node
+bundle: help_page
+label: 'Publish on'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

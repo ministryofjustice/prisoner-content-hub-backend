@@ -1,0 +1,18 @@
+uuid: 8557677a-5a67-4a8d-be4e-56b05b1fc286
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '1'
+id: node.moj_video_item
+target_entity_type_id: node
+target_bundle: moj_video_item
+default_langcode: site_default
+language_alterable: false

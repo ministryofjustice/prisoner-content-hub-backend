@@ -12,7 +12,7 @@ bundle: topics
 label: 'Exclude feedback'
 description: 'Select to hide the feedback form when viewing this secondary tag.'
 required: false
-translatable: true
+translatable: false
 default_value:
   -
     value: 0

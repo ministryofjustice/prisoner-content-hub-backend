@@ -1,0 +1,18 @@
+uuid: ad085df5-2098-43e7-a51c-179c6cad0d8c
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.title
+field_name: title
+entity_type: node
+bundle: moj_radio_item
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

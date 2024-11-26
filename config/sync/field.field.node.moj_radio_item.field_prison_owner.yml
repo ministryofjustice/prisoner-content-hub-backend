@@ -13,7 +13,7 @@ bundle: moj_radio_item
 label: 'Prison owner'
 description: 'Select which prison(s) should <em>own</em> this content.  This will effect who has the ability to edit the content.'
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
