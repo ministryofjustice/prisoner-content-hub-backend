@@ -11,10 +11,14 @@
 @link_uuid = 8be7944d-db0a-431a-ae7e-c8d450ee332c
 @radio_uuid = 02bb3b40-9d1a-4194-ad8c-1054b7b3b1d8
 @search_text = prison
+# English
+@language =
+# Welsh
+#@language = /cy
 
 ###
 # @name GetCategory
-GET {{address}}/jsonapi/prison/{{prison}}/taxonomy_term/moj_categories/{{category_uuid}}?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/taxonomy_term/moj_categories/{{category_uuid}}?
   include=field_featured_tiles%2Cfield_featured_tiles.field_moj_thumbnail_image&
   fields%5Bnode--page%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&
   fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&
@@ -41,7 +45,7 @@ GET {{address}}/router/prison/{{prison}}/translate-path?
 
 ###
 # @name Homepage
-GET {{address}}/jsonapi/prison/{{prison}}/node/homepage?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/homepage?
   include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&
   page%5Blimit%5D=4&
   fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&
@@ -52,7 +56,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/homepage?
 
 ###
 # @name HomePageExploreTheHub
-GET {{address}}/jsonapi/prison/{{prison}}/explore/node?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/explore/node?
   include=field_moj_thumbnail_image&
   page%5Blimit%5D=4&
   fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&
@@ -64,7 +68,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/explore/node?
 
 ###
 # @name HomePageRecentlyAdded
-GET {{address}}/jsonapi/prison/{{prison}}/recently-added?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/recently-added?
   include=field_moj_thumbnail_image&
   sort=-published_at%2Ccreated&
   fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&
@@ -79,7 +83,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/recently-added?
 
 ###
 # @name HomePageUpdates
-GET {{address}}/jsonapi/prison/{{prison}}/node?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node?
   filter%5B6%5D%5Bcondition%5D%5Bpath%5D=published_at&
   filter%5B6%5D%5Bcondition%5D%5Bvalue%5D=1723192942&
   filter%5B6%5D%5Bcondition%5D%5Boperator%5D=%3E%3D&
@@ -113,14 +117,14 @@ GET {{address}}/jsonapi/prison/{{prison}}/node?
 
 ###
 # @name Link
-GET {{address}}/jsonapi/prison/{{prison}}/node/link/{{link_uuid}}?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/link/{{link_uuid}}?
   fields%5Bnode--link%5D=title%2Cdrupal_internal__nid%2Cfield_show_interstitial_page%2Cfield_url
 
 > test_cache_hit.js
 
 ###
 # @name NextInSeries
-GET {{address}}/jsonapi/prison/{{prison}}/node?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node?
   filter%5Bfield_moj_series.meta.drupal_internal__tid%5D={{series_id}}&
   filter%5Bnext_items%5D%5Bgroup%5D%5Bconjunction%5D=OR&
   filter%5Bseries_sort_value%5D%5Bcondition%5D%5Bpath%5D=series_sort_value&
@@ -143,7 +147,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node?
 
 ###
 # @name NodesInCategory
-GET {{address}}/jsonapi/prison/{{prison}}/node?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node?
   filter%5Bfield_moj_top_level_categories.id%5D={{category_uuid}}&
   include=field_moj_thumbnail_image&
   sort=-created&
@@ -158,7 +162,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node?
 
 ###
 # @name NodesInTopic
-GET {{address}}/jsonapi/prison/{{prison}}/node?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node?
   filter%5Bfield_topics.id%5D={{topic_uuid}}&
   include=field_moj_thumbnail_image%2Cfield_topics.field_moj_thumbnail_image&
   sort=-created&
@@ -175,7 +179,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node?
 
 ###
 # @name Page
-GET {{address}}/jsonapi/prison/{{prison}}/node/page/{{page_uuid}}?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/page/{{page_uuid}}?
   include=field_topics%2Cfield_moj_top_level_categories&
   fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Ccreated%2Cfield_main_body_content%2Cfield_moj_stand_first%2Cfield_topics%2Cfield_moj_series%2Cfield_moj_top_level_categories%2Cfield_exclude_feedback%2Cbreadcrumbs&
   fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname&
@@ -185,7 +189,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/page/{{page_uuid}}?
 
 ###
 # @name Pdf
-GET {{address}}/jsonapi/prison/{{prison}}/node/moj_pdf_item/{{pdf_uuid}}?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/moj_pdf_item/{{pdf_uuid}}?
   include=field_moj_pdf&
   fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_pdf
 
@@ -193,14 +197,14 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/moj_pdf_item/{{pdf_uuid}}?
 
 ###
 # @name PrimaryNavigation
-GET {{address}}/jsonapi/prison/{{prison}}/primary_navigation?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/primary_navigation?
   fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl
 
 > test_cache_hit.js
 
 ###
 # @name Radio
-GET {{address}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{radio_uuid}}?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{radio_uuid}}?
   include=field_moj_thumbnail_image%2Cfield_moj_series%2Cfield_moj_audio%2Cfield_topics%2Cfield_moj_top_level_categories&
   fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Ccreated%2Cfield_moj_audio%2Cfield_description%2Cfield_topics%2Cfield_moj_series%2Cfield_moj_season%2Cfield_moj_episode%2Cfield_moj_top_level_categories%2Cfield_moj_thumbnail_image%2Cfield_moj_programme_code%2Cseries_sort_value%2Cfield_exclude_feedback%2Cbreadcrumbs&
   fields%5Bfile--file%5D=uri%2Cimage_style_uri&
@@ -212,7 +216,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{radio_uuid}}?
 
 ###
 # @name SubtermsForCategory
-GET {{address}}/jsonapi/prison/{{prison}}/taxonomy_term/moj_categories/{{category_uuid}}/sub_terms?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/taxonomy_term/moj_categories/{{category_uuid}}/sub_terms?
   include=field_moj_thumbnail_image&
   fields%5Btaxonomy_term--series%5D=type%2Cdrupal_internal__tid%2Cname%2Cfield_moj_thumbnail_image%2Cpath%2Ccontent_updated%2Cchild_term_count%2Cpublished_at&
   fields%5Btaxonomy_term--moj_categories%5D=type%2Cdrupal_internal__tid%2Cname%2Cfield_moj_thumbnail_image%2Cpath%2Ccontent_updated%2Cchild_term_count%2Cpublished_at&
@@ -223,7 +227,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/taxonomy_term/moj_categories/{{categor
 
 ###
 # @name Topics
-GET {{address}}/jsonapi/prison/{{prison}}/taxonomy_term?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/taxonomy_term?
   filter%5Bvid.meta.drupal_internal__target_id%5D=topics&
   page%5Blimit%5D=100&
   sort=name&
@@ -233,7 +237,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/taxonomy_term?
 
 ###
 # @name UrgentBanners
-GET {{address}}/jsonapi/prison/{{prison}}/node/urgent_banner?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/urgent_banner?
   include=field_more_info_page&
   fields%5Bnode--urgent_banner%5D=drupal_internal__nid%2Ctitle%2Ccreated%2Cchanged%2Cfield_more_info_page%2Cunpublish_on
 
@@ -241,7 +245,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/urgent_banner?
 
 ###
 # @name Video
-GET {{address}}/jsonapi/prison/{{prison}}/node/moj_video_item/{{video_uuid}}?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/moj_video_item/{{video_uuid}}?
   include=field_moj_thumbnail_image%2Cfield_moj_series%2Cfield_video%2Cfield_topics%2Cfield_moj_top_level_categories&
   fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Ccreated%2Cfield_video%2Cfield_description%2Cfield_topics%2Cfield_moj_series%2Cfield_moj_season%2Cfield_moj_episode%2Cfield_moj_top_level_categories%2Cfield_moj_thumbnail_image%2Cseries_sort_value%2Cfield_exclude_feedback%2Cbreadcrumbs&
   fields%5Bfile--file%5D=uri%2Cimage_style_uri&
@@ -255,7 +259,7 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/moj_video_item/{{video_uuid}}?
 # @name YouMightLike
 ## This suggestions call was actually generated from a video item.
 ## Need to investigate why this uses a moj_radio_item path.
-GET {{address}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{video_uuid}}/suggestions?
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{video_uuid}}/suggestions?
   include=field_moj_thumbnail_image&
   page%5Blimit%5D=4&
   fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&
@@ -268,12 +272,12 @@ GET {{address}}/jsonapi/prison/{{prison}}/node/moj_radio_item/{{video_uuid}}/sug
 
 ###
 # @name SearchSuggestions
-GET {{address}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=5
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=5
 
 > test_cache_hit.js
 
 ###
 # @name SearchResults
-GET {{address}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=15
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=15
 
 > test_cache_hit.js
