@@ -1,0 +1,12 @@
+uuid: 29a9cd44-737c-4aaf-8753-a74df559b4c2
+langcode: en
+status: true
+dependencies:
+  module:
+    - content_translation
+id: translator
+label: Translator
+weight: -4
+is_admin: null
+permissions:
+  - 'translate editable entities'
