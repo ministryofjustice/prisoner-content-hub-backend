@@ -163,4 +163,5 @@ function prisoner_hub_prison_access_cms_field_group_form_process_alter(array &$e
 function prisoner_hub_prison_access_cms_entity_type_alter(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['node']->setHandlerClass('translation', '\Drupal\prisoner_hub_prison_access_cms\PrisonerHubContentTranslationHandler');
+  $entity_types['node']->setHandlerClass('access', '\Drupal\prisoner_hub_prison_access_cms\PrisonerHubAccessControlHandler');
 }

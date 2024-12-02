@@ -19,7 +19,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class to restrict who can edit translations.
+ * Class to restrict who can create translations.
  *
  * Users can edit any prison's content according to the node access system.
  * However, we disable nearly all fields when editing content from another
@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PrisonerHubContentTranslationHandler extends ContentTranslationHandler {
 
   /**
-   * Initializes an instance of the content translation controller.
+   * Initializes an instance of the content translation handler.
    *
    * @param \Drupal\prisoner_hub_prison_access_cms\EntityEditAccess $entityEditAccess
    *   The entity edit access service.
