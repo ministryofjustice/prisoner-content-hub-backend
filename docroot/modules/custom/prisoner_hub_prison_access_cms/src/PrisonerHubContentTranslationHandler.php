@@ -116,7 +116,9 @@ class PrisonerHubContentTranslationHandler extends ContentTranslationHandler {
       // We need to double check against the user has either
       // `bypass prison ownership edit access`, or the content they are
       // editing belongs to the same prison as them.
-      $access = AccessResult::allowedIf($this->entityEditAccess->hasEntityAccess($entity))->cachePerUser();
+      if (!$this->entityEditAccess->hasEntityAccess($entity)) {
+        return AccessResult::forbidden();
+      }
     }
     return $access;
   }

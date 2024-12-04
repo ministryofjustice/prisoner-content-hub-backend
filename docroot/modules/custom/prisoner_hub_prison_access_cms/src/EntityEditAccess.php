@@ -127,31 +127,38 @@ class EntityEditAccess {
       return FALSE;
     }
 
-    /** @var \Drupal\taxonomy\TermInterface $user_prison */
-    foreach ($this->userPrisons as $user_prison) {
-      /** @var \Drupal\taxonomy\TermInterface $content_prison */
-      foreach ($content_prisons as $content_prison) {
-        if ($user_prison->id() == $content_prison->id()) {
-          return TRUE;
-        }
-        // Check if $user_prison is a parent category, and matches the parent
-        // of $content_prison.
-        // E.g. $user_prison = "Adult male", $content_prison = "Berwyn".
-        foreach ($content_prison->get('parent') as $content_prison_parent) {
-          if ($content_prison_parent->target_id == $user_prison->id()) {
+    // Only grant permission via prison if either the content is in the default
+    // language, or the user explicitly has the permission to edit translated
+    // content.
+    if ($entity->language()->isDefault()
+      || $this->user->hasPermission('translate editable entities')) {
+      /** @var \Drupal\taxonomy\TermInterface $user_prison */
+      foreach ($this->userPrisons as $user_prison) {
+        /** @var \Drupal\taxonomy\TermInterface $content_prison */
+        foreach ($content_prisons as $content_prison) {
+          if ($user_prison->id() == $content_prison->id()) {
             return TRUE;
           }
-        }
-        // Check if $content_prison is a parent category, and matches the parent
-        // of $user_prison.
-        // E.g. $content_prison = "Adult male", $user_prison = "Berwyn".
-        foreach ($user_prison->get('parent') as $user_prison_parent) {
-          if ($user_prison_parent->target_id == $content_prison->id()) {
-            return TRUE;
+          // Check if $user_prison is a parent category, and matches the parent
+          // of $content_prison.
+          // E.g. $user_prison = "Adult male", $content_prison = "Berwyn".
+          foreach ($content_prison->get('parent') as $content_prison_parent) {
+            if ($content_prison_parent->target_id == $user_prison->id()) {
+              return TRUE;
+            }
+          }
+          // Check if $content_prison is a parent category, and matches the
+          // parent of $user_prison.
+          // E.g. $content_prison = "Adult male", $user_prison = "Berwyn".
+          foreach ($user_prison->get('parent') as $user_prison_parent) {
+            if ($user_prison_parent->target_id == $content_prison->id()) {
+              return TRUE;
+            }
           }
         }
       }
     }
+
     // If no prison field matches, deny access to the field.
     return FALSE;
   }
