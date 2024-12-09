@@ -4,4 +4,5 @@ description: 'Provides entity access integration within the CMS.'
 core_version_requirement: ^10 || ^11
 package: 'Custom'
 dependencies:
+  - drupal:content_translation
   - prisoner_hub_prison_access:prisoner_hub_prison_access

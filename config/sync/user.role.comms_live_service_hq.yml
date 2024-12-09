@@ -13,6 +13,7 @@ permissions:
   - 'assign comms_live_service_hq role'
   - 'assign local_administrator role'
   - 'assign moj_local_content_manager role'
+  - 'assign translator role'
   - 'create field_prioritise_on_recently_add'
   - 'edit field_prioritise_on_recently_add'
   - 'edit own field_prioritise_on_recently_add'
