@@ -2,7 +2,6 @@ _core:
   default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 module:
   actions_permissions: 0
-  admin_toolbar: 0
   autocomplete_id: 0
   block: 0
   book: 0
@@ -51,6 +50,7 @@ module:
   jsonapi_page_limit: 0
   jsonapi_resources: 0
   jsonapi_search_api: 0
+  language: 0
   layout_builder: 0
   layout_discovery: 0
   link: 0
@@ -60,6 +60,7 @@ module:
   menu_ui: 0
   monolog: 0
   mysql: 0
+  navigation: 0
   node: 0
   node_edit_protection: 0
   optgroup_taxonomy_select: 0
@@ -101,7 +102,6 @@ module:
   search_api_db: 0
   select2: 0
   serialization: 0
-  shortcut: 0
   string_field_formatter: 0
   system: 0
   taxonomy: 0
@@ -126,6 +126,7 @@ module:
   menu_link_content: 1
   pathauto: 1
   password_policy: 10
+  content_translation: 10
   views: 10
   publication_date: 99
   prisoner_content_hub_profile: 1000
