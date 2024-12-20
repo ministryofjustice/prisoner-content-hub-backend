@@ -6,14 +6,7 @@ dependencies:
     - field.storage.node.field_moj_thumbnail_image
     - node.type.moj_video_item
   module:
-    - content_translation
     - image
-third_party_settings:
-  content_translation:
-    translation_sync:
-      file: file
-      alt: '0'
-      title: '0'
 _core:
   default_config_hash: jfPrkx1Z5m1TQ0baF4cavnBN1aqFveoADyLELazp8Y8
 id: node.moj_video_item.field_moj_thumbnail_image
@@ -23,7 +16,7 @@ bundle: moj_video_item
 label: 'Thumbnail image'
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:

@@ -14,9 +14,8 @@ bundle: moj_radio_item
 label: Description
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
-settings:
-  allowed_formats: {  }
+settings: {  }
 field_type: text_long

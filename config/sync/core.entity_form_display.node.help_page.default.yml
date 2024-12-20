@@ -7,7 +7,6 @@ dependencies:
     - node.type.help_page
   module:
     - path
-    - publication_date
     - scheduler
     - text
 id: node.help_page.default
@@ -31,13 +30,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  langcode:
-    type: language_select
-    weight: 2
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   path:
     type: path
     weight: 30
@@ -54,12 +46,6 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 30
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  published_at:
-    type: publication_date_timestamp
-    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
