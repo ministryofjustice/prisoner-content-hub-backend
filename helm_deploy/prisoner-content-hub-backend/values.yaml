@@ -103,3 +103,6 @@ dbRefresh:
 s3Sync:
   enabled: false
   source_region: eu-west-2
+
+generic-prometheus-alerts:
+  targetApplication: prisoner-content-hub-backend

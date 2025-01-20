@@ -17,3 +17,6 @@ s3Sync:
   enabled: true
 application:
   analyticsSiteId: G-4WHXTZQ3EG
+
+generic-prometheus-alerts:
+  alertSeverity: hmpps-launchpad-nonprod
