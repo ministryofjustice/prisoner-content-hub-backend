@@ -2676,6 +2676,663 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      filters:
+        status_extra:
+          id: status_extra
+          table: node_field_data
+          field: status_extra
+          entity_type: node
+          plugin_id: node_status
+          operator: '='
+          value: false
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Status
+            description: ''
+            use_operator: false
+            operator: status_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: status
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: true
+          group_info:
+            label: 'Published status'
+            description: ''
+            identifier: status
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Published
+                operator: '='
+                value: '1'
+              2:
+                title: Unpublished
+                operator: '='
+                value: '0'
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            moj_radio_item: moj_radio_item
+            page: page
+            help_page: help_page
+            homepage: homepage
+            link: link
+            moj_pdf_item: moj_pdf_item
+            urgent_banner: urgent_banner
+            moj_video_item: moj_video_item
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: 'Content type'
+            description: ''
+            use_operator: false
+            operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+              comms_live_service_hq: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_moj_top_level_categories_target_id:
+          id: field_moj_top_level_categories_target_id
+          table: node__field_moj_top_level_categories
+          field: field_moj_top_level_categories_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_moj_top_level_categories_target_id_op
+            label: Category
+            description: ''
+            use_operator: false
+            operator: field_moj_top_level_categories_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_moj_top_level_categories_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              prisoner: '0'
+              local_administrator: '0'
+              anonymous: '0'
+              administrator: '0'
+              moj_view_video: '0'
+              moj_view_pdf: '0'
+              moj_view_radio: '0'
+              moj_local_content_manager: '0'
+              moj_prison_officer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: true
+          vid: moj_categories
+          type: textfield
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_topics_target_id:
+          id: field_topics_target_id
+          table: node__field_topics
+          field: field_topics_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_topics_target_id_op
+            label: Topics
+            description: ''
+            use_operator: false
+            operator: field_topics_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_topics_target_id
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: topics
+          type: textfield
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_moj_series_target_id:
+          id: field_moj_series_target_id
+          table: node__field_moj_series
+          field: field_moj_series_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_moj_series_target_id_op
+            label: Series
+            description: ''
+            use_operator: false
+            operator: field_moj_series_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_moj_series_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              prisoner: '0'
+              local_administrator: '0'
+              anonymous: '0'
+              administrator: '0'
+              moj_view_video: '0'
+              moj_view_pdf: '0'
+              moj_view_radio: '0'
+              moj_local_content_manager: '0'
+              moj_prison_officer: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: true
+          vid: series
+          type: textfield
+          hierarchy: false
+          limit: true
+          error_message: true
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: numeric
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: nid_op
+            label: ID
+            description: ''
+            use_operator: false
+            operator: nid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: nid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        uid:
+          id: uid
+          table: node_field_data
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: uid
+          plugin_id: user_name
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: uid_op
+            label: 'Authored by'
+            description: ' '
+            use_operator: false
+            operator: uid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: uid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+              gds_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_description_value:
+          id: field_description_value
+          table: node__field_description
+          field: field_description_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_description_value_op
+            label: Description
+            description: ''
+            use_operator: false
+            operator: field_description_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_description_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_summary_value:
+          id: field_summary_value
+          table: node__field_summary
+          field: field_summary_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_summary_value_op
+            label: Summary
+            description: ''
+            use_operator: false
+            operator: field_summary_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_summary_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_prisons_target_id:
+          id: field_prisons_target_id
+          table: node__field_prisons
+          field: field_prisons_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_prisons_target_id_op
+            label: 'Prisons (field_prisons)'
+            description: ''
+            use_operator: true
+            operator: field_prisons_target_id_op
+            operator_limit_selection: true
+            operator_list:
+              or: or
+              and: and
+              not: not
+            identifier: field_prisons_target_id
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: prisons
+          type: select
+          hierarchy: true
+          limit: true
+          error_message: true
+        field_prison_owner_target_id:
+          id: field_prison_owner_target_id
+          table: node__field_prison_owner
+          field: field_prison_owner_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_prison_owner_target_id_op
+            label: 'Prison owner'
+            description: ''
+            use_operator: false
+            operator: field_prison_owner_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_prison_owner_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: prisons
+          type: select
+          hierarchy: true
+          limit: true
+          error_message: true
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: langcode
+          plugin_id: language
+          operator: in
+          value:
+            en: en
+            cy: cy
+          group: 1
+          exposed: true
+          expose:
+            operator_id: langcode_op
+            label: Language
+            description: ''
+            use_operator: false
+            operator: langcode_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: langcode
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
+              administrator: '0'
+              comms_live_service_hq: '0'
+              translator: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: 'Translation language'
+            description: null
+            identifier: langcode
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1: {  }
+              2: {  }
+              3: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      defaults:
+        filters: false
+        filter_groups: false
       display_extenders:
         views_ef_fieldset:
           views_ef_fieldset:
@@ -2707,31 +3364,37 @@ display:
                   id: title
                   pid: container-2
                   type: filter
-                  weight: '-33'
+                  weight: '-31'
                 nid:
                   depth: '2'
                   id: nid
                   pid: container-2
                   type: filter
-                  weight: '-32'
+                  weight: '-30'
                 type:
                   depth: '2'
                   id: type
                   pid: container-2
                   type: filter
-                  weight: '-31'
+                  weight: '-29'
                 status:
                   depth: '2'
                   id: status
                   pid: container-2
                   type: filter
-                  weight: '-30'
+                  weight: '-28'
                 uid:
                   depth: '2'
                   id: uid
                   pid: container-2
                   type: filter
-                  weight: '-28'
+                  weight: '-27'
+                langcode:
+                  depth: '2'
+                  id: langcode
+                  pid: container-2
+                  type: filter
+                  weight: '-26'
                 container-6:
                   container_type: details
                   depth: '1'
@@ -2906,6 +3569,16 @@ display:
                   title: 'Container 12'
                   type: container
                   weight: '-15'
+                container-14:
+                  container_type: details
+                  depth: '1'
+                  description: ''
+                  id: container-14
+                  open: false
+                  pid: root
+                  title: 'Container 14'
+                  type: container
+                  weight: '-14'
                 container-13:
                   container_type: details
                   depth: '1'
