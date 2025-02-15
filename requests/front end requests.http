@@ -12,7 +12,7 @@
 @radio_uuid = 02bb3b40-9d1a-4194-ad8c-1054b7b3b1d8
 @search_text = prison
 # English
-@language =
+@language = /en
 # Welsh
 #@language = /cy
 
