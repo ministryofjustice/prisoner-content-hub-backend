@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "prisoner-content-hub-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "*/5 * * * *"
+  schedule: {{ .Values.cron.scheduler.schedule | quote }}
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
