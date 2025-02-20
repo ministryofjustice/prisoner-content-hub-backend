@@ -31,7 +31,7 @@ function prisoner_hub_bulk_updater_deploy_woodhill_red_content(array &$sandbox):
       if (intval($line) != 0) {
         $sandbox['nids'][] = intval($line);
       }
-    };
+    }
     fclose($red_csv_file);
 
     $sandbox['total'] = count($sandbox['nids']);
@@ -96,7 +96,7 @@ function prisoner_hub_bulk_updater_deploy_cookhamwood_red_content(array &$sandbo
       if (intval($line) != 0) {
         $sandbox['nids'][] = intval($line);
       }
-    };
+    }
     fclose($red_csv_file);
 
     $sandbox['total'] = count($sandbox['nids']);
@@ -390,7 +390,7 @@ function prisoner_hub_bulk_updater_deploy_cleanse_1(array &$sandbox) {
       if (intval($line) != 0) {
         $sandbox['nids'][] = intval($line);
       }
-    };
+    }
     fclose($cleanse_csv_file);
 
     $sandbox['total'] = count($sandbox['nids']);
@@ -443,7 +443,7 @@ function prisoner_hub_bulk_updater_deploy_cleanse_2(array &$sandbox) {
       if (intval($line) != 0) {
         $sandbox['nids'][] = intval($line);
       }
-    };
+    }
     fclose($cleanse_csv_file);
 
     $sandbox['total'] = count($sandbox['nids']);

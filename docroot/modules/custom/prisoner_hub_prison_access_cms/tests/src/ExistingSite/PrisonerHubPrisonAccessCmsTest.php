@@ -22,7 +22,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    *
    * @var string
    */
-  static private string $role = 'moj_local_content_manager';
+  private static string $role = 'moj_local_content_manager';
 
   /**
    * The content types to test on, an array of bundle ids.

@@ -21,7 +21,7 @@ class EntityViewOverride extends EntityViewController {
    *
    * @var string[]
    */
-  static private array $excludedContentTypes = ['help_page'];
+  private static array $excludedContentTypes = ['help_page'];
 
   /**
    * Creates an EntityViewOverride object.
