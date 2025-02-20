@@ -33,7 +33,7 @@ class RecentlyAdded extends EntityResourceBase implements ContainerInjectionInte
    *
    * @var array|string[]
    */
-  static public array $contentTypes = [
+  public static array $contentTypes = [
     'moj_radio_item',
     'page',
     'link',
