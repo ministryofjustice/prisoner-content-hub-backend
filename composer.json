@@ -74,6 +74,7 @@
         "drupal/views_entity_form_field": "^1.0@beta",
         "drupal/views_filters_populate": "^2.0",
         "drupal/views_tree": "^2.0@alpha",
+        "drupal/warmer": "^2.0",
         "drush/drush": "^12.4",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
