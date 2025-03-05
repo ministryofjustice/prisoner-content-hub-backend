@@ -102,7 +102,7 @@ class PrimaryNavResource extends ResourceBase implements ContainerInjectionInter
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function process(Request $request, MenuInterface $menu = NULL): ResourceResponse {
+  public function process(Request $request, ?MenuInterface $menu = NULL): ResourceResponse {
     $cacheability = new CacheableMetadata();
 
     if (is_null($menu)) {

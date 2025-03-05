@@ -20,3 +20,11 @@ application:
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-launchpad-nonprod
+
+cron:
+  cache-rebuild:
+    schedule: "1 7 * * *"
+  drupal:
+    schedule: "0 8,10,12,14,16,18,20 * * *"
+  scheduler:
+    schedule:  "*/5 7-22 * * *"

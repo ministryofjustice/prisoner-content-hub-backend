@@ -38,7 +38,7 @@ class PathProcessorOutbound implements OutboundPathProcessorInterface {
    *
    * I.E. paths that are being generated in the current request.
    */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $prison = $this->routeMatch->getParameter('prison');
     if ($prison && isset($options['route']) && RouteSubscriber::isJsonApiRoute($options['route'])) {
       $prison_machine_name = $prison->get('machine_name')->getString();

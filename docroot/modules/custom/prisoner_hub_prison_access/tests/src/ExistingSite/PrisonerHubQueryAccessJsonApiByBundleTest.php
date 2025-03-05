@@ -17,7 +17,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
    *
    * @var string[]
    */
-  static private array $entityTypes = ['node', 'taxonomy_term'];
+  private static array $entityTypes = ['node', 'taxonomy_term'];
 
   /**
    * An array of bundles to check for, keyed by entity type.

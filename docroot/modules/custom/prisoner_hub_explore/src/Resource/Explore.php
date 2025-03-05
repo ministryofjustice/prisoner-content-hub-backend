@@ -24,7 +24,7 @@ class Explore extends EntityQueryResourceBase {
    *
    * @var array|string[]
    */
-  static private array $contentTypes = [
+  private static array $contentTypes = [
     'moj_radio_item',
     'page',
     'link',
