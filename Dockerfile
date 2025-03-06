@@ -91,7 +91,7 @@ RUN pecl install uploadprogress \
 RUN pecl install redis \
   && docker-php-ext-enable redis
 
-RUN pecl install apcu-5.1.23 \
+RUN pecl install apcu-5.1.24 \
   && docker-php-ext-enable apcu
 
 # Enable apache modules that are used in Drupal's htaccess.
