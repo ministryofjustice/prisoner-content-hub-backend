@@ -3,7 +3,6 @@
 namespace Drupal\prisoner_hub_cache_warmer\Plugin\warmer;
 
 use Drupal\Core\Form\SubformStateInterface;
-use Drupal\Core\Utility\Error;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
@@ -75,16 +74,19 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * {@inheritdoc}
    */
   public function warmMultiple(array $items = []) {
+    $warm_count = 0;
     foreach ($items as $item) {
       /** @var \Drupal\taxonomy\TermInterface $item */
       /* @todo make base path configurable */
       try {
-        $this->httpClient->request('GET', "http://localhost:11001/jsonapi/prison/$item->machine_name/node/homepage");
+        $this->httpClient->request('GET', "http://localhost:8080/jsonapi/prison/{$item->machine_name->value}/node/homepage");
+        $warm_count++;
       }
       catch (GuzzleException $e) {
 //        Error::logException($this->logger, $e);
       }
     }
+    return $warm_count;
   }
 
   /**
@@ -92,19 +94,22 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    */
   public function buildIdsBatch($cursor) {
     // Load all prison categories - they are the first level in the tree.
-    $prison_categories = $this->termStorage->loadTree('prisons', 0, 1);
-    $prisons = [];
+    $prison_categories = $this->termStorage->loadTree('prisons', 0, 1, TRUE);
+    $all_prisons = [];
     foreach ($prison_categories as $category) {
       // Then load all prisons - they are the second level in the tree.
-      $prisons_in_category = $this->termStorage->loadTree('prisons', $category->id(), 1);
+      $prisons_in_category = $this->termStorage->loadTree('prisons', $category->id(), 1, TRUE);
       foreach ($prisons_in_category as $prison) {
-        $prisons[] = $prison->machine_name;
+        $all_prisons[] = $prison->machine_name->value;
       }
     }
-    asort($prisons);
+    sort($all_prisons);
 
-    // @todo slice by cursor.
-    return $prisons;
+    $cursor_position = is_null($cursor) ? -1 : array_search($cursor, $all_prisons);
+    if ($cursor_position === FALSE) {
+      return [];
+    }
+    return array_slice($all_prisons, $cursor_position + 1, (int) $this->getBatchSize());
   }
 
   /**
