@@ -97,6 +97,11 @@ env:
     value: {{ .Values.application.analyticsSiteId }}
   - name: RDS_CERTIFICATE
     value: {{ .Values.application.rdsCertificate }}
+  - name: HUB_API_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        name: {{ .Values.application.contentConfigMapName }}
+        key: internalUrl
 
 {{- end -}}
 
@@ -122,11 +127,6 @@ env:
       secretKeyRef:
         name: {{ .Values.application.dbSecretName }}
         key: rds_instance_address
-  - name: HUB_API_ENDPOINT
-    valueFrom:
-      configMapKeyRef:
-        name: {{ .Values.application.contentConfigMapName }}
-        key: internalUrl
   - name: DB_BACKUP_S3_KEY
     valueFrom:
       secretKeyRef:

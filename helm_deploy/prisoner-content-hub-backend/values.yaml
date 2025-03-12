@@ -35,7 +35,6 @@ application:
   govUkSecretName: govuknotify
   openSearchSecretName: pfs-opensearch-proxy-url
   rdsCertificate: /etc/ssl/certs/root.crt
-  contentConfigMapName: prisoner-content-hub-backend
 
 volumes:
   - name: apache-cache
