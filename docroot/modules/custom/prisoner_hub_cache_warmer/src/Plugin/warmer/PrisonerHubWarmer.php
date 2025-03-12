@@ -3,11 +3,12 @@
 namespace Drupal\prisoner_hub_cache_warmer\Plugin\warmer;
 
 use Drupal\Core\Form\SubformStateInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Utility\Error;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,9 +33,11 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   protected ClientInterface $httpClient;
 
   /**
-   * The logger service.
+   * Base address of the cache warmer endpoint.
+   *
+   * Should be the same as the base address used by the front end application.
    */
-  protected LoggerInterface $logger;
+  protected string $cacheWarmerEndpoint;
 
   /**
    * {@inheritdoc}
@@ -49,7 +52,8 @@ class PrisonerHubWarmer extends WarmerPluginBase {
 
     $instance->termStorage = $container->get('entity_type.manager')->getStorage('taxonomy_term');
     $instance->httpClient = $container->get('http_client');
-//    $instance->logger = $container->get('logger.channel.prisoner_hub_cache_warmer');
+    $instance->logger = $container->get('logger.channel.prisoner_hub_cache_warmer');
+    $instance->cacheWarmerEndpoint = Settings::get('cache_warmer_endpoint');
 
     return $instance;
   }
@@ -77,13 +81,12 @@ class PrisonerHubWarmer extends WarmerPluginBase {
     $warm_count = 0;
     foreach ($items as $item) {
       /** @var \Drupal\taxonomy\TermInterface $item */
-      /* @todo make base path configurable */
       try {
-        $this->httpClient->request('GET', "http://localhost:8080/jsonapi/prison/{$item->machine_name->value}/node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri");
+        $this->httpClient->request('GET', "{$this->cacheWarmerEndpoint}/jsonapi/prison/{$item->machine_name->value}/node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri");
         $warm_count++;
       }
       catch (GuzzleException $e) {
-//        Error::logException($this->logger, $e);
+        Error::logException($this->logger, $e);
       }
     }
     return $warm_count;
@@ -116,7 +119,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * {@inheritdoc}
    */
   public function addMoreConfigurationFormElements(array $form, SubformStateInterface $form_state) {
-    // @todo Implement addMoreConfigurationFormElements() method.
+      // @todo Implement addMoreConfigurationFormElements() method.
   }
 
 }
