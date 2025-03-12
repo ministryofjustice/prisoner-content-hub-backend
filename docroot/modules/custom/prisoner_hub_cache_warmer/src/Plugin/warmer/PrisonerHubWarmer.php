@@ -9,6 +9,7 @@ use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,6 +32,11 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * The HTTP client.
    */
   protected ClientInterface $httpClient;
+
+  /**
+   * The logger service.
+   */
+  protected LoggerInterface $logger;
 
   /**
    * Base address of the cache warmer endpoint.
@@ -118,8 +124,9 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function addMoreConfigurationFormElements(array $form, SubformStateInterface $form_state) {
+  public function addMoreConfigurationFormElements(array $form, SubformStateInterface $form_state): array {
     // @todo Implement addMoreConfigurationFormElements() method.
+    return [];
   }
 
 }
