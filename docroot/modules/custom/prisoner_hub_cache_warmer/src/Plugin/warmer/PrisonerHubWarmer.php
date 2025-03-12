@@ -119,7 +119,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * {@inheritdoc}
    */
   public function addMoreConfigurationFormElements(array $form, SubformStateInterface $form_state) {
-      // @todo Implement addMoreConfigurationFormElements() method.
+    // @todo Implement addMoreConfigurationFormElements() method.
   }
 
 }
