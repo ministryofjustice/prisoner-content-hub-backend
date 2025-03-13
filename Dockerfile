@@ -72,6 +72,10 @@ RUN { \
     echo 'output_buffering=On'; \
   } > /usr/local/etc/php/conf.d/output-buffering.ini
 
+RUN { \
+    echo 'zend.assertions=-1'; \
+  } > /usr/local/etc/php/conf.d/zend-assertions.ini
+
 ###########################################################################################
 # Finish copy Dockerhub Drupal image
 ###########################################################################################
