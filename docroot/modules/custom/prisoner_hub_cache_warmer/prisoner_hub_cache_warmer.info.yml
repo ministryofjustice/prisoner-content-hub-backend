@@ -1,0 +1,8 @@
+name: 'Prisoner Hub Cache Warmer'
+type: module
+description: 'Warms the cache to help recovery from the page cache being cleared.'
+package: Custom
+core_version_requirement: ^10 || ^11
+dependencies:
+  - taxonomy_machine_name:taxonomy_machine_name
+  - warmer:warmer
