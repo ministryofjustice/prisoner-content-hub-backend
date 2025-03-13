@@ -131,6 +131,7 @@ COPY --chown=www-data:www-data composer.json composer.lock Makefile phpstan.neon
 COPY --chown=www-data:www-data patches patches
 COPY --chown=www-data:www-data docroot docroot
 COPY --chown=www-data:www-data config config
+COPY --chown=www-data:www-data assets assets
 
 COPY ./apache/ /etc/apache2/
 
