@@ -108,6 +108,9 @@
         "drupal-scaffold": {
             "locations": {
                 "web-root": "docroot/"
+            },
+            "file-mapping": {
+                "[web-root]/.htaccess": "assets/scaffold/.htaccess"
             }
         },
         "_readme": [
