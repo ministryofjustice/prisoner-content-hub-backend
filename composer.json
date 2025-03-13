@@ -110,7 +110,7 @@
                 "web-root": "docroot/"
             },
             "file-mapping": {
-                "[web-root]/.htaccess": "assets/scaffold/.htaccess"
+                "[web-root]/.htaccess": "assets/scaffold/htaccess"
             }
         },
         "_readme": [
