@@ -72,6 +72,10 @@ RUN { \
     echo 'output_buffering=On'; \
   } > /usr/local/etc/php/conf.d/output-buffering.ini
 
+RUN { \
+    echo 'zend.assertions=-1'; \
+  } > /usr/local/etc/php/conf.d/zend-assertions.ini
+
 ###########################################################################################
 # Finish copy Dockerhub Drupal image
 ###########################################################################################
@@ -127,6 +131,7 @@ COPY --chown=www-data:www-data composer.json composer.lock Makefile phpstan.neon
 COPY --chown=www-data:www-data patches patches
 COPY --chown=www-data:www-data docroot docroot
 COPY --chown=www-data:www-data config config
+COPY --chown=www-data:www-data assets assets
 
 COPY ./apache/ /etc/apache2/
 
