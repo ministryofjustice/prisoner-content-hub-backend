@@ -1713,15 +1713,6 @@ display:
           admin_label: author
           plugin_id: standard
           required: true
-        field_moj_series:
-          id: field_moj_series
-          table: node__field_moj_series
-          field: field_moj_series
-          relationship: none
-          group_type: group
-          admin_label: series
-          plugin_id: standard
-          required: false
       show_admin_links: false
       display_extenders: {  }
     cache_metadata:
@@ -2638,7 +2629,25 @@ display:
             utf8_bom: '0'
             use_serializer_encode_only: false
       defaults:
+        relationships: false
         fields: false
+      relationships:
+        uid:
+          id: uid
+          table: node_field_data
+          field: uid
+          admin_label: author
+          plugin_id: standard
+          required: true
+        field_moj_series:
+          id: field_moj_series
+          table: node__field_moj_series
+          field: field_moj_series
+          relationship: none
+          group_type: group
+          admin_label: series
+          plugin_id: standard
+          required: false
       display_extenders:
         views_ef_fieldset: {  }
       path: admin/content/csv-export
