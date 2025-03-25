@@ -5,6 +5,8 @@
  * Functions to support theming in the Prisconhub custom theme.
  */
 
+use Drupal\Core\Entity\ContentEntityFormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 
 /**
@@ -39,4 +41,24 @@ function prisconhub_preprocess_field_multiple_value_form(&$variables) {
     $build['#attributes']['class'] = ['form-item__help-page-link'];
     $variables['table']['#header'][0]['data']['#suffix'] = \Drupal::service('renderer')->render($build);
   }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * We use this to remove some field groups from non-default language forms.
+ * The form elements within these field groups are non-translatable, so are
+ * automatically removed. However the field groups themselves are not.
+ */
+function prisconhub_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof ContentEntityFormInterface) {
+    return;
+  }
+  if (!$form_object->isDefaultFormLangcode($form_state)) {
+    unset($form['#fieldgroups']['group_series']);
+    unset($form['#fieldgroups']['group_prisons']);
+    unset($form['#fieldgroups']['group_prison_categories']);
+  }
+
 }
