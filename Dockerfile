@@ -188,6 +188,18 @@ RUN pecl install xdebug-3.3.2 \
 
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
 
+# Install php-spx and dependencies for profiling.
+RUN apt-get update && apt-get install -y \
+  zlib1g-dev
+
+RUN git clone https://github.com/NoiseByNorthwest/php-spx.git \
+    && cd php-spx \
+    && git checkout release/latest \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install
+
 # Set to www-data user.
 USER 33
 ###########################################################################################
