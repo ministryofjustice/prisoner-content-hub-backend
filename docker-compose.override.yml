@@ -17,6 +17,7 @@ services:
     volumes:
       - .:/var/www/html
       - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./php/spx.ini:/usr/local/etc/php/conf.d/spx.ini
       - ~/.kube:/var/www/.kube
     env_file:
       - prisoner-content-hub-backend.env
