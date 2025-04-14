@@ -152,7 +152,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     $message = 'JSON response returns the correct results on url: ' . $url->toString();
     $expected_breadcrumbs = [
       [
-        'uri' => '/',
+        'uri' => '/en',
         'title' => 'Home',
         'options' => [],
       ],
