@@ -205,6 +205,8 @@ if (PHP_SAPI !== 'cli') {
   $settings['reverse_proxy_trusted_headers'] = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_FORWARDED;
 }
 
+$settings['cache_warmer_endpoint'] = getenv('HUB_API_ENDPOINT', TRUE);
+
 // Set max_execution_time to 30 seconds, as this is the same timeout as on the
 // frontend.  Note this does not apply to cli commands.
 if (PHP_SAPI !== 'cli') {
