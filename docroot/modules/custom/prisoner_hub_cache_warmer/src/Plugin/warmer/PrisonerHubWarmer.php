@@ -102,6 +102,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
       $this->cacheResponses[$prison->machine_name->value] = [];
       try {
         $this->warmPrisonHomePage($prison->machine_name->value);
+        $this->warmPrimaryNavigationContent($prison->machine_name->value);
 
         $warm_count++;
       }
@@ -117,8 +118,6 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *
    * @param string $prison
    *   Machine name of the prison.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   private function warmPrisonHomePage(string $prison) {
     // Homepage.
@@ -134,9 +133,53 @@ class PrisonerHubWarmer extends WarmerPluginBase {
     // Recently Added.
     $this->warmJsonApiRequest($prison, "recently-added?include=field_moj_thumbnail_image&sort=-published_at%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri&page[offset]=0&page[limit]=8", 'recently added');
     // Explore the Hub.
-    $this->warmJsonApiRequest($prison,"explore/node?include=field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at", "explore the hub");
+    $this->warmJsonApiRequest($prison, "explore/node?include=field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at", "explore the hub");
     // Topics.
-    $this->httpClient->request('GET', "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/taxonomy_term?filter[vid.meta.drupal_internal__target_id]=topics&page[limit]=100&sort=name&fields[taxonomy_term--topics]=drupal_internal__tid,name");
+    $this->warmJsonApiRequest($prison, "taxonomy_term?filter[vid.meta.drupal_internal__target_id]=topics&page[limit]=100&sort=name&fields[taxonomy_term--topics]=drupal_internal__tid,name");
+  }
+
+  /**
+   * Warms the items in the primary navigation for a given prison.
+   *
+   * @param string $prison
+   *   Machine name of the prison for which we are making the call.
+   */
+  private function warmPrimaryNavigationContent(string $prison) {
+    if (!isset($this->cacheResponses[$prison]['primary navigation']->data)) {
+      return;
+    }
+    $tids = [];
+    foreach ($this->cacheResponses[$prison]['primary navigation']->data as $menu_item) {
+      if (!isset($menu_item->attributes->url)) {
+        continue;
+      }
+      $matches = [];
+      if (preg_match("/tags\/(\d+)/", $menu_item->attributes->url, $matches)) {
+        $tids[] = $matches[1];
+      }
+    }
+    $terms = $this->termStorage->loadMultiple($tids);
+    foreach ($terms as $term) {
+      if ($term->bundle() != 'moj_categories') {
+        continue;
+      }
+      $this->warmCategoryPage($prison, $term->uuid());
+    }
+
+  }
+
+  /**
+   * Warms a category page for a given page.
+   *
+   * @param string $prison
+   *   Machine name of the prison.
+   * @param string $uuid
+   *   UUID of category.
+   */
+  private function warmCategoryPage(string $prison, string $uuid) {
+    $this->warmJsonApiRequest($prison, "node?filter%5Bfield_moj_top_level_categories.id%5D=$uuid&include=field_moj_thumbnail_image&sort=-created&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&fields%5Bmoj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&page[offset]=0&page[limit]=40");
+    $this->warmJsonApiRequest($prison, "taxonomy_term/moj_categories/$uuid/sub_terms?include=field_moj_thumbnail_image&fields%5Btaxonomy_term--series%5D=type%2Cdrupal_internal__tid%2Cname%2Cfield_moj_thumbnail_image%2Cpath%2Ccontent_updated%2Cchild_term_count%2Cpublished_at&fields%5Btaxonomy_term--moj_categories%5D=type%2Cdrupal_internal__tid%2Cname%2Cfield_moj_thumbnail_image%2Cpath%2Ccontent_updated%2Cchild_term_count%2Cpublished_at&page[offset]=0&page[limit]=40");
+    $this->warmJsonApiRequest($prison, "taxonomy_term/moj_categories/$uuid?include=field_featured_tiles%2Cfield_featured_tiles.field_moj_thumbnail_image&fields%5Bnode--page%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Bmoj_pdf_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Btaxonomy_term_series%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Btaxonomy_term--moj_categories%5D=name%2Cdescription%2Cfield_exclude_feedback%2Cfield_featured_tiles%2Cbreadcrumbs%2Cchild_term_count");
   }
 
   /**
