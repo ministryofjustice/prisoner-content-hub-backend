@@ -53,6 +53,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/pathologic": "^2",
         "drupal/publication_date": "^2.0@beta",
+        "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
         "drupal/readonlymode": "2.0.x-dev",
         "drupal/redis": "^1.5",

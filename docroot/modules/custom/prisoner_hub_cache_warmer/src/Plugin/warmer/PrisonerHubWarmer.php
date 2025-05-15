@@ -58,6 +58,40 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   protected array $cacheResponses = [];
 
   /**
+   * These are the most popular pages that are not in the primary nav.
+   *
+   * These are based on a snapshot from GA on 14/5/25, and are ordered by
+   * descending popularity.
+   *
+   * Each array entry is a term_id.
+   */
+  protected array $popularPages = [
+    785,
+    933,
+    647,
+    978,
+    690,
+    1505,
+    787,
+    1817,
+    965,
+    1295,
+    1004,
+    1016,
+    1189,
+    1663,
+    1051,
+    865,
+    1859,
+    660,
+  ];
+
+  /**
+   * List of prisons to not cache warm.
+   */
+  protected array $excludePrisons = ['thestudio'];
+
+  /**
    * {@inheritdoc}
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -103,6 +137,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
       try {
         $this->warmPrisonHomePage($prison->machine_name->value);
         $this->warmPrimaryNavigationContent($prison->machine_name->value);
+        $this->warmPopularPages($prison->machine_name->value);
 
         $warm_count++;
       }
@@ -169,6 +204,27 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   }
 
   /**
+   * Warms the globally popular pages for a given prison.
+   *
+   * At the time of writing, the most popular pages all correspond to taxonomy
+   * terms, so pages that are nodes are not handled here.
+   *
+   * @param string $prison
+   *   Machine name of the prison for which we are warming the page.
+   */
+  private function warmPopularPages(string $prison) {
+    $terms = $this->termStorage->loadMultiple($this->popularPages);
+
+    foreach ($terms as $term) {
+      match ($term->bundle()) {
+        'moj_categories' => $this->warmCategoryPage($prison, $term->uuid()),
+        'series' => $this->warmSeriesPage($prison, $term->uuid()),
+        'topics' => $this->warmTopicPage($prison, $term->uuid()),
+      };
+    }
+  }
+
+  /**
    * Warms a category page for a given page.
    *
    * @param string $prison
@@ -180,6 +236,30 @@ class PrisonerHubWarmer extends WarmerPluginBase {
     $this->warmJsonApiRequest($prison, "node?filter%5Bfield_moj_top_level_categories.id%5D=$uuid&include=field_moj_thumbnail_image&sort=-created&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&fields%5Bmoj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&page[offset]=0&page[limit]=40");
     $this->warmJsonApiRequest($prison, "taxonomy_term/moj_categories/$uuid/sub_terms?include=field_moj_thumbnail_image&fields%5Btaxonomy_term--series%5D=type%2Cdrupal_internal__tid%2Cname%2Cfield_moj_thumbnail_image%2Cpath%2Ccontent_updated%2Cchild_term_count%2Cpublished_at&fields%5Btaxonomy_term--moj_categories%5D=type%2Cdrupal_internal__tid%2Cname%2Cfield_moj_thumbnail_image%2Cpath%2Ccontent_updated%2Cchild_term_count%2Cpublished_at&page[offset]=0&page[limit]=40");
     $this->warmJsonApiRequest($prison, "taxonomy_term/moj_categories/$uuid?include=field_featured_tiles%2Cfield_featured_tiles.field_moj_thumbnail_image&fields%5Bnode--page%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Bmoj_pdf_item%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Btaxonomy_term_series%5D=drupal_internal__nid%2Cdrupal_internal__tid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cfield_exclude_feedback%2Cpublished_at&fields%5Btaxonomy_term--moj_categories%5D=name%2Cdescription%2Cfield_exclude_feedback%2Cfield_featured_tiles%2Cbreadcrumbs%2Cchild_term_count");
+  }
+
+  /**
+   * Warms a series page for a given page.
+   *
+   * @param string $prison
+   *   Machine name of the prison.
+   * @param string $uuid
+   *   UUID of series.
+   */
+  private function warmSeriesPage(string $prison, string $uuid) {
+    $this->warmJsonApiRequest($prison, "node?filter%5Bfield_moj_series.id%5D=$uuid&include=field_moj_thumbnail_image%2Cfield_moj_series.field_moj_thumbnail_image&sort=series_sort_value%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_moj_series%2Cpath%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_moj_series%2Cpath%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_moj_series%2Cpath%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_moj_series%2Cpath%2Cpublished_at&fields%5Bfile--file%5D=image_style_uri&fields%5Btaxonomy_term--series%5D=name%2Cdescription%2Cdrupal_internal__tid%2Cfield_moj_thumbnail_image%2Cpath%2Cfield_exclude_feedback%2Cbreadcrumbs&page[offset]=0&page[limit]=40");
+  }
+
+  /**
+   * Warms a topic page for a given page.
+   *
+   * @param string $prison
+   *   Machine name of the prison.
+   * @param string $uuid
+   *   UUID of topic.
+   */
+  private function warmTopicPage(string $prison, string $uuid) {
+    $this->warmJsonApiRequest($prison, "node?filter%5Bfield_topics.id%5D=$uuid&include=field_moj_thumbnail_image%2Cfield_topics.field_moj_thumbnail_image&sort=-created&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bfile--file%5D=image_style_uri&fields%5Btaxonomy_term--topics%5D=name%2Cdescription%2Cdrupal_internal__tid%2Cfield_moj_thumbnail_image%2Cpath%2Cfield_exclude_feedback%2Cbreadcrumbs&page[offset]=0&page[limit]=40");
   }
 
   /**
@@ -217,7 +297,9 @@ class PrisonerHubWarmer extends WarmerPluginBase {
       // Then load all prisons - they are the second level in the tree.
       $prisons_in_category = $this->termStorage->loadTree('prisons', $category->id(), 1, TRUE);
       foreach ($prisons_in_category as $prison) {
-        $all_prisons[] = $prison->machine_name->value;
+        if (!in_array($prison->machine_name->value, $this->excludePrisons)) {
+          $all_prisons[] = $prison->machine_name->value;
+        }
       }
     }
     sort($all_prisons);
@@ -235,6 +317,17 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   public function addMoreConfigurationFormElements(array $form, SubformStateInterface $form_state): array {
     // @todo Implement addMoreConfigurationFormElements() method.
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Set the batchSize to only warm one prison at a time.
+   */
+  public function getConfiguration() {
+    $configuration = parent::getConfiguration();
+    $configuration['batchSize'] = 1;
+    return $configuration;
   }
 
 }
