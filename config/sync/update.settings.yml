@@ -9,5 +9,5 @@ fetch:
   timeout: 30
 notification:
   emails:
-    - sweety.john@digital.justice.gov.uk
+    - elliot.ward@digital.justice.gov.uk
   threshold: security
