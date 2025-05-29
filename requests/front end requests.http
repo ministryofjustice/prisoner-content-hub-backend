@@ -1,12 +1,12 @@
 @prison = berwyn
-@tag_id = 885
+@tag_id = 1535
 @topic_uuid = ff43d107-d52c-47c9-8100-4fc5b3d148ef
 @node_id = 4164
 @video_uuid = 53cd415a-b831-4f4f-8fdf-64b9b15af863
 @series_id = 871
 @series_sort_value = -4002
-@category_uuid = 2e6a65ae-a720-42d2-8b31-da194a45a077
-@page_uuid = 7ce3d9db-cfb3-4a66-b678-b0ab3637e75a
+@category_uuid = 7a80305b-9dcd-4030-9821-7b055a6462f8
+@page_uuid = 7a80305b-9dcd-4030-9821-7b055a6462f8
 @pdf_uuid = 569e381b-300f-487f-90f5-c433f3c3c4a8
 @link_uuid = 8be7944d-db0a-431a-ae7e-c8d450ee332c
 @radio_uuid = 02bb3b40-9d1a-4194-ad8c-1054b7b3b1d8
@@ -46,7 +46,7 @@ GET {{address}}/router/prison/{{prison}}/translate-path?
 ###
 # @name Homepage
 GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/homepage?
-  include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&
+  include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image%2Cfield_featured_tiles.field_image.field_media_image&
   page%5Blimit%5D=4&
   fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&
   fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&
@@ -149,7 +149,7 @@ GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node?
 # @name NodesInCategory
 GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node?
   filter%5Bfield_moj_top_level_categories.id%5D={{category_uuid}}&
-  include=field_moj_thumbnail_image&
+  include=field_moj_thumbnail_image%2Cfield_image&
   sort=-created&
   fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&
   fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at&
@@ -281,3 +281,26 @@ GET {{address}}{{language}}/jsonapi/prison/{{prison}}/index/content_for_search?f
 GET {{address}}{{language}}/jsonapi/prison/{{prison}}/index/content_for_search?filter%5Bfulltext%5D={{search_text}}&page%5Blimit%5D=15
 
 > test_cache_hit.js
+
+###
+# @name Playing with media
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/page/{{page_uuid}}
+
+###
+# @name Playing with media - this just gets a page
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/page/457141ba-0550-4f39-9526-e6be5ddc07e1
+
+###
+# @name Playing with media including the image - this is enough to get the uri to the image style
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/page/457141ba-0550-4f39-9526-e6be5ddc07e1?
+  include=field_moj_thumbnail_image
+
+###
+# @name Playing with media including the media field
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/page/457141ba-0550-4f39-9526-e6be5ddc07e1?
+  include=field_image
+
+###
+# @name Playing with media including the media field
+GET {{address}}{{language}}/jsonapi/prison/{{prison}}/node/page/457141ba-0550-4f39-9526-e6be5ddc07e1?
+  include=field_image.field_media_image
