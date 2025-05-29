@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.moj_pdf_item.field_exclude_from_prison
+    - field.field.node.moj_pdf_item.field_image
     - field.field.node.moj_pdf_item.field_moj_episode
     - field.field.node.moj_pdf_item.field_moj_pdf
     - field.field.node.moj_pdf_item.field_moj_season
@@ -36,6 +37,15 @@ content:
       link: true
     third_party_settings: {  }
     weight: 20
+    region: content
+  field_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 26
     region: content
   field_moj_episode:
     type: number_integer

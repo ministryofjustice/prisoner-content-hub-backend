@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.link.field_display_url
     - field.field.node.link.field_exclude_from_prison
+    - field.field.node.link.field_image
     - field.field.node.link.field_moj_episode
     - field.field.node.link.field_moj_season
     - field.field.node.link.field_moj_series
@@ -32,6 +33,15 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 104
+    region: content
+  field_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 26
     region: content
   field_moj_episode:
     type: number_integer

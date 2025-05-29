@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_description
     - field.field.node.moj_radio_item.field_exclude_feedback
     - field.field.node.moj_radio_item.field_exclude_from_prison
+    - field.field.node.moj_radio_item.field_image
     - field.field.node.moj_radio_item.field_moj_audio
     - field.field.node.moj_radio_item.field_moj_episode
     - field.field.node.moj_radio_item.field_moj_programme_code
@@ -26,6 +27,7 @@ dependencies:
     - field_group
     - file
     - image
+    - media_library
     - path
     - publication_date
     - scheduler
@@ -172,6 +174,13 @@ content:
       cascading_selection: 0
       cascading_selection_enforce: false
       max_depth: 0
+    third_party_settings: {  }
+  field_image:
+    type: media_library_widget
+    weight: 7
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_moj_audio:
     type: file_generic
