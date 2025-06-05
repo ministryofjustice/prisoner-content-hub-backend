@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3209950fd36fd25995b075c7c52b170e",
+    "content-hash": "6dbe85b7099474ea1cbef45941a58a38",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -4137,20 +4137,20 @@
         },
         {
             "name": "drupal/linkit",
-            "version": "6.1.6",
+            "version": "7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/linkit.git",
-                "reference": "6.1.6"
+                "reference": "7.0.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/linkit-6.1.6.zip",
-                "reference": "6.1.6",
-                "shasum": "113d8e569cfb92f8d7feb0a2f7713953c0715e92"
+                "url": "https://ftp.drupal.org/files/projects/linkit-7.0.4.zip",
+                "reference": "7.0.4",
+                "shasum": "cb112f26b1475f6857c9012880ec17f1636dd053"
             },
             "require": {
-                "drupal/core": "^10.1"
+                "drupal/core": "^10.1 || ^11"
             },
             "require-dev": {
                 "drupal/ckeditor": "*",
@@ -4159,8 +4159,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "6.1.6",
-                    "datestamp": "1729189029",
+                    "version": "7.0.4",
+                    "datestamp": "1745413700",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5346,20 +5346,20 @@
         },
         {
             "name": "drupal/taxonomy_machine_name",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/taxonomy_machine_name.git",
-                "reference": "2.0.0"
+                "reference": "2.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/taxonomy_machine_name-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "c12912804d5c00032cf33df20a14b014efda1aa4"
+                "url": "https://ftp.drupal.org/files/projects/taxonomy_machine_name-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "5801284f1120a0553b8b81214ecc0d78413c31b4"
             },
             "require": {
-                "drupal/core": "^9.4 || ^10"
+                "drupal/core": "^9.4 || ^10 || ^11"
             },
             "require-dev": {
                 "drupal/search_api": "*"
@@ -5367,8 +5367,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1688572816",
+                    "version": "2.0.1",
+                    "datestamp": "1732210448",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5662,20 +5662,21 @@
         },
         {
             "name": "drupal/views_bulk_edit",
-            "version": "2.9.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_bulk_edit.git",
-                "reference": "8.x-2.9"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_bulk_edit-8.x-2.9.zip",
-                "reference": "8.x-2.9",
-                "shasum": "db45a8cc9ac629859374b24974eafcef257e4387"
+                "url": "https://ftp.drupal.org/files/projects/views_bulk_edit-3.0.0.zip",
+                "reference": "3.0.0",
+                "shasum": "3b16079aa95fb4834561fcfd1197cce73b7f4b88"
             },
             "require": {
-                "drupal/core": "^9.4 || ^10"
+                "drupal/core": "^9.4 || ^10 || ^11",
+                "php": ">=8.1"
             },
             "require-dev": {
                 "drupal/views_bulk_operations": "~4.2.4"
@@ -5686,8 +5687,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.9",
-                    "datestamp": "1690222256",
+                    "version": "3.0.0",
+                    "datestamp": "1725358398",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5704,8 +5705,16 @@
                     "homepage": "https://www.drupal.org/u/graber"
                 },
                 {
-                    "name": "Graber",
+                    "name": "benjy",
+                    "homepage": "https://www.drupal.org/user/1852732"
+                },
+                {
+                    "name": "graber",
                     "homepage": "https://www.drupal.org/user/1599440"
+                },
+                {
+                    "name": "grevil",
+                    "homepage": "https://www.drupal.org/user/3668491"
                 },
                 {
                     "name": "joseph.olstad",
@@ -5927,26 +5936,26 @@
         },
         {
             "name": "drupal/views_entity_form_field",
-            "version": "1.0.0-beta10",
+            "version": "1.0.0-beta12",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_entity_form_field.git",
-                "reference": "8.x-1.0-beta10"
+                "reference": "8.x-1.0-beta12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_entity_form_field-8.x-1.0-beta10.zip",
-                "reference": "8.x-1.0-beta10",
-                "shasum": "d8437110e3956fb5d0e9d4be1a95b09fff6b12bd"
+                "url": "https://ftp.drupal.org/files/projects/views_entity_form_field-8.x-1.0-beta12.zip",
+                "reference": "8.x-1.0-beta12",
+                "shasum": "130a3add2e6fed6e5afd1402e27fb573bedfc5ba"
             },
             "require": {
-                "drupal/core": "^9.4 || ^10"
+                "drupal/core": "^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-beta10",
-                    "datestamp": "1687364966",
+                    "version": "8.x-1.0-beta12",
+                    "datestamp": "1735807209",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -5981,26 +5990,26 @@
         },
         {
             "name": "drupal/views_filters_populate",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_filters_populate.git",
-                "reference": "2.1.0"
+                "reference": "2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_filters_populate-2.1.0.zip",
-                "reference": "2.1.0",
-                "shasum": "3ad9d0a7c3251276158c786394311672b1b1a9a1"
+                "url": "https://ftp.drupal.org/files/projects/views_filters_populate-2.2.0.zip",
+                "reference": "2.2.0",
+                "shasum": "8a18d2f6af47e01a2e6dee5d2306411bb2ad5fa9"
             },
             "require": {
-                "drupal/core": "^9 || ^10"
+                "drupal/core": "^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.1.0",
-                    "datestamp": "1692305050",
+                    "version": "2.2.0",
+                    "datestamp": "1741769746",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6013,7 +6022,7 @@
             ],
             "authors": [
                 {
-                    "name": "Eli-T",
+                    "name": "eli-t",
                     "homepage": "https://www.drupal.org/user/516878"
                 },
                 {
@@ -6037,29 +6046,29 @@
         },
         {
             "name": "drupal/views_tree",
-            "version": "2.0.0-rc1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_tree.git",
-                "reference": "8.x-2.0-rc1"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_tree-8.x-2.0-rc1.zip",
-                "reference": "8.x-2.0-rc1",
-                "shasum": "04da08c0dfac48dc008f0757cdc12bb406589127"
+                "url": "https://ftp.drupal.org/files/projects/views_tree-3.0.0.zip",
+                "reference": "3.0.0",
+                "shasum": "8f66d0ab5b6c29b9437ff7c1a6ec1586491039f7"
             },
             "require": {
-                "drupal/core": "^9 || ^10"
+                "drupal/core": "^10.3 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-rc1",
-                    "datestamp": "1671654510",
+                    "version": "3.0.0",
+                    "datestamp": "1747155976",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "RC releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -6087,12 +6096,17 @@
                 {
                     "name": "jhedstrom",
                     "homepage": "https://www.drupal.org/user/208732"
+                },
+                {
+                    "name": "smustgrave",
+                    "homepage": "https://www.drupal.org/user/3252890"
                 }
             ],
             "description": "A Views style plugin to display a tree of elements using the adjacency model.",
             "homepage": "https://www.drupal.org/project/views_tree",
             "support": {
-                "source": "https://git.drupalcode.org/project/views_tree"
+                "source": "https://git.drupalcode.org/project/views_tree",
+                "issues": "https://www.drupal.org/project/issues/views_tree"
             }
         },
         {
@@ -18716,8 +18730,7 @@
         "drupal/jsonapi_search_api": 5,
         "drupal/publication_date": 10,
         "drupal/readonlymode": 20,
-        "drupal/views_entity_form_field": 10,
-        "drupal/views_tree": 15
+        "drupal/views_entity_form_field": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
