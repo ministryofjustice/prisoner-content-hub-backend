@@ -315,23 +315,12 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Machine name of the prison for which we are making the call.
    * @param string $request
    *   Part of the request following the prison name.
-   * @param string $cacheKey
-   *   Key under which to cache the response data.
-   *   Omit or set empty string to not cache the response.
    *
    * @return \GuzzleHttp\Promise\PromiseInterface
    *   Promise of the async request.
    */
-  private function warmJsonApiRequestAsync(string $prison, string $request, string $cacheKey = '') {
-    return $this->httpClient
-      ->requestAsync('GET', "{$this->cacheWarmerEndpoint}/jsonapi/prison/$prison/$request")
-      ->then(function (ResponseInterface $response) use ($prison, $cacheKey) {
-        if ($cacheKey) {
-          $this->cacheResponses[$prison][$cacheKey] = json_decode($response->getBody());
-        }
-      }, function (\Exception $e) {
-        Error::logException($this->logger, $e);
-      });
+  private function warmJsonApiRequestAsync(string $prison, string $request) {
+    return $this->httpClient->requestAsync('GET', "{$this->cacheWarmerEndpoint}/jsonapi/prison/$prison/$request");
   }
 
   /**
