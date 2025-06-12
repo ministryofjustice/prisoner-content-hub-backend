@@ -291,7 +291,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    */
   private function warmJsonApiRequest(string $prison, string $request, string $cacheKey = '') {
     try {
-      $response = $this->httpClient->request('GET', "{$this->cacheWarmerEndpoint}/jsonapi/prison/$prison/$request");
+      $response = $this->httpClient->request('GET', "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/$request");
       $body = $response->getBody();
       if ($cacheKey) {
         $this->cacheResponses[$prison][$cacheKey] = json_decode($body);
@@ -314,7 +314,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Promise of the async request.
    */
   private function warmJsonApiRequestAsync(string $prison, string $request) {
-    return $this->httpClient->requestAsync('GET', "{$this->cacheWarmerEndpoint}/jsonapi/prison/$prison/$request");
+    return $this->httpClient->requestAsync('GET', "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/$request");
   }
 
   /**
