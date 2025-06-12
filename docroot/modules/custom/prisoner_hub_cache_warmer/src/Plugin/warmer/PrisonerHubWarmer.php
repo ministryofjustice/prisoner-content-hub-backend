@@ -5,7 +5,6 @@ namespace Drupal\prisoner_hub_cache_warmer\Plugin\warmer;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
-use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
