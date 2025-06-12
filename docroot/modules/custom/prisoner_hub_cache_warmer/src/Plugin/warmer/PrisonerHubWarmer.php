@@ -5,6 +5,7 @@ namespace Drupal\prisoner_hub_cache_warmer\Plugin\warmer;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
+use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
@@ -217,6 +218,9 @@ class PrisonerHubWarmer extends WarmerPluginBase {
       }
       $this->warmCategoryPage($prison, $term->uuid());
     }
+    foreach ($tids as $tid) {
+      $this->queueAsynchronousRequest($prison, "translate-path?path=tags/$tid");
+    }
 
   }
 
@@ -230,6 +234,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Machine name of the prison for which we are warming the page.
    */
   private function warmPopularPages(string $prison) {
+    /** @var \Drupal\taxonomy\TermInterface $terms */
     $terms = $this->termStorage->loadMultiple($this->popularPages);
 
     foreach ($terms as $term) {
@@ -238,6 +243,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
         'series' => $this->warmSeriesPage($prison, $term->uuid()),
         'topics' => $this->warmTopicPage($prison, $term->uuid()),
       };
+      $this->queueAsynchronousRequest($prison, "translate-path?path=tags/$term->id()");
     }
   }
 
