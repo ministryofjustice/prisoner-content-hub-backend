@@ -236,7 +236,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
         'series' => $this->warmSeriesPage($prison, $term->uuid()),
         'topics' => $this->warmTopicPage($prison, $term->uuid()),
       };
-      $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/$term->id()");
+      $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/{$term->id()}");
     }
   }
 
@@ -368,7 +368,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Path of the request to queue.
    */
   protected function queueAsynchronousJsonApiRequest(string $prison, string $path) {
-    $this->queuedAsynchronousRequests[] = [$prison, "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/$path"];
+    $this->queuedAsynchronousRequests[] = "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/$path";
   }
 
   /**
