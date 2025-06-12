@@ -140,16 +140,11 @@ class PrisonerHubWarmer extends WarmerPluginBase {
     foreach ($items as $prison) {
       /** @var \Drupal\taxonomy\TermInterface $prison */
       $this->cacheResponses[$prison->machine_name->value] = [];
-      try {
-        $this->warmPrisonHomePage($prison->machine_name->value);
-        $this->warmPrimaryNavigationContent($prison->machine_name->value);
-        $this->warmPopularPages($prison->machine_name->value);
-        $this->executeAllAsynchronousRequests();
-        $warm_count++;
-      }
-      catch (GuzzleException $e) {
-        Error::logException($this->logger, $e);
-      }
+      $this->warmPrisonHomePage($prison->machine_name->value);
+      $this->warmPrimaryNavigationContent($prison->machine_name->value);
+      $this->warmPopularPages($prison->machine_name->value);
+      $this->executeAllAsynchronousRequests();
+      $warm_count++;
     }
     return $warm_count;
   }
