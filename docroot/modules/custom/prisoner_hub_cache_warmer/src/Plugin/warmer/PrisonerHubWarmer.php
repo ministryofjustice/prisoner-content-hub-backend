@@ -8,8 +8,8 @@ use Drupal\Core\Utility\Error;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\Utils;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,18 +45,6 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * Should be the same as the base address used by the front end application.
    */
   protected string $cacheWarmerEndpoint;
-
-  /**
-   * Some data retrieved whilst warming is useful for future warmings.
-   *
-   * For example, the response from warming the primary navigation will
-   * help work out the content to warm in anticipation of users clicking
-   * on items in the primary navigation.
-   *
-   * For that reason, where appropriate, we cache responses to warming
-   * requests.
-   */
-  protected array $cacheResponses = [];
 
   /**
    * These are the most popular pages that are not in the primary nav.
@@ -96,6 +84,14 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * List of queued requests for asynchronous processing.
    */
   protected array $queuedAsynchronousRequests = [];
+
+  /**
+   * List of queued promises.
+   *
+   * These must complete before the $queuedAsynchronousRequests are issued,
+   * as fulfilment of these promises may add to that queue.
+   */
+  protected array $queuedPromises = [];
 
   /**
    * {@inheritdoc}
@@ -139,9 +135,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
     $warm_count = 0;
     foreach ($items as $prison) {
       /** @var \Drupal\taxonomy\TermInterface $prison */
-      $this->cacheResponses[$prison->machine_name->value] = [];
       $this->warmPrisonHomePage($prison->machine_name->value);
-      $this->warmPrimaryNavigationContent($prison->machine_name->value);
       $this->warmPopularPages($prison->machine_name->value);
       $this->executeAllAsynchronousRequests();
       $warm_count++;
@@ -158,9 +152,8 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   private function warmPrisonHomePage(string $prison) {
     // Homepage.
     $this->queueAsynchronousJsonApiRequest($prison, "node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri");
-    // Primary Navigation. Not asynchronous as we need the response to inform
-    // later requests.
-    $this->warmJsonApiRequest($prison, "primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl", "primary navigation");
+    // Primary Navigation.
+    $this->queuedPromises[] = $this->warmPrimaryNavigation($prison);
     // Urgent Banners.
     $this->queueAsynchronousJsonApiRequest($prison, "node/urgent_banner?include=field_more_info_page&fields%5Bnode--urgent_banner%5D=drupal_internal__nid%2Ctitle%2Ccreated%2Cchanged%2Cfield_more_info_page%2Cunpublish_on");
     // Updates.
@@ -185,36 +178,48 @@ class PrisonerHubWarmer extends WarmerPluginBase {
   }
 
   /**
-   * Warms the items in the primary navigation for a given prison.
+   * Issues an async request for the primary navigation.
+   *
+   * Returns a promise that when fulfilled, queues requests for each item in
+   * the returned navigation.
    *
    * @param string $prison
-   *   Machine name of the prison for which we are making the call.
+   *   Machine name of the prison.
+   *
+   * @return \GuzzleHttp\Promise\PromiseInterface
+   *   Promise for the async request.
    */
-  private function warmPrimaryNavigationContent(string $prison) {
-    if (!isset($this->cacheResponses[$prison]['primary navigation']->data)) {
-      return;
-    }
-    $tids = [];
-    foreach ($this->cacheResponses[$prison]['primary navigation']->data as $menu_item) {
-      if (!isset($menu_item->attributes->url)) {
-        continue;
-      }
-      $matches = [];
-      if (preg_match("/tags\/(\d+)/", $menu_item->attributes->url, $matches)) {
-        $tids[] = $matches[1];
-      }
-    }
-    $terms = $this->termStorage->loadMultiple($tids);
-    foreach ($terms as $term) {
-      if ($term->bundle() != 'moj_categories') {
-        continue;
-      }
-      $this->warmCategoryPage($prison, $term->uuid());
-    }
-    foreach ($tids as $tid) {
-      $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/$tid");
-    }
+  private function warmPrimaryNavigation(string $prison) {
+    return $this->warmJsonApiRequestAsync("$this->cacheWarmerEndpoint/jsonapi/prison/$prison/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl")
+      ->then(function (ResponseInterface $response) use ($prison) {
+        if (!$json_response = json_decode($response->getBody())) {
+          return;
+        }
+        $tids = [];
+        foreach ($json_response->data as $menu_item) {
+          if (!isset($menu_item->attributes->url)) {
+            continue;
+          }
+          $matches = [];
+          if (preg_match("/tags\/(\d+)/", $menu_item->attributes->url, $matches)) {
+            $tids[] = $matches[1];
+          }
+        }
+        $terms = $this->termStorage->loadMultiple($tids);
+        foreach ($terms as $term) {
+          if ($term->bundle() != 'moj_categories') {
+            continue;
+          }
+          $this->warmCategoryPage($prison, $term->uuid());
+        }
+        foreach ($tids as $tid) {
+          $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/$tid");
+        }
 
+      }, function (\Exception $e) {
+        Error::logException($this->logger, $e);
+      }
+    );
   }
 
   /**
@@ -276,30 +281,6 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    */
   private function warmTopicPage(string $prison, string $uuid) {
     $this->queueAsynchronousJsonApiRequest($prison, "node?filter%5Bfield_topics.id%5D=$uuid&include=field_moj_thumbnail_image%2Cfield_topics.field_moj_thumbnail_image&sort=-created&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_summary%2Cfield_moj_thumbnail_image%2Cfield_topics%2Cpath%2Cpublished_at&fields%5Bfile--file%5D=image_style_uri&fields%5Btaxonomy_term--topics%5D=name%2Cdescription%2Cdrupal_internal__tid%2Cfield_moj_thumbnail_image%2Cpath%2Cfield_exclude_feedback%2Cbreadcrumbs&page[offset]=0&page[limit]=40");
-  }
-
-  /**
-   * Makes a call to JSON:API to warm the cache.
-   *
-   * @param string $prison
-   *   Machine name of the prison for which we are making the call.
-   * @param string $request
-   *   Part of the request following the prison name.
-   * @param string $cacheKey
-   *   Key under which to cache the response data.
-   *   Omit or set empty string to not cache the response.
-   */
-  private function warmJsonApiRequest(string $prison, string $request, string $cacheKey = '') {
-    try {
-      $response = $this->httpClient->request('GET', "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/$request");
-      $body = $response->getBody();
-      if ($cacheKey) {
-        $this->cacheResponses[$prison][$cacheKey] = json_decode($body);
-      }
-    }
-    catch (GuzzleException $e) {
-      Error::logException($this->logger, $e);
-    }
   }
 
   /**
@@ -386,6 +367,11 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    * Execute all outstanding asynchronous requests in batches.
    */
   protected function executeAllAsynchronousRequests() {
+    // Ensure all queued promises are complete before processing the queued
+    // requests. Outstanding promises may still be adding to the requests.
+    Utils::all($this->queuedPromises)->wait();
+    $this->queuedPromises = [];
+
     $maxConcurrentRequests = 20;
     $batchedRequests = array_chunk($this->queuedAsynchronousRequests, $maxConcurrentRequests);
     foreach ($batchedRequests as $batch) {
