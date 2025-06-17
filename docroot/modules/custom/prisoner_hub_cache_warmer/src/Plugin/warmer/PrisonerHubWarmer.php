@@ -348,7 +348,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Path of the request to queue.
    */
   protected function queueAsynchronousJsonApiRequest(string $prison, string $path) {
-    $this->queuedAsynchronousRequests[] = "$this->cacheWarmerEndpoint/en/jsonapi/prison/., $prison/$path";
+    $this->queuedAsynchronousRequests[] = "$this->cacheWarmerEndpoint/en/jsonapi/prison/$prison/$path";
   }
 
   /**
