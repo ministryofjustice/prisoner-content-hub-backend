@@ -1,0 +1,4 @@
+services:
+  logger.channel.prisoner_hub_cache_warmer:
+    parent: logger.channel_base
+    arguments: ['prisoner_hub_cache_warmer']
