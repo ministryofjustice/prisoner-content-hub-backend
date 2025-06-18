@@ -1,0 +1,52 @@
+From c56ad65d2f98b728b784e7b071a53576307b96da Mon Sep 17 00:00:00 2001
+From: Elliot Ward <elliot.ward@digital.justice.gov.uk>
+Date: Wed, 18 Jun 2025 15:48:04 +0100
+Subject: [PATCH] =?UTF-8?q?#3273547:=20=F0=9F=94=A7=20=20add=20config=20se?=
+ =?UTF-8?q?tting=20to=20disable=20automatic=20enqueuing=20of=20warmers=20d?=
+ =?UTF-8?q?uring=20cron=20execution.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ config/install/warmer.settings.yml | 1 +
+ config/schema/warmer.schema.yml    | 3 +++
+ warmer.module                      | 4 ++++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/config/install/warmer.settings.yml b/config/install/warmer.settings.yml
+index c08b276..bf6fae8 100644
+--- a/config/install/warmer.settings.yml
++++ b/config/install/warmer.settings.yml
+@@ -1 +1,2 @@
+ warmers: []
++enqueue_warmers_on_cron_run: true
+diff --git a/config/schema/warmer.schema.yml b/config/schema/warmer.schema.yml
+index 18122c8..63e6fd2 100644
+--- a/config/schema/warmer.schema.yml
++++ b/config/schema/warmer.schema.yml
+@@ -7,3 +7,6 @@ warmer.settings:
+       label: 'Warmers'
+       sequence:
+         type: warmer.settings.warmer_plugin.[%key]
++    enqueue_warmers_on_cron_run:
++      type: boolean
++      label: 'Enqueue warmers on cron run'
+diff --git a/warmer.module b/warmer.module
+index d222a6d..33d6a87 100644
+--- a/warmer.module
++++ b/warmer.module
+@@ -12,6 +12,10 @@ use Drupal\Core\Routing\RouteMatchInterface;
+  * Implements hook_cron().
+  */
+ function warmer_cron() {
++  $config = \Drupal::configFactory()->get('warmer.settings');
++  if ($config->get('enqueue_warmers_on_cron_run') === FALSE) {
++    return;
++  }
+   HookImplementations::enqueueWarmers();
+ }
+ 
+-- 
+GitLab
+
