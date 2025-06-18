@@ -1,3 +1,4 @@
 _core:
   default_config_hash: wLhhL58IKPWkAbhxcI6gpCna7d431Q7kM0y-Om92BUQ
 warmers: {  }
+enqueue_warmers_on_cron_run: false
