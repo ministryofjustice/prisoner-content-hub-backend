@@ -190,7 +190,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Promise for the async request.
    */
   private function warmPrimaryNavigation(string $prison) {
-    return $this->warmJsonApiRequestAsync("$this->cacheWarmerEndpoint/jsonapi/prison/$prison/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl")
+    return $this->warmJsonApiRequestAsync("$this->cacheWarmerEndpoint/en/jsonapi/prison/$prison/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl")
       ->then(function (ResponseInterface $response) use ($prison) {
         if (!$json_response = json_decode($response->getBody())) {
           return;
@@ -348,7 +348,7 @@ class PrisonerHubWarmer extends WarmerPluginBase {
    *   Path of the request to queue.
    */
   protected function queueAsynchronousJsonApiRequest(string $prison, string $path) {
-    $this->queuedAsynchronousRequests[] = "$this->cacheWarmerEndpoint/jsonapi/prison/$prison/$path";
+    $this->queuedAsynchronousRequests[] = "$this->cacheWarmerEndpoint/en/jsonapi/prison/$prison/$path";
   }
 
   /**
