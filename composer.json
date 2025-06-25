@@ -205,6 +205,9 @@
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
+            },
+            "drupal/warmer": {
+                "Issue #3273547: No way to disable cron warming": "patches/warmer_3273547-no-way-to-disable-cron-warming.patch"
             }
         },
         "patches-ignore": {
