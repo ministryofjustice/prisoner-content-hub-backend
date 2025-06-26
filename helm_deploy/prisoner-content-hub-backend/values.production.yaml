@@ -20,3 +20,6 @@ dbRefresh:
   enabled: false
 s3Sync:
   enabled: false
+
+generic-prometheus-alerts:
+  alertSeverity: hmpps-launchpad
