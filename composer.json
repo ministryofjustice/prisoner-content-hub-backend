@@ -158,13 +158,10 @@
             "drupal/core": "-p2"
         },
         "patches": {
-            "drupal/flysystem": {
-                "Issue #3387094 - deprecation warnings on PHP >= 8.2": "patches/flysystem_3387094-add-context.patch"
-            },
             "drupal/flysystem_s3": {
                 "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-68-presigned_urls.patch",
                 "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-MR.patch",
-                "Issue #3271681 - Improve performance when generating image style urls": "patches/flysystem_s3-3271681-improve-performance-when-generating-image-style-urls-2.patch"
+                "Issue #3271681 - Improve performance when generating image style urls": "patches/3271681-improve-performance-when-generating-image-style-urls-5.patch"
             },
             "twistor/stream-util": {
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
@@ -173,10 +170,6 @@
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
                 "Issue #3090131 - Use per-bundle entity list cache tags to potentially increase caching and performance": "patches/drupal-3090131-16.patch",
-                "No Issue - Do not enable phpass module in Drupal 10 upgrade": "patches/drupal_do_not_enable_phpass_via_update_function.patch"
-            },
-            "drupal/views_ef_fieldset": {
-                "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch"
             },
             "drupal/jsonapi_cross_bundles": {
                 "Issue #3241626: 404 on cross bundle routes when uninstalling another module": "patches/jsonapi_cross_bundles-3241626-fix-404-on-cross-bundle-routes-when-uninstalling-another-module-2.patch"
@@ -196,12 +189,6 @@
             },
             "drupal/views_data_export": {
                 "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
-            },
-            "drupal/google_analytics": {
-                "Issue #3373921: Cannot install from existing config": "patches/google_analytics-3373921-15.patch"
-            },
-            "drupal/search_api": {
-                "Issue #3313569: Warning: Could not load the following items on index": "patches/3313569-10--referenced_entity_tracking_translations.patch"
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
