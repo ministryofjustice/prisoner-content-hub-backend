@@ -69,7 +69,7 @@
         "drupal/uploaded_file_filename_randomizer": "^1.0",
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^3",
-        "drupal/views_bulk_operations": "~4.2.7",
+        "drupal/views_bulk_operations": "^4.3",
         "drupal/views_data_export": "1.4.0",
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
