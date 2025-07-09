@@ -1,17 +1,17 @@
 diff --git a/src/Flysystem/S3.php b/src/Flysystem/S3.php
-index 7a07c87..b80d759 100644
+index 89098f2..2535232 100644
 --- a/src/Flysystem/S3.php
 +++ b/src/Flysystem/S3.php
-@@ -196,7 +196,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+@@ -223,7 +223,7 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
  
      $target = $this->getTarget($uri);
  
 -    if (strpos($target, 'styles/') === 0 && !file_exists($uri)) {
 +    if (strpos($target, 'styles/') === 0 && !$this->isUsingImageStyleWarmer($target) && !file_exists($uri)) {
-       $this->generateImageStyle($target);
-     }
- 
-@@ -267,4 +267,23 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
+       /*
+        * Using the replacement generateImageUrl() causes a
+        * RouteNotFoundException for flysystem.image_style_redirect.serve.
+@@ -299,4 +299,23 @@ class S3 implements FlysystemPluginInterface, ContainerFactoryPluginInterface {
      return $protocol . '://' . $cname . $bucket . $prefix;
    }
  
