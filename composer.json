@@ -194,13 +194,6 @@
                 "Issue #3273547: No way to disable cron warming": "patches/warmer_3273547-no-way-to-disable-cron-warming.patch"
             }
         },
-        "patches-ignore": {
-            "drupal/views_ef_fieldset": {
-                "drupal/core": {
-                    "Remove patch that uses externally hosted file, and adds no functionality (only used internally on drupal.org for running autoamted tests).": "https://www.drupal.org/files/issues/2018-07-05/2943172-kernel-test-base-3.patch"
-                }
-            }
-        }
     },
     "repositories": [
         {
