@@ -193,7 +193,7 @@
             "drupal/warmer": {
                 "Issue #3273547: No way to disable cron warming": "patches/warmer_3273547-no-way-to-disable-cron-warming.patch"
             }
-        },
+        }
     },
     "repositories": [
         {
