@@ -11,5 +11,5 @@ backend: elasticsearch
 backend_config:
   cluster_settings:
     cluster: opensearch
-  fuzziness: '0'
+  fuzziness: auto
   server_description: ''

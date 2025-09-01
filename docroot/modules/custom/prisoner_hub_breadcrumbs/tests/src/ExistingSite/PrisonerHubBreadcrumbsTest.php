@@ -7,9 +7,9 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use GuzzleHttp\RequestOptions;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
@@ -22,6 +22,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
 class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
+  use JsonApiTrait;
   use NodeCreationTrait;
   use TaxonomyCreationTrait;
 
@@ -66,7 +67,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $subSubCategoryTerm->id()],
       ],
-      'field_not_in_series' => 1,
     ]);
 
     $this->categoryTerms = [$parentTerm, $subCategoryTerm, $subSubCategoryTerm];
@@ -81,7 +81,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $this->seriesTerm->id()],
       ],
-      'field_not_in_series' => 0,
     ]);
 
     // Allow anonymous user to access entities without prison context.
@@ -122,7 +121,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $category->id()],
       ],
-      'field_not_in_series' => 1,
     ]);
     $this->assertJsonApiBreadcrumbResponse($node, $this->categoryTerms);
   }
@@ -135,7 +133,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $this->seriesTerm->id()],
       ],
-      'field_not_in_series' => 0,
     ]);
     $breadcrumbs = $this->categoryTerms;
     $breadcrumbs[] = $this->seriesTerm;
@@ -155,7 +152,7 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
     $message = 'JSON response returns the correct results on url: ' . $url->toString();
     $expected_breadcrumbs = [
       [
-        'uri' => '/',
+        'uri' => '/en',
         'title' => 'Home',
         'options' => [],
       ],
@@ -205,21 +202,6 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       }
       $this->assertEquals($breadcrumbs, $response_document['data']['attributes']['breadcrumbs'], $message);
     }
-  }
-
-  /**
-   * Get a response from a JSON:API url.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The url object to use for the JSON:API request.
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   *   The response object.
-   */
-  protected function getJsonApiResponse(Url $url) {
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    return $this->request('GET', $url, $request_options);
   }
 
 }

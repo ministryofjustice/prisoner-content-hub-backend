@@ -12,7 +12,7 @@ bundle: moj_video_item
 label: Episode
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:

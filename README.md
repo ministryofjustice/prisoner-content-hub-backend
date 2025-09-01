@@ -14,7 +14,7 @@ Docker
 >`-d` starts the services up in the background
 
 ```
-docker-compose up -d
+docker compose up -d build
 ```
 #### 2. Build PHP/Drupal dependencies
 ```

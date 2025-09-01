@@ -12,7 +12,7 @@ dependencies:
     - field.field.node.moj_video_item.field_moj_subtitles
     - field.field.node.moj_video_item.field_moj_thumbnail_image
     - field.field.node.moj_video_item.field_moj_top_level_categories
-    - field.field.node.moj_video_item.field_not_in_series
+    - field.field.node.moj_video_item.field_prioritise_on_recently_add
     - field.field.node.moj_video_item.field_prison_owner
     - field.field.node.moj_video_item.field_prisons
     - field.field.node.moj_video_item.field_release_date
@@ -51,7 +51,6 @@ third_party_settings:
     group_series:
       children:
         - field_moj_series
-        - field_not_in_series
         - group_season_and_episode_number
         - group_release_date
       label: 'Does this content fit into a Series?'
@@ -62,7 +61,7 @@ third_party_settings:
       format_settings:
         classes: ''
         id: ''
-        description: 'Select the series this content belongs to. Then enter either a season and episode number or the date of release.'
+        description: 'Please select a Series or Category the content fits into. If content fits into both, please also select a category.'
         required_fields: true
     group_season_and_episode_number:
       children:
@@ -102,7 +101,7 @@ third_party_settings:
       format_settings:
         classes: ''
         id: ''
-        description: 'Please enter and select the category for this content. This is required if no series has been selected for the content.'
+        description: "Please enter and select the category for this content.\r\nYou may select more than one category if required. Drag to re-order so that the primary category is first. This is where the content lives and the navigation path is displayed."
         required_fields: true
     group_exclude_from_prison:
       children:
@@ -222,9 +221,9 @@ content:
       match_operator: CONTAINS
       match_limit: 10
     third_party_settings: {  }
-  field_not_in_series:
+  field_prioritise_on_recently_add:
     type: boolean_checkbox
-    weight: 13
+    weight: 27
     region: content
     settings:
       display_label: true
@@ -285,6 +284,13 @@ content:
     region: content
     settings:
       progress_indicator: throbber
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path

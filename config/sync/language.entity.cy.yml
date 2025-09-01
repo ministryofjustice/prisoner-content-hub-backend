@@ -1,0 +1,9 @@
+uuid: fcabed50-0302-4605-aa52-66ad3c3b7a1d
+langcode: en
+status: true
+dependencies: {  }
+id: cy
+label: Welsh
+direction: ltr
+weight: 1
+locked: false

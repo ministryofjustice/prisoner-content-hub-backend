@@ -13,7 +13,7 @@ log_levels:
   7: 0
   8: 0
 stack: true
-timeout: !!float 2
+timeout: 2.0
 message_limit: 2048
 trace: true
 fatal_error_handler: true

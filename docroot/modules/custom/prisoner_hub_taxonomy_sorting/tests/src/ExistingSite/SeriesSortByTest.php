@@ -30,6 +30,11 @@ class SeriesSortByTest extends ExistingSiteBase {
   protected $seriesTerm;
 
   /**
+   * URL for calling JSON:API page endpoint.
+   */
+  protected Url $jsonApiUrl;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() : void {

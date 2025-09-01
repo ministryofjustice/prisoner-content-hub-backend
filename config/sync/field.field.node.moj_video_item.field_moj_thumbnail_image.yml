@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_moj_thumbnail_image
     - node.type.moj_video_item
   module:
+    - content_translation
     - image
+third_party_settings:
+  content_translation:
+    translation_sync:
+      file: file
+      alt: '0'
+      title: '0'
 _core:
   default_config_hash: jfPrkx1Z5m1TQ0baF4cavnBN1aqFveoADyLELazp8Y8
 id: node.moj_video_item.field_moj_thumbnail_image
@@ -16,7 +23,7 @@ bundle: moj_video_item
 label: 'Thumbnail image'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -24,8 +31,8 @@ settings:
   handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'png gif jpg jpeg'
-  max_filesize: ''
-  max_resolution: ''
+  max_filesize: '2 MB'
+  max_resolution: 1024x1024
   min_resolution: ''
   alt_field: false
   alt_field_required: true

@@ -6,3 +6,4 @@ name: Categories
 vid: moj_categories
 description: 'Top level categories'
 weight: 0
+new_revision: false

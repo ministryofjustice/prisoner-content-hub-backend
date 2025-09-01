@@ -98,6 +98,13 @@ env:
         key: access_key
   - name: ANALYTICS_SITE_ID
     value: {{ .Values.application.analyticsSiteId }}
+  - name: RDS_CERTIFICATE
+    value: {{ .Values.application.rdsCertificate }}
+  - name: HUB_API_ENDPOINT
+    valueFrom:
+      configMapKeyRef:
+        name: {{ .Values.application.contentConfigMapName }}
+        key: internalUrl
 
 {{- end -}}
 

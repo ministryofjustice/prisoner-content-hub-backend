@@ -1,0 +1,18 @@
+uuid: d1fa7591-c6ec-49e7-9974-df78480e2445
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+id: node.urgent_banner.created
+field_name: created
+entity_type: node
+bundle: urgent_banner
+label: 'Authored on'
+description: 'The date and time that the content was created.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

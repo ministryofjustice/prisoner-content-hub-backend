@@ -1,0 +1,22 @@
+uuid: 49978351-d3af-43ea-935c-5093f42c15ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+id: node.urgent_banner.sticky
+field_name: sticky
+entity_type: node
+bundle: urgent_banner
+label: 'Sticky at top of lists'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

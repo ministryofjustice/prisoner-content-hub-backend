@@ -12,7 +12,7 @@ bundle: link
 label: Url
 description: 'You can enter either an external url, e.g. https://www.example.com (please include the https:// part) or an internal one, such as /profile.'
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }

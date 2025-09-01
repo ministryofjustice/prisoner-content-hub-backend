@@ -1,0 +1,14 @@
+uuid: 087bdfaf-ac27-4558-917c-3ac5c1756c80
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.comms_live_service_hq
+  module:
+    - user
+id: user_add_role_action.comms_live_service_hq
+label: 'Add the Comms &amp; Live Service HQ role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: comms_live_service_hq

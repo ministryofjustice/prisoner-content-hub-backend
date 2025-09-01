@@ -14,7 +14,7 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@3.11
+  hmpps: ministryofjustice/hmpps@11
 
 commands:
   release_to_namespace:
@@ -44,7 +44,8 @@ commands:
               --set cronToken=${HELM_BACKEND_CRON_TOKEN} \
               --set application.sentry_dsn="${DRUPAL_SENTRY_DSN}" \
               --set application.sentry_environment="${SENTRY_ENVIRONMENT}" \
-              --set application.sentry_release="${CIRCLE_BUILD_NUM}"
+              --set application.sentry_release="${CIRCLE_BUILD_NUM}" \
+              --set application.contentConfigMapName="${HELM_BACKEND_RELEASE_NAME}"
           no_output_timeout: 1500
 
 jobs:
@@ -60,7 +61,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.17
+          version: default
           docker_layer_caching: true
       - run:
           name: Build docker images with docker compose
@@ -82,6 +83,7 @@ jobs:
           command: |
             set -x
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make coding-standards
+            docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make php-stan
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make install-drupal
             docker-compose -f << parameters.docker-compose-filename >> exec << parameters.docker-image-name-backend >> make run-tests
       - run:
@@ -100,7 +102,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.17
+          version: default
           docker_layer_caching: true
       - hmpps/create_app_version
       - run:
@@ -123,7 +125,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.17
+          version: default
           docker_layer_caching: true
       - hmpps/create_app_version
       - run:

@@ -1,0 +1,21 @@
+uuid: 67067a41-1489-4660-a46b-7eb7f372b16a
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+  module:
+    - text
+id: taxonomy_term.moj_categories.description
+field_name: description
+entity_type: taxonomy_term
+bundle: moj_categories
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

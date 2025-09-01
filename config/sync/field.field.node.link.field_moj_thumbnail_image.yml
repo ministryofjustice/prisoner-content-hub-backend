@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_moj_thumbnail_image
     - node.type.link
   module:
+    - content_translation
     - image
+third_party_settings:
+  content_translation:
+    translation_sync:
+      file: file
+      alt: '0'
+      title: '0'
 id: node.link.field_moj_thumbnail_image
 field_name: field_moj_thumbnail_image
 entity_type: node
@@ -22,8 +29,8 @@ settings:
   handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: 'png gif jpg jpeg'
-  max_filesize: ''
-  max_resolution: ''
+  max_filesize: '2 MB'
+  max_resolution: 1024x1024
   min_resolution: ''
   alt_field: false
   alt_field_required: true

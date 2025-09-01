@@ -12,7 +12,7 @@ bundle: link
 label: 'Show interstitial page'
 description: 'Enable the "You are leaving the Hub" page.  This is normally used for external links.'
 required: false
-translatable: true
+translatable: false
 default_value:
   -
     value: 1

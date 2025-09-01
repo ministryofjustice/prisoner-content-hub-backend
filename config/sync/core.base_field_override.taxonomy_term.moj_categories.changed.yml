@@ -1,0 +1,18 @@
+uuid: 5ff5cc90-0ff6-4027-bb12-ee2bcc9f6521
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+id: taxonomy_term.moj_categories.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: moj_categories
+label: Changed
+description: 'The time that the term was last edited.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

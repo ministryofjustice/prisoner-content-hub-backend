@@ -27,5 +27,6 @@ hidden:
   field_more_info_page: true
   field_prison_owner: true
   field_prisons: true
+  langcode: true
   published_at: true
   search_api_excerpt: true

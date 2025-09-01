@@ -1,0 +1,20 @@
+uuid: edccc05d-1091-4d11-816d-140db5c6e201
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+  module:
+    - path
+id: node.moj_video_item.path
+field_name: path
+entity_type: node
+bundle: moj_video_item
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

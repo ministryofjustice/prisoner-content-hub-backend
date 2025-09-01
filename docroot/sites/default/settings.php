@@ -20,6 +20,14 @@ $databases['default']['default'] = [
   'driver' => 'mysql',
 ];
 
+$rds_certificate = getenv('RDS_CERTIFICATE', TRUE);
+if ($rds_certificate) {
+  $databases['default']['default']['pdo'] = [
+    PDO::MYSQL_ATTR_SSL_CA => $rds_certificate,
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
+  ];
+}
+
 $settings['trusted_host_patterns'] = [
   getenv('TRUSTED_HOSTS', TRUE),
   getenv('TRUSTED_HOSTS_JSONAPI', TRUE),
@@ -188,6 +196,8 @@ if (PHP_SAPI !== 'cli') {
   // Setting the trusted reverse proxy header, to further prevent IP spoofing.
   $settings['reverse_proxy_trusted_headers'] = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_FORWARDED;
 }
+
+$settings['cache_warmer_endpoint'] = getenv('HUB_API_ENDPOINT', TRUE);
 
 // Set max_execution_time to 30 seconds, as this is the same timeout as on the
 // frontend.  Note this does not apply to cli commands.

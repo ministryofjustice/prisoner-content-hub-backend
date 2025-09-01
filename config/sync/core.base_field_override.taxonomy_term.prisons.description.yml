@@ -1,0 +1,21 @@
+uuid: cee630c1-5a35-490b-8022-cc43c323ee13
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prisons
+  module:
+    - text
+id: taxonomy_term.prisons.description
+field_name: description
+entity_type: taxonomy_term
+bundle: prisons
+label: Description
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

@@ -69,7 +69,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->studioAdministrator = User::create([
@@ -199,7 +199,7 @@ class TaxonomyFieldsFormStatesTest extends ExistingSiteSelenium2DriverTestBase {
   /**
    * Remove the users we created for the test.
    */
-  public function tearDown() {
+  public function tearDown(): void {
     parent::tearDown();
     $this->studioAdministrator->delete();
     $this->localContentManagerUser->delete();

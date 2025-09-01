@@ -1,7 +1,7 @@
 name: 'Text Editor Refresh Images'
 type: module
 description: 'Refreshes images from the file system in the text editor.'
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10 || ^11
 package: 'Custom'
 dependencies:
   - drupal:editor

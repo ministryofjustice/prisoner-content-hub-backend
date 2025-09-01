@@ -5,50 +5,55 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.2",
+        "consolidation/site-process": "dev-main",
         "cweagans/composer-patches": "~1.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/autocomplete_id": "^1.4",
+        "drupal/book": "^1.0",
         "drupal/book_blocks": "^1.6",
         "drupal/computed_breadcrumbs": "^1",
-        "drupal/config_ignore": "^2.3",
-        "drupal/core-composer-scaffold": "^9.0.0",
-        "drupal/core-project-message": "^9.0.0",
-        "drupal/core-recommended": "^9.5",
-        "drupal/core-vendor-hardening": "^9.0.0",
-        "drupal/csv_serialization": "^3.0",
+        "drupal/config_filter": "^2.6",
+        "drupal/config_ignore": "^3",
+        "drupal/core-composer-scaffold": "^10.5",
+        "drupal/core-project-message": "^10.5",
+        "drupal/core-recommended": "^10.5",
+        "drupal/core-vendor-hardening": "^10.5",
+        "drupal/csv_serialization": "^3.0 || ^4.0",
+        "drupal/database_ssl_check": "^2.0",
         "drupal/decoupled_router": "^2.0",
         "drupal/diff": "^1.0",
-        "drupal/dynamic_entity_reference": "^1.12",
+        "drupal/dynamic_entity_reference": "^3.2",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
         "drupal/entity_clone": "^2.0@beta",
         "drupal/field_group": "^3.1",
+        "drupal/field_permissions": "^1.3",
         "drupal/file_mime_validator": "^2.0",
         "drupal/flood_control": "^2.3",
-        "drupal/flysystem": "^2.0",
+        "drupal/flysystem": "^2.2",
         "drupal/flysystem_s3": "^2",
         "drupal/form_state_empty": "^1.0@alpha",
         "drupal/google_analytics": "^4.0",
-        "drupal/govuk_notify": "^2.1",
+        "drupal/govuk_notify": "^2.1 || ^3.0",
         "drupal/health_check": "^3.0",
         "drupal/hierarchical_term_formatter": "^1.3",
         "drupal/image_style_warmer": "^1.1",
         "drupal/jsonapi_cross_bundles": "^1.0",
-        "drupal/jsonapi_filter_cache_tags": "^1.0@beta",
+        "drupal/jsonapi_filter_cache_tags": "^1",
         "drupal/jsonapi_image_styles": "^3.0",
         "drupal/jsonapi_menu_items": "^1.2",
         "drupal/jsonapi_page_limit": "^1.0.0-beta2",
         "drupal/jsonapi_search_api": "^1.0@RC",
-        "drupal/linkit": "^6.0",
+        "drupal/linkit": "^7.0",
         "drupal/maintenance_exempt": "^1.3",
-        "drupal/maxlength": "^2.0",
-        "drupal/memcache": "^2.0",
-        "drupal/monolog": "^2.0",
+        "drupal/maxlength": "^3.0",
+        "drupal/monolog": "^3",
         "drupal/node_edit_protection": "^1.0",
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/pathauto": "^1.8",
         "drupal/pathologic": "^2",
         "drupal/publication_date": "^2.0@beta",
+        "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
         "drupal/readonlymode": "2.0.x-dev",
         "drupal/redis": "^1.5",
@@ -61,16 +66,17 @@
         "drupal/taxonomy_machine_name": "^2.0",
         "drupal/term_reference_tree": "^2.0",
         "drupal/token": "^1.5",
-        "drupal/upgrade_status": "^4.0",
+        "drupal/uploaded_file_filename_randomizer": "^1.0",
         "drupal/view_unpublished": "^1.0",
-        "drupal/views_bulk_edit": "^2.5",
-        "drupal/views_bulk_operations": "^4.2",
-        "drupal/views_data_export": "^1.2",
+        "drupal/views_bulk_edit": "^3",
+        "drupal/views_bulk_operations": "^4.3",
+        "drupal/views_data_export": "1.4.0",
         "drupal/views_ef_fieldset": "^1.5",
         "drupal/views_entity_form_field": "^1.0@beta",
         "drupal/views_filters_populate": "^2.0",
-        "drupal/views_tree": "^2.0@alpha",
-        "drush/drush": "^11.2",
+        "drupal/views_tree": "^3.0",
+        "drupal/warmer": "^2.0",
+        "drush/drush": "^12.4",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
         "oomphinc/composer-installers-extender": "^2.0"
@@ -95,7 +101,8 @@
             "oomphinc/composer-installers-extender": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "tbachert/spi": true
         }
     },
     "extra": {
@@ -103,6 +110,9 @@
         "drupal-scaffold": {
             "locations": {
                 "web-root": "docroot/"
+            },
+            "file-mapping": {
+                "[web-root]/.htaccess": "assets/scaffold/htaccess"
             }
         },
         "_readme": [
@@ -151,28 +161,15 @@
             "drupal/flysystem_s3": {
                 "Issue #2772847 - Enable pre-signed links": "patches/flysystem_2772847-68-presigned_urls.patch",
                 "Issue #3248956 - Disable other fields when uploading files": "patches/flysystem_s3-3248956-disable-other-fields-when-uploading-MR.patch",
-                "Issue #3271681 - Improve performance when generating image style urls": "patches/flysystem_s3-3271681-improve-performance-when-generating-image-style-urls-2.patch"
+                "Issue #3271681 - Improve performance when generating image style urls": "patches/3271681-improve-performance-when-generating-image-style-urls-5.patch"
             },
             "twistor/stream-util": {
                 "PR #3 - More robust version of getSize() ": "patches/stream_util-pr3-more-robust-version-of-getsize.patch"
             },
             "drupal/core": {
-                "Issue #1149078 - States API doesn't work with multiple select fields": "patches/1149078-144.patch",
                 "Issue #3228329 - Fix cache dependencies not set for files uploaded through text editor.": "patches/drupal-3228329-files-uploaded-through-text-editor-cache-dependency-2.patch",
-                "Issue #3057545 - ResourceTypeRepository wrongly assumes that all entity reference fields have the setting \"target_type\".": "patches/drupal-3057545-40.patch",
                 "Issue #2352009 - Bubbling of elements' max-age to the page's headers and the page cache": "patches/drupal-2352009-max-age-bubbling-9.1.x.patch",
-                "Issue #3114365 - Vocabulary name not shown in View for Anonymous Users": "patches/drupal-3114365-17.patch",
                 "Issue #3090131 - Use per-bundle entity list cache tags to potentially increase caching and performance": "patches/drupal-3090131-16.patch"
-            },
-            "drupal/views_ef_fieldset": {
-                "Issue #3173822: Exposed operators are not included in fieldsets": "patches/views_ef_fieldset_3173822-operator_issue-9.patch",
-                "Issue #3269083: TypeError: Unsupported operand types:": "patches/views_ef_fieldset-3269083-17.patch"
-            },
-            "drupal/dynamic_entity_reference": {
-                "Issue #3057556: Incompatibility with jsonapi relatable resource search": "patches/dynamic_entity_reference-3057556-4.patch"
-            },
-            "drupal/jsonapi_cross_bundles": {
-                "Issue #3241626: 404 on cross bundle routes when uninstalling another module": "patches/jsonapi_cross_bundles-3241626-fix-404-on-cross-bundle-routes-when-uninstalling-another-module-2.patch"
             },
             "drupal/term_reference_tree": {
                 "Issue #2411667: \"Disabled\" state of the element is cleared.": "patches/term_reference_tree-2411667-disabled-state-of-element-is-cleared-2.0.x-rebase.patch",
@@ -181,27 +178,17 @@
             "drupal/elasticsearch_connector": {
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
             },
-            "drupal/computed_breadcrumbs": {
-                "Issue #3266585: Support other entity types.": "patches/3266585-support-other-entity-types-13.patch",
-                "Issue #3243177: Allow return relative URLs.": "patches/3243177-return-relative-urls-15.patch"
-            },
-            "drupal/jsonapi_menu_items": {
-                "Issue #3270141: Allow other modules to extend MenuItemsResource.": "patches/jsonapi_menu_items-3270141-allow-other-modules-to-extend-2.patch"
-            },
-            "drupal/config_ignore": {
-                "Issue #2857247: Support for export filtering via Drush.": "patches/config_ignore_2857247-75.patch"
-            },
             "drupal/pathologic": {
-                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-18.patch"
-            },
-            "drupal/linkit": {
-                "Issue #2877535: Link shown after the autocomplete selection is the bare node/xxx link, not the alias": "patches/linkit-2877535-64.patch"
+                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
             },
             "drupal/views_data_export": {
                 "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
             },
-            "guzzlehttp/guzzle": {
-                "https://github.com/guzzle/guzzle/issues/3020 support PHP8.1 as used by Behat 3 with Drupal 9.3": "patches/guzzle-3020.patch"
+            "consolidation/site-process": {
+                "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
+            },
+            "drupal/warmer": {
+                "Issue #3273547: No way to disable cron warming": "patches/warmer_3273547-no-way-to-disable-cron-warming.patch"
             }
         },
         "patches-ignore": {
@@ -214,6 +201,10 @@
     },
     "repositories": [
         {
+            "type": "vcs",
+            "url": "git@github.com:consolidation/site-process.git"
+        },
+        {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
@@ -224,10 +215,13 @@
     ],
     "require-dev": {
         "dmore/chrome-mink-driver": "^2.7",
-        "drupal/console": "^1.9",
-        "drupal/core-dev": "^9.0.0",
+        "drupal/core-dev": "~10.3.9",
+        "mglaman/phpstan-drupal": "^1.2",
         "palantirnet/drupal-rector": "^0.15.1",
         "phpspec/prophecy-phpunit": "^2",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
         "weitzman/drupal-test-traits": "^2"
     }
 }

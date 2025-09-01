@@ -13,7 +13,7 @@ dependencies:
     - field.field.node.moj_radio_item.field_moj_series
     - field.field.node.moj_radio_item.field_moj_thumbnail_image
     - field.field.node.moj_radio_item.field_moj_top_level_categories
-    - field.field.node.moj_radio_item.field_not_in_series
+    - field.field.node.moj_radio_item.field_prioritise_on_recently_add
     - field.field.node.moj_radio_item.field_prison_owner
     - field.field.node.moj_radio_item.field_prisons
     - field.field.node.moj_radio_item.field_release_date
@@ -110,7 +110,7 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_not_in_series:
+  field_prioritise_on_recently_add:
     type: boolean
     label: above
     settings:
@@ -118,7 +118,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 16
+    weight: 25
     region: content
   field_prison_owner:
     type: entity_reference_label
@@ -163,6 +163,7 @@ content:
 hidden:
   breadcrumbs: true
   field_moj_audio: true
+  langcode: true
   links: true
   published_at: true
   search_api_excerpt: true

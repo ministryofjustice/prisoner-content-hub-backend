@@ -12,7 +12,7 @@ bundle: page
 label: 'Exclude feedback'
 description: 'Select to hide the feedback form when viewing this content.'
 required: false
-translatable: true
+translatable: false
 default_value:
   -
     value: 0

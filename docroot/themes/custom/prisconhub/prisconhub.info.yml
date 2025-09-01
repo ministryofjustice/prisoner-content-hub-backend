@@ -2,8 +2,21 @@ name: Prisconhub
 type: theme
 description: 'Admin theme for the Prisoner content hub'
 package: Other
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10 || ^11
 libraries:
   - prisconhub/global-styling
 
 base theme: claro
+
+regions:
+  header: Header
+  pre_content: Pre-content
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: Page top
+  page_bottom: Page bottom
+  sidebar_first: First sidebar
+regions_hidden:
+  - sidebar_first

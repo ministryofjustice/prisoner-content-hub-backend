@@ -1,0 +1,5 @@
+name: 'Prisoner Hub Test Traits'
+type: module
+description: 'Traits for common functionality in Prisoner Hub automated tests'
+package: Custom
+core_version_requirement: ^10

@@ -1,0 +1,18 @@
+uuid: d930b81a-d923-4300-9234-8a1efe704b55
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_radio_item
+id: node.moj_radio_item.created
+field_name: created
+entity_type: node
+bundle: moj_radio_item
+label: 'Authored on'
+description: 'The date and time that the content was created.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

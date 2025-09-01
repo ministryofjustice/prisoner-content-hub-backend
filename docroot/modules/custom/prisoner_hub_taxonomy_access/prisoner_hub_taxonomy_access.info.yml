@@ -1,5 +1,5 @@
 name: 'Prisoner Hub Taxonomy Access'
 type: module
 description: 'Provides entity access rules for taxonomy based on available content within each term.'
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10 || ^11
 package: 'Custom'

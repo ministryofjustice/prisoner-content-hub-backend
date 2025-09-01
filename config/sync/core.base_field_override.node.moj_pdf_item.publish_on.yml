@@ -1,0 +1,18 @@
+uuid: 6b9d81ec-3dc3-4172-9259-c666493e9f3d
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+id: node.moj_pdf_item.publish_on
+field_name: publish_on
+entity_type: node
+bundle: moj_pdf_item
+label: 'Publish on'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

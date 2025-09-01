@@ -2,8 +2,6 @@ _core:
   default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
 module:
   actions_permissions: 0
-  admin_toolbar: 0
-  admin_toolbar_links_access_filter: 0
   autocomplete_id: 0
   block: 0
   book: 0
@@ -12,11 +10,11 @@ module:
   ckeditor5: 0
   computed_breadcrumbs: 0
   config: 0
-  config_filter: 0
   config_ignore: 0
   contextual: 0
   csv_serialization: 0
   ctools: 0
+  database_ssl_check: 0
   datetime: 0
   decoupled_router: 0
   diff: 0
@@ -28,6 +26,7 @@ module:
   field: 0
   field_group: 0
   field_group_open_non_empty: 0
+  field_permissions: 0
   field_ui: 0
   file: 0
   file_download_expires_fix: 0
@@ -36,7 +35,6 @@ module:
   flood_control: 0
   flysystem: 0
   flysystem_s3: 0
-  form_state_empty: 0
   google_analytics: 0
   govuk_notify: 0
   health_check: 0
@@ -52,6 +50,7 @@ module:
   jsonapi_page_limit: 0
   jsonapi_resources: 0
   jsonapi_search_api: 0
+  language: 0
   layout_builder: 0
   layout_discovery: 0
   link: 0
@@ -61,6 +60,7 @@ module:
   menu_ui: 0
   monolog: 0
   mysql: 0
+  navigation: 0
   node: 0
   node_edit_protection: 0
   optgroup_taxonomy_select: 0
@@ -70,14 +70,17 @@ module:
   path: 0
   path_alias: 0
   pathologic: 0
+  phpass: 0
   prisoner_hub_breadcrumbs: 0
   prisoner_hub_bulk_updater: 0
+  prisoner_hub_cache_warmer: 0
   prisoner_hub_cms_help: 0
   prisoner_hub_content_suggestions: 0
   prisoner_hub_edit_only: 0
   prisoner_hub_explore: 0
   prisoner_hub_linkit_matcher: 0
   prisoner_hub_primary_nav: 0
+  prisoner_hub_priority_content: 0
   prisoner_hub_prison_access: 0
   prisoner_hub_prison_access_cms: 0
   prisoner_hub_prison_context: 0
@@ -87,6 +90,7 @@ module:
   prisoner_hub_taxonomy_child_count: 0
   prisoner_hub_taxonomy_field_ux: 0
   prisoner_hub_taxonomy_sorting: 0
+  queue_ui: 0
   raven: 0
   readonlymode: 0
   redis: 0
@@ -97,7 +101,6 @@ module:
   search_api_db: 0
   select2: 0
   serialization: 0
-  shortcut: 0
   string_field_formatter: 0
   system: 0
   taxonomy: 0
@@ -107,8 +110,8 @@ module:
   text_editor_refresh_images: 0
   token: 0
   toolbar: 0
-  tour: 0
   update: 0
+  uploaded_file_filename_randomizer: 0
   user: 0
   view_unpublished: 0
   views_bulk_edit: 0
@@ -119,8 +122,10 @@ module:
   views_filters_populate: 0
   views_tree: 0
   views_ui: 0
+  warmer: 0
   menu_link_content: 1
   pathauto: 1
+  content_translation: 10
   views: 10
   publication_date: 99
   prisoner_content_hub_profile: 1000

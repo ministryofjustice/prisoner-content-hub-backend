@@ -1,0 +1,22 @@
+uuid: 5aaeb4a8-53fe-4ec3-a385-0adc37107073
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+id: node.moj_video_item.sticky
+field_name: sticky
+entity_type: node
+bundle: moj_video_item
+label: 'Sticky at top of lists'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

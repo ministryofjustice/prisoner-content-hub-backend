@@ -1,4 +1,8 @@
 parameters:
+  # Toggles the super user access policy. If your website has at least one user
+  # with the Administrator role, it is advised to set this to false. This allows
+  # you to make user 1 a regular user, strengthening the security of your site.
+  security.enable_super_user: false
   session.storage.options:
     # Default ini options for sessions.
     #
@@ -179,6 +183,8 @@ parameters:
 
   jsonapi_page_limit.size_max:
     /jsonapi/*: 100
+    /cy/jsonapi/*: 100
+
 services:
   monolog.handler.stream:
     class: Monolog\Handler\StreamHandler

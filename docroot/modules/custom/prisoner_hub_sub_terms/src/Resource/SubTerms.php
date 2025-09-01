@@ -3,9 +3,11 @@
 namespace Drupal\prisoner_hub_sub_terms\Resource;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
@@ -13,8 +15,8 @@ use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi_resources\Resource\EntityResourceBase;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -26,7 +28,22 @@ use Symfony\Component\Routing\Route;
  *
  * @internal
  */
-class SubTerms extends EntityResourceBase {
+class SubTerms extends EntityResourceBase implements ContainerInjectionInterface {
+
+  /**
+   * Returns a new SubTerms resource.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Renderer.
+   */
+  public function __construct(protected RendererInterface $renderer) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('renderer'));
+  }
 
   /**
    * Process the resource request.
@@ -67,7 +84,7 @@ class SubTerms extends EntityResourceBase {
     // Use aggregate entity query, so that we can use groupBy on the category
     // and series fields.  Removing duplicate category and series ids.
     // @see https://www.drupal.org/node/1918702
-    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getAggregateQuery()->accessCheck(TRUE);
 
     // Check for content that's...
     $condition_group = $query->orConditionGroup()
@@ -104,7 +121,7 @@ class SubTerms extends EntityResourceBase {
 
     $results = $this->executeQueryInRenderContext($query);
     $taxonomy_ids = $this->getTaxonomyIdsFromQueryResults($results);
-    $entities = Term::loadMultiple($taxonomy_ids);
+    $entities = $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($taxonomy_ids);
     $processed_entities = $this->filterClosestSubCategoriesAndSeries($entities, $taxonomy_term);
 
     $result_entities = array_slice($processed_entities, $pagination->getOffset(), $pagination->getSize());
@@ -176,7 +193,7 @@ class SubTerms extends EntityResourceBase {
       }
       $top_level_id = $this->findClosestSubCategory($category_id, $top_parent_entity->id());
       if (!isset($processed_entities[$top_level_id]) && $top_level_id) {
-        $top_level_entity = $entities[$top_level_id] ?? Term::load($top_level_id);
+        $top_level_entity = $entities[$top_level_id] ?? $this->entityTypeManager->getStorage('taxonomy_term')->load($top_level_id);
         $processed_entities[$top_level_id] = $top_level_entity;
       }
     }
@@ -245,8 +262,8 @@ class SubTerms extends EntityResourceBase {
    */
   protected function executeQueryInRenderContext(QueryInterface $query) {
     $context = new RenderContext();
-    return \Drupal::service('renderer')->executeInRenderContext($context, function () use ($query) {
-      return $query->execute();
+    return $this->renderer->executeInRenderContext($context, function () use ($query) {
+      return $query->accessCheck(TRUE)->execute();
     });
   }
 
@@ -286,7 +303,7 @@ class SubTerms extends EntityResourceBase {
    */
   private function getPagination(Request $request): OffsetPage {
     return $request->query->has('page')
-      ? OffsetPage::createFromQueryParameter($request->query->get('page'))
+      ? OffsetPage::createFromQueryParameter($request->query->all()['page'] ?? [])
       : new OffsetPage(OffsetPage::DEFAULT_OFFSET, OffsetPage::SIZE_MAX);
   }
 

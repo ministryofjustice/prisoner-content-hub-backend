@@ -1,0 +1,20 @@
+uuid: d5954533-6c8d-4da8-a5bc-f938ad87af32
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.urgent_banner
+id: node.urgent_banner.menu_link
+field_name: menu_link
+entity_type: node
+bundle: urgent_banner
+label: 'Menu link'
+description: 'Computed menu link for the node (only available during node saving).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: default
+  handler_settings: {  }
+field_type: entity_reference

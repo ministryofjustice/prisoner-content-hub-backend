@@ -1,0 +1,18 @@
+uuid: f65721c2-3dda-4644-9136-9de73fb2af91
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_video_item
+id: node.moj_video_item.changed
+field_name: changed
+entity_type: node
+bundle: moj_video_item
+label: Changed
+description: 'The time that the node was last edited.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

@@ -6,19 +6,20 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
-use GuzzleHttp\RequestOptions;
+use Drupal\Tests\prisoner_hub_test_traits\Traits\JsonApiTrait;
 use weitzman\DrupalTestTraits\Entity\NodeCreationTrait;
 use weitzman\DrupalTestTraits\Entity\TaxonomyCreationTrait;
 use weitzman\DrupalTestTraits\ExistingSiteBase;
 
 /**
- * Test the the content suggestions JSON:API resource works correctly.
+ * Test that the content suggestions JSON:API resource works correctly.
  *
  * @group prisoner_hub_content_suggestions
  */
 class PrisonerHubSubTermsTest extends ExistingSiteBase {
 
   use JsonApiRequestTestTrait;
+  use JsonApiTrait;
   use NodeCreationTrait;
   use TaxonomyCreationTrait;
 
@@ -87,7 +88,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $first_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => time(),
     ]);
 
@@ -100,7 +100,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-2 years'),
     ]);
 
@@ -108,7 +107,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // sorting.
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => time(),
       'status' => 0,
     ]);
@@ -139,7 +137,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $third_term->id()]],
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-1 week'),
     ]);
 
@@ -174,7 +171,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
-      'field_not_in_series' => 1,
       'published_at' => strtotime('-7 months'),
     ]);
 
@@ -192,7 +188,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $another_category = $this->createTerm($vocab_categories);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $another_category->id()]],
-      'field_not_in_series' => 1,
     ]);
 
     $another_sub_category = $this->createTerm($vocab_categories, [
@@ -202,7 +197,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $another_sub_category->id()]],
-      'field_not_in_series' => 1,
     ]);
 
     $another_series = $this->createTerm($vocab_series, [
@@ -218,7 +212,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // this also isn't returned (we should only receive sub-terms).
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->categoryTerm->id()]],
-      'field_not_in_series' => 1,
     ]);
 
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
@@ -236,7 +229,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Create some content in the new subCategory and ensure we get a cache HIT.
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
-      'field_not_in_series' => 1,
     ]);
     // Run the request twice, so the first one generates a cache.
     $this->getJsonApiResponse($this->jsonApiUrl);
@@ -257,7 +249,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     // Create a new node, and check for a MISS.
     $node = $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->subCategoryTerm->id()]],
-      'field_not_in_series' => 1,
     ]);
     $response = $this->getJsonApiResponse($this->jsonApiUrl);
     if (\Drupal::moduleHandler()->moduleExists('page_cache')) {
@@ -287,21 +278,6 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $invalidation_count = \Drupal::service('cache_tags.invalidator.checksum')->getCurrentChecksum(['prisoner_hub_sub_terms:' . $new_category->id()]);
     $this->assertSame(1, $invalidation_count, 'Cache tag has been cleared exactly one time.');
 
-  }
-
-  /**
-   * Get a response from a JSON:API url.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The url object to use for the JSON:API request.
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   *   The response object.
-   */
-  public function getJsonApiResponse(Url $url) {
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    return $this->request('GET', $url, $request_options);
   }
 
 }

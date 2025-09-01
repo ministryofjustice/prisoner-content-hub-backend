@@ -10,7 +10,7 @@ dependencies:
     - field.field.node.link.field_moj_series
     - field.field.node.link.field_moj_thumbnail_image
     - field.field.node.link.field_moj_top_level_categories
-    - field.field.node.link.field_not_in_series
+    - field.field.node.link.field_prioritise_on_recently_add
     - field.field.node.link.field_prisons
     - field.field.node.link.field_release_date
     - field.field.node.link.field_show_interstitial_page
@@ -31,7 +31,6 @@ third_party_settings:
     group_series:
       children:
         - field_moj_series
-        - field_not_in_series
         - group_season_and_episode_number
         - group_release_date
       label: 'Does this content fit into a Series?'
@@ -82,7 +81,7 @@ third_party_settings:
       format_settings:
         classes: ''
         id: ''
-        description: 'Please enter and select the category for this content. This is required if no series has been selected for the content.'
+        description: "Please enter and select the category for this content.\r\nYou may select more than one category if required. Drag to re-order so that the primary category is first. This is where the content lives and the navigation path is displayed."
         required_fields: true
     group_prison_categories:
       children:
@@ -184,9 +183,9 @@ content:
       match_operator: CONTAINS
       match_limit: 10
     third_party_settings: {  }
-  field_not_in_series:
+  field_prioritise_on_recently_add:
     type: boolean_checkbox
-    weight: 16
+    weight: 27
     region: content
     settings:
       display_label: true
@@ -223,6 +222,13 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path
@@ -261,6 +267,11 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 10
+    region: content
+    settings: {  }
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete

@@ -81,6 +81,9 @@ class EntityPreSave {
           $calculated_sort_value = 0;
         }
         break;
+
+      default:
+        $calculated_sort_value = 0;
     }
 
     // If the sorting is descending, cast this as a negative number to invert

@@ -8,7 +8,7 @@
 
 # Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
 # of the things we run, like kubectl.
-FROM --platform=linux/amd64 php:8.1.11-apache-buster AS base
+FROM --platform=linux/amd64 php:8.3.9-apache-bookworm AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -25,12 +25,14 @@ RUN set -eux; \
 		libjpeg-dev \
 		libpng-dev \
 		libpq-dev \
+    libwebp-dev \
 		libzip-dev \
 	; \
 	\
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
+    --with-webp=/usr \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
@@ -46,6 +48,7 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark; \
 	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
 		| awk '/=>/ { print $3 }' \
+    | awk '{print $1} {system("realpath " $1)}' \
 		| sort -u \
 		| xargs -r dpkg-query -S \
 		| cut -d: -f1 \
@@ -64,6 +67,15 @@ RUN { \
 		echo 'opcache.revalidate_freq=60'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+RUN { \
+    echo 'output_buffering=On'; \
+  } > /usr/local/etc/php/conf.d/output-buffering.ini
+
+RUN { \
+    echo 'zend.assertions=-1'; \
+  } > /usr/local/etc/php/conf.d/zend-assertions.ini
+
 ###########################################################################################
 # Finish copy Dockerhub Drupal image
 ###########################################################################################
@@ -82,6 +94,9 @@ RUN pecl install uploadprogress \
 
 RUN pecl install redis \
   && docker-php-ext-enable redis
+
+RUN pecl install apcu-5.1.24 \
+  && docker-php-ext-enable apcu
 
 # Enable apache modules that are used in Drupal's htaccess.
 RUN a2enmod expires headers
@@ -104,7 +119,7 @@ WORKDIR /var/www/html
 
 RUN mkdir -p /var/www/.local/bin
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=$HOME/.local/bin --filename=composer --version=2.4.2 \
+  && php composer-setup.php --install-dir=$HOME/.local/bin --filename=composer --version=2.7.7 \
   && php -r "unlink('composer-setup.php');"
 
 # Add the composer bin directory to the path.
@@ -112,12 +127,20 @@ ENV PATH="/var/www/html/vendor/bin:/var/www/.local/bin:$PATH"
 
 # Copy Project files.
 # Copy with chown as otherwise files are owned by root.
-COPY --chown=www-data:www-data composer.json composer.lock Makefile ./
+COPY --chown=www-data:www-data composer.json composer.lock Makefile phpstan.neon ./
 COPY --chown=www-data:www-data patches patches
 COPY --chown=www-data:www-data docroot docroot
 COPY --chown=www-data:www-data config config
+COPY --chown=www-data:www-data assets assets
 
 COPY ./apache/ /etc/apache2/
+
+###########################################################################################
+# Copy AWS RDS Certificate
+###########################################################################################
+USER root
+RUN curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem > /etc/ssl/certs/root.crt
+USER 33
 
 ###########################################################################################
 # Create test image
@@ -160,10 +183,22 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.8.8.zip" -o "aw
     && ./aws/install -i ~/.local/aws-cli -b ~/.local/bin
 
 USER root
-RUN pecl install xdebug-3.1.5 \
+RUN pecl install xdebug-3.3.2 \
   && docker-php-ext-enable xdebug
 
 RUN echo 'opcache.enable=0' > /usr/local/etc/php/conf.d/opcache-disable.ini
+
+# Install php-spx and dependencies for profiling.
+RUN apt-get update && apt-get install -y \
+  zlib1g-dev
+
+RUN git clone https://github.com/NoiseByNorthwest/php-spx.git \
+    && cd php-spx \
+    && git checkout release/latest \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install
 
 # Set to www-data user.
 USER 33
