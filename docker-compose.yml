@@ -55,7 +55,7 @@ services:
       - prisoner_content_hub
 
   localstack:
-    image: localstack/localstack:0.13.3
+    image: localstack/localstack:4.7.0
     environment:
       - SERVICES=s3
     ports:
