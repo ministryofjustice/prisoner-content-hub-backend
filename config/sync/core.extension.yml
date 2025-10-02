@@ -11,6 +11,7 @@ module:
   computed_breadcrumbs: 0
   config: 0
   config_ignore: 0
+  content_moderation: 0
   contextual: 0
   csv_serialization: 0
   ctools: 0
@@ -123,6 +124,7 @@ module:
   views_tree: 0
   views_ui: 0
   warmer: 0
+  workflows: 0
   menu_link_content: 1
   pathauto: 1
   content_translation: 10

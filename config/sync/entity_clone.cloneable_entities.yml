@@ -36,3 +36,5 @@ cloneable_entities:
   - base_field_override
   - configurable_language
   - language_content_settings
+  - workflow
+  - content_moderation_state

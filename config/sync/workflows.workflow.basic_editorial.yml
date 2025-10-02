@@ -1,0 +1,61 @@
+uuid: 19567685-f265-45ce-a96c-5f9368e8c9c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.link
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+  module:
+    - content_moderation
+id: basic_editorial
+label: Basic
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      weight: 0
+      published: false
+      default_revision: false
+    published:
+      label: Published
+      weight: 1
+      published: true
+      default_revision: true
+    unpublished:
+      label: Unpublished
+      weight: 2
+      published: true
+      default_revision: false
+  transitions:
+    create_new_draft:
+      label: 'Create New Draft'
+      from:
+        - draft
+        - published
+      to: draft
+      weight: 0
+    publish:
+      label: Publish
+      from:
+        - draft
+        - published
+      to: published
+      weight: 1
+    unpublish:
+      label: Unpublish
+      from:
+        - published
+      to: unpublished
+      weight: 2
+  entity_types:
+    node:
+      - link
+      - moj_pdf_item
+      - moj_radio_item
+      - moj_video_item
+      - page
+  default_moderation_state: draft
