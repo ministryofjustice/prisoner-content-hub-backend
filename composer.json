@@ -60,6 +60,7 @@
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",
         "drupal/scheduler": "^2",
+        "drupal/scheduler_content_moderation_integration": "^3",
         "drupal/search_api": "^1.17",
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
