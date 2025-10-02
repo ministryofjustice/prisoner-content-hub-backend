@@ -28,8 +28,8 @@ type_settings:
     unpublished:
       label: Unpublished
       weight: 2
-      published: true
-      default_revision: false
+      published: false
+      default_revision: true
   transitions:
     create_new_draft:
       label: 'Create New Draft'
@@ -43,6 +43,7 @@ type_settings:
       from:
         - draft
         - published
+        - unpublished
       to: published
       weight: 1
     unpublish:
