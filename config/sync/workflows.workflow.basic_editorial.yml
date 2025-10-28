@@ -15,40 +15,77 @@ label: Basic
 type: content_moderation
 type_settings:
   states:
+    awaiting_review:
+      label: 'Awaiting Review'
+      weight: -1
+      published: false
+      default_revision: false
     draft:
       label: Draft
-      weight: 0
+      weight: -2
+      published: false
+      default_revision: false
+    passed_review:
+      label: 'Passed Review'
+      weight: 2
       published: false
       default_revision: false
     published:
       label: Published
-      weight: 1
+      weight: 0
       published: true
       default_revision: true
     unpublished:
-      label: Unpublished
-      weight: 2
+      label: Archived
+      weight: 1
       published: false
       default_revision: true
   transitions:
+    approve:
+      label: Approve
+      from:
+        - awaiting_review
+      to: passed_review
+      weight: 4
     create_new_draft:
       label: 'Create New Draft'
       from:
+        - awaiting_review
         - draft
+        - passed_review
         - published
+        - unpublished
       to: draft
       weight: 0
     publish:
       label: Publish
       from:
+        - awaiting_review
         - draft
         - published
         - unpublished
       to: published
       weight: 1
-    unpublish:
-      label: Unpublish
+    publish_approved_content:
+      label: 'Publish approved content'
       from:
+        - passed_review
+      to: published
+      weight: 5
+    submit_for_review:
+      label: 'Submit for review'
+      from:
+        - draft
+        - passed_review
+        - unpublished
+      to: awaiting_review
+      weight: 3
+    unpublish:
+      label: Archive
+      from:
+        - awaiting_review
+        - draft
+        - passed_review
         - published
       to: unpublished
       weight: 2

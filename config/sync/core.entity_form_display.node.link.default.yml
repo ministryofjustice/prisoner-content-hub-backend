@@ -18,12 +18,14 @@ dependencies:
     - image.style.thumbnail
     - node.type.link
   module:
+    - content_moderation
     - datetime
     - field_group
     - image
     - path
     - publication_date
     - scheduler
+    - scheduler_content_moderation_integration
     - select2
     - term_reference_tree
 third_party_settings:
@@ -230,6 +232,12 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   path:
     type: path
     weight: 13
@@ -238,7 +246,13 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 14
+    weight: 52
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 53
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -249,7 +263,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 12
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -285,7 +299,13 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 15
+    weight: 54
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 55
     region: content
     settings: {  }
     third_party_settings: {  }
