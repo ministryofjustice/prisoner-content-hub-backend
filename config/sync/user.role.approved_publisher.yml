@@ -1,0 +1,9 @@
+uuid: b5ffe13f-58d1-4ef8-b46a-b34ac64bdcc8
+langcode: en
+status: true
+dependencies: {  }
+id: approved_publisher
+label: 'Approved Publisher'
+weight: -3
+is_admin: null
+permissions: {  }

@@ -1,0 +1,14 @@
+uuid: 02576480-d44d-4b75-bb7b-3c93b7d49c8a
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.approved_publisher
+  module:
+    - user
+id: user_remove_role_action.approved_publisher
+label: 'Remove the Approved Publisher role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: approved_publisher
