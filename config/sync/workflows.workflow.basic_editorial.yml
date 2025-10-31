@@ -48,7 +48,7 @@ type_settings:
       to: passed_review
       weight: 4
     create_new_draft:
-      label: 'Create New Draft'
+      label: 'Create new draft'
       from:
         - awaiting_review
         - draft
