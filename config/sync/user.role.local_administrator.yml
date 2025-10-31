@@ -15,9 +15,11 @@ dependencies:
     - taxonomy.vocabulary.moj_categories
     - taxonomy.vocabulary.series
     - taxonomy.vocabulary.topics
+    - workflows.workflow.basic_editorial
   module:
     - actions_permissions
     - book
+    - content_moderation
     - entity_clone
     - field_permissions
     - filter
@@ -29,7 +31,6 @@ dependencies:
     - system
     - taxonomy
     - toolbar
-    - view_unpublished
 _core:
   default_config_hash: w3gv4hBMp_vQx-dpzgOKpEZ0uNN5SSNFsYLbXwC7WZU
 id: local_administrator
@@ -135,6 +136,9 @@ permissions:
   - 'set any published on date'
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'
+  - 'use basic_editorial transition create_new_draft'
+  - 'use basic_editorial transition publish'
+  - 'use basic_editorial transition unpublish'
   - 'use text format full_html'
   - 'view all revisions'
   - 'view any unpublished content'
