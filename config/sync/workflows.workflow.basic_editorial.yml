@@ -96,4 +96,4 @@ type_settings:
       - moj_radio_item
       - moj_video_item
       - page
-  default_moderation_state: draft
+  default_moderation_state: published
