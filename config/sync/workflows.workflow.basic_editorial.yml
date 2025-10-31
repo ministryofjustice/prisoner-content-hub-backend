@@ -17,17 +17,17 @@ type_settings:
   states:
     awaiting_review:
       label: 'Awaiting Review'
-      weight: -1
+      weight: -2
       published: false
       default_revision: false
     draft:
       label: Draft
-      weight: -2
+      weight: -3
       published: false
       default_revision: false
     passed_review:
       label: 'Passed Review'
-      weight: 2
+      weight: -1
       published: false
       default_revision: false
     published:
@@ -46,7 +46,7 @@ type_settings:
       from:
         - awaiting_review
       to: passed_review
-      weight: 4
+      weight: 0
     create_new_draft:
       label: 'Create new draft'
       from:
@@ -56,7 +56,7 @@ type_settings:
         - published
         - unpublished
       to: draft
-      weight: 0
+      weight: -3
     publish:
       label: Publish
       from:
@@ -65,13 +65,13 @@ type_settings:
         - published
         - unpublished
       to: published
-      weight: 1
+      weight: -2
     publish_approved_content:
       label: 'Publish approved content'
       from:
         - passed_review
       to: published
-      weight: 5
+      weight: 1
     submit_for_review:
       label: 'Submit for review'
       from:
@@ -79,7 +79,7 @@ type_settings:
         - passed_review
         - unpublished
       to: awaiting_review
-      weight: 3
+      weight: -1
     unpublish:
       label: Archive
       from:
