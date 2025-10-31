@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\prisoner_hub_prison_access_cms\ExistingSite;
 
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\prisoner_hub_prison_access\ExistingSite\PrisonerHubPrisonAccessTestTrait;
@@ -49,6 +50,11 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected string $userPrisonFieldName;
 
   /**
+   * Moderation information service.
+   */
+  protected ModerationInformationInterface $moderationInformation;
+
+  /**
    * Create prison taxonomy terms and a user to test with.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -61,6 +67,8 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->prisonOwnerFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
     $this->userPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
+
+    $this->moderationInformation = $this->container->get('content_moderation.moderation_information');
 
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
@@ -300,7 +308,8 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
       // Test some fields are disabled, that appear on all content types.
       $this->assertSession()->fieldDisabled('title[0][value]');
-      $this->assertSession()->fieldDisabled('Published');
+      $publishedField = $this->moderationInformation->isModeratedEntity($node) ? 'Change to' : 'Published';
+      $this->assertSession()->fieldDisabled($publishedField);
 
       $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
 
