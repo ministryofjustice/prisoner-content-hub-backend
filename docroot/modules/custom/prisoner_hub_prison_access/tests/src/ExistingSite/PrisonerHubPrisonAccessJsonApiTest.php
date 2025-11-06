@@ -133,11 +133,15 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
    */
   public function testContentTaggedWithPrisonAndCategoryUnpublished() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       foreach ($bundles as $bundle) {
+        $bundle_is_moderated = $this->moderationInformation->shouldModerateEntitiesOfBundle($entity_type, $bundle);
+        $status = $bundle_is_moderated ? NULL : NodeInterface::NOT_PUBLISHED;
+        $moderation_state = $bundle_is_moderated ? 'draft' : '';
         $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [
           $this->prisonTerm->id(),
           $this->prisonCategoryTerm->id(),
-        ], NodeInterface::NOT_PUBLISHED);
+        ], $status, [], $moderation_state);
         $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_403);
         $this->assertJsonApiResponseByStatusCode($url, 403);
       }

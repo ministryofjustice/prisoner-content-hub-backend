@@ -3,6 +3,8 @@
 namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -28,10 +30,19 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   use PrisonerHubNodeCreationTrait;
 
   /**
+   * Moderation information service.
+   */
+  protected ModerationInformationInterface $moderationInformation;
+
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Sets up prison and prison category terms, to be used later when testing.
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->moderationInformation = $this->container->get('content_moderation.moderation_information');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->createPrisonTaxonomyTerms();
   }
 
@@ -132,10 +143,17 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = []) {
-    $values = [
-      'status' => $status,
-    ];
+  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = [], string $moderation_state = '') {
+    if ($moderation_state) {
+      $values = [
+        'moderation_state' => $moderation_state,
+      ];
+    }
+    else {
+      $values = [
+        'status' => $status,
+      ];
+    }
     foreach ($prison_ids as $prison_id) {
       $values[$this->prisonFieldName][] = ['target_id' => $prison_id];
     }
