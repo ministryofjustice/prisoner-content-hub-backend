@@ -3,6 +3,7 @@
 namespace Drupal\Tests\prisoner_hub_prison_access_cms\ExistingSite;
 
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\prisoner_hub_prison_access\ExistingSite\PrisonerHubPrisonAccessTestTrait;
@@ -55,6 +56,11 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected ModerationInformationInterface $moderationInformation;
 
   /**
+   * Entity type manager.
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Create prison taxonomy terms and a user to test with.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -69,6 +75,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
 
     $this->moderationInformation = $this->container->get('content_moderation.moderation_information');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
 
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
@@ -121,7 +128,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -262,7 +269,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -416,10 +423,10 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  protected function assertUserCanEditNode(NodeInterface $node) {
+  protected function assertUserCanEditNode(NodeInterface $node, bool $new_node = TRUE) {
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
-    $this->assertUserCanEditNodeOnCurrentPage($node->getType());
+    $this->assertUserCanEditNodeOnCurrentPage($node->getType(), FALSE);
   }
 
   /**
@@ -430,11 +437,13 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    * @param string $contentType
    *   The content type of the current page.
    */
-  protected function assertUserCanEditNodeOnCurrentPage(string $contentType) {
+  protected function assertUserCanEditNodeOnCurrentPage(string $contentType, bool $new_node = TRUE) {
     // Test some fields are enabled, that appear on all content types.
     try {
       $this->assertSession()->fieldEnabled('title[0][value]');
-      $this->assertSession()->fieldEnabled('Published');
+      $entityType = $this->entityTypeManager->getDefinition('node');
+      $publishedField = $this->moderationInformation->shouldModerateEntitiesOfBundle($entityType, $contentType) ? ($new_node ? 'Save as' : 'Change to') : 'Published';
+      $this->assertSession()->fieldEnabled($publishedField);
     }
     catch (\Exception $e) {
       $this->fail("Unable to edit the $contentType content type. Error message: " . $e->getMessage());

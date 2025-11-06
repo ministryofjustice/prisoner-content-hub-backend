@@ -184,9 +184,14 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $bundle_is_moderated = $this->moderationInformation->shouldModerateEntitiesOfBundle($entity_type, $bundle);
+    $status = $bundle_is_moderated ? NULL : NodeInterface::PUBLISHED;
+    $moderation_state = $bundle_is_moderated ? 'published' : '';
+
     $entities_to_check = [];
     for ($i = 0; $i < $amount; $i++) {
-      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], $status, [], $moderation_state);
     }
 
     // Also create some content tagged with a different prison.
@@ -195,8 +200,11 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     }
 
     // Also create some unpublished entities.
+    $status = $bundle_is_moderated ? NULL : NodeInterface::NOT_PUBLISHED;
+    $moderation_state = $bundle_is_moderated ? 'draft' : '';
+
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], NodeInterface::NOT_PUBLISHED);
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], $status, [], $moderation_state);
     }
 
     return $entities_to_check;
