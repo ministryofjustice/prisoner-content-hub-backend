@@ -362,6 +362,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $series->id()],
       ],
+      'moderation_state' => 'draft',
     ]);
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
