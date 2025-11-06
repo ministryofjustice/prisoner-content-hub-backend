@@ -34,6 +34,9 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    */
   protected ModerationInformationInterface $moderationInformation;
 
+  /**
+   * Entity type manager.
+   */
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**

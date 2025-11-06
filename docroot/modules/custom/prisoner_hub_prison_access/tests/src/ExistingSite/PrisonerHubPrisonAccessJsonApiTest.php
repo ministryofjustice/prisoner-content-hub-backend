@@ -76,12 +76,18 @@ class PrisonerHubPrisonAccessJsonApiTest extends PrisonerHubQueryAccessTestBase 
    */
   public function testEntitiesTaggedWithPrisonButNoCategory() {
     foreach ($this->bundlesByEntityType as $entity_type_id => $bundles) {
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       foreach ($bundles as $bundle) {
-        $uuid_to_check_is_200 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
+        $bundle_is_moderated = $this->moderationInformation->shouldModerateEntitiesOfBundle($entity_type, $bundle);
+
+        $status = $bundle_is_moderated ? NULL : NodeInterface::PUBLISHED;
+        $moderation_state = $bundle_is_moderated ? 'published' : '';
+
+        $uuid_to_check_is_200 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], $status, [], $moderation_state);
         $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_200);
         $this->assertJsonApiResponseByStatusCode($url, 200);
 
-        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id()]);
+        $uuid_to_check_is_403 = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->anotherPrisonTerm->id()], $status, [], $moderation_state);
         $url = $this->getJsonApiUri($this->prisonTermMachineName, $entity_type_id, $bundle, $uuid_to_check_is_403);
         $this->assertJsonApiResponseByStatusCode($url, 403);
       }
