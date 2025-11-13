@@ -426,7 +426,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected function assertUserCanEditNode(NodeInterface $node, bool $new_node = TRUE) {
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
-    $this->assertUserCanEditNodeOnCurrentPage($node->getType(), FALSE);
+    $this->assertUserCanEditNodeOnCurrentPage($node->getType(), $new_node);
   }
 
   /**
