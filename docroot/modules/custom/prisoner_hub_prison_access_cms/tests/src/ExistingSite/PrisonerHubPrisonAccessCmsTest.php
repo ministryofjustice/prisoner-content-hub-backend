@@ -151,7 +151,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -186,7 +186,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -216,7 +216,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -239,7 +239,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
