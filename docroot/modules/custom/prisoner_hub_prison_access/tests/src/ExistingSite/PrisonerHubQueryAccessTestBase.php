@@ -136,9 +136,13 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @param int $status
    *   Whether entity should be published. Should be either
    *   NodeInterface::PUBLISHED or NodeInterface::NOT_PUBLISHED.
+   *   Will be ignored if $moderation_state is set.
    * @param array $excluded_prisons
    *   Optional set of term IDs for the prisons from which the entity should be
    *   excluded.
+   * @param string $moderation_state
+   *   The moderation state to set on the new entity. Only set if the entity
+   *   type is moderated. Will override $status.
    *
    * @return string
    *   The uuid of the created entity.

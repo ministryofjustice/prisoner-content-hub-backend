@@ -3,6 +3,7 @@
 namespace Drupal\Tests\prisoner_hub_prison_access_cms\ExistingSite;
 
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -418,10 +419,12 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   /**
    * Asserts that the user can make edits to the $node.
    *
-   * @param \Drupal\node\NodeInterface $node
+   * @param NodeInterface $node
    *   Node to be tested.
+   * @param bool $new_node
+   *   Whether the node is newly created.
    *
-   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws EntityMalformedException
    */
   protected function assertUserCanEditNode(NodeInterface $node, bool $new_node = TRUE) {
     $edit_url = $node->toUrl('edit-form');
@@ -436,6 +439,8 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    *
    * @param string $contentType
    *   The content type of the current page.
+   * @param bool $new_node
+   *   Whether the node is newly created.
    */
   protected function assertUserCanEditNodeOnCurrentPage(string $contentType, bool $new_node = TRUE) {
     // Test some fields are enabled, that appear on all content types.
