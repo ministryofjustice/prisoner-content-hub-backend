@@ -256,6 +256,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'administer nodes',
       'bypass node access',
       'bypass prison ownership edit access',
+      'use basic_editorial transition create_new_draft',
     ]);
     $new_user->save();
     $this->drupalLogin($new_user);
@@ -444,6 +445,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected function assertUserCanEditNodeOnCurrentPage(string $contentType, bool $new_node = TRUE) {
     // Test some fields are enabled, that appear on all content types.
     try {
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->fieldEnabled('title[0][value]');
       $entityType = $this->entityTypeManager->getDefinition('node');
       $publishedField = $this->moderationInformation->shouldModerateEntitiesOfBundle($entityType, $contentType) ? ($new_node ? 'Save as' : 'Change to') : 'Published';
