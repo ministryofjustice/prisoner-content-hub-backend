@@ -287,7 +287,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => $this->user->id(),
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
