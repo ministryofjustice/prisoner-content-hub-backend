@@ -3,7 +3,6 @@
 namespace Drupal\Tests\prisoner_hub_prison_access_cms\ExistingSite;
 
 use Drupal\content_moderation\ModerationInformationInterface;
-use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -419,12 +418,12 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   /**
    * Asserts that the user can make edits to the $node.
    *
-   * @param NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   Node to be tested.
    * @param bool $new_node
    *   Whether the node is newly created.
    *
-   * @throws EntityMalformedException
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function assertUserCanEditNode(NodeInterface $node, bool $new_node = TRUE) {
     $edit_url = $node->toUrl('edit-form');
