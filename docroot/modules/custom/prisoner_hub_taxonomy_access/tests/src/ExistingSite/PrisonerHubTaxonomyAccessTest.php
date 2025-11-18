@@ -83,7 +83,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_moj_top_level_categories' => [
         ['target_id' => $category->id()],
       ],
-      'status' => NodeInterface::NOT_PUBLISHED,
+      'moderation_state' => 'draft',
     ]);
 
     $vocab_series = Vocabulary::load('series');
@@ -96,7 +96,7 @@ class PrisonerHubTaxonomyAccessTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $series->id()],
       ],
-      'status' => NodeInterface::NOT_PUBLISHED,
+      'moderation_state' => 'draft',
     ]);
 
     $url = Url::fromUri('internal:/jsonapi/taxonomy_term/' . $category->bundle() . '/' . $category->uuid());
