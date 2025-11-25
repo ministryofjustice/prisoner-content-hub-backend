@@ -13,6 +13,7 @@ label: 'Comms & Live Service HQ'
 weight: -5
 is_admin: null
 permissions:
+  - 'assign approved_publisher role'
   - 'assign comms_live_service_hq role'
   - 'assign local_administrator role'
   - 'assign moj_local_content_manager role'
