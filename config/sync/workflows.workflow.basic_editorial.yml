@@ -77,6 +77,7 @@ type_settings:
       from:
         - draft
         - passed_review
+        - published
         - unpublished
       to: awaiting_review
       weight: -2
