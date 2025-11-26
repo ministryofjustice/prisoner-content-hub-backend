@@ -46,7 +46,7 @@ type_settings:
       from:
         - awaiting_review
       to: passed_review
-      weight: 0
+      weight: -1
     create_new_draft:
       label: 'Create new draft'
       from:
@@ -65,13 +65,13 @@ type_settings:
         - published
         - unpublished
       to: published
-      weight: -2
+      weight: 1
     publish_approved_content:
       label: 'Publish approved content'
       from:
         - passed_review
       to: published
-      weight: 1
+      weight: 0
     submit_for_review:
       label: 'Submit for review'
       from:
@@ -79,7 +79,7 @@ type_settings:
         - passed_review
         - unpublished
       to: awaiting_review
-      weight: -1
+      weight: -2
     unpublish:
       label: Archive
       from:
