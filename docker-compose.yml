@@ -1,6 +1,6 @@
 services:
   database:
-    image: mariadb:10.4
+    image: mariadb:10.11
     env_file:
       - prisoner-content-hub-backend-db.env
     ports:
@@ -55,7 +55,7 @@ services:
       - prisoner_content_hub
 
   localstack:
-    image: localstack/localstack:0.13.3
+    image: localstack/localstack:4.7.0
     environment:
       - SERVICES=s3
     ports:
