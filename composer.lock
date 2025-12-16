@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8a192af67bc4f4294ae7ad3a4da6f62",
+    "content-hash": "82ecf3d338cf5e553cc5cdb137cf275e",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -1801,26 +1801,27 @@
         },
         {
             "name": "drupal/book",
-            "version": "1.0.0",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/book.git",
-                "reference": "1.0.0"
+                "reference": "2.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/book-1.0.0.zip",
-                "reference": "1.0.0",
-                "shasum": "8838e4a314e54dff2bc34a0ae4f0a85ac03b6fb8"
+                "url": "https://ftp.drupal.org/files/projects/book-2.0.2.zip",
+                "reference": "2.0.2",
+                "shasum": "32a2c216de59d901cfefdaec264ab7bcd908a174"
             },
             "require": {
-                "drupal/core": ">=10.0"
+                "drupal/core": "^10.3 || ^11",
+                "ext-pdo": "*"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0",
-                    "datestamp": "1712238320",
+                    "version": "2.0.2",
+                    "datestamp": "1750804798",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -1833,22 +1834,25 @@
             ],
             "authors": [
                 {
-                    "name": "mdranove",
-                    "homepage": "https://www.drupal.org/user/3695874"
+                    "name": "Peter Wolanin (pwolanin)",
+                    "homepage": "https://www.drupal.org/u/pwolanin",
+                    "role": "Maintainer"
                 },
                 {
-                    "name": "pwolanin",
-                    "homepage": "https://www.drupal.org/user/49851"
+                    "name": "Stephen Mustgrave (smustgrave)",
+                    "homepage": "https://www.drupal.org/u/smustgrave",
+                    "role": "Co-Maintainer"
                 },
                 {
                     "name": "smustgrave",
                     "homepage": "https://www.drupal.org/user/3252890"
                 }
             ],
-            "description": "Allows users to create and organize related content in an outline.",
-            "homepage": "https://www.drupal.org/project/book",
+            "description": "A book is a set of nodes tied together in a hierarchical structure, with chapters, sections, and subsections.",
+            "homepage": "https://drupal.org/project/book",
             "support": {
-                "source": "https://git.drupalcode.org/project/book"
+                "source": "https://git.drupalcode.org/project/book",
+                "issues": "https://drupal.org/project/issues/book"
             }
         },
         {
