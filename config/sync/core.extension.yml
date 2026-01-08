@@ -106,6 +106,7 @@ module:
   serialization: 0
   string_field_formatter: 0
   system: 0
+  tagify: 0
   taxonomy: 0
   taxonomy_machine_name: 0
   term_reference_tree: 0
