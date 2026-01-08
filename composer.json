@@ -81,7 +81,8 @@
         "drush/drush": "^12.4",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
-        "oomphinc/composer-installers-extender": "^2.0"
+        "oomphinc/composer-installers-extender": "^2.0",
+        "yaireo/tagify": "^4.35"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -213,6 +214,18 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "yaireo/tagify",
+                "version": "4.35.4",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://github.com/yaireo/tagify/archive/refs/tags/v4.35.4.zip",
+                    "type": "zip"
+                }
+            }
         }
     ],
     "require-dev": {
