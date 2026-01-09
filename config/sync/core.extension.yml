@@ -63,7 +63,6 @@ module:
   navigation: 0
   node: 0
   node_edit_protection: 0
-  optgroup_taxonomy_select: 0
   options: 0
   page_cache: 0
   page_cache_persist: 0
@@ -102,7 +101,6 @@ module:
   scheduler: 0
   search_api: 0
   search_api_db: 0
-  select2: 0
   serialization: 0
   string_field_formatter: 0
   system: 0
