@@ -16,7 +16,7 @@ dependencies:
   module:
     - field_group
     - image
-    - select2
+    - tagify
     - term_reference_tree
     - text
 third_party_settings:
@@ -62,14 +62,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_category:
-    type: select2_entity_reference
+    type: tagify_entity_reference_autocomplete_widget
     weight: 3
     region: content
     settings:
-      width: 100%
-      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox

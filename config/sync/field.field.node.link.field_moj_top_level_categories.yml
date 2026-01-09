@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_moj_top_level_categories
     - node.type.link
-    - taxonomy.vocabulary.moj_categories
 id: node.link.field_moj_top_level_categories
 field_name: field_moj_top_level_categories
 entity_type: node
@@ -17,13 +16,10 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: optgroup_taxonomy_select
+  handler: views
   handler_settings:
-    target_bundles:
-      - moj_categories
-    sort:
-      field: name
-      direction: asc
-    auto_create: 0
-    auto_create_bundle: ''
+    view:
+      view_name: non_root_categories
+      display_name: entity_reference_1
+      arguments: {  }
 field_type: entity_reference

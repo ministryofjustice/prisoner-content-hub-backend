@@ -26,7 +26,7 @@ dependencies:
     - path
     - publication_date
     - scheduler
-    - select2
+    - tagify
     - term_reference_tree
 third_party_settings:
   field_group:
@@ -175,14 +175,17 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_moj_series:
-    type: select2_entity_reference
+    type: tagify_entity_reference_autocomplete_widget
     weight: 17
     region: content
     settings:
-      width: 100%
-      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
     third_party_settings: {  }
   field_moj_thumbnail_image:
     type: image_image
@@ -193,14 +196,17 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
   field_moj_top_level_categories:
-    type: select2_entity_reference
+    type: tagify_entity_reference_autocomplete_widget
     weight: 9
     region: content
     settings:
-      width: 100%
-      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
     third_party_settings: {  }
   field_prioritise_on_recently_add:
     type: boolean_checkbox
@@ -210,14 +216,17 @@ content:
       display_label: true
     third_party_settings: {  }
   field_prison_owner:
-    type: select2_entity_reference
+    type: tagify_entity_reference_autocomplete_widget
     weight: 17
     region: content
     settings:
-      width: 100%
-      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
     third_party_settings: {  }
   field_prisons:
     type: term_reference_tree
@@ -250,14 +259,17 @@ content:
         maxlength_js_label: 'Summary limited to @limit characters, remaining: <strong>@remaining</strong>'
         maxlength_js_enforce: true
   field_topics:
-    type: select2_entity_reference
+    type: tagify_entity_reference_autocomplete_widget
     weight: 8
     region: content
     settings:
-      width: 100%
-      autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
     third_party_settings: {  }
   langcode:
     type: language_select
