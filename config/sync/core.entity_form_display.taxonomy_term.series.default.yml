@@ -71,8 +71,8 @@ content:
       placeholder: ''
       suggestions_dropdown: 1
       show_entity_id: 0
-      show_info_label: 0
-      info_label: ''
+      show_info_label: 1
+      info_label: 'ID: [term:tid], [term:parents]'
     third_party_settings: {  }
   field_exclude_feedback:
     type: boolean_checkbox
