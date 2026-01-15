@@ -196,8 +196,8 @@ content:
       placeholder: ''
       suggestions_dropdown: 1
       show_entity_id: 0
-      show_info_label: 0
-      info_label: ''
+      show_info_label: 1
+      info_label: 'ID: [term:tid], under [term:field_category:entity:parents], [term:field_category]'
     third_party_settings: {  }
   field_moj_subtitles:
     type: file_generic
@@ -223,9 +223,9 @@ content:
       match_limit: 10
       placeholder: ''
       suggestions_dropdown: 1
-      show_entity_id: 1
-      show_info_label: 0
-      info_label: ''
+      show_entity_id: 0
+      show_info_label: 1
+      info_label: 'ID: [term:tid], [term:parents]'
     third_party_settings: {  }
   field_prioritise_on_recently_add:
     type: boolean_checkbox
