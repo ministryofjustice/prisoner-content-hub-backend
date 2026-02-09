@@ -164,6 +164,10 @@
   line-height: 1.25
 }
 
+.govuk-list,div.ck-editor__main ul,div.ck-editor__main ol {
+  margin-inline-start: 0;
+}
+
 @media(min-width: 40.0625em) {
   .govuk-list,div.ck-editor__main ul,div.ck-editor__main ol {
     font-size:1.1875rem;
