@@ -14882,39 +14882,6 @@ video {
   color: #fff
 }
 
-.govuk-notification-banner--urgent {
-  border-color: #d4351c;
-  background-color: #d4351c;
-  color: #fff;
-  margin-bottom: 0
-}
-
-.govuk-notification-banner--urgent .govuk-notification-banner__heading {
-  min-width: 100%
-}
-
-.govuk-notification-banner--urgent .govuk-notification-banner__link:link,.govuk-notification-banner--urgent .govuk-notification-banner__link:visited {
-  color: #d4351c
-}
-
-.govuk-notification-banner--urgent .govuk-notification-banner__link:hover {
-  color: #922615
-}
-
-.govuk-notification-banner--urgent .govuk-notification-banner__link:active,.govuk-notification-banner--urgent .govuk-notification-banner__link:focus {
-  color: #000
-}
-
-@media(max-width: 40.0525em) {
-  .govuk-notification-banner--urgent h2 {
-    padding:.2em 0
-  }
-
-  .govuk-notification-banner--urgent svg {
-    transform: scale(0.9)
-  }
-}
-
 div.ck-editor__main .align-right {
   float: right;
   margin-left: 1em
