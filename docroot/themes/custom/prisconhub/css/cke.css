@@ -16119,3 +16119,17 @@ div.ck-editor__main .table table th {
   background-color: #ffffff !important;
   border-width: 0 0 1px 0;
 }
+
+div.ck-editor__main hr {
+  display: block !important;
+  height: 0px;
+  margin-block-start: 0.5em !important;
+  margin-block-end: 0.5em !important;
+  margin-inline-start: auto !important;
+  margin-inline-end: auto !important;
+  color: gray !important;
+  unicode-bidi: isolate !important;
+  overflow: hidden !important;
+  border-style: inset !important;
+  border-width: 1px !important;
+}
