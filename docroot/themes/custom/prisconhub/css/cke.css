@@ -6,7 +6,8 @@
   --govuk-frontend-breakpoint-tablet: var(--govuk-breakpoint-tablet);
   --govuk-breakpoint-desktop: 48.0625rem;
   --govuk-frontend-breakpoint-desktop: var(--govuk-breakpoint-desktop);
-  --ck-font-face: "GDS Transport",arial,sans-serif;
+  --ck-font-face: "GDS Transport",arial,sans-serif !important;
+  --ck-content-color-table-caption-background: #ffffff !important;
 }
 
 .govuk-link,div.ck-editor__main a,.govuk-breadcrumbs li a {
@@ -5919,7 +5920,7 @@
 
 .govuk-table__header,div.ck-editor__main th,.govuk-table__cell,div.ck-editor__main td {
   padding: 10px 20px 10px 0;
-  border-bottom: 1px solid #b1b4b6;
+  border-bottom: 1px solid #b1b4b6 !important;
   text-align: left;
   vertical-align: top
 }
@@ -14951,27 +14952,27 @@ div.ck-editor__main .align-center {
 }
 
 div.ck-editor__main table {
-  border: none
+  border: none !important;
 }
 
 div.ck-editor__main tbody {
-  border: none
+  border: none !important;
 }
 
 div.ck-editor__main tr {
-  border: none
+  border: none !important;
 }
 
 div.ck-editor__main th {
-  border-top: none;
-  border-right: none;
-  border-left: none
+  border-top: none !important;
+  border-right: none !important;
+  border-left: none !important;
 }
 
 div.ck-editor__main td {
-  border-top: none;
-  border-right: none;
-  border-left: none
+  border-top: none !important;
+  border-right: none !important;
+  border-left: none !important;
 }
 
 div.ck-editor__main strong {
@@ -16100,4 +16101,21 @@ div.ck-editor__main panel p {
 .visually-hidden {
   display: none;
   visibility: hidden
+}
+
+div.ck-editor__main .table>figcaption {
+  font-size: 1.1875rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+div.ck-editor__main .table table {
+  margin: 0;
+  border: 0;
+}
+
+div.ck-editor__main .table table th {
+  background-color: #ffffff !important;
+  border-width: 0 0 1px 0;
 }
