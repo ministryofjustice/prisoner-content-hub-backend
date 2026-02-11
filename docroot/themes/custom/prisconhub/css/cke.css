@@ -3753,60 +3753,60 @@ div.ck-editor__main figcaption+h3, div.ck-editor__main p+h3, div.ck-editor__main
   border-bottom: 0
 }
 
-.govuk-inset-text,div.ck-editor__main blockquote {
+div.ck-editor__main blockquote {
   font-family: "GDS Transport",arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale
 }
 
-.govuk-inset-text,div.ck-editor__main blockquote {
+div.ck-editor__main blockquote {
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.25
 }
 
 @media(min-width: 40.0625em) {
-  .govuk-inset-text,div.ck-editor__main blockquote {
+  div.ck-editor__main blockquote {
     font-size:1.1875rem;
     line-height: 1.3157894737
   }
 }
 
-.govuk-inset-text,div.ck-editor__main blockquote {
+div.ck-editor__main blockquote {
   color: #0b0c0c
 }
 
-.govuk-inset-text,div.ck-editor__main blockquote {
+.div.ck-editor__main blockquote {
   padding: 15px;
   margin-top: 20px
 }
 
 @media(min-width: 40.0625em) {
-  .govuk-inset-text,div.ck-editor__main blockquote {
+  div.ck-editor__main blockquote {
     margin-top:30px
   }
 }
 
-.govuk-inset-text,div.ck-editor__main blockquote {
+div.ck-editor__main blockquote {
   margin-bottom: 20px
 }
 
 @media(min-width: 40.0625em) {
-  .govuk-inset-text,div.ck-editor__main blockquote {
+  div.ck-editor__main blockquote {
     margin-bottom:30px
   }
 }
 
-.govuk-inset-text,div.ck-editor__main blockquote {
+div.ck-editor__main blockquote {
   clear: both;
   border-left: 10px solid #b1b4b6
 }
 
-.govuk-inset-text>:first-child,div.ck-editor__main blockquote>:first-child {
+div.ck-editor__main blockquote>:first-child {
   margin-top: 0
 }
 
-.govuk-inset-text>:only-child,div.ck-editor__main blockquote>:only-child,.govuk-inset-text>:last-child,div.ck-editor__main blockquote>:last-child {
+div.ck-editor__main blockquote>:only-child, div.ck-editor__main blockquote>:last-child {
   margin-bottom: 0
 }
 
