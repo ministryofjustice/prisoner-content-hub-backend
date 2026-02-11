@@ -5492,50 +5492,50 @@ div.ck-editor__main figcaption+h3, div.ck-editor__main p+h3, div.ck-editor__main
   border-bottom: none
 }
 
-.govuk-table,div.ck-editor__main table {
+div.ck-editor__main table {
   font-family: "GDS Transport",arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale
 }
 
-.govuk-table,div.ck-editor__main table {
+div.ck-editor__main table {
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.25
 }
 
 @media(min-width: 40.0625em) {
-  .govuk-table,div.ck-editor__main table {
+  div.ck-editor__main table {
     font-size:1.1875rem;
     line-height: 1.3157894737
   }
 }
 
-.govuk-table,div.ck-editor__main table {
+div.ck-editor__main table {
   color: #0b0c0c
 }
 
-.govuk-table,div.ck-editor__main table {
+div.ck-editor__main table {
   width: 100%;
   margin-bottom: 20px
 }
 
 @media(min-width: 40.0625em) {
-  .govuk-table,div.ck-editor__main table {
+  ck-editor__main table {
     margin-bottom:30px
   }
 }
 
-.govuk-table,div.ck-editor__main table {
+div.ck-editor__main table {
   border-spacing: 0;
   border-collapse: collapse
 }
 
-.govuk-table__header,div.ck-editor__main th {
+div.ck-editor__main th {
   font-weight: 700
 }
 
-.govuk-table__header,div.ck-editor__main th,.govuk-table__cell,div.ck-editor__main td {
+div.ck-editor__main th, div.ck-editor__main td {
   padding: 10px 20px 10px 0;
   border-bottom: 1px solid #b1b4b6 !important;
   text-align: left;
