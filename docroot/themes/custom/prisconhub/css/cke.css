@@ -324,6 +324,7 @@ div.ck-editor__main figcaption+h3, div.ck-editor__main p+h3, div.ck-editor__main
 
 div.ck-editor__main blockquote {
   font-family: "GDS Transport",arial,sans-serif;
+  font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale
 }
