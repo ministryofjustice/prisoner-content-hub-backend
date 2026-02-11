@@ -278,7 +278,7 @@ div.ck-editor__main figcaption, div.ck-editor__main p {
   -moz-osx-font-smoothing: grayscale
 }
 
-div.ck-editor__main figcaption, div.ck-editor__main p, {
+div.ck-editor__main figcaption, div.ck-editor__main p {
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.25
@@ -307,7 +307,7 @@ div.ck-editor__main figcaption+h2, div.ck-editor__main p+h2, div.ck-editor__main
 }
 
 @media(min-width: 40.0625em) {
-  div.ck-editor__main figcaption+h2, div.ck-editor__main p+h2, div.ck-editor__main .govuk-breadcrumbs li+h2, div.ck-editor__main ul+h2, div.ck-editor__main ol+h2 { {
+  div.ck-editor__main figcaption+h2, div.ck-editor__main p+h2, div.ck-editor__main .govuk-breadcrumbs li+h2, div.ck-editor__main ul+h2, div.ck-editor__main ol+h2 {
     padding-top:20px
   }
 }
@@ -408,7 +408,7 @@ div.ck-editor__main table {
 }
 
 @media(min-width: 40.0625em) {
-  ck-editor__main table {
+  div.ck-editor__main table {
     margin-bottom:30px
   }
 }
@@ -503,16 +503,6 @@ div.ck-editor__main img {
 
 div.ck-editor__main .videoPlayer img {
   max-width: 100%
-}
-
-div.ck-editor__main panel {
-  display: block
-}
-
-div.ck-editor__main panel p {
-  color: #fff;
-  font-weight: bold;
-  margin-bottom: 0
 }
 
 div.ck-editor__main .table>figcaption {
