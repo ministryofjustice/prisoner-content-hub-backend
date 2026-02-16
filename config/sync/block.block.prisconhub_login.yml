@@ -24,4 +24,4 @@ visibility:
   request_path:
     id: request_path
     negate: true
-    pages: /user/password
+    pages: "/user/password\r\n/user/reset/*\r\n"

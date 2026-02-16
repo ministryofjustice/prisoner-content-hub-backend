@@ -175,4 +175,8 @@ AddEncoding gzip svgz
   Header always set X-Content-Type-Options nosniff
   # Disable Proxy header, since it's an attack vector.
   RequestHeader unset Proxy
+
+  # Obscure the exact versions of Drupal and PHP we are running.
+  Header unset X-Powered-By
+  Header unset X-Generator
 </IfModule>

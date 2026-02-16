@@ -20,3 +20,6 @@ regions:
   sidebar_first: First sidebar
 regions_hidden:
   - sidebar_first
+
+ckeditor5-stylesheets:
+  - css/cke.css

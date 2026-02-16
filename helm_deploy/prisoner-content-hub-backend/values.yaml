@@ -83,6 +83,14 @@ ingress:
         deny all;
         return 401;
       }
+      location /en/jsonapi {
+        deny all;
+        return 401;
+      }
+      location /cy/jsonapi {
+        deny all;
+        return 401;
+      }
   jsonapi:
     annotations:
       nginx.ingress.kubernetes.io/server-snippet: |

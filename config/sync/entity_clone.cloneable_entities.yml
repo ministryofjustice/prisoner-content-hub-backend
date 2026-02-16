@@ -38,3 +38,4 @@ cloneable_entities:
   - language_content_settings
   - workflow
   - content_moderation_state
+  - password_policy
