@@ -145,6 +145,7 @@ permissions:
   - 'view field_prioritise_on_recently_add'
   - 'view help_page revisions'
   - 'view homepage revisions'
+  - 'view latest version'
   - 'view link revisions'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'

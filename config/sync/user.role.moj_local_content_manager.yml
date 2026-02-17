@@ -69,6 +69,7 @@ permissions:
   - 'view any unpublished urgent_banner content'
   - 'view field_prioritise_on_recently_add'
   - 'view homepage revisions'
+  - 'view latest version'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
   - 'view moj_video_item revisions'
