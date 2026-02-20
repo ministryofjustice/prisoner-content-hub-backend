@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Prisoner Hub Protect Approved Content module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * Adds a validate function to nodes in the basic_editorial workflow.
+ */
+function prisoner_hub_protect_approved_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var $node \Drupal\node\NodeInterface */
+  $node = $form_state->getFormObject()->getEntity();
+  if (!$node->id()) {
+    // Creating a new node, so nothing to do.
+    return;
+  }
+  $wf = \Drupal::service('content_moderation.moderation_information')->getWorkflowForEntity($node);
+  if (!$wf || $wf->id() != 'basic_editorial') {
+    // Node is not in the basic_editorial workflow, so nothing to do.
+    return;
+  }
+  if ($node->moderation_state->value != 'passed_review') {
+    // We only need to protect content that has passed review.
+    return;
+  }
+  $form['#validate'][] = 'prisoner_hub_protect_approved_content_node_validation';
+}
+
+/**
+ * Validation handler to protect approved content nodes in specific workflows.
+ *
+ * Prevents changes to specific fields once the content has reached an approved
+ * state in the workflow.
+ *
+ * @param array $form
+ *   The form structure that is being validated.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form being processed.
+ */
+function prisoner_hub_protect_approved_content_node_validation(&$form, FormStateInterface $form_state) {
+  $moderation_state = $form_state->getValue('moderation_state')[0];
+
+  if (in_array($moderation_state, ['draft', 'awaiting_review'])) {
+    // Changes are permitted if changing moderation state back to these states.
+    return;
+  }
+
+  $node = $form_state->getFormObject()->getEntity();
+
+  $new_values = $form_state->getValues();
+  foreach ($new_values as $key => $value) {
+    // If this is not a protected field...
+    if (!in_array($key, [
+      'field_description',
+      'field_main_body_content',
+      'field_moj_audio',
+      'field_moj_pdf',
+      'field_moj_stand_first',
+      'field_moj_thumbnail_image',
+      'field_summary',
+      'field_video',
+      'title',
+    ])) {
+      // ...skip it.
+      continue;
+    }
+    $old_value = match (get_class($node->get($key))) {
+      'Drupal\text\Plugin\Field\FieldType\TextFieldItemList', 'Drupal\Core\Field\FieldItemList' => $node->get($key)->getValue()[0]['value'],
+      'Drupal\file\Plugin\Field\FieldType\FileFieldItemList' => $node->get($key)->getValue()[0]['target_id'],
+    };
+    $new_value = match (get_class($node->get($key))) {
+      'Drupal\text\Plugin\Field\FieldType\TextFieldItemList', 'Drupal\Core\Field\FieldItemList' => $value[0]['value'],
+      'Drupal\file\Plugin\Field\FieldType\FileFieldItemList' => $value[0]['fids'][0],
+    };
+    // Otherwise, if they have changed the value..
+    if ($old_value != $new_value) {
+      // ..set an error
+      $form_state->setErrorByName($key, t('You cannot change this field once this content has been approved for publishing.'));
+    }
+  }
+}
