@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - node.type.link
     - node.type.moj_pdf_item
     - node.type.moj_radio_item
     - node.type.moj_video_item
@@ -92,7 +91,6 @@ type_settings:
       weight: 2
   entity_types:
     node:
-      - link
       - moj_pdf_item
       - moj_radio_item
       - moj_video_item
