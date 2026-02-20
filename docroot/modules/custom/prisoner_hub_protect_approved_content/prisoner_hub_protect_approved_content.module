@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Adds a validate function to nodes in the basic_editorial workflow.
  */
 function prisoner_hub_protect_approved_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  /** @var $node \Drupal\node\NodeInterface */
+  /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
   if (!$node->id()) {
     // Creating a new node, so nothing to do.
