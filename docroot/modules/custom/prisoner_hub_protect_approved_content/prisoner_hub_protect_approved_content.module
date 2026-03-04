@@ -43,7 +43,7 @@ function prisoner_hub_protect_approved_content_form_node_form_alter(&$form, Form
  *   The current state of the form being processed.
  */
 function prisoner_hub_protect_approved_content_node_validation(&$form, FormStateInterface $form_state) {
-  $moderation_state = $form_state->getValue('moderation_state')[0];
+  $moderation_state = $form_state->getValue('moderation_state')[0]['value'];
 
   if (in_array($moderation_state, ['draft', 'awaiting_review'])) {
     // Changes are permitted if changing moderation state back to these states.
