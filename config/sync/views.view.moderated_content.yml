@@ -3,6 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
     - workflows.workflow.basic_editorial
   module:
     - content_moderation
@@ -560,7 +564,11 @@ display:
           entity_field: type
           plugin_id: bundle
           operator: in
-          value: {  }
+          value:
+            moj_radio_item: moj_radio_item
+            page: page
+            moj_pdf_item: moj_pdf_item
+            moj_video_item: moj_video_item
           group: 1
           exposed: true
           expose:
@@ -578,8 +586,13 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
+              moj_local_content_manager: '0'
+              local_administrator: '0'
               administrator: '0'
-            reduce: false
+              comms_live_service_hq: '0'
+              translator: '0'
+              approved_publisher: '0'
+            reduce: true
           is_grouped: false
           group_info:
             label: ''
