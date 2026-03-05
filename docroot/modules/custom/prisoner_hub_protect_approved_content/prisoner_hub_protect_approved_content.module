@@ -43,6 +43,11 @@ function prisoner_hub_protect_approved_content_form_node_form_alter(&$form, Form
  *   The current state of the form being processed.
  */
 function prisoner_hub_protect_approved_content_node_validation(&$form, FormStateInterface $form_state) {
+  // Don't do anything if the form if triggered by AJAX callback.
+  if (\Drupal::request()->isXmlHttpRequest()) {
+    return;
+  }
+
   $moderation_state = $form_state->getValue('moderation_state')[0]['value'];
 
   if (in_array($moderation_state, ['draft', 'awaiting_review'])) {
