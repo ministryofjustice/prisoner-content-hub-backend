@@ -41,6 +41,9 @@ function prisoner_hub_protect_approved_content_form_node_form_alter(&$form, Form
  *   The form structure that is being validated.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form being processed.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
 function prisoner_hub_protect_approved_content_node_validation(&$form, FormStateInterface $form_state) {
   // Don't do anything if the form if triggered by AJAX callback.
@@ -55,7 +58,9 @@ function prisoner_hub_protect_approved_content_node_validation(&$form, FormState
     return;
   }
 
-  $node = $form_state->getFormObject()->getEntity();
+  // Get the approved revision of the node we are saving.
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $node = $node_storage->loadRevision($node_storage->getLatestRevisionId($form_state->getFormObject()->getEntity()->id()));
 
   $new_values = $form_state->getValues();
   foreach ($new_values as $key => $value) {
@@ -75,12 +80,12 @@ function prisoner_hub_protect_approved_content_node_validation(&$form, FormState
       continue;
     }
     $old_value = match (get_class($node->get($key))) {
-      'Drupal\text\Plugin\Field\FieldType\TextFieldItemList', 'Drupal\Core\Field\FieldItemList' => $node->get($key)->getValue()[0]['value'],
-      'Drupal\file\Plugin\Field\FieldType\FileFieldItemList' => $node->get($key)->getValue()[0]['target_id'],
+      'Drupal\text\Plugin\Field\FieldType\TextFieldItemList', 'Drupal\Core\Field\FieldItemList' => $node->get($key)->getValue()[0]['value'] ?? NULL,
+      'Drupal\file\Plugin\Field\FieldType\FileFieldItemList' => $node->get($key)->getValue()[0]['target_id'] ?? NULL,
     };
     $new_value = match (get_class($node->get($key))) {
-      'Drupal\text\Plugin\Field\FieldType\TextFieldItemList', 'Drupal\Core\Field\FieldItemList' => $value[0]['value'],
-      'Drupal\file\Plugin\Field\FieldType\FileFieldItemList' => $value[0]['fids'][0],
+      'Drupal\text\Plugin\Field\FieldType\TextFieldItemList', 'Drupal\Core\Field\FieldItemList' => $value[0]['value'] ?? NULL,
+      'Drupal\file\Plugin\Field\FieldType\FileFieldItemList' => $value[0]['fids'][0] ?? NULL,
     };
     // Otherwise, if they have changed the value..
     if ($old_value != $new_value) {
