@@ -46,7 +46,7 @@ function prisoner_hub_protect_approved_content_form_node_form_alter(&$form, Form
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
 function prisoner_hub_protect_approved_content_node_validation(&$form, FormStateInterface $form_state) {
-  // Don't do anything if the form if triggered by AJAX callback.
+  // Don't do anything if the form is triggered by AJAX callback.
   if (\Drupal::request()->isXmlHttpRequest()) {
     return;
   }
