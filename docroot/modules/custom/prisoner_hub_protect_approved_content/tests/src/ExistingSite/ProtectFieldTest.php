@@ -31,40 +31,35 @@ class ProtectFieldTest extends ExistingSiteBase {
    *
    * @var array[]
    */
-  protected array $protectedFields;
-
-  public function __construct() {
-    parent::__construct();
-    $this->protectedFields = [
-      'page' => [
-        ['field_main_body_content', '#edit-field-main-body-content-0-value'],
-        ['field_moj_stand_first', '#edit-field-moj-stand-first-0-value'],
-        // 'field_moj_thumbnail_image',
-        ['field_summary', '#edit-field-summary-0-value'],
-        ['title', '#edit-title-0-value'],
-      ],
-      'moj_pdf_item' => [
-        // 'field_moj_pdf',
-        // 'field_moj_thumbnail_image',
-        ['field_summary', '#edit-field-summary-0-value'],
-        ['title', '#edit-title-0-value'],
-      ],
-      'moj_radio_item' => [
-        ['field_description', '#edit-field-description-0-value'],
-        // 'field_moj_audio',
-        // 'field_moj_thumbnail_image',
-        ['field_summary', '#edit-field-summary-0-value'],
-        ['title', '#edit-title-0-value'],
-      ],
-      'moj_video_item' => [
-        ['field_description', '#edit-field-description-0-value'],
-        // 'field_moj_thumbnail_image',
-        // 'field_video',
-        ['field_summary', '#edit-field-summary-0-value'],
-        ['title', '#edit-title-0-value'],
-      ],
-    ];
-  }
+  protected array $protectedFields = [
+    'page' => [
+      ['field_main_body_content', '#edit-field-main-body-content-0-value'],
+      ['field_moj_stand_first', '#edit-field-moj-stand-first-0-value'],
+      // 'field_moj_thumbnail_image',
+      ['field_summary', '#edit-field-summary-0-value'],
+      ['title', '#edit-title-0-value'],
+    ],
+    'moj_pdf_item' => [
+      // 'field_moj_pdf',
+      // 'field_moj_thumbnail_image',
+      ['field_summary', '#edit-field-summary-0-value'],
+      ['title', '#edit-title-0-value'],
+    ],
+    'moj_radio_item' => [
+      ['field_description', '#edit-field-description-0-value'],
+      // 'field_moj_audio',
+      // 'field_moj_thumbnail_image',
+      ['field_summary', '#edit-field-summary-0-value'],
+      ['title', '#edit-title-0-value'],
+    ],
+    'moj_video_item' => [
+      ['field_description', '#edit-field-description-0-value'],
+      // 'field_moj_thumbnail_image',
+      // 'field_video',
+      ['field_summary', '#edit-field-summary-0-value'],
+      ['title', '#edit-title-0-value'],
+    ],
+  ];
 
   /**
    * {@inheritdoc}
