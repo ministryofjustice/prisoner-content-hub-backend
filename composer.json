@@ -178,7 +178,7 @@
                 "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection-2-0-x.patch"
             },
             "drupal/elasticsearch_connector": {
-                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
+                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-28.patch"
             },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
