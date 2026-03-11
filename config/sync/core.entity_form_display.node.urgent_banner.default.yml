@@ -9,9 +9,11 @@ dependencies:
     - field.field.node.urgent_banner.field_prisons
     - node.type.urgent_banner
   module:
+    - content_moderation
     - field_group
     - publication_date
     - scheduler
+    - scheduler_content_moderation_integration
     - select2
     - term_reference_tree
 third_party_settings:
@@ -140,9 +142,21 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 1
+    weight: 52
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 53
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -153,7 +167,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 0
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -189,7 +203,13 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 2
+    weight: 54
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 55
     region: content
     settings: {  }
     third_party_settings: {  }

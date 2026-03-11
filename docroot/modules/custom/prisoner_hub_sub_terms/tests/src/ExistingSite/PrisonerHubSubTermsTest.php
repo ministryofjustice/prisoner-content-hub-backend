@@ -89,6 +89,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $first_term->id()]],
       'published_at' => time(),
+      'moderation_state' => 'published',
     ]);
 
     // Create another subcategory, and create content that is _very old_,
@@ -101,6 +102,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
       'published_at' => strtotime('-2 years'),
+      'moderation_state' => 'published',
     ]);
 
     // Create some unpublished content to ensure this doesn't effect
@@ -108,7 +110,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $last_term->id()]],
       'published_at' => time(),
-      'status' => 0,
+      'moderation_state' => 'draft',
     ]);
 
     // Create another sub-category with a series inside it.
@@ -126,6 +128,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_series' => [['target_id' => $second_series->id()]],
       'published_at' => strtotime('-10 minutes'),
+      'moderation_state' => 'published',
     ]);
 
     // Create a subcategory with some content, and ensure it's displayed
@@ -138,6 +141,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $third_term->id()]],
       'published_at' => strtotime('-1 week'),
+      'moderation_state' => 'published',
     ]);
 
     // Create a series inside the current category, with some content in it.
@@ -150,6 +154,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_series' => [['target_id' => $fourth_term->id()]],
       'published_at' => strtotime('-6 months'),
+      'moderation_state' => 'published',
     ]);
 
     // Create a three new sub-categories (going three levels down), and ensure
@@ -172,6 +177,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $fifth_subsubcategory->id()]],
       'published_at' => strtotime('-7 months'),
+      'moderation_state' => 'published',
     ]);
 
     $correct_order_sub_terms = [
@@ -188,6 +194,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     $another_category = $this->createTerm($vocab_categories);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $another_category->id()]],
+      'moderation_state' => 'published',
     ]);
 
     $another_sub_category = $this->createTerm($vocab_categories, [
@@ -197,6 +204,7 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $another_sub_category->id()]],
+      'moderation_state' => 'published',
     ]);
 
     $another_series = $this->createTerm($vocab_series, [
@@ -206,12 +214,14 @@ class PrisonerHubSubTermsTest extends ExistingSiteBase {
     ]);
     $this->createNode([
       'field_moj_series' => [['target_id' => $another_series->id()]],
+      'moderation_state' => 'published',
     ]);
 
     // Also create content on the main category itself, to ensure that
     // this also isn't returned (we should only receive sub-terms).
     $this->createNode([
       'field_moj_top_level_categories' => [['target_id' => $this->categoryTerm->id()]],
+      'moderation_state' => 'published',
     ]);
 
     $response = $this->getJsonApiResponse($this->jsonApiUrl);

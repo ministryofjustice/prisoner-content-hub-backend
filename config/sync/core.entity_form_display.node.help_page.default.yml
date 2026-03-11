@@ -6,9 +6,9 @@ dependencies:
     - field.field.node.help_page.body
     - node.type.help_page
   module:
+    - content_moderation
     - path
     - publication_date
-    - scheduler
     - text
 id: node.help_page.default
 targetEntityType: node
@@ -38,6 +38,12 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   path:
     type: path
     weight: 30
@@ -50,12 +56,6 @@ content:
     region: content
     settings:
       display_label: true
-    third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 30
-    region: content
-    settings: {  }
     third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
@@ -95,10 +95,8 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 30
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  publish_on: true
+  publish_state: true
+  unpublish_on: true
+  unpublish_state: true
