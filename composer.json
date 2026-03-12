@@ -56,7 +56,7 @@
         "drupal/publication_date": "^2.0@beta",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
-        "drupal/readonlymode": "2.0.x-dev",
+        "drupal/readonlymode": "^2@alpha",
         "drupal/redis": "^1.5",
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",
