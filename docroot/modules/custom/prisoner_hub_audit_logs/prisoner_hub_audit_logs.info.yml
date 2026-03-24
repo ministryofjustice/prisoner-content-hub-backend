@@ -1,0 +1,7 @@
+name: 'Prisoner content hub audit logs'
+type: module
+description: 'Adds additional logs as required for audit.'
+package: Custom
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:user
