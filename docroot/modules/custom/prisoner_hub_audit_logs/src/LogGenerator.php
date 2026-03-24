@@ -25,8 +25,9 @@ final readonly class LogGenerator {
    * Log that a user has been granted the administrator role.
    */
   public function logUserGrantedAdministratorRole(UserInterface $adminUser, array $previousRoles = []): void {
-    $newRoles = sort($adminUser->getRoles(TRUE));
-    $previousRoles = sort($previousRoles);
+    $newRoles = $adminUser->getRoles(TRUE);
+    sort($newRoles);
+    sort($previousRoles);
     $context = [
       '%granting_user_email' => $this->currentUser->getEmail(),
       '%granting_user_name' => $this->currentUser->getDisplayName(),
