@@ -38,7 +38,7 @@ final readonly class LogGenerator {
       '%admin_user_roles' => implode(', ', $newRoles),
       '%admin_user_previous_roles' => implode(', ', $previousRoles),
     ];
-    $this->loggerChannel->log('INFO', 'User %granted_user_name with email address %granted_user_email and ID %granted_user_id has been granted the administrator role. They were granted that role by %granting_user_name with email address %granting_user_email and ID %granting_user_id. Their full set of roles is now %admin_user_roles. Their previous full set of roles was %admin_user_previous_roles.', $context);
+    $this->loggerChannel->info('User %granted_user_name with email address %granted_user_email and ID %granted_user_id has been granted the administrator role. They were granted that role by %granting_user_name with email address %granting_user_email and ID %granting_user_id. Their full set of roles is now %admin_user_roles. Their previous full set of roles was %admin_user_previous_roles.', $context);
   }
 
 }
