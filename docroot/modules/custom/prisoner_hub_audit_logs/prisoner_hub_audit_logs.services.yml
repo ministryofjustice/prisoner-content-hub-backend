@@ -1,4 +1,7 @@
 services:
   prisoner_hub_audit_logs.log_generator:
     class: Drupal\prisoner_hub_audit_logs\LogGenerator
-    arguments: ['@current_user', '@logger.channel.user']
+    arguments: ['@current_user', '@logger.channel.prisoner_hub_audit_logs']
+  logger.channel.prisoner_hub_audit_logs:
+    parent: logger.channel_base
+    arguments: ['prisoner_hub_audit_logs']

@@ -25,6 +25,8 @@ final readonly class LogGenerator {
    * Log that a user has been granted the administrator role.
    */
   public function logUserGrantedAdministratorRole(UserInterface $adminUser, array $previousRoles = []): void {
+    $newRoles = sort($adminUser->getRoles(TRUE));
+    $previousRoles = sort($previousRoles);
     $context = [
       '%granting_user_email' => $this->currentUser->getEmail(),
       '%granting_user_name' => $this->currentUser->getDisplayName(),
@@ -32,7 +34,7 @@ final readonly class LogGenerator {
       '%granted_user_email' => $adminUser->getEmail(),
       '%granted_user_name' => $adminUser->getDisplayName(),
       '%granted_user_id' => $adminUser->id(),
-      '%admin_user_roles' => implode(', ', $adminUser->getRoles()),
+      '%admin_user_roles' => implode(', ', $newRoles),
       '%admin_user_previous_roles' => implode(', ', $previousRoles),
     ];
     $this->loggerChannel->log('INFO', 'User %granted_user_name with email address %granted_user_email and ID %granted_user_id has been granted the administrator role. They were granted that role by %granting_user_name with email address %granting_user_email and ID %granting_user_id. Their full set of roles is now %admin_user_roles. Their previous full set of roles was %admin_user_previous_roles.', $context);
