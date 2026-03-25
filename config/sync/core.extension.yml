@@ -75,6 +75,7 @@ module:
   path_alias: 0
   pathologic: 0
   phpass: 0
+  prisoner_hub_audit_logs: 0
   prisoner_hub_breadcrumbs: 0
   prisoner_hub_bulk_updater: 0
   prisoner_hub_cache_warmer: 0
