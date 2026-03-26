@@ -3551,28 +3551,28 @@
         },
         {
             "name": "drupal/govuk_notify",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/govuk_notify.git",
-                "reference": "3.2.0"
+                "reference": "3.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/govuk_notify-3.2.0.zip",
-                "reference": "3.2.0",
-                "shasum": "787fb2293d111e51fa83943d29dec61542f761c3"
+                "url": "https://ftp.drupal.org/files/projects/govuk_notify-3.2.1.zip",
+                "reference": "3.2.1",
+                "shasum": "d9db898adc25079d3573418f2ce335f0aedd3a97"
             },
             "require": {
-                "alphagov/notifications-php-client": "*",
+                "alphagov/notifications-php-client": "^7.0.0",
                 "drupal/core": "^10.3 || ^11",
                 "php-http/guzzle7-adapter": "*"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.2.0",
-                    "datestamp": "1745091075",
+                    "version": "3.2.1",
+                    "datestamp": "1774542690",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
