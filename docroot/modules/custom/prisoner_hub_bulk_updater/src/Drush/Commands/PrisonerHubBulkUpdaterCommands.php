@@ -314,8 +314,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   #[CLI\Command(name: 'prisoner_hub_bulk_updater:fix-scheduled-publishing', aliases: ['phfsp'])]
-  #[CLI\Argument(name: 'batch', description: 'Batch size when updating content (default: 100).')]
-  public function fixScheduledPublishing(int $batch = 50): void {
+  public function fixScheduledPublishing(): void {
     $this->logger->notice("Fixing scheduled publishing");
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
     $publish_query_group = $query->andConditionGroup()->condition('publish_on', NULL, 'IS NOT NULL')->condition('publish_state', NULL, 'IS NULL');
@@ -326,7 +325,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     $query->accessCheck(FALSE);
     $query->condition('type', ['moj_pdf_item', 'moj_radio_item', 'moj_video_item', 'page'], 'IN');
     $all_nids = $query->execute();
-    $all_nids = array_chunk($all_nids, $batch);
+    $all_nids = array_chunk($all_nids, 50);
     foreach ($all_nids as $batch_nids) {
       $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($batch_nids);
       foreach ($nodes as $node) {
