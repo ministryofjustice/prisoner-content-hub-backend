@@ -335,7 +335,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
           $node->publish_state = 'published';
         }
         if ($node->unpublish_on->getValue() && !$node->unpublish_state->getValue()) {
-          $node->publish_state = 'unpublished';
+          $node->unpublish_state = 'unpublished';
         }
         $node->save();
       }
