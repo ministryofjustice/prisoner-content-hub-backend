@@ -183,9 +183,6 @@
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
             },
-            "drupal/views_data_export": {
-                "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-MR95.patch"
-            },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
             },
