@@ -74,7 +74,7 @@
         "drupal/views_bulk_operations": "^4.3",
         "drupal/views_data_export": "^1.8",
         "drupal/views_ef_fieldset": "^1.5",
-        "drupal/views_entity_form_field": "^1.0@beta",
+        "drupal/views_entity_form_field": "^1.0",
         "drupal/views_filters_populate": "^2.0",
         "drupal/views_tree": "^3.0",
         "drupal/warmer": "^2.0",
