@@ -56,7 +56,7 @@
         "drupal/publication_date": "^2.0@beta",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
-        "drupal/readonlymode": "2.0.x-dev",
+        "drupal/readonlymode": "^2@alpha",
         "drupal/redis": "^1.5",
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",
@@ -72,9 +72,9 @@
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^3",
         "drupal/views_bulk_operations": "^4.3",
-        "drupal/views_data_export": "1.4.0",
+        "drupal/views_data_export": "^1.8",
         "drupal/views_ef_fieldset": "^1.5",
-        "drupal/views_entity_form_field": "^1.0@beta",
+        "drupal/views_entity_form_field": "^1.0",
         "drupal/views_filters_populate": "^2.0",
         "drupal/views_tree": "^3.0",
         "drupal/warmer": "^2.0",
@@ -178,13 +178,10 @@
                 "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection-2-0-x.patch"
             },
             "drupal/elasticsearch_connector": {
-                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
+                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-28.patch"
             },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
-            },
-            "drupal/views_data_export": {
-                "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
