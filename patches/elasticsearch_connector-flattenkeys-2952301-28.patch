@@ -1,27 +1,26 @@
 diff --git a/src/ElasticSearch/Parameters/Builder/SearchBuilder.php b/src/ElasticSearch/Parameters/Builder/SearchBuilder.php
-index 0129ea3..8f171f8 100644
+index 644a37909b65dd09d44a239ba7b8f9d7f819c385..bc8cecf0191047f27e630f65e1faacef3e02f17d 100644
 --- a/src/ElasticSearch/Parameters/Builder/SearchBuilder.php
 +++ b/src/ElasticSearch/Parameters/Builder/SearchBuilder.php
-@@ -11,7 +11,7 @@ use Drupal\search_api\Query\ConditionGroupInterface;
- use Drupal\search_api\Query\QueryInterface;
+@@ -16,7 +16,7 @@ use Drupal\search_api\Query\QueryInterface;
  use Elasticsearch\Common\Exceptions\ElasticsearchException;
+ use MakinaCorpus\Lucene\AbstractFuzzyQuery;
  use MakinaCorpus\Lucene\Query;
 -use MakinaCorpus\Lucene\TermCollectionQuery;
 +use MakinaCorpus\Lucene\CollectionQuery;
  use MakinaCorpus\Lucene\TermQuery;
  use Drupal\elasticsearch_connector\Event\PrepareSearchQueryEvent;
  use Drupal\elasticsearch_connector\Event\BuildSearchParamsEvent;
-@@ -287,31 +287,27 @@ class SearchBuilder {
+@@ -295,31 +295,27 @@ class SearchBuilder {
     * @return \MakinaCorpus\Lucene\AbstractQuery
     *   Return a lucene query object.
     */
--  protected function flattenKeys(array $keys, ParseModeInterface $parse_mode = NULL, $fuzzy = TRUE) {
-+  protected function flattenKeys(array $keys, ParseModeInterface $parse_mode = NULL, $fuzzy = 'auto') {
+-  protected function flattenKeys(array $keys, ?ParseModeInterface $parse_mode = NULL, $fuzzy = TRUE) {
++  protected function flattenKeys(array $keys, ?ParseModeInterface $parse_mode = NULL, $fuzzy = 'auto') {
      // Grab the conjunction and negation properties if present.
--    $conjunction = isset($keys['#conjunction']) ? $keys['#conjunction'] : 'AND';
-+    $conjunction = $keys['#conjunction'] ?? 'AND';
+     $conjunction = $keys['#conjunction'] ?? 'AND';
      $negation = !empty($keys['#negation']);
-
+ 
 -    // Create a top level query.
 -    $query = (new TermCollectionQuery())
 +    // Create a CollectionQuery with the above values.
@@ -30,7 +29,7 @@ index 0129ea3..8f171f8 100644
      if ($negation) {
        $query->setExclusion(Query::OP_PROHIBIT);
      }
-
+ 
 -    // Filter out top level properties beginning with '#'.
 -    $keys = array_filter($keys, function (string $key) {
 -      return $key[0] !== '#';
@@ -42,10 +41,9 @@ index 0129ea3..8f171f8 100644
 +    // whose name begins with #.
 +    foreach ($keys as $name => $key) {
        $element = NULL;
-
+ 
        if (is_array($key)) {
--        $element = $this->luceneFlattenKeys($key, $parse_mode);
-+        $element = $this->flattenKeys($key, $parse_mode, $fuzzy);
+         $element = $this->flattenKeys($key, $parse_mode, $fuzzy);
        }
 -      elseif (is_string($key)) {
 +      elseif (is_string($key) && (((string) $name)[0] !== '#')) {
