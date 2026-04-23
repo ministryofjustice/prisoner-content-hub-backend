@@ -1,0 +1,18 @@
+{
+  "name": "prisoner-content-hub-backend-e2e",
+  "private": true,
+  "description": "Playwright end-to-end tests for prisoner-content-hub-backend",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "typecheck:e2e": "tsc --noEmit -p tsconfig.playwright.json"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.6.0",
+    "typescript": "^5.9.3"
+  }
+}

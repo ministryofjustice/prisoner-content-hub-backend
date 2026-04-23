@@ -76,3 +76,53 @@ To obtain the s3 credentials, you can run the following commands:
 - FLYSYSTEM_S3_CNAME_IS_BUCKET=true
 - FLYSYSTEM_S3_CNAME=""
 - FLYSYSTEM_S3_ENDPOINT=""
+
+## Playwright E2E Tests
+
+Playwright has been added to support migration of existing tests to browser-based end-to-end tests, using TypeScript.
+
+### Install dependencies
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+### Run tests
+
+```bash
+npm run test:e2e
+```
+
+Run the starter login test (creates a temporary Drupal user at runtime via Drush):
+
+```bash
+npm run test:e2e -- login.spec.ts
+```
+
+Optional variables for login tests:
+
+```bash
+# Override drush command if needed.
+PLAYWRIGHT_DRUSH_COMMAND="docker-compose exec -T drupal drush"
+
+# Override role for generated test users.
+PLAYWRIGHT_LOGIN_ROLE="moj_local_content_manager"
+
+# Override role used by access parity checks.
+PLAYWRIGHT_ACCESS_TEST_ROLE="moj_local_content_manager"
+```
+
+### Type-check tests
+
+```bash
+npm run typecheck:e2e
+```
+
+By default, tests target `http://localhost:11001`. You can override this with:
+
+```bash
+PLAYWRIGHT_BASE_URL=http://localhost:11001 npm run test:e2e
+```
+
+The first starter spec is in `tests/e2e/smoke.spec.ts`.

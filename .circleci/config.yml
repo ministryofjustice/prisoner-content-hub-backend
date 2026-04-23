@@ -97,6 +97,50 @@ jobs:
       - store_artifacts:
           path: ~/phpunit
 
+  run_playwright_e2e_tests:
+    working_directory: ~/workspace
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - run:
+          name: Build docker images with docker compose
+          command: |
+            set -x
+            docker compose up -d --build
+      - run:
+          name: Wait for mysql service to come up
+          command: |
+            docker compose exec drupal /bin/bash -c \
+            'while ! mysqladmin ping -h"$HUB_DB_PORT_3306_TCP_ADDR" --silent; do sleep 1; done'
+      - run:
+          name: Create S3 bucket in localstack
+          command: |
+            set -x
+            docker compose exec localstack awslocal s3 mb s3://localstack-s3
+      - run:
+          name: Install Drupal for E2E tests
+          command: |
+            set -x
+            docker compose exec drupal make install-drupal
+      - run:
+          name: Install Node dependencies and Playwright browser
+          command: |
+            set -x
+            npm ci
+            npx playwright install chromium
+      - run:
+          name: Run Playwright E2E tests
+          command: |
+            set -x
+            PLAYWRIGHT_BASE_URL=http://localhost:11001 npx playwright test --workers=1
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+      - store_artifacts:
+          path: playwright-report
+
   build_preview:
     <<: *defaults
     steps:
@@ -183,8 +227,12 @@ workflows:
   build-test-deploy:
     jobs:
       - run_tests
+      - run_playwright_e2e_tests
       - build_preview:
           <<: *feature_branch
+          requires:
+            - run_tests
+            - run_playwright_e2e_tests
 
       - approve_preview_build:
           <<: *feature_branch
@@ -200,6 +248,9 @@ workflows:
 
       - build_production:
           <<: *main_branch
+          requires:
+            - run_tests
+            - run_playwright_e2e_tests
 
       - approve_deploy_development:
           <<: *main_branch
