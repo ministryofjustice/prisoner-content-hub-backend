@@ -42,6 +42,9 @@ awscliv2.zip
 db-backups
 docroot/libraries
 docroot/sites/simpletest
+node_modules
+playwright-report
+test-results
 
 # Ignore override docker-compose files.
 # Even those these are in git, we want to allow local changes to them without being pushed up to git.
