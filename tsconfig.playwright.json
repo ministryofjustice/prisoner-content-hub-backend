@@ -10,5 +10,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["playwright.config.ts", "tests/e2e/**/*.ts"]
+  "include": ["playwright.config.ts", "tests/e2e/**/*.ts", "tests/e2e_tests/**/*.ts"]
 }

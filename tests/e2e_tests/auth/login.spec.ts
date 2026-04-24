@@ -1,20 +1,21 @@
 /// <reference types="node" />
 
 import { expect, test } from '@playwright/test';
-import { canManageDrupalUsersFromTests } from './helpers/drupalUser';
-import { createStepRunner } from './helpers/stepScreenshots';
+import { canManageDrupalUsersFromTests } from '../../e2e/helpers/drupalUser';
+import { createStepRunner } from '../../e2e/helpers/stepScreenshots';
 import {
   expectAuthenticatedSessionCookie,
   loginViaUi,
   runWithTemporaryUser,
-} from './actions/authActions';
-import { NodeCreationPage } from './pages/NodeCreationPage';
+} from '../../e2e/actions/authActions';
+import { NodeCreationPage } from '../../e2e/pages/NodeCreationPage';
 
 const canManageUsers = canManageDrupalUsersFromTests();
 const loginRole = process.env.PLAYWRIGHT_LOGIN_ROLE ?? 'moj_local_content_manager';
 const accessRole = process.env.PLAYWRIGHT_ACCESS_TEST_ROLE ?? 'moj_local_content_manager';
 
 test.describe('authentication', () => {
+  test.describe.configure({ mode: 'serial' });
   test.skip(!canManageUsers, 'Drush is not available. Set PLAYWRIGHT_DRUSH_COMMAND to enable runtime user creation.');
 
   test('user can log in from Drupal login page', async ({ context, page }, testInfo) => {

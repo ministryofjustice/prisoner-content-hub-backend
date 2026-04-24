@@ -125,4 +125,4 @@ By default, tests target `http://localhost:11001`. You can override this with:
 PLAYWRIGHT_BASE_URL=http://localhost:11001 npm run test:e2e
 ```
 
-The first starter spec is in `tests/e2e/smoke.spec.ts`.
+The first starter spec is in `tests/e2e_tests/smoke/smoke.spec.ts`.

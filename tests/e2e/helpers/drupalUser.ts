@@ -22,6 +22,29 @@ function runDrush(args: string[]): string {
   });
 }
 
+function isDeadlockError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  return /SQLSTATE\[40001\]|Deadlock found when trying to get lock|Serialization failure/i.test(error.message);
+}
+
+function runDrushWithRetry(args: string[], retries = 3): string {
+  let attempts = 0;
+  while (attempts < retries) {
+    try {
+      return runDrush(args);
+    } catch (error) {
+      attempts += 1;
+      if (!isDeadlockError(error) || attempts >= retries) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error('Unreachable retry state while running drush command.');
+}
+
 export function canManageDrupalUsersFromTests(): boolean {
   try {
     runDrush(['--version']);
@@ -37,8 +60,8 @@ export function createTemporaryDrupalUser(role = 'moj_local_content_manager'): T
   const password = `PwE2e-${suffix}-A1!`;
   const email = `${username}@example.test`;
 
-  runDrush(['user:create', username, `--mail=${email}`, `--password=${password}`]);
-  runDrush(['user:role:add', role, username]);
+  runDrushWithRetry(['user:create', username, `--mail=${email}`, `--password=${password}`]);
+  runDrushWithRetry(['user:role:add', role, username]);
 
   return { username, password };
 }

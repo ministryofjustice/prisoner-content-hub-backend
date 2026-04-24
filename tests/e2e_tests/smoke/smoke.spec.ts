@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { createStepRunner } from './helpers/stepScreenshots';
+import { createStepRunner } from '../../e2e/helpers/stepScreenshots';
 
 test('home page responds', async ({ page }, testInfo) => {
   const runStep = createStepRunner(page, testInfo);

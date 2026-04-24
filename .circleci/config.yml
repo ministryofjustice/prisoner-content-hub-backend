@@ -111,18 +111,18 @@ jobs:
       - run:
           name: Wait for mysql service to come up
           command: |
-            docker compose exec drupal /bin/bash -c \
-            'while ! mysqladmin ping -h"$HUB_DB_PORT_3306_TCP_ADDR" --silent; do sleep 1; done'
+            docker compose exec -T drupal /bin/bash -c \
+            'while ! mysqladmin ping -hdatabase --silent; do sleep 1; done'
       - run:
           name: Create S3 bucket in localstack
           command: |
             set -x
-            docker compose exec localstack awslocal s3 mb s3://localstack-s3
+            docker compose exec -T localstack awslocal s3 mb s3://localstack-s3 || true
       - run:
           name: Install Drupal for E2E tests
           command: |
             set -x
-            docker compose exec drupal make install-drupal
+            docker compose exec -T drupal /bin/bash -lc 'if [ "$(drush status --field=bootstrap 2>/dev/null || true)" != "Successful" ]; then make install-drupal; else echo "Drupal already installed, skipping install-drupal"; fi'
       - run:
           name: Install Node dependencies and Playwright browser
           command: |
