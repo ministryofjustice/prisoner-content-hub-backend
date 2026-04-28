@@ -7,13 +7,13 @@ export class NodeCreationPage {
     return this.page.goto(`/node/add/${bundle}`);
   }
 
-  async expectBundleCreateAccessible(bundle: string): Promise<void> {
+  async expectCreatePageAccessible(bundle: string): Promise<void> {
     const response = await this.gotoCreatePage(bundle);
     expect(response?.status()).toBe(200);
     await expect(this.page).toHaveURL(new RegExp(`/node/add/${bundle}$`));
   }
 
-  async expectBundleCreateDenied(bundle: string): Promise<void> {
+  async expectCreatePageDenied(bundle: string): Promise<void> {
     const response = await this.gotoCreatePage(bundle);
     const deniedStatus = response?.status();
     const hasAccessDeniedText = /access denied/i.test(await this.page.locator('body').innerText());
