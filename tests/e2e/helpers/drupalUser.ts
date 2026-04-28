@@ -15,6 +15,8 @@ const roleLabelByRoleId: Record<string, string> = {
   local_administrator: 'local-admin',
   administrator: 'admin',
   comms_live_service_hq: 'comms',
+  translator: 'translator',
+  approved_publisher: 'approved-publisher',
 };
 
 function quote(value: string): string {
