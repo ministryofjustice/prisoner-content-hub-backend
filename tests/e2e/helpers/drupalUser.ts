@@ -10,6 +10,13 @@ export interface TemporaryUser {
 
 const drushCommand = process.env.PLAYWRIGHT_DRUSH_COMMAND ?? 'docker-compose exec -T drupal drush';
 
+const roleLabelByRoleId: Record<string, string> = {
+  moj_local_content_manager: 'lcm',
+  local_administrator: 'local-admin',
+  administrator: 'admin',
+  comms_live_service_hq: 'comms',
+};
+
 function quote(value: string): string {
   return `'${value.replace(/'/g, `'"'"'`)}'`;
 }
@@ -20,6 +27,20 @@ function runDrush(args: string[]): string {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });
+}
+
+function roleLabel(role: string): string {
+  const mapped = roleLabelByRoleId[role];
+  if (mapped) {
+    return mapped;
+  }
+
+  const roleSlug = role
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return roleSlug.slice(0, 16) || 'user';
 }
 
 function isDeadlockError(error: unknown): boolean {
@@ -56,7 +77,7 @@ export function canManageDrupalUsersFromTests(): boolean {
 
 export function createTemporaryDrupalUser(role = 'moj_local_content_manager'): TemporaryUser {
   const suffix = randomUUID().slice(0, 8);
-  const username = `pw-e2e-${suffix}`;
+  const username = `pw-e2e-${roleLabel(role)}-${suffix}`;
   const password = `PwE2e-${suffix}-A1!`;
   const email = `${username}@example.test`;
 
