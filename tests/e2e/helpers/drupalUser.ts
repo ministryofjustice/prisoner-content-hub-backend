@@ -11,12 +11,12 @@ export interface TemporaryUser {
 const drushCommand = process.env.PLAYWRIGHT_DRUSH_COMMAND ?? 'docker-compose exec -T drupal drush';
 
 const roleLabelByRoleId: Record<string, string> = {
-  moj_local_content_manager: 'lcm',
-  local_administrator: 'local-admin',
-  administrator: 'admin',
-  comms_live_service_hq: 'comms',
-  translator: 'translator',
-  approved_publisher: 'approved-publisher',
+  moj_local_content_manager: 'Local-Content-Manager',
+  local_administrator: 'Local-Administrator',
+  administrator: 'Administrator',
+  comms_live_service_hq: 'Comms-Live-Service-HQ',
+  translator: 'Translator',
+  approved_publisher: 'Approved-Publisher',
 };
 
 function quote(value: string): string {
@@ -79,8 +79,8 @@ export function canManageDrupalUsersFromTests(): boolean {
 
 export function createTemporaryDrupalUser(role = 'moj_local_content_manager'): TemporaryUser {
   const suffix = randomUUID().slice(0, 8);
-  const username = `pw-e2e-${roleLabel(role)}-${suffix}`;
-  const password = `PwE2e-${suffix}-A1!`;
+  const username = `${roleLabel(role)}-${suffix}`;
+  const password = `${suffix}-A1!`;
   const email = `${username}@example.test`;
 
   runDrushWithRetry(['user:create', username, `--mail=${email}`, `--password=${password}`]);
