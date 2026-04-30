@@ -8,19 +8,9 @@ export class LoginPage {
   }
 
   async submitCredentials(username: string, password: string): Promise<void> {
-    const usernameById = this.page.locator('#edit-name');
-    const passwordById = this.page.locator('#edit-pass');
-
-    const usernameInput = (await usernameById.count()) > 0
-      ? usernameById.first()
-      : this.page.getByLabel(/username|email/i).first();
-    const passwordInput = (await passwordById.count()) > 0
-      ? passwordById.first()
-      : this.page.getByLabel(/password/i).first();
-
-    await usernameInput.fill(username);
-    await passwordInput.fill(password);
-    await this.page.getByRole('button', { name: /log in/i }).click();
+    await this.page.locator('#edit-name').fill(username);
+    await this.page.locator('#edit-pass').fill(password);
+    await this.page.locator('#edit-submit').click();
   }
 
   async expectLoginSucceeded(): Promise<void> {
