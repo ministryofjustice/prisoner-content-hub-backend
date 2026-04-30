@@ -1,7 +1,5 @@
 
 const allRoleIds = [
-  'anonymous',
-  'authenticated',
   'administrator',
   'local_administrator',
   'moj_local_content_manager',
@@ -16,7 +14,6 @@ export const appSettings = {
   },
   roles: {
     all: allRoleIds,
-    login: 'moj_local_content_manager',
     accessTest: 'moj_local_content_manager',
     lcmTest: 'moj_local_content_manager',
     studioAdminTest: 'local_administrator',
