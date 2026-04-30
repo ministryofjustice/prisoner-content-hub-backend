@@ -404,7 +404,10 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
           $node_storage->deleteRevision($vid);
         }
         else {
-          $this->logger->notice("Revision {vid} for node ID {nid} is affected by a translation, so not deleting", ['vid' => $vid, 'nid' => $nid]);
+          $this->logger->notice("Revision {vid} for node ID {nid} is affected by a translation, so not deleting", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
         }
         $this->logger->notice("Successfully deleted revision {vid} for node ID {nid}", ['vid' => $vid, 'nid' => $nid]);
       }
