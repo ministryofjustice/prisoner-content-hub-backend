@@ -341,4 +341,74 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     }
   }
 
+  /**
+   * Command to delete bad revisions of nodes.
+   */
+  #[CLI\Command(name: 'prisoner_hub_bulk_updater:delete-bad-revisions', aliases: ['phdbr'])]
+  #[CLI\Argument(name: 'list', description: 'Name of the CSV file in this module\'s files folder that comprises the content to cleanse.')]
+  #[CLI\Usage(name: 'prisoner_hub_bulk_updater:delete-bad-revisions bad_revisions.csv', description: 'Specify a csv file of node IDs from which to delete all bad revisions.')]
+  public function deleteBadRevisions($list): void {
+    $this->logger->notice("Deleting bad revisions");
+    // First check we have a readable csv file.
+    $module_path = $this->extensionListModule->getPath('prisoner_hub_bulk_updater');
+    $csv_path = "{$module_path}/files/{$list}";
+    if (!is_readable($csv_path)) {
+      throw new \InvalidArgumentException("The file $csv_path does not exist, or is not readable.");
+    }
+    $csv_file = fopen($csv_path, 'r');
+    if (!$csv_file) {
+      throw new \InvalidArgumentException("Could not open $csv_file for reading.");
+    }
+
+    $rows = [];
+    $node_ids = [];
+
+    // Arguments are valid, so proceed to remove bad revisions.
+    /** @var \Drupal\node\NodeStorageInterface $node_storage */
+    $node_storage = $this->entityTypeManager->getStorage('node');
+
+    // For every line in the CSV...
+    while (($line = fgets($csv_file)) !== FALSE) {
+      $nid = intval($line);
+      // ...check this line has a valid node id, and skip if not.
+      if (!$nid) {
+        $rows[] = [
+          'nid' => $line,
+          'status' => 'Non-numeric node ID',
+        ];
+        continue;
+      }
+      $node_ids[] = $nid;
+    }
+    // Bulk load all nodes by their IDs.
+    $nodes = $node_storage->loadMultiple($node_ids);
+    foreach ($node_ids as $nid) {
+      if (!isset($nodes[$nid])) {
+        $rows[] = [
+          'nid' => $nid,
+          'status' => 'Could not be loaded',
+        ];
+        continue;
+      }
+      /** @var \Drupal\Node\NodeInterface $node */
+      $node = $nodes[$nid];
+      $vids = $node_storage->revisionIds($node);
+      foreach ($vids as $vid) {
+        $revision = $node_storage->loadRevision($vid);
+        if (!$revision) {
+          $this->logger->notice("Revision {vid} for node ID {nid} could not be loaded", ['vid' => $vid, 'nid' => $nid]);
+          continue;
+        }
+        if (!$revision->isRevisionTranslationAffected()) {
+          $this->logger->notice("Deleting revision {vid} for node ID {nid}", ['vid' => $vid, 'nid' => $nid]);
+          $node_storage->deleteRevision($vid);
+        }
+        else {
+          $this->logger->notice("Revision {vid} for node ID {nid} is affected by a translation, so not deleting", ['vid' => $vid, 'nid' => $nid]);
+        }
+        $this->logger->notice("Successfully deleted revision {vid} for node ID {nid}", ['vid' => $vid, 'nid' => $nid]);
+      }
+    }
+  }
+
 }
