@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
-import { createStepRunner } from '../../e2e/helpers/stepScreenshots';
+import { createStepRunner } from '../../helpers/stepScreenshots';
 import {
   expectAuthenticatedSessionCookie,
   loginViaUi,
   runWithTemporaryUser,
-} from '../../e2e/actions/authActions';
-import { appSettings } from '../../e2e/config/appSettings';
+} from '../../actions/authActions';
+import { appSettings } from '../../config/appSettings';
 
 test.describe('Drupal Login Page', () => {
   test.describe.configure({ mode: 'serial' });

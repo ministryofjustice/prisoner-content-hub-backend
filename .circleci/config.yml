@@ -133,7 +133,7 @@ jobs:
           name: Run Playwright E2E tests
           command: |
             set -x
-            PLAYWRIGHT_BASE_URL=http://localhost:11001 npx playwright test --workers=1 --reporter=list,html
+            PLAYWRIGHT_BASE_URL=http://localhost:11001 npx playwright test -c tests/e2e/playwright.config.ts --workers=1 --reporter=list,html
       - store_test_results:
           path: test-results
       - store_artifacts:

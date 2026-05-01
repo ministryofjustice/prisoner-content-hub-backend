@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
-import { createStepRunner } from '../../e2e/helpers/stepScreenshots';
+import { createStepRunner } from '../../helpers/stepScreenshots';
 import {
   loginViaUi,
   runWithTemporaryUser,
-} from '../../e2e/actions/authActions';
-import { NodeCreationPage } from '../../e2e/pages/NodeCreationPage';
-import { appSettings } from '../../e2e/config/appSettings';
+} from '../../actions/authActions';
+import { NodeCreationPage } from '../../pages/NodeCreationPage';
+import { appSettings } from '../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
 test.describe('create page function', () => {
