@@ -378,7 +378,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $nid = intval($line);
       // ...check this line has a valid node id, and skip if not.
       if (!$nid) {
-        $this->logger->notice("Node ID {nid} is not a valid integer so will not be checked.", ['nid' => $nid]);;
+        $this->logger->notice("Node ID {nid} is not a valid integer so will not be checked.", ['nid' => $nid]);
         $output_rows[] = [
           'nid' => $line,
           'status' => 'Non-numeric node ID',
@@ -402,10 +402,16 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       $node = $nodes[$nid];
       $vids = $node_storage->revisionIds($node);
       foreach ($vids as $vid) {
-        $this->logger->notice("Checking revision ID {vid} for node ID {nid}", ['vid' => $vid, 'nid' => $nid]);
+        $this->logger->notice("Checking revision ID {vid} for node ID {nid}", [
+          'vid' => $vid,
+          'nid' => $nid,
+        ]);
         $revision = $node_storage->loadRevision($vid);
         if (!$revision) {
-          $this->logger->notice("Revision ID {vid} for node ID {nid} could not be loaded", ['vid' => $vid, 'nid' => $nid]);
+          $this->logger->notice("Revision ID {vid} for node ID {nid} could not be loaded", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
           $output_rows[] = [
             'nid' => $nid,
             'vid' => $vid,
@@ -414,7 +420,10 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
           continue;
         }
         if (!$revision->isRevisionTranslationAffected()) {
-          $this->logger->notice("Deleting revision ID {vid} for node ID {nid}", ['vid' => $vid, 'nid' => $nid]);
+          $this->logger->notice("Deleting revision ID {vid} for node ID {nid}", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
           $node_storage->deleteRevision($vid);
           $output_rows[] = [
             'nid' => $nid,
@@ -423,7 +432,10 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
           ];
         }
         else {
-          $this->logger->notice("Retaining revision ID {vid} for node ID {nid}", ['vid' => $vid, 'nid' => $nid]);
+          $this->logger->notice("Retaining revision ID {vid} for node ID {nid}", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
           $output_rows[] = [
             'nid' => $nid,
             'vid' => $vid,
