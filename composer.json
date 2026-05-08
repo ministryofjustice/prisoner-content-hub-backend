@@ -52,7 +52,7 @@
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "^1.8",
-        "drupal/pathologic": "^2",
+        "drupal/pathologic": "2.0.0-alpha3",
         "drupal/publication_date": "^2.0@beta",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
