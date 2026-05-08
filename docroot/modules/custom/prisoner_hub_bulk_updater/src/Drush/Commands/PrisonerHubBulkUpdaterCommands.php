@@ -347,13 +347,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
   #[CLI\Command(name: 'prisoner_hub_bulk_updater:delete-bad-revisions', aliases: ['phdbr'])]
   #[CLI\Argument(name: 'list', description: 'Name of the CSV file in this module\'s files folder that comprises the content for which to remove bad revisions.')]
   #[CLI\Usage(name: 'prisoner_hub_bulk_updater:delete-bad-revisions bad_revisions.csv', description: 'Specify a csv file of node IDs from which to delete all bad revisions.')]
-  #[CLI\FieldLabels(labels: [
-    'nid' => 'Node ID',
-    'vid' => 'Revision ID',
-    'status' => 'Status',
-  ])]
-  #[CLI\DefaultTableFields(fields: ['nid', 'vid', 'status'])]
-  public function deleteBadRevisions($list): RowsOfFields {
+  public function deleteBadRevisions($list) {
     $this->logger->info("Deleting bad revisions");
     // First check we have a readable csv file.
     $module_path = $this->extensionListModule->getPath('prisoner_hub_bulk_updater');
@@ -367,7 +361,6 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     }
 
     $node_ids = [];
-    $output_rows = [];
 
     // Arguments are valid, so proceed to remove bad revisions.
     /** @var \Drupal\node\NodeStorageInterface $node_storage */
@@ -379,10 +372,6 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       // ...check this line has a valid node id, and skip if not.
       if (!$nid) {
         $this->logger->notice("Node ID {nid} is not a valid integer so will not be checked.", ['nid' => $nid]);
-        $output_rows[] = [
-          'nid' => $line,
-          'status' => 'Non-numeric node ID',
-        ];
         continue;
       }
       $node_ids[] = $nid;
@@ -392,10 +381,7 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     foreach ($node_ids as $nid) {
       $this->logger->notice("Checking node ID {nid} for bad revisions", ['nid' => $nid]);
       if (!isset($nodes[$nid])) {
-        $output_rows[] = [
-          'nid' => $nid,
-          'status' => 'Node could not be loaded',
-        ];
+        $this->logger->notice("Node ID {nid} could not be loaded.", ['nid' => $nid]);
         continue;
       }
       /** @var \Drupal\node\NodeInterface $node */
@@ -412,11 +398,6 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
             'vid' => $vid,
             'nid' => $nid,
           ]);
-          $output_rows[] = [
-            'nid' => $nid,
-            'vid' => $vid,
-            'status' => 'Revision could not be loaded',
-          ];
           continue;
         }
         if (!$revision->isRevisionTranslationAffected()) {
@@ -425,26 +406,15 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
             'nid' => $nid,
           ]);
           $node_storage->deleteRevision($vid);
-          $output_rows[] = [
-            'nid' => $nid,
-            'vid' => $vid,
-            'status' => 'Revision deleted',
-          ];
         }
         else {
           $this->logger->notice("Retaining revision ID {vid} for node ID {nid}", [
             'vid' => $vid,
             'nid' => $nid,
           ]);
-          $output_rows[] = [
-            'nid' => $nid,
-            'vid' => $vid,
-            'status' => 'Revision retained',
-          ];
         }
       }
     }
-    return new RowsOfFields($output_rows);
   }
 
 }
