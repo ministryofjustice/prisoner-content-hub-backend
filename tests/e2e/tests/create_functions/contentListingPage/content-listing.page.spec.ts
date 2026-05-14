@@ -40,6 +40,10 @@ test.describe('content listing', () => {
         await basicPage.save();
       });
 
+      await runStep('verify basic page was created before listing checks', async () => {
+        await basicPage.expectNodeViewPage(uniqueTitle, uniqueBody);
+      });
+
       await runStep('visit content listing', async () => {
         await page.goto('/admin/content');
         await expect(page).toHaveURL(/\/admin\/content/);

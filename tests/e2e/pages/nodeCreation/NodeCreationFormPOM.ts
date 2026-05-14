@@ -33,15 +33,45 @@ export class NodeCreationFormPOM {
   }
 
   seasonField(): Locator {
-    return this.page.locator('#edit-field-moj-season-0-value');
+    return this.page
+      .locator(
+        [
+          '#edit-field-moj-season-0-value',
+          'input[name="field_moj_season[0][value]"]',
+          'input[data-drupal-selector="edit-field-moj-season-0-value"]',
+          'input[id*="field-moj-season"][type="number"]',
+          '[data-drupal-selector*="edit-field-moj-season"] input[type="number"]',
+        ].join(', ')
+      )
+      .first();
   }
 
   episodeField(): Locator {
-    return this.page.locator('#edit-field-moj-episode-0-value');
+    return this.page
+      .locator(
+        [
+          '#edit-field-moj-episode-0-value',
+          'input[name="field_moj_episode[0][value]"]',
+          'input[data-drupal-selector="edit-field-moj-episode-0-value"]',
+          'input[id*="field-moj-episode"][type="number"]',
+          '[data-drupal-selector*="edit-field-moj-episode"] input[type="number"]',
+        ].join(', ')
+      )
+      .first();
   }
 
   releaseDateField(): Locator {
-    return this.page.locator('#edit-field-release-date-0-value-date');
+    return this.page
+      .locator(
+        [
+          '#edit-field-release-date-0-value-date',
+          'input[name="field_release_date[0][value][date]"]',
+          'input[data-drupal-selector="edit-field-release-date-0-value-date"]',
+          'input[id*="field-release-date"][type="date"]',
+          '[data-drupal-selector*="edit-field-release-date"] input[type="date"]',
+        ].join(', ')
+      )
+      .first();
   }
 
   prisonCheckboxes(): Locator {
@@ -67,7 +97,13 @@ export class NodeCreationFormPOM {
   }
 
   async fillBody(body: string): Promise<void> {
-    const bodyTextarea = this.page.locator('textarea[name="body[0][value]"]');
+    const bodyTextarea = this.page.locator(
+      [
+        'textarea[name="body[0][value]"]',
+        'textarea[name="field_main_body_content[0][value]"]',
+        '#edit-field-main-body-content-0-value',
+      ].join(', ')
+    );
 
     if ((await bodyTextarea.count()) > 0 && (await bodyTextarea.first().isVisible())) {
       await bodyTextarea.first().fill(body);
@@ -78,6 +114,12 @@ export class NodeCreationFormPOM {
     if ((await richTextEditor.count()) > 0) {
       await richTextEditor.first().click();
       await richTextEditor.first().fill(body);
+      return;
+    }
+
+    const bodyByLabel = this.page.getByRole('textbox', { name: /main body content|body/i }).first();
+    if ((await bodyByLabel.count()) > 0) {
+      await bodyByLabel.fill(body);
     }
   }
 

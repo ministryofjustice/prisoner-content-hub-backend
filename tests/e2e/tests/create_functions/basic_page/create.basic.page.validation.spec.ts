@@ -124,6 +124,27 @@ test.describe('create page validation warnings', () => {
 
       await runStep('verify main body content warning appears', async () => {
         await page.waitForURL(/\/node\/add\/page$/);
+
+        const bodyValidationState = await page.evaluate(() => {
+          const bodyField = document.querySelector(
+            '#edit-field-main-body-content-0-value, textarea[name="field_main_body_content[0][value]"], textarea[name="body[0][value]"]'
+          );
+
+          if (!(bodyField instanceof HTMLTextAreaElement || bodyField instanceof HTMLInputElement)) {
+            return { hasField: false, validationMessage: '' };
+          }
+
+          return {
+            hasField: true,
+            validationMessage: bodyField.validationMessage || '',
+          };
+        });
+
+        if (bodyValidationState.hasField && bodyValidationState.validationMessage !== '') {
+          expect(bodyValidationState.validationMessage).toMatch(/fill out this field|required/i);
+          return;
+        }
+
         await expect(page.locator('main')).toContainText(/main body content.*required|required.*main body content/i);
       });
     });
