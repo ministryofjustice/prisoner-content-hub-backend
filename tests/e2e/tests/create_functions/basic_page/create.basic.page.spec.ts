@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { NodeCreationPage } from '../../../pages/NodeCreationPage';
+import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -16,12 +16,12 @@ test.describe('basic page create', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const basicPage = new BasicPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('verify page create route is accessible', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('page');
+        await basicPage.expectCreatePageAccessible();
       });
     });
   });
@@ -33,27 +33,27 @@ test.describe('basic page create', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const basicPage = new BasicPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open basic page create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('page');
+        await basicPage.expectCreatePageAccessible();
       });
 
       await runStep('fill basic page content fields', async () => {
-        await nodeCreationPage.fillTitle(uniqueTitle);
-        await nodeCreationPage.fillSummary(uniqueSummary);
-        await nodeCreationPage.fillBody(uniqueBody);
-        await nodeCreationPage.selectFirstCategory();
+        await basicPage.fillTitle(uniqueTitle);
+        await basicPage.fillSummary(uniqueSummary);
+        await basicPage.fillBody(uniqueBody);
+        await basicPage.selectFirstCategory();
       });
 
       await runStep('save basic page content', async () => {
-        await nodeCreationPage.save();
+        await basicPage.save();
       });
 
       await runStep('verify created basic page content', async () => {
-        await nodeCreationPage.expectNodeViewPage(uniqueTitle, uniqueBody);
+        await basicPage.expectNodeViewPage(uniqueTitle, uniqueBody);
       });
     });
   });

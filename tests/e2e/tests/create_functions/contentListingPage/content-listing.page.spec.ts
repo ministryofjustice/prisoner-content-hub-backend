@@ -4,7 +4,8 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { NodeCreationPage } from '../../../pages/NodeCreationPage';
+import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -20,23 +21,23 @@ test.describe('content listing', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const basicPage = new BasicPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open basic page create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('page');
+        await basicPage.expectCreatePageAccessible();
       });
 
       await runStep('fill basic page content fields', async () => {
-        await nodeCreationPage.fillTitle(uniqueTitle);
-        await nodeCreationPage.fillSummary(uniqueSummary);
-        await nodeCreationPage.fillBody(uniqueBody);
-        await nodeCreationPage.selectFirstCategory();
+        await basicPage.fillTitle(uniqueTitle);
+        await basicPage.fillSummary(uniqueSummary);
+        await basicPage.fillBody(uniqueBody);
+        await basicPage.selectFirstCategory();
       });
 
       await runStep('save basic page content', async () => {
-        await nodeCreationPage.save();
+        await basicPage.save();
       });
 
       await runStep('visit content listing', async () => {
@@ -75,28 +76,28 @@ test.describe('content listing', () => {
     const uniqueSummary = `Playwright PDF summary ${Date.now()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const pdfPage = new PdfPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open PDF create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('moj_pdf_item');
+        await pdfPage.expectCreatePageAccessible();
       });
 
       await runStep('fill PDF content fields', async () => {
-        await nodeCreationPage.fillTitle(uniqueTitle);
-        await nodeCreationPage.fillSummary(uniqueSummary);
-        await nodeCreationPage.selectFirstCategory();
+        await pdfPage.fillTitle(uniqueTitle);
+        await pdfPage.fillSummary(uniqueSummary);
+        await pdfPage.selectFirstCategory();
       });
 
       await runStep('upload PDF file', async () => {
         const path = require('path');
         const testFilePath = path.resolve(__dirname, '../../fixtures/test-file.pdf');
-        await nodeCreationPage.uploadPdfFile(testFilePath);
+        await pdfPage.uploadPdfFile(testFilePath);
       });
 
       await runStep('save PDF content', async () => {
-        await nodeCreationPage.save();
+        await pdfPage.save();
       });
 
       await runStep('visit content listing', async () => {

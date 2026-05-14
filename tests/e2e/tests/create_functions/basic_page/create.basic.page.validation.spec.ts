@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { NodeCreationPage } from '../../../pages/NodeCreationPage';
+import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -16,16 +16,16 @@ test.describe('create page validation warnings', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const basicPage = new BasicPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open basic page create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('page');
+        await basicPage.expectCreatePageAccessible();
       });
 
       await runStep('submit empty basic page form', async () => {
-        await nodeCreationPage.save();
+        await basicPage.save();
       });
 
       await runStep('verify title and summary validation warnings are shown', async () => {
@@ -72,22 +72,22 @@ test.describe('create page validation warnings', () => {
     const uniqueBody = `Warning validation body ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const basicPage = new BasicPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open basic page create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('page');
+        await basicPage.expectCreatePageAccessible();
       });
 
       await runStep('fill required text fields without category or series', async () => {
-        await nodeCreationPage.fillTitle(uniqueTitle);
-        await nodeCreationPage.fillSummary(uniqueSummary);
-        await nodeCreationPage.fillBody(uniqueBody);
+        await basicPage.fillTitle(uniqueTitle);
+        await basicPage.fillSummary(uniqueSummary);
+        await basicPage.fillBody(uniqueBody);
       });
 
       await runStep('submit form without taxonomy selection', async () => {
-        await nodeCreationPage.save();
+        await basicPage.save();
       });
 
       await runStep('verify category or series validation warning appears', async () => {
@@ -104,22 +104,22 @@ test.describe('create page validation warnings', () => {
     const uniqueSummary = `Playwright body summary ${Date.now()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const basicPage = new BasicPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open basic page create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('page');
+        await basicPage.expectCreatePageAccessible();
       });
 
       await runStep('fill title summary and category without body', async () => {
-        await nodeCreationPage.fillTitle(uniqueTitle);
-        await nodeCreationPage.fillSummary(uniqueSummary);
-        await nodeCreationPage.selectFirstCategory();
+        await basicPage.fillTitle(uniqueTitle);
+        await basicPage.fillSummary(uniqueSummary);
+        await basicPage.selectFirstCategory();
       });
 
       await runStep('submit form without body content', async () => {
-        await nodeCreationPage.save();
+        await basicPage.save();
       });
 
       await runStep('verify main body content warning appears', async () => {

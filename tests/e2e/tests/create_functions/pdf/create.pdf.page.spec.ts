@@ -5,7 +5,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { NodeCreationPage } from '../../../pages/NodeCreationPage';
+import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -19,23 +19,23 @@ test.describe('PDF create page', () => {
     const uniqueSummary = `Playwright PDF summary ${Date.now()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const nodeCreationPage = new NodeCreationPage(page);
+      const pdfPage = new PdfPageCreationPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
       await runStep('open PDF create form', async () => {
-        await nodeCreationPage.expectCreatePageAccessible('moj_pdf_item');
+        await pdfPage.expectCreatePageAccessible();
       });
 
       await runStep('fill PDF content fields', async () => {
-        await nodeCreationPage.fillTitle(uniqueTitle);
-        await nodeCreationPage.fillSummary(uniqueSummary);
-        await nodeCreationPage.selectFirstCategory();
+        await pdfPage.fillTitle(uniqueTitle);
+        await pdfPage.fillSummary(uniqueSummary);
+        await pdfPage.selectFirstCategory();
       });
 
       await runStep('upload PDF file', async () => {
         const testFilePath = path.resolve(__dirname, '../../fixtures/test-file.pdf');
-        await nodeCreationPage.uploadPdfFile(testFilePath);
+        await pdfPage.uploadPdfFile(testFilePath);
       });
 
       await runStep('save PDF content', async () => {
@@ -43,7 +43,7 @@ test.describe('PDF create page', () => {
         const isDisabled = await saveButton.isDisabled();
         console.log('Save button disabled?', isDisabled);
         
-        await nodeCreationPage.save();
+        await pdfPage.save();
         await page.waitForTimeout(3000);
 
         const currentUrl = page.url();
@@ -56,7 +56,7 @@ test.describe('PDF create page', () => {
       });
 
       await runStep('verify created PDF content', async () => {
-        await nodeCreationPage.expectNodeViewPage(uniqueTitle);
+        await pdfPage.expectNodeViewPage(uniqueTitle);
       });
     });
   });
