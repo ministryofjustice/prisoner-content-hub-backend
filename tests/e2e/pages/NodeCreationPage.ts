@@ -1,7 +1,55 @@
-import { expect, Page, Response } from '@playwright/test';
+import { expect, Locator, Page, Response } from '@playwright/test';
 
 export class NodeCreationPage {
   constructor(private readonly page: Page) {}
+
+  titleField(): Locator {
+    return this.page.locator('#edit-title-0-value').first();
+  }
+
+  summaryField(): Locator {
+    return this.page.locator([
+      '#edit-field-summary-0-value',
+      'textarea[name="field_summary[0][value]"]',
+      '#edit-field-moj-short-summary-0-value',
+      'textarea[name="field_moj_short_summary[0][value]"]',
+    ].join(', ')).first();
+  }
+
+  categoryField(): Locator {
+    return this.page.locator([
+      'select[name="field_moj_top_level_categories[]"]',
+      'input[id*="field-moj-top-level-categories"][type="search"]',
+    ].join(', ')).first();
+  }
+
+  pdfFileInput(): Locator {
+    return this.page.locator('input[type="file"][name="files[field_moj_pdf_0]"]').first();
+  }
+
+  thumbnailImageInput(): Locator {
+    return this.page.locator('input[type="file"][name="files[field_moj_thumbnail_image_0]"]').first();
+  }
+
+  seasonField(): Locator {
+    return this.page.locator('#edit-field-moj-season-0-value');
+  }
+
+  episodeField(): Locator {
+    return this.page.locator('#edit-field-moj-episode-0-value');
+  }
+
+  releaseDateField(): Locator {
+    return this.page.locator('#edit-field-release-date-0-value-date');
+  }
+
+  prisonCheckboxes(): Locator {
+    return this.page.locator('input[type="checkbox"][name^="field_prisons"]');
+  }
+
+  saveButton(): Locator {
+    return this.page.getByRole('button', { name: /^Save$/ });
+  }
 
   async gotoCreatePage(bundle: string): Promise<Response | null> {
     return this.page.goto(`/node/add/${bundle}`);
@@ -21,19 +69,13 @@ export class NodeCreationPage {
   }
 
   async fillTitle(title: string): Promise<void> {
-    await this.page.locator('#edit-title-0-value').fill(title);
+    await this.titleField().fill(title);
   }
 
   async fillSummary(summary: string): Promise<void> {
-    const summaryById = this.page.locator('#edit-field-moj-short-summary-0-value');
-    if ((await summaryById.count()) > 0) {
-      await summaryById.first().fill(summary);
-      return;
-    }
-
-    const summaryByName = this.page.locator('textarea[name="field_moj_short_summary[0][value]"]');
-    if ((await summaryByName.count()) > 0) {
-      await summaryByName.first().fill(summary);
+    const summaryField = this.summaryField();
+    if ((await summaryField.count()) > 0) {
+      await summaryField.fill(summary);
       return;
     }
 
@@ -57,12 +99,12 @@ export class NodeCreationPage {
   }
 
   async uploadPdfFile(filePath: string): Promise<void> {
-    const pdfFileInput = this.page.locator('input[name="files[field_moj_pdf_0]"]').first();
+    const pdfFileInput = this.pdfFileInput();
     
     if ((await pdfFileInput.count()) > 0) {
       await pdfFileInput.setInputFiles(filePath);
 
-      const saveButton = this.page.getByRole('button', { name: /^Save$/ });
+      const saveButton = this.saveButton();
       
       try {
         let isEnabled = false;
@@ -107,7 +149,7 @@ export class NodeCreationPage {
   }
 
   async save(): Promise<void> {
-    await this.page.getByRole('button', { name: /^Save$/ }).click();
+    await this.saveButton().click();
   }
 
   async expectNodeViewPage(title: string, body?: string): Promise<void> {
