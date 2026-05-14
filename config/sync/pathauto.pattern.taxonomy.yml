@@ -2,17 +2,20 @@ uuid: d054c5b4-c3b6-49b8-a82e-cec3a29045e8
 langcode: en
 status: true
 dependencies:
+  config:
+    - taxonomy.vocabulary.moj_categories
+    - taxonomy.vocabulary.series
+    - taxonomy.vocabulary.topics
   module:
     - taxonomy
 id: taxonomy
 label: Taxonomy
 type: 'canonical_entities:taxonomy_term'
-pattern: 'tags/[term:tid]'
+pattern: '/tags/[term:tid]'
 selection_criteria:
   f27adfd4-5e47-4535-aec2-f438ec9665ef:
     id: 'entity_bundle:taxonomy_term'
     negate: false
-    uuid: f27adfd4-5e47-4535-aec2-f438ec9665ef
     context_mapping:
       taxonomy_term: taxonomy_term
     bundles:
