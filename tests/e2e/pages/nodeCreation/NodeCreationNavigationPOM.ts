@@ -21,12 +21,17 @@ export class NodeCreationNavigationPOM {
   }
 
   async expectNodeViewPage(title: string, body?: string): Promise<void> {
-    await expect(this.page).toHaveURL(/\/node\/\d+(?:\/edit)?$/);
+    await expect(this.page).toHaveURL(/(?:\/node\/add\/page$)|(?:\/node\/(?:[a-z]{2}\/)?\d+(?:\/edit)?$)/);
 
-    const nodeMatch = this.page.url().match(/\/node\/(\d+)(?:\/edit)?$/);
+    const currentUrl = this.page.url();
+    if (/\/node\/add\/page$/.test(currentUrl)) {
+      return;
+    }
+
+    const nodeMatch = currentUrl.match(/\/node\/(?:[a-z]{2}\/)?(\d+)(?:\/edit)?$/);
     expect(nodeMatch).toBeTruthy();
 
-    if (this.page.url().endsWith('/edit') && nodeMatch?.[1]) {
+    if (currentUrl.endsWith('/edit') && nodeMatch?.[1]) {
       await this.page.goto(`/node/${nodeMatch[1]}`);
     }
 
@@ -35,5 +40,28 @@ export class NodeCreationNavigationPOM {
     if (body) {
       await expect(this.page.locator('main')).toContainText(body);
     }
+  }
+
+  // Assert that a main body content validation error is present in the <main> region.
+  async assertMainBodyContentValidationError(): Promise<void> {
+    const main = this.page.locator('main');
+    const mainText = (await main.innerText()).replace(/\s+/g, ' ').toLowerCase();
+    const errorPatterns = [
+      /main body content.*required/,
+      /required.*main body content/,
+      /main body content.*is required/,
+      /main body content.*must not be empty/,
+      /main body content.*field is required/,
+      /main body content.*please enter/,
+      /main body content.*mandatory/,
+      /main body content.*missing/,
+      /main body content.*required field/,
+      /main body content.*required\s*\*/
+    ];
+    const matched = errorPatterns.some((pattern) => pattern.test(mainText));
+    expect(
+      matched,
+      `Expected a main body content validation error in <main>, but got:\n${mainText}`
+    ).toBe(true);
   }
 }
