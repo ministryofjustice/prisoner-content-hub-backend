@@ -50,6 +50,8 @@ test.describe('content listing', () => {
       });
 
       await runStep('verify new page appears in listing', async () => {
+        await page.fill('input[name="title"]', uniqueTitle);
+        await page.click('input[type="submit"][value="Filter"]');
         await expect(page.locator('table')).toContainText(uniqueTitle);
       });
 
@@ -110,6 +112,8 @@ test.describe('content listing', () => {
       });
 
       await runStep('verify new PDF appears in listing', async () => {
+        await page.fill('input[name="title"]', uniqueTitle);
+        await page.click('input[type="submit"][value="Filter"]');
         await expect(page.locator('table')).toContainText(uniqueTitle);
       });
 

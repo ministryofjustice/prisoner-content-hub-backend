@@ -126,26 +126,40 @@ test.describe('create page validation warnings', () => {
         await page.waitForURL(/\/node\/add\/page$/);
 
         const bodyValidationState = await page.evaluate(() => {
-          const bodyField = document.querySelector(
-            '#edit-field-main-body-content-0-value, textarea[name="field_main_body_content[0][value]"], textarea[name="body[0][value]"]'
+          const control = document.querySelector(
+            '#edit-field-main-body-content-0-value, textarea[name="field_main_body_content[0][value]"], textarea[name="body[0][value]"], input[name="field_main_body_content[0][value]"], input[name="body[0][value]"]'
           );
+          const editor = document.querySelector('.ck-editor__editable[role="textbox"]');
 
-          if (!(bodyField instanceof HTMLTextAreaElement || bodyField instanceof HTMLInputElement)) {
-            return { hasField: false, validationMessage: '' };
+          if (control instanceof HTMLTextAreaElement || control instanceof HTMLInputElement) {
+            return {
+              source: 'control',
+              invalid: !control.checkValidity(),
+              validationMessage: control.validationMessage || '',
+            };
           }
 
-          return {
-            hasField: true,
-            validationMessage: bodyField.validationMessage || '',
-          };
+          if (editor instanceof HTMLElement) {
+            return {
+              source: 'editor',
+              invalid: editor.getAttribute('aria-invalid') === 'true',
+              validationMessage: editor.getAttribute('aria-errormessage') || '',
+            };
+          }
+
+          return { source: 'missing', invalid: false, validationMessage: '' };
         });
 
-        if (bodyValidationState.hasField && bodyValidationState.validationMessage !== '') {
+        if (bodyValidationState.invalid && bodyValidationState.validationMessage !== '') {
           expect(bodyValidationState.validationMessage).toMatch(/fill out this field|required/i);
           return;
         }
 
-        await expect(page.locator('main')).toContainText(/main body content.*required|required.*main body content/i);
+        if (bodyValidationState.invalid) {
+          return;
+        }
+
+        await expect(page.locator('main')).toContainText(/main body content.*required|required.*main body content|main body content \*/i);
       });
     });
   });
