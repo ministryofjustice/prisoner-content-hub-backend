@@ -21,14 +21,18 @@ export class NodeCreationNavigationPOM {
   }
 
   async expectNodeViewPage(title: string, body?: string): Promise<void> {
-    await expect(this.page).toHaveURL(/(?:\/node\/add\/page$)|(?:\/node\/(?:[a-z]{2}\/)?\d+(?:\/edit)?$)/);
+    await expect(this.page).toHaveURL(/(?:\/node\/add\/page$)|(?:\/(?:[a-z]{2}\/)?node\/\d+(?:\/edit)?$)/);
 
     const currentUrl = this.page.url();
     if (/\/node\/add\/page$/.test(currentUrl)) {
-      return;
+      const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
+      throw new Error(
+        `Expected to be redirected to created node view, but stayed on add page (${currentUrl}). ` +
+        `This usually means form validation blocked save. Main text: ${mainText}`
+      );
     }
 
-    const nodeMatch = currentUrl.match(/\/node\/(?:[a-z]{2}\/)?(\d+)(?:\/edit)?$/);
+    const nodeMatch = currentUrl.match(/\/(?:[a-z]{2}\/)?node\/(\d+)(?:\/edit)?$/);
     expect(nodeMatch).toBeTruthy();
 
     if (currentUrl.endsWith('/edit') && nodeMatch?.[1]) {

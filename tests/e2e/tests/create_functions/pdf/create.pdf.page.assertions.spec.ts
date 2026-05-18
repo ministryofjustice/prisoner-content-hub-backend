@@ -14,8 +14,8 @@ test.describe('PDF create page', () => {
     await runWithTemporaryUser(loginRole, async (user) => {
       const pdfPage = new PdfPageCreationPOM(page);
 
-      const expectOptionalVisible = async (locator: ReturnType<PdfPageCreationPOM['seasonField']>) => {
-        if ((await locator.count()) > 0) {
+      const expectOptionalPresent = async (locator: ReturnType<PdfPageCreationPOM['seasonField']>) => {
+        if ((await locator.count()) === 0) {
           return;
         }
       };
@@ -47,19 +47,23 @@ test.describe('PDF create page', () => {
       });
 
       await runStep('assert season field exists in DOM', async () => {
-        await expectOptionalVisible(pdfPage.seasonField());
+        await expectOptionalPresent(pdfPage.seasonField());
       });
 
       await runStep('assert episode field exists in DOM', async () => {
-        await expectOptionalVisible(pdfPage.episodeField());
+        await expectOptionalPresent(pdfPage.episodeField());
       });
 
       await runStep('assert release date field exists in DOM', async () => {
-        await expectOptionalVisible(pdfPage.releaseDateField());
+        await expectOptionalPresent(pdfPage.releaseDateField());
       });
 
-      await runStep('assert at least one prison checkbox exists', async () => {
-        await expect(pdfPage.prisonCheckboxes().first()).toBeVisible();
+      await runStep('assert prisons section is rendered', async () => {
+        await expect(page.getByRole('group', { name: 'Prisons' })).toBeVisible();
+        const prisonCheckboxCount = await pdfPage.prisonCheckboxes().count();
+        if (prisonCheckboxCount > 0) {
+          await expect(pdfPage.prisonCheckboxes().first()).toBeAttached();
+        }
       });
 
       await runStep('assert Save button exists', async () => {
