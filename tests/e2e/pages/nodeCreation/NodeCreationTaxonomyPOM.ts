@@ -130,10 +130,32 @@ export class NodeCreationTaxonomyPOM {
       }
     }
 
-    const autocomplete = this.categoryAutocompleteField().first();
-    if ((await autocomplete.count()) > 0) {
-      const value = (await autocomplete.inputValue()).trim();
-      if (value && !/^-\s*none\s*-$/i.test(value)) {
+    return false;
+  }
+
+  private async hasSelectionInGroup(group: Locator): Promise<boolean> {
+    const selectedChoices = group.locator('.select2-selection__choice');
+    if ((await selectedChoices.count()) > 0) {
+      return true;
+    }
+
+    const renderedSelection = group.locator('.select2-selection__rendered').first();
+    if ((await renderedSelection.count()) > 0) {
+      const text = (await renderedSelection.innerText()).replace(/\s+/g, ' ').trim();
+      if (text && !/^(-\s*none\s*-|select|search)/i.test(text)) {
+        return true;
+      }
+    }
+
+    const nativeSelect = group.locator('select').first();
+    if ((await nativeSelect.count()) > 0) {
+      const selectedLabel = (await nativeSelect
+        .locator('option:checked')
+        .first()
+        .innerText()
+        .catch(() => ''))
+        .trim();
+      if (selectedLabel && !/^\-\s*none\s*\-$/i.test(selectedLabel)) {
         return true;
       }
     }
@@ -147,7 +169,7 @@ export class NodeCreationTaxonomyPOM {
       return false;
     }
 
-    const combo = group.locator('[role="combobox"]').last();
+    const combo = group.locator('[role="combobox"]').first();
     if ((await combo.count()) === 0) {
       return false;
     }
@@ -159,17 +181,31 @@ export class NodeCreationTaxonomyPOM {
       .first();
     if ((await comboInput.count()) > 0) {
       await comboInput.fill(preferredValue);
-      await comboInput.press('Enter');
-      if (await this.hasCategoryOrSeriesSelection()) {
+
+      const exactOption = this.page
+        .locator('.select2-container--open .select2-results__option[role="option"], .select2-dropdown .select2-results__option[role="option"]')
+        .filter({ hasText: new RegExp(`^\\s*${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i') })
+        .first();
+
+      if ((await exactOption.count()) > 0) {
+        await exactOption.click();
+      } else {
+        await comboInput.press('Enter');
+      }
+
+      if (await this.hasSelectionInGroup(group)) {
         return true;
       }
 
-      const noResultsAlert = this.page.locator('[role="alert"]', { hasText: /no results found/i }).first();
+      const noResultsAlert = this.page
+        .locator('.select2-container--open .select2-results__option, .select2-dropdown .select2-results__option')
+        .filter({ hasText: /no results found/i })
+        .first();
       if ((await noResultsAlert.count()) > 0) {
         await comboInput.fill('');
         await comboInput.press('ArrowDown');
         await comboInput.press('Enter');
-        if (await this.hasCategoryOrSeriesSelection()) {
+        if (await this.hasSelectionInGroup(group)) {
           return true;
         }
       }
@@ -180,13 +216,17 @@ export class NodeCreationTaxonomyPOM {
       .first();
     if ((await firstOption.count()) > 0) {
       await firstOption.click();
-      if (await this.hasCategoryOrSeriesSelection()) {
+      if (await this.hasSelectionInGroup(group)) {
         return true;
       }
     }
 
     await combo.press('ArrowDown');
     await combo.press('Enter');
+    if (await this.hasSelectionInGroup(group)) {
+      return true;
+    }
+
     return this.hasCategoryOrSeriesSelection();
   }
 
