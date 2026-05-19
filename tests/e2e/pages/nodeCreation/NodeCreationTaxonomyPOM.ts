@@ -61,8 +61,8 @@ export class NodeCreationTaxonomyPOM {
     );
   }
 
-  private async selectFromSelect2(preferredValue: string): Promise<boolean> {
-    const selectionTrigger = this.page
+  private async selectFromSelect2(root: Locator, preferredValue: string): Promise<boolean> {
+    const selectionTrigger = root
       .locator(
         [
           '.select2-selection',
@@ -97,7 +97,6 @@ export class NodeCreationTaxonomyPOM {
       return true;
     }
 
-    // Fallback: pick the first available result regardless of label.
     await openSearch.fill('');
     const firstAvailableResult = this.page
       .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
@@ -129,16 +128,6 @@ export class NodeCreationTaxonomyPOM {
       }
     }
 
-    const select2Choice = this.page
-      .locator('.select2-selection__rendered, .select2-selection__choice')
-      .first();
-    if ((await select2Choice.count()) > 0) {
-      const renderedText = (await select2Choice.innerText()).trim();
-      if (renderedText && !/^-\s*none\s*-$/i.test(renderedText)) {
-        return true;
-      }
-    }
-
     const autocomplete = this.categoryAutocompleteField().first();
     if ((await autocomplete.count()) > 0) {
       const value = (await autocomplete.inputValue()).trim();
@@ -148,6 +137,55 @@ export class NodeCreationTaxonomyPOM {
     }
 
     return false;
+  }
+
+  private async selectFromTaxonomyGroup(groupName: RegExp, preferredValue: string): Promise<boolean> {
+    const group = this.page.getByRole('group', { name: groupName }).first();
+    if ((await group.count()) === 0) {
+      return false;
+    }
+
+    const combo = group.locator('[role="combobox"]').last();
+    if ((await combo.count()) === 0) {
+      return false;
+    }
+
+    await combo.click();
+
+    const comboInput = this.page
+      .locator('.select2-container--open input.select2-search__field, .select2-dropdown input.select2-search__field')
+      .first();
+    if ((await comboInput.count()) > 0) {
+      await comboInput.fill(preferredValue);
+      await comboInput.press('Enter');
+      if (await this.hasCategoryOrSeriesSelection()) {
+        return true;
+      }
+
+      const noResultsAlert = this.page.locator('[role="alert"]', { hasText: /no results found/i }).first();
+      if ((await noResultsAlert.count()) > 0) {
+        await comboInput.fill('');
+        await comboInput.press('ArrowDown');
+        await comboInput.press('Enter');
+        if (await this.hasCategoryOrSeriesSelection()) {
+          return true;
+        }
+      }
+    }
+
+    const firstOption = this.page
+      .locator('.select2-container--open .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found")), .select2-dropdown .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found"))')
+      .first();
+    if ((await firstOption.count()) > 0) {
+      await firstOption.click();
+      if (await this.hasCategoryOrSeriesSelection()) {
+        return true;
+      }
+    }
+
+    await combo.press('ArrowDown');
+    await combo.press('Enter');
+    return this.hasCategoryOrSeriesSelection();
   }
 
   async selectFirstCategory(preferredValue = 'Animated shorts'): Promise<void> {
@@ -219,7 +257,7 @@ export class NodeCreationTaxonomyPOM {
         }
       }
 
-      if (await this.selectFromSelect2(preferredValue)) {
+      if (await this.selectFromSelect2(categoryWrapper.first(), preferredValue)) {
         if (await this.hasCategoryOrSeriesSelection()) {
           return;
         }
@@ -234,6 +272,14 @@ export class NodeCreationTaxonomyPOM {
       if (await this.hasCategoryOrSeriesSelection()) {
         return;
       }
+    }
+
+    if (await this.selectFromTaxonomyGroup(/^Category$/i, preferredValue)) {
+      return;
+    }
+
+    if (await this.selectFromTaxonomyGroup(/Series/i, preferredValue)) {
+      return;
     }
 
     const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
