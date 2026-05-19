@@ -87,19 +87,92 @@ export class NodeCreationTaxonomyPOM {
     }
 
     await openSearch.fill(preferredValue);
-    await openSearch.press('Enter');
-    return true;
+
+    const preferredResult = this.page
+      .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
+      .first();
+
+    if ((await preferredResult.count()) > 0) {
+      await preferredResult.click();
+      return true;
+    }
+
+    // Fallback: pick the first available result regardless of label.
+    await openSearch.fill('');
+    const firstAvailableResult = this.page
+      .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
+      .first();
+    if ((await firstAvailableResult.count()) > 0) {
+      await firstAvailableResult.click();
+      return true;
+    }
+
+    return false;
+  }
+
+  private async hasCategoryOrSeriesSelection(): Promise<boolean> {
+    const nativeSelect = this.categorySelectField().first();
+    if ((await nativeSelect.count()) > 0) {
+      const selectedValue = await nativeSelect.inputValue();
+      if (selectedValue && !/^(_none|none)?$/i.test(selectedValue)) {
+        return true;
+      }
+
+      const selectedLabel = (await nativeSelect
+        .locator('option:checked')
+        .first()
+        .innerText()
+        .catch(() => ''))
+        .trim();
+      if (selectedLabel && !/^-\s*none\s*-$/i.test(selectedLabel)) {
+        return true;
+      }
+    }
+
+    const select2Choice = this.page
+      .locator('.select2-selection__rendered, .select2-selection__choice')
+      .first();
+    if ((await select2Choice.count()) > 0) {
+      const renderedText = (await select2Choice.innerText()).trim();
+      if (renderedText && !/^-\s*none\s*-$/i.test(renderedText)) {
+        return true;
+      }
+    }
+
+    const autocomplete = this.categoryAutocompleteField().first();
+    if ((await autocomplete.count()) > 0) {
+      const value = (await autocomplete.inputValue()).trim();
+      if (value && !/^-\s*none\s*-$/i.test(value)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   async selectFirstCategory(preferredValue = 'Animated shorts'): Promise<void> {
     const categoryNativeSelect = this.categorySelectField();
-    if ((await categoryNativeSelect.count()) > 0 && (await categoryNativeSelect.first().isVisible())) {
+    if ((await categoryNativeSelect.count()) > 0) {
       const options = categoryNativeSelect.first().locator('option');
       const optionsCount = await options.count();
       if (optionsCount > 0) {
-        const fallbackIndex = optionsCount > 1 ? 1 : 0;
-        await categoryNativeSelect.first().selectOption({ index: fallbackIndex });
-        return;
+        const candidateValues: string[] = [];
+        for (let i = 0; i < optionsCount; i++) {
+          const option = options.nth(i);
+          const value = (await option.getAttribute('value')) ?? '';
+          const label = (await option.innerText()).trim();
+          if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
+            continue;
+          }
+          candidateValues.push(value);
+        }
+
+        if (candidateValues.length > 0) {
+          await categoryNativeSelect.first().selectOption(candidateValues[0]);
+          if (await this.hasCategoryOrSeriesSelection()) {
+            return;
+          }
+        }
       }
     }
 
@@ -108,7 +181,9 @@ export class NodeCreationTaxonomyPOM {
       await categorySelect2Input.first().click();
       await categorySelect2Input.first().fill(preferredValue);
       await categorySelect2Input.first().press('Enter');
-      return;
+      if (await this.hasCategoryOrSeriesSelection()) {
+        return;
+      }
     }
 
     const categoryWrapper = this.categoryWrapperField();
@@ -139,11 +214,15 @@ export class NodeCreationTaxonomyPOM {
         await selectedViaWrapperInput.click();
         await selectedViaWrapperInput.fill(preferredValue);
         await selectedViaWrapperInput.press('Enter');
-        return;
+        if (await this.hasCategoryOrSeriesSelection()) {
+          return;
+        }
       }
 
       if (await this.selectFromSelect2(preferredValue)) {
-        return;
+        if (await this.hasCategoryOrSeriesSelection()) {
+          return;
+        }
       }
     }
 
@@ -152,9 +231,15 @@ export class NodeCreationTaxonomyPOM {
       await categorySearch.click();
       await categorySearch.fill(preferredValue);
       await categorySearch.press('Enter');
-      return;
+      if (await this.hasCategoryOrSeriesSelection()) {
+        return;
+      }
     }
 
-    throw new Error('Unable to find a category or series field on the create form.');
+    const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
+    throw new Error(
+      'Unable to select a category or series on the create form. ' +
+      `Main text snapshot: ${mainText}`
+    );
   }
 }
