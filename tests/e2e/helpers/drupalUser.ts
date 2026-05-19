@@ -8,6 +8,8 @@ export interface TemporaryUser {
   password: string;
 }
 
+let taxonomySeededForSession = false;
+
 const drushCommand = process.env.PLAYWRIGHT_DRUSH_COMMAND ?? 'docker-compose exec -T drupal drush';
 
 const roleLabelByRoleId: Record<string, string> = {
@@ -91,4 +93,26 @@ export function createTemporaryDrupalUser(role = 'moj_local_content_manager'): T
 
 export function deleteTemporaryDrupalUser(username: string): void {
   runDrush(['user:cancel', username, '--delete-content', '--yes']);
+}
+
+export function ensureE2ETaxonomyTerms(): void {
+  if (taxonomySeededForSession) {
+    return;
+  }
+
+  const phpEval = [
+    '$map = ["moj_categories" => "Playwright Category", "series" => "Playwright Series"];',
+    '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
+    'foreach ($map as $vid => $name) {',
+    '  $existing = $storage->loadByProperties(["vid" => $vid]);',
+    '  if (empty($existing)) {',
+    '    $term = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => $vid, "name" => $name]);',
+    '    $term->save();',
+    '  }',
+    '}',
+    'print("ok");',
+  ].join(' ');
+
+  runDrushWithRetry(['php:eval', phpEval]);
+  taxonomySeededForSession = true;
 }
