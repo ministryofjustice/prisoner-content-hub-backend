@@ -124,6 +124,9 @@ test.describe('create page validation warnings', () => {
 
       await runStep('verify main body content warning appears', async () => {
         await page.waitForURL(/\/node\/add\/page$/);
+        const main = page.locator('main');
+        await expect(main).toContainText(/create basic page/i);
+        await expect(main).toContainText(/main body content/i);
         await expect(page.getByRole('textbox', { name: /Rich Text Editor/i }).first()).toBeVisible();
       });
     });
