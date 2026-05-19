@@ -9,6 +9,8 @@ export interface TemporaryUser {
 }
 
 let taxonomySeededForSession = false;
+const defaultCategoryTerm = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
+const defaultSeriesTerm = process.env.PLAYWRIGHT_E2E_SERIES_TERM ?? defaultCategoryTerm;
 
 const drushCommand = process.env.PLAYWRIGHT_DRUSH_COMMAND ?? 'docker-compose exec -T drupal drush';
 
@@ -23,6 +25,10 @@ const roleLabelByRoleId: Record<string, string> = {
 
 function quote(value: string): string {
   return `'${value.replace(/'/g, `'"'"'`)}'`;
+}
+
+function phpSingleQuoted(value: string): string {
+  return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 }
 
 function runDrush(args: string[]): string {
@@ -101,7 +107,7 @@ export function ensureE2ETaxonomyTerms(): void {
   }
 
   const phpEval = [
-    '$map = ["moj_categories" => "Playwright Category", "series" => "Playwright Series"];',
+    `$map = ["moj_categories" => ${phpSingleQuoted(defaultCategoryTerm)}, "series" => ${phpSingleQuoted(defaultSeriesTerm)}];`,
     '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
     'foreach ($map as $vid => $name) {',
     '  $existing = $storage->loadByProperties(["vid" => $vid]);',

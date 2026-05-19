@@ -1,5 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 
+const defaultPreferredCategory = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
+
 export class NodeCreationTaxonomyPOM {
   constructor(private readonly page: Page) {}
 
@@ -188,7 +190,7 @@ export class NodeCreationTaxonomyPOM {
     return this.hasCategoryOrSeriesSelection();
   }
 
-  async selectFirstCategory(preferredValue = 'Animated shorts'): Promise<void> {
+  async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
     const categoryNativeSelect = this.categorySelectField();
     if ((await categoryNativeSelect.count()) > 0) {
       const options = categoryNativeSelect.first().locator('option');
