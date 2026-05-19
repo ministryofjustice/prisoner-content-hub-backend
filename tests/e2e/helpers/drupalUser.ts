@@ -11,6 +11,7 @@ export interface TemporaryUser {
 let taxonomySeededForSession = false;
 const defaultCategoryTerm = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
 const defaultSeriesTerm = process.env.PLAYWRIGHT_E2E_SERIES_TERM ?? defaultCategoryTerm;
+const defaultSeedNodeTitle = process.env.PLAYWRIGHT_E2E_SEED_NODE_TITLE ?? defaultCategoryTerm;
 
 const drushCommand = process.env.PLAYWRIGHT_DRUSH_COMMAND ?? 'docker-compose exec -T drupal drush';
 
@@ -109,12 +110,34 @@ export function ensureE2ETaxonomyTerms(): void {
   const phpEval = [
     `$map = ["moj_categories" => ${phpSingleQuoted(defaultCategoryTerm)}, "series" => ${phpSingleQuoted(defaultSeriesTerm)}];`,
     '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
+    '$termIds = [];',
     'foreach ($map as $vid => $name) {',
     '  $existing = $storage->loadByProperties(["vid" => $vid, "name" => $name]);',
     '  if (empty($existing)) {',
     '    $term = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => $vid, "name" => $name]);',
     '    $term->save();',
+    '    $termIds[$vid] = (int) $term->id();',
     '  }',
+    '  else {',
+    '    $existingTerm = reset($existing);',
+    '    $termIds[$vid] = (int) $existingTerm->id();',
+    '  }',
+    '}',
+    `$seedTitle = ${phpSingleQuoted(defaultSeedNodeTitle)};`,
+    '$nodeStorage = \\Drupal::entityTypeManager()->getStorage("node");',
+    '$existingNodes = $nodeStorage->loadByProperties(["type" => "page", "title" => $seedTitle]);',
+    'if (empty($existingNodes) && !empty($termIds["moj_categories"]) && !empty($termIds["series"])) {',
+    '  $node = \\Drupal\\node\\Entity\\Node::create([',
+    '    "type" => "page",',
+    '    "title" => $seedTitle,',
+    '    "status" => 1,',
+    '    "uid" => 1,',
+    '    "field_summary" => [["value" => "Playwright seed summary"]],',
+    '    "body" => [["value" => "Playwright seed body", "format" => "basic_html"]],',
+    '    "field_moj_top_level_categories" => [["target_id" => $termIds["moj_categories"]]],',
+    '    "field_moj_series" => [["target_id" => $termIds["series"]]],',
+    '  ]);',
+    '  $node->save();',
     '}',
     'print("ok");',
   ].join(' ');
