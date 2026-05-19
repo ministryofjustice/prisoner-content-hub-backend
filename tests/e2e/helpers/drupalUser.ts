@@ -110,7 +110,7 @@ export function ensureE2ETaxonomyTerms(): void {
     `$map = ["moj_categories" => ${phpSingleQuoted(defaultCategoryTerm)}, "series" => ${phpSingleQuoted(defaultSeriesTerm)}];`,
     '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
     'foreach ($map as $vid => $name) {',
-    '  $existing = $storage->loadByProperties(["vid" => $vid]);',
+    '  $existing = $storage->loadByProperties(["vid" => $vid, "name" => $name]);',
     '  if (empty($existing)) {',
     '    $term = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => $vid, "name" => $name]);',
     '    $term->save();',
