@@ -122,13 +122,13 @@ jobs:
           name: Import database backup for E2E tests
           command: |
             set -x
-            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'scripts/downloadDBFromBackup.sh'
+            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'cd /var/www/html && scripts/downloadDBFromBackup.sh'
       - run:
           name: Clear existing database and import backup
           command: |
             set -x
             docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'drush sql-drop -y'
-            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'scripts/importDBFromBackup.sh'
+            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'cd /var/www/html && scripts/importDBFromBackup.sh'
       - run:
           name: Install Node dependencies and Playwright browser
           command: |
