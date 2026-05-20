@@ -119,10 +119,16 @@ jobs:
             set -x
             docker-compose -f docker-compose.yml exec -T localstack awslocal s3 mb s3://localstack-s3 || true
       - run:
-          name: Install Drupal for E2E tests
+          name: Import database backup for E2E tests
           command: |
             set -x
-            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'if [ "$(drush status --field=bootstrap 2>/dev/null || true)" != "Successful" ]; then make install-drupal; else echo "Drupal already installed, skipping install-drupal"; fi'
+            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'scripts/downloadDBFromBackup.sh'
+      - run:
+          name: Clear existing database and import backup
+          command: |
+            set -x
+            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'drush sql-drop -y'
+            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'scripts/importDBFromBackup.sh'
       - run:
           name: Install Node dependencies and Playwright browser
           command: |
