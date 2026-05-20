@@ -119,16 +119,10 @@ jobs:
             set -x
             docker-compose -f docker-compose.yml exec -T localstack awslocal s3 mb s3://localstack-s3 || true
       - run:
-          name: Import database backup for E2E tests
+          name: Install Drupal for E2E tests
           command: |
             set -x
-            docker-compose -f docker-compose.yml exec -T drupal bash /var/www/html/scripts/downloadDBFromBackup.sh
-      - run:
-          name: Clear existing database and import backup
-          command: |
-            set -x
-            docker-compose -f docker-compose.yml exec -T drupal drush sql-drop -y
-            docker-compose -f docker-compose.yml exec -T drupal bash /var/www/html/scripts/importDBFromBackup.sh
+            docker-compose -f docker-compose.yml exec -T drupal make install-drupal
       - run:
           name: Install Node dependencies and Playwright browser
           command: |
