@@ -1,17 +1,21 @@
-import { Locator, Page, Response } from '@playwright/test';
-import { NodeCreationFormPOM } from './nodeCreation/NodeCreationFormPOM';
-import { NodeCreationNavigationPOM } from './nodeCreation/NodeCreationNavigationPOM';
-import { NodeCreationTaxonomyPOM } from './nodeCreation/NodeCreationTaxonomyPOM';
+import { Locator, Page } from '@playwright/test';
+import { NodeCreationFormPOM } from './NodeCreationFormPOM';
+import { NodeCreationNavigationPOM } from './NodeCreationNavigationPOM';
+import { NodeCreationTaxonomyPOM } from './NodeCreationTaxonomyPOM';
 
-export class NodeCreationPage {
+export class PdfPageCreationPOM {
   private readonly form: NodeCreationFormPOM;
   private readonly navigation: NodeCreationNavigationPOM;
   private readonly taxonomy: NodeCreationTaxonomyPOM;
 
-  constructor(private readonly page: Page) {
+  constructor(page: Page) {
     this.form = new NodeCreationFormPOM(page);
     this.navigation = new NodeCreationNavigationPOM(page);
     this.taxonomy = new NodeCreationTaxonomyPOM(page);
+  }
+
+  async expectCreatePageAccessible(): Promise<void> {
+    await this.navigation.expectCreatePageAccessible('moj_pdf_item');
   }
 
   titleField(): Locator {
@@ -54,18 +58,6 @@ export class NodeCreationPage {
     return this.form.saveButton();
   }
 
-  async gotoCreatePage(bundle: string): Promise<Response | null> {
-    return this.navigation.gotoCreatePage(bundle);
-  }
-
-  async expectCreatePageAccessible(bundle: string): Promise<void> {
-    await this.navigation.expectCreatePageAccessible(bundle);
-  }
-
-  async expectCreatePageDenied(bundle: string): Promise<void> {
-    await this.navigation.expectCreatePageDenied(bundle);
-  }
-
   async fillTitle(title: string): Promise<void> {
     await this.form.fillTitle(title);
   }
@@ -74,23 +66,19 @@ export class NodeCreationPage {
     await this.form.fillSummary(summary);
   }
 
-  async fillBody(body: string): Promise<void> {
-    await this.form.fillBody(body);
+  async selectFirstCategory(preferredValue?: string): Promise<void> {
+    await this.taxonomy.selectFirstCategory(preferredValue);
   }
 
   async uploadPdfFile(filePath: string): Promise<void> {
     await this.form.uploadPdfFile(filePath);
   }
 
-  async selectFirstCategory(): Promise<void> {
-    await this.taxonomy.selectFirstCategory();
-  }
-
   async save(): Promise<void> {
     await this.form.save();
   }
 
-  async expectNodeViewPage(title: string, body?: string): Promise<void> {
-    await this.navigation.expectNodeViewPage(title, body);
+  async expectNodeViewPage(title: string): Promise<void> {
+    await this.navigation.expectNodeViewPage(title);
   }
 }

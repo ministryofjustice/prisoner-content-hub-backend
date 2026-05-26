@@ -1,6 +1,7 @@
 import { BrowserContext, expect, Page } from '@playwright/test';
 import {
   TemporaryUser,
+  ensureE2ETaxonomyTerms,
   createTemporaryDrupalUser,
   deleteTemporaryDrupalUser,
 } from '../helpers/drupalUser';
@@ -11,6 +12,7 @@ export async function runWithTemporaryUser<T>(
   role: string,
   action: (user: TemporaryUser) => Promise<T>,
 ): Promise<T> {
+  ensureE2ETaxonomyTerms();
   const user = createTemporaryDrupalUser(role);
   try {
     return await action(user);

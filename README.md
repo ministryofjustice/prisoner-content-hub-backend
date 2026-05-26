@@ -111,7 +111,21 @@ PLAYWRIGHT_LOGIN_ROLE="moj_local_content_manager"
 
 # Override role used by access parity checks.
 PLAYWRIGHT_ACCESS_TEST_ROLE="moj_local_content_manager"
+
+# Preferred taxonomy term for category selection in E2E create flows.
+PLAYWRIGHT_E2E_CATEGORY_TERM="Animated shorts"
+
+# Optional series seed term (defaults to PLAYWRIGHT_E2E_CATEGORY_TERM).
+PLAYWRIGHT_E2E_SERIES_TERM="Animated shorts"
 ```
+
+### Database Setup for E2E Tests
+
+Both local and CI environments use a fresh Drupal install with minimal configuration. E2E tests then seed the specific taxonomy terms and content they need at test runtime via `ensureE2ETaxonomyTerms()`. This ensures:
+
+- Tests are deterministic and isolated
+- No shared state between test runs
+- Exact same behavior locally and in CI
 
 ### Type-check tests
 

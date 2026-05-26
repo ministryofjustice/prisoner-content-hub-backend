@@ -122,7 +122,7 @@ jobs:
           name: Install Drupal for E2E tests
           command: |
             set -x
-            docker-compose -f docker-compose.yml exec -T drupal /bin/bash -lc 'if [ "$(drush status --field=bootstrap 2>/dev/null || true)" != "Successful" ]; then make install-drupal; else echo "Drupal already installed, skipping install-drupal"; fi'
+            docker-compose -f docker-compose.yml exec -T drupal make install-drupal
       - run:
           name: Install Node dependencies and Playwright browser
           command: |
