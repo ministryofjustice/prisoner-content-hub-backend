@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Contains hooks for prisoner_hub_audit_logs module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_user_insert().
+ *
+ * Logs if a new user is granted the administrator role.
+ */
+function prisoner_hub_audit_logs_user_insert(UserInterface $user) {
+  if ($user->hasRole('administrator')) {
+    /** @var \Drupal\prisoner_hub_audit_logs\LogGenerator $log_generator */
+    $log_generator = \Drupal::service('prisoner_hub_audit_logs.log_generator');
+    $log_generator->logUserGrantedAdministratorRole($user);
+  }
+}
+
+/**
+ * Implements hook_user_update().
+ *
+ * Logs if an existing user is granted the administrator role.
+ */
+function prisoner_hub_audit_logs_user_update(UserInterface $user) {
+  if ($user->hasRole('administrator') && !$user->original->hasRole('administrator')) {
+    /** @var \Drupal\prisoner_hub_audit_logs\LogGenerator $log_generator */
+    $log_generator = \Drupal::service('prisoner_hub_audit_logs.log_generator');
+    $log_generator->logUserGrantedAdministratorRole($user, $user->original->getRoles(TRUE));
+  }
+}

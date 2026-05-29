@@ -99,6 +99,7 @@ function prisoner_hub_prison_access_cms_entity_presave(EntityInterface $entity) 
     return;
   }
 
+  /** @var \Drupal\prisoner_hub_prison_access_cms\EntityEditAccess $entity_edit_access */
   $entity_edit_access = \Drupal::service('prisoner_hub_prison_access_cms.entity_edit_access');
   $prison_field_names = [
     \Drupal::getContainer()->getParameter('prisoner_hub_prison_access.exclude_from_prison_field_name'),

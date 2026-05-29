@@ -1,0 +1,8 @@
+name: 'Prisoner Hub Protect Approved Content'
+type: module
+description: 'Prevents approved content from being edited without redrafting'
+package: Custom
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:content_moderation
+  - drupal:node

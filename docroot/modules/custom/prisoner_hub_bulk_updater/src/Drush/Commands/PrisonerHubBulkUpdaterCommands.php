@@ -306,4 +306,115 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
     return new RowsOfFields($rows);
   }
 
+  /**
+   * Command to fix nodes with a scheduled publish/unpublish date but no state.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  #[CLI\Command(name: 'prisoner_hub_bulk_updater:fix-scheduled-publishing', aliases: ['phfsp'])]
+  public function fixScheduledPublishing(): void {
+    $this->logger->notice("Fixing scheduled publishing");
+    $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $publish_query_group = $query->andConditionGroup()->condition('publish_on', NULL, 'IS NOT NULL')->condition('publish_state', NULL, 'IS NULL');
+    $unpublish_query_group = $query->andConditionGroup()->condition('unpublish_on', NULL, 'IS NOT NULL')->condition('unpublish_state', NULL, 'IS NULL');
+    $combined_query_group = $query->orConditionGroup()->condition($publish_query_group)->condition($unpublish_query_group);
+    $query->condition($combined_query_group);
+    $query->sort('nid');
+    $query->accessCheck(FALSE);
+    $query->condition('type', ['moj_pdf_item', 'moj_radio_item', 'moj_video_item', 'page'], 'IN');
+    $all_nids = $query->execute();
+    $all_nids = array_chunk($all_nids, 50);
+    foreach ($all_nids as $batch_nids) {
+      $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($batch_nids);
+      foreach ($nodes as $node) {
+        $this->logger->notice("Fixing scheduled publishing for node ID {nid}", ['nid' => $node->id()]);
+        if ($node->publish_on->getValue() && !$node->publish_state->getValue()) {
+          $node->publish_state = 'published';
+        }
+        if ($node->unpublish_on->getValue() && !$node->unpublish_state->getValue()) {
+          $node->unpublish_state = 'unpublished';
+        }
+        $node->save();
+      }
+    }
+  }
+
+  /**
+   * Command to delete bad revisions of nodes.
+   */
+  #[CLI\Command(name: 'prisoner_hub_bulk_updater:delete-bad-revisions', aliases: ['phdbr'])]
+  #[CLI\Argument(name: 'list', description: 'Name of the CSV file in this module\'s files folder that comprises the content for which to remove bad revisions.')]
+  #[CLI\Usage(name: 'prisoner_hub_bulk_updater:delete-bad-revisions bad_revisions.csv', description: 'Specify a csv file of node IDs from which to delete all bad revisions.')]
+  public function deleteBadRevisions($list) {
+    $this->logger->info("Deleting bad revisions");
+    // First check we have a readable csv file.
+    $module_path = $this->extensionListModule->getPath('prisoner_hub_bulk_updater');
+    $csv_path = "{$module_path}/files/{$list}";
+    if (!is_readable($csv_path)) {
+      throw new \InvalidArgumentException("The file $csv_path does not exist, or is not readable.");
+    }
+    $csv_file = fopen($csv_path, 'r');
+    if (!$csv_file) {
+      throw new \InvalidArgumentException("Could not open $csv_path for reading.");
+    }
+
+    $node_ids = [];
+
+    // Arguments are valid, so proceed to remove bad revisions.
+    /** @var \Drupal\node\NodeStorageInterface $node_storage */
+    $node_storage = $this->entityTypeManager->getStorage('node');
+
+    // For every line in the CSV...
+    while (($line = fgets($csv_file)) !== FALSE) {
+      $nid = intval($line);
+      // ...check this line has a valid node id, and skip if not.
+      if (!$nid) {
+        $this->logger->notice("Node ID {nid} is not a valid integer so will not be checked.", ['nid' => $nid]);
+        continue;
+      }
+      $node_ids[] = $nid;
+    }
+    // Bulk load all nodes by their IDs.
+    $nodes = $node_storage->loadMultiple($node_ids);
+    foreach ($node_ids as $nid) {
+      $this->logger->notice("Checking node ID {nid} for bad revisions", ['nid' => $nid]);
+      if (!isset($nodes[$nid])) {
+        $this->logger->notice("Node ID {nid} could not be loaded.", ['nid' => $nid]);
+        continue;
+      }
+      /** @var \Drupal\node\NodeInterface $node */
+      $node = $nodes[$nid];
+      $vids = $node_storage->revisionIds($node);
+      foreach ($vids as $vid) {
+        $this->logger->notice("Checking revision ID {vid} for node ID {nid}", [
+          'vid' => $vid,
+          'nid' => $nid,
+        ]);
+        $revision = $node_storage->loadRevision($vid);
+        if (!$revision) {
+          $this->logger->notice("Revision ID {vid} for node ID {nid} could not be loaded", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
+          continue;
+        }
+        if (!$revision->isRevisionTranslationAffected()) {
+          $this->logger->notice("Deleting revision ID {vid} for node ID {nid}", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
+          $node_storage->deleteRevision($vid);
+        }
+        else {
+          $this->logger->notice("Retaining revision ID {vid} for node ID {nid}", [
+            'vid' => $vid,
+            'nid' => $nid,
+          ]);
+        }
+      }
+    }
+  }
+
 }

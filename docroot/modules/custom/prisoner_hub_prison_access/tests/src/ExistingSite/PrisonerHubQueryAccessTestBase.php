@@ -3,6 +3,8 @@
 namespace Drupal\Tests\prisoner_hub_prison_access\ExistingSite;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -28,10 +30,22 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
   use PrisonerHubNodeCreationTrait;
 
   /**
+   * Moderation information service.
+   */
+  protected ModerationInformationInterface $moderationInformation;
+
+  /**
+   * Entity type manager.
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Sets up prison and prison category terms, to be used later when testing.
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->moderationInformation = $this->container->get('content_moderation.moderation_information');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->createPrisonTaxonomyTerms();
   }
 
@@ -122,9 +136,13 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @param int $status
    *   Whether entity should be published. Should be either
    *   NodeInterface::PUBLISHED or NodeInterface::NOT_PUBLISHED.
+   *   Will be ignored if $moderation_state is set.
    * @param array $excluded_prisons
    *   Optional set of term IDs for the prisons from which the entity should be
    *   excluded.
+   * @param string $moderation_state
+   *   The moderation state to set on the new entity. Only set if the entity
+   *   type is moderated. Will override $status.
    *
    * @return string
    *   The uuid of the created entity.
@@ -132,10 +150,17 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = []) {
-    $values = [
-      'status' => $status,
-    ];
+  public function createEntityTaggedWithPrisons(string $entity_type_id, string $bundle, array $prison_ids, $status = NodeInterface::PUBLISHED, $excluded_prisons = [], string $moderation_state = '') {
+    if ($moderation_state) {
+      $values = [
+        'moderation_state' => $moderation_state,
+      ];
+    }
+    else {
+      $values = [
+        'status' => $status,
+      ];
+    }
     foreach ($prison_ids as $prison_id) {
       $values[$this->prisonFieldName][] = ['target_id' => $prison_id];
     }
@@ -163,9 +188,14 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function setupEntitiesTaggedWithPrisonButNoCategory(string $entity_type_id, string $bundle, int $amount = 5) {
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $bundle_is_moderated = $this->moderationInformation->shouldModerateEntitiesOfBundle($entity_type, $bundle);
+    $status = $bundle_is_moderated ? NULL : NodeInterface::PUBLISHED;
+    $moderation_state = $bundle_is_moderated ? 'published' : '';
+
     $entities_to_check = [];
     for ($i = 0; $i < $amount; $i++) {
-      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()]);
+      $entities_to_check[] = $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], $status, [], $moderation_state);
     }
 
     // Also create some content tagged with a different prison.
@@ -174,8 +204,11 @@ abstract class PrisonerHubQueryAccessTestBase extends ExistingSiteBase {
     }
 
     // Also create some unpublished entities.
+    $status = $bundle_is_moderated ? NULL : NodeInterface::NOT_PUBLISHED;
+    $moderation_state = $bundle_is_moderated ? 'draft' : '';
+
     for ($i = 0; $i < $amount; $i++) {
-      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], NodeInterface::NOT_PUBLISHED);
+      $this->createEntityTaggedWithPrisons($entity_type_id, $bundle, [$this->prisonTerm->id()], $status, [], $moderation_state);
     }
 
     return $entities_to_check;

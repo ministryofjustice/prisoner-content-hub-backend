@@ -14,10 +14,10 @@
         "drupal/computed_breadcrumbs": "^1",
         "drupal/config_filter": "^2.6",
         "drupal/config_ignore": "^3",
-        "drupal/core-composer-scaffold": "^10.5",
-        "drupal/core-project-message": "^10.5",
-        "drupal/core-recommended": "^10.5",
-        "drupal/core-vendor-hardening": "^10.5",
+        "drupal/core-composer-scaffold": "^10.6",
+        "drupal/core-project-message": "^10.6",
+        "drupal/core-recommended": "^10.6",
+        "drupal/core-vendor-hardening": "^10.6",
         "drupal/csv_serialization": "^3.0 || ^4.0",
         "drupal/database_ssl_check": "^2.0",
         "drupal/decoupled_router": "^2.0",
@@ -26,7 +26,7 @@
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
         "drupal/entity_clone": "^2.0@beta",
-        "drupal/field_group": "^3.1",
+        "drupal/field_group": "^4",
         "drupal/field_permissions": "^1.3",
         "drupal/file_mime_validator": "^2.0",
         "drupal/flood_control": "^2.3",
@@ -52,15 +52,16 @@
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "^1.8",
-        "drupal/pathologic": "^2",
+        "drupal/pathologic": "2.0.0-alpha3",
         "drupal/publication_date": "^2.0@beta",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
-        "drupal/readonlymode": "2.0.x-dev",
+        "drupal/readonlymode": "^2@alpha",
         "drupal/redis": "^1.5",
         "drupal/restui": "^1.18",
         "drupal/role_delegation": "^1.1",
-        "drupal/scheduler": "^1.3",
+        "drupal/scheduler": "^2",
+        "drupal/scheduler_content_moderation_integration": "^3",
         "drupal/search_api": "^1.17",
         "drupal/select2": "^1.13",
         "drupal/string_field_formatter": "^2.0",
@@ -72,9 +73,9 @@
         "drupal/view_unpublished": "^1.0",
         "drupal/views_bulk_edit": "^3",
         "drupal/views_bulk_operations": "^4.3",
-        "drupal/views_data_export": "1.4.0",
+        "drupal/views_data_export": "^1.8",
         "drupal/views_ef_fieldset": "^1.5",
-        "drupal/views_entity_form_field": "^1.0@beta",
+        "drupal/views_entity_form_field": "^1.0",
         "drupal/views_filters_populate": "^2.0",
         "drupal/views_tree": "^3.0",
         "drupal/warmer": "^2.0",
@@ -82,7 +83,8 @@
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "^4.0",
         "oomphinc/composer-installers-extender": "^2.0",
-        "yaireo/tagify": "^4.35"
+        "yaireo/tagify": "^4.35",
+        "psy/psysh": "0.12.21"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -179,13 +181,10 @@
                 "Issue #3251627: Add ability to enforce cascading selection..": "patches/term_reference_tree-3251627-enforce-selection-2-0-x.patch"
             },
             "drupal/elasticsearch_connector": {
-                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-15.patch"
+                "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-28.patch"
             },
             "drupal/pathologic": {
                 "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
-            },
-            "drupal/views_data_export": {
-                "Issue #3200974: Allow use of any configured file system scheme": "patches/views_data_export-allow-configurable-filesystems_3200974-6.patch"
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
@@ -230,7 +229,7 @@
     ],
     "require-dev": {
         "dmore/chrome-mink-driver": "^2.7",
-        "drupal/core-dev": "~10.3.9",
+        "drupal/core-dev": "^10.6",
         "mglaman/phpstan-drupal": "^1.2",
         "palantirnet/drupal-rector": "^0.15.1",
         "phpspec/prophecy-phpunit": "^2",

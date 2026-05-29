@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\prisoner_hub_prison_access_cms\ExistingSite;
 
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\prisoner_hub_prison_access\ExistingSite\PrisonerHubPrisonAccessTestTrait;
@@ -49,6 +51,16 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   protected string $userPrisonFieldName;
 
   /**
+   * Moderation information service.
+   */
+  protected ModerationInformationInterface $moderationInformation;
+
+  /**
+   * Entity type manager.
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Create prison taxonomy terms and a user to test with.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -61,6 +73,9 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
     $this->prisonOwnerFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
     $this->userPrisonFieldName = $this->container->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
     $this->contentTypes = $this->getBundlesWithField('node', $this->prisonOwnerFieldName);
+
+    $this->moderationInformation = $this->container->get('content_moderation.moderation_information');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
 
     $this->user = $this->createUser([], NULL, FALSE, [
       $this->userPrisonFieldName => [
@@ -113,7 +128,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -135,7 +150,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -170,7 +185,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -200,7 +215,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -223,7 +238,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -241,6 +256,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'administer nodes',
       'bypass node access',
       'bypass prison ownership edit access',
+      'use basic_editorial transition create_new_draft',
     ]);
     $new_user->save();
     $this->drupalLogin($new_user);
@@ -254,7 +270,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => 1,
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -272,7 +288,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
         'uid' => $this->user->id(),
       ]);
 
-      $this->assertUserCanEditNode($node);
+      $this->assertUserCanEditNode($node, FALSE);
     }
   }
 
@@ -300,7 +316,8 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
       // Test some fields are disabled, that appear on all content types.
       $this->assertSession()->fieldDisabled('title[0][value]');
-      $this->assertSession()->fieldDisabled('Published');
+      $publishedField = $this->moderationInformation->isModeratedEntity($node) ? 'Change to' : 'Published';
+      $this->assertSession()->fieldDisabled($publishedField);
 
       $fieldPrisonElement = $this->assertSession()->elementExists('css', '#edit-field-prisons');
 
@@ -353,6 +370,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
       'field_moj_series' => [
         ['target_id' => $series->id()],
       ],
+      'moderation_state' => 'draft',
     ]);
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
@@ -403,13 +421,15 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    *
    * @param \Drupal\node\NodeInterface $node
    *   Node to be tested.
+   * @param bool $new_node
+   *   Whether the node is newly created.
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  protected function assertUserCanEditNode(NodeInterface $node) {
+  protected function assertUserCanEditNode(NodeInterface $node, bool $new_node = TRUE) {
     $edit_url = $node->toUrl('edit-form');
     $this->visit($edit_url->toString());
-    $this->assertUserCanEditNodeOnCurrentPage($node->getType());
+    $this->assertUserCanEditNodeOnCurrentPage($node->getType(), $new_node);
   }
 
   /**
@@ -419,12 +439,17 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
    *
    * @param string $contentType
    *   The content type of the current page.
+   * @param bool $new_node
+   *   Whether the node is newly created.
    */
-  protected function assertUserCanEditNodeOnCurrentPage(string $contentType) {
+  protected function assertUserCanEditNodeOnCurrentPage(string $contentType, bool $new_node = TRUE) {
     // Test some fields are enabled, that appear on all content types.
     try {
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->fieldEnabled('title[0][value]');
-      $this->assertSession()->fieldEnabled('Published');
+      $entityType = $this->entityTypeManager->getDefinition('node');
+      $publishedField = $this->moderationInformation->shouldModerateEntitiesOfBundle($entityType, $contentType) ? ($new_node ? 'Save as' : 'Change to') : 'Published';
+      $this->assertSession()->fieldEnabled($publishedField);
     }
     catch (\Exception $e) {
       $this->fail("Unable to edit the $contentType content type. Error message: " . $e->getMessage());

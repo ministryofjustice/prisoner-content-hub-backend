@@ -11,7 +11,9 @@ dependencies:
     - node.type.moj_video_item
     - node.type.page
     - node.type.urgent_banner
+    - workflows.workflow.basic_editorial
   module:
+    - content_moderation
     - field_permissions
     - filter
     - node
@@ -53,6 +55,10 @@ permissions:
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
   - 'set any published on date'
+  - 'use basic_editorial transition create_new_draft'
+  - 'use basic_editorial transition publish_approved_content'
+  - 'use basic_editorial transition submit_for_review'
+  - 'use basic_editorial transition unpublish'
   - 'use text format full_html'
   - 'view any unpublished homepage content'
   - 'view any unpublished link content'
@@ -63,6 +69,7 @@ permissions:
   - 'view any unpublished urgent_banner content'
   - 'view field_prioritise_on_recently_add'
   - 'view homepage revisions'
+  - 'view latest version'
   - 'view moj_pdf_item revisions'
   - 'view moj_radio_item revisions'
   - 'view moj_video_item revisions'

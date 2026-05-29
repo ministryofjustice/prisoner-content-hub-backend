@@ -2,17 +2,18 @@ uuid: 7c4654b1-1969-4e5c-855c-ceea979f5097
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.link
   module:
     - node
 id: link
 label: Link
 type: 'canonical_entities:node'
-pattern: 'link/[node:nid]'
+pattern: '/link/[node:nid]'
 selection_criteria:
   743e0301-52f6-470b-b995-6b7c717934da:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 743e0301-52f6-470b-b995-6b7c717934da
     context_mapping:
       node: node
     bundles:

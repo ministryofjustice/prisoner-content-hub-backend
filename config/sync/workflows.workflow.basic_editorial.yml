@@ -1,0 +1,98 @@
+uuid: 19567685-f265-45ce-a96c-5f9368e8c9c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.moj_pdf_item
+    - node.type.moj_radio_item
+    - node.type.moj_video_item
+    - node.type.page
+  module:
+    - content_moderation
+id: basic_editorial
+label: Basic
+type: content_moderation
+type_settings:
+  states:
+    awaiting_review:
+      label: 'Awaiting Review'
+      weight: -2
+      published: false
+      default_revision: false
+    draft:
+      label: Draft
+      weight: -3
+      published: false
+      default_revision: false
+    passed_review:
+      label: 'Passed Review'
+      weight: -1
+      published: false
+      default_revision: false
+    published:
+      label: Published
+      weight: 0
+      published: true
+      default_revision: true
+    unpublished:
+      label: Archived
+      weight: 1
+      published: false
+      default_revision: true
+  transitions:
+    approve:
+      label: Approve
+      from:
+        - awaiting_review
+      to: passed_review
+      weight: -1
+    create_new_draft:
+      label: 'Create new draft'
+      from:
+        - awaiting_review
+        - draft
+        - passed_review
+        - published
+        - unpublished
+      to: draft
+      weight: -3
+    publish:
+      label: Publish
+      from:
+        - awaiting_review
+        - draft
+        - published
+        - unpublished
+      to: published
+      weight: 1
+    publish_approved_content:
+      label: 'Publish approved content'
+      from:
+        - passed_review
+      to: published
+      weight: 0
+    submit_for_review:
+      label: 'Submit for review'
+      from:
+        - draft
+        - passed_review
+        - published
+        - unpublished
+      to: awaiting_review
+      weight: -2
+    unpublish:
+      label: Archive
+      from:
+        - awaiting_review
+        - draft
+        - passed_review
+        - published
+      to: unpublished
+      weight: 2
+  entity_types:
+    node:
+      - moj_pdf_item
+      - moj_radio_item
+      - moj_video_item
+      - page
+  default_moderation_state: published
