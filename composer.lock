@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "afdff14ebdfd22f7a300f07c6ae02bf1",
+    "content-hash": "e0f924b52856121fe1aa5babd3567864",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -8445,10 +8445,10 @@
         },
         {
             "name": "npm-asset/select2",
-            "version": "4.1.0",
+            "version": "4.0.13",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/select2/-/select2-4.1.0.tgz"
+                "url": "https://registry.npmjs.org/select2/-/select2-4.0.13.tgz"
             },
             "type": "npm-asset",
             "license": [

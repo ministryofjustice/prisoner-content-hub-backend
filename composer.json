@@ -80,7 +80,7 @@
         "drupal/warmer": "^2.0",
         "drush/drush": "^12.4",
         "mhor/php-mediainfo": "^5.1.0",
-        "npm-asset/select2": "^4.0",
+        "npm-asset/select2": "4.0.13",
         "oomphinc/composer-installers-extender": "^2.0",
         "psy/psysh": "0.12.21"
     },
