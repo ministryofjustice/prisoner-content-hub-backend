@@ -24,11 +24,11 @@ form_settings:
     disable: false
     hidden: true
   path_alias:
-    hidden: true
     default_value: false
     disable: false
+    hidden: true
   search_api_task:
-    hidden: true
     default_value: false
     disable: false
-take_ownership: 1
+    hidden: true
+take_ownership: true
