@@ -63,7 +63,7 @@
         "drupal/scheduler": "^2",
         "drupal/scheduler_content_moderation_integration": "^3",
         "drupal/search_api": "^1.17",
-        "drupal/select2": "^1.13",
+        "drupal/select2": "^2",
         "drupal/string_field_formatter": "^2.0",
         "drupal/taxonomy_machine_name": "^2.0",
         "drupal/term_reference_tree": "^2.0",
@@ -80,7 +80,7 @@
         "drupal/warmer": "^2.0",
         "drush/drush": "^12.4",
         "mhor/php-mediainfo": "^5.1.0",
-        "npm-asset/select2": "4.0.13",
+        "npm-asset/select2": "^4.1",
         "oomphinc/composer-installers-extender": "^2.0",
         "psy/psysh": "0.12.21"
     },
