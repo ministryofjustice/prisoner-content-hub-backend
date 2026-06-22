@@ -52,7 +52,7 @@
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "^1.8",
-        "drupal/pathologic": "2.0.0-alpha3",
+        "drupal/pathologic": "^2",
         "drupal/publication_date": "^2.0@beta",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
@@ -182,7 +182,7 @@
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-28.patch"
             },
             "drupal/pathologic": {
-                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
+                "Issue #3604065: enable wildcards for local path configuration.": "patches/pathologic-3604065_enable_wildcards_for_local_path_configuration.patch"
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"

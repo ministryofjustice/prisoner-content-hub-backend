@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0f924b52856121fe1aa5babd3567864",
+    "content-hash": "946af99c312067e125392dc882e4dc0d",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -4714,17 +4714,17 @@
         },
         {
             "name": "drupal/pathologic",
-            "version": "2.0.0-alpha3",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/pathologic.git",
-                "reference": "2.0.0-alpha3"
+                "reference": "2.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pathologic-2.0.0-alpha3.zip",
-                "reference": "2.0.0-alpha3",
-                "shasum": "f59c465b7070c3e6d12a204a55ee1117b991ae93"
+                "url": "https://ftp.drupal.org/files/projects/pathologic-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "619312d3b973a30cb556b8bc4d0a6b5475505d28"
             },
             "require": {
                 "drupal/core": "^9 || ^10 || ^11"
@@ -4732,11 +4732,11 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.0-alpha3",
-                    "datestamp": "1733441073",
+                    "version": "2.0.0",
+                    "datestamp": "1773879253",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
