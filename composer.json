@@ -52,7 +52,7 @@
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "^1.8",
-        "drupal/pathologic": "2.0.0-alpha3",
+        "drupal/pathologic": "dev-3604065-wild-cards-in",
         "drupal/publication_date": "^2.0@beta",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
@@ -181,9 +181,6 @@
             "drupal/elasticsearch_connector": {
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-28.patch"
             },
-            "drupal/pathologic": {
-                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
-            },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"
             },
@@ -200,6 +197,10 @@
         }
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@git.drupal.org:issue/pathologic-3604065.git"
+        },
         {
             "type": "vcs",
             "url": "git@github.com:consolidation/site-process.git"
