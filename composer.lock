@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "946af99c312067e125392dc882e4dc0d",
+    "content-hash": "07cdee660939c8c3375306cd2cd03278",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -3174,26 +3174,26 @@
         },
         {
             "name": "drupal/file_mime_validator",
-            "version": "2.0.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/file_mime_validator.git",
-                "reference": "8.x-2.0"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/file_mime_validator-8.x-2.0.zip",
-                "reference": "8.x-2.0",
-                "shasum": "ba1393cbd2abcef6bd459039a4d4cf5de6f075bc"
+                "url": "https://ftp.drupal.org/files/projects/file_mime_validator-3.0.0.zip",
+                "reference": "3.0.0",
+                "shasum": "deade98e99d6f20019a9b30df60c10f656a22e7f"
             },
             "require": {
-                "drupal/core": "^9 || ^10"
+                "drupal/core": "^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0",
-                    "datestamp": "1674850860",
+                    "version": "3.0.0",
+                    "datestamp": "1759988434",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
