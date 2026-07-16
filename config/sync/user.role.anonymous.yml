@@ -6,6 +6,7 @@ dependencies:
     - filter.format.restricted_html
   module:
     - filter
+    - raven
     - system
 _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
@@ -15,4 +16,5 @@ weight: -10
 is_admin: false
 permissions:
   - 'access content'
+  - 'send performance traces to sentry'
   - 'use text format restricted_html'

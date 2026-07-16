@@ -7,6 +7,7 @@ dependencies:
   module:
     - content_moderation
     - field_permissions
+    - raven
     - role_delegation
 id: comms_live_service_hq
 label: 'Comms & Live Service HQ'
@@ -21,6 +22,7 @@ permissions:
   - 'create field_prioritise_on_recently_add'
   - 'edit field_prioritise_on_recently_add'
   - 'edit own field_prioritise_on_recently_add'
+  - 'send performance traces to sentry'
   - 'use basic_editorial transition approve'
   - 'view field_prioritise_on_recently_add'
   - 'view own field_prioritise_on_recently_add'
