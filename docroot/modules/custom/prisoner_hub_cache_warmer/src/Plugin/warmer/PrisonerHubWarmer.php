@@ -47,35 +47,35 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
    * {@inheritdoc}
    */
   protected function warmCategoryPage(string $prison, string $uuid) {
-    // TODO: Implement warmCategoryPage() method.
+    // @todo Implement warmCategoryPage() method.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function warmPrimaryNavigation(string $prison) {
-    // TODO: Implement warmPrimaryNavigation() method.
+    // @todo Implement warmPrimaryNavigation() method.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function warmPrisonHomePage(string $prison) {
-    // TODO: Implement warmPrisonHomePage() method.
+    // @todo Implement warmPrisonHomePage() method.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function warmSeriesPage(string $prison, string $uuid) {
-    // TODO: Implement warmSeriesPage() method.
+    // @todo Implement warmSeriesPage() method.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function warmTopicPage(string $prison, string $uuid) {
-    // TODO: Implement warmTopicPage() method.
+    // @todo Implement warmTopicPage() method.
   }
 
 }
