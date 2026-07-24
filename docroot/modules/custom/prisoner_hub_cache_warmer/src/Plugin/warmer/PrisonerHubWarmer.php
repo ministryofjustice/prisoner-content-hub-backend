@@ -55,6 +55,7 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
    */
   protected function warmPrimaryNavigation(string $prison) {
     // @todo Implement warmPrimaryNavigation() method.
+    return $this->warmJsonApiRequestAsync('https://example.com');
   }
 
   /**
