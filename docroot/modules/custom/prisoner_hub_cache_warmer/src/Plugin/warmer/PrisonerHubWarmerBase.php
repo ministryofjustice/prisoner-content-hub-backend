@@ -4,10 +4,12 @@ namespace Drupal\prisoner_hub_cache_warmer\Plugin\warmer;
 
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Utility\Error;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\Utils;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -110,7 +112,38 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    * @return \GuzzleHttp\Promise\PromiseInterface
    *   Promise for the async request.
    */
-  abstract protected function warmPrimaryNavigation(string $prison);
+  protected function warmPrimaryNavigation(string $prison) {
+    return $this->warmJsonApiRequestAsync("$this->cacheWarmerEndpoint/en/jsonapi/prison/$prison/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl")
+      ->then(function (ResponseInterface $response) use ($prison) {
+        if (!$json_response = json_decode($response->getBody())) {
+          return;
+        }
+        $tids = [];
+        foreach ($json_response->data as $menu_item) {
+          if (!isset($menu_item->attributes->url)) {
+            continue;
+          }
+          $matches = [];
+          if (preg_match("/tags\/(\d+)/", $menu_item->attributes->url, $matches)) {
+            $tids[] = $matches[1];
+          }
+        }
+        $terms = $this->termStorage->loadMultiple($tids);
+        foreach ($terms as $term) {
+          if ($term->bundle() != 'moj_categories') {
+            continue;
+          }
+          $this->warmCategoryPage($prison, $term->uuid());
+        }
+        foreach ($tids as $tid) {
+          $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/$tid");
+        }
+
+      }, function (\Exception $e) {
+        Error::logException($this->logger, $e);
+      }
+      );
+  }
 
   /**
    * Warms the contents of the home page for a given prison.
