@@ -133,6 +133,7 @@ permissions:
   - 'revert urgent_banner revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'send performance traces to sentry'
   - 'set any published on date'
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'

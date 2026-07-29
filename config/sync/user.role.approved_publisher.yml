@@ -6,11 +6,13 @@ dependencies:
     - workflows.workflow.basic_editorial
   module:
     - content_moderation
+    - raven
 id: approved_publisher
 label: 'Approved Publisher'
 weight: -3
 is_admin: null
 permissions:
+  - 'send performance traces to sentry'
   - 'use basic_editorial transition create_new_draft'
   - 'use basic_editorial transition publish'
   - 'use basic_editorial transition unpublish'

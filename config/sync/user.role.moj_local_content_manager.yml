@@ -54,6 +54,7 @@ permissions:
   - 'revert urgent_banner revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'send performance traces to sentry'
   - 'set any published on date'
   - 'use basic_editorial transition create_new_draft'
   - 'use basic_editorial transition publish_approved_content'
