@@ -94,9 +94,66 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    * Gets the query for the primary navigation.
    *
    * @return string
-   *   Query for primary navigation to be appended after the prison name.
+   *   Query to be appended after the prison name.
    */
-  abstract protected function getPrimaryNavigationQuery();
+  abstract protected function getPrimaryNavigationQuery() : string;
+
+  /**
+   * Gets the query for recently added content.
+   *
+   * @return string
+   *   Query to be appended after the prison name.
+   */
+  abstract protected function getRecentlyAddedQuery() : string;
+
+  /**
+   * Gets the query for urgent banners.
+   *
+   * @return string
+   *   Query to be appended after the prison name.
+   */
+  abstract protected function getUrgentBannersQuery() : string;
+
+  /**
+   * Gets the query for recent updates.
+   *
+   * @param int $earliest_published_date
+   *   Unix timestamp of the earliest published date to be considered.
+   *
+   * @return string
+   *   Query to be appended after the prison name.
+   */
+  abstract protected function getUpdatesQuery(int $earliest_published_date) : string;
+
+  /**
+   * Gets the query to populate the Explore the Hub section.
+   *
+   * @return string
+   *   Query to be appended after the prison name.
+   */
+  protected function getExploreTheHubQuery(): string {
+    return 'explore/node?include=field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at';
+  }
+
+  /**
+   * Gets the query for the home page.
+   *
+   * @return string
+   *   Query to be appended after the prison name.
+   */
+  protected function getHomePageQuery() : string {
+    return 'node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri';
+  }
+
+  /**
+   * Gets the query for the topics on the home page.
+   *
+   * @return string
+   *   Query to be appended after the prison name.
+   */
+  protected function getTopicsQuery() : string {
+    return 'taxonomy_term?filter%5Bvid.meta.drupal_internal__target_id%5D=topics&page%5Blimit%5D=100&sort=name&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname';
+  }
 
   /**
    * Warms a category page for a given page.
@@ -159,7 +216,39 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    * @param string $prison
    *   Machine name of the prison.
    */
-  abstract protected function warmPrisonHomePage(string $prison);
+  protected function warmPrisonHomePage(string $prison) {
+    // Homepage.
+    $this->queueAsynchronousJsonApiRequest($prison, $this->getHomePageQuery());
+
+    // Primary Navigation.
+    $this->queuedPromises[] = $this->warmPrimaryNavigation($prison);
+
+    // Urgent Banners.
+    $this->queueAsynchronousJsonApiRequest($prison, $this->getUrgentBannersQuery());
+
+    // Updates.
+    try {
+      // The updates request restricts nodes to those published after midnight
+      // 90 days ago.
+      $earliest_published_date = ((new \DateTimeImmutable())
+        ->sub(\DateInterval::createFromDateString('90 day')))
+        ->setTime(0, 0)
+        ->getTimestamp();
+      $this->queueAsynchronousJsonApiRequest($prison, $this->getUpdatesQuery($earliest_published_date));
+    }
+    catch (\DateMalformedStringException | \DateInvalidOperationException $e) {
+      Error::logException($this->logger, $e);
+    }
+
+    // Recently Added.
+    $this->queueAsynchronousJsonApiRequest($prison, $this->getRecentlyAddedQuery());
+
+    // Explore the Hub.
+    $this->queueAsynchronousJsonApiRequest($prison, $this->getExploreTheHubQuery());
+
+    // Topics.
+    $this->queueAsynchronousJsonApiRequest($prison, $this->getTopicsQuery());
+  }
 
   /**
    * Warms a series page for a given page.
