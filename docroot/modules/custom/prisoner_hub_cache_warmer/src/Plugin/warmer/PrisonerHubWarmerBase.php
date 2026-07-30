@@ -91,6 +91,14 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
   abstract protected function getExcludedPrisons();
 
   /**
+   * Gets the query for the primary navigation.
+   *
+   * @return string
+   *   Query for primary navigation to be appended after the prison name.
+   */
+  abstract protected function getPrimaryNavigationQuery();
+
+  /**
    * Warms a category page for a given page.
    *
    * @param string $prison
@@ -113,7 +121,7 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    *   Promise for the async request.
    */
   protected function warmPrimaryNavigation(string $prison) {
-    return $this->warmJsonApiRequestAsync("$this->cacheWarmerEndpoint/en/jsonapi/prison/$prison/primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl")
+    return $this->warmJsonApiRequestAsync("$this->cacheWarmerEndpoint/en/jsonapi/prison/$prison/" . $this->getPrimaryNavigationQuery())
       ->then(function (ResponseInterface $response) use ($prison) {
         if (!$json_response = json_decode($response->getBody())) {
           return;

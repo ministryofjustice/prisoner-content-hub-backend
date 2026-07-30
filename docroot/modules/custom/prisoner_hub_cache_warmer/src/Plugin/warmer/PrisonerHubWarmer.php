@@ -46,6 +46,13 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
   /**
    * {@inheritdoc}
    */
+  protected function getPrimaryNavigationQuery() {
+    return "primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=title%2Curl";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function warmCategoryPage(string $prison, string $uuid) {
     // @todo Implement warmCategoryPage() method.
   }

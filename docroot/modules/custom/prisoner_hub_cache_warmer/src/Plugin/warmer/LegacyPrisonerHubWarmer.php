@@ -26,6 +26,13 @@ class LegacyPrisonerHubWarmer extends PrisonerHubWarmerBase {
   /**
    * {@inheritdoc}
    */
+  protected function getPrimaryNavigationQuery() {
+    return "primary_navigation?fields%5Bmenu_link_content--menu_link_content%5D=id%2Ctitle%2Curl";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function warmPrisonHomePage(string $prison) {
     // Homepage.
     $this->queueAsynchronousJsonApiRequest($prison, "node/homepage?include=field_featured_tiles.field_moj_thumbnail_image%2Cfield_featured_tiles%2Cfield_large_update_tile%2Cfield_key_info_tiles%2Cfield_key_info_tiles.field_moj_thumbnail_image%2Cfield_large_update_tile.field_moj_thumbnail_image&page%5Blimit%5D=4&fields%5Bnode--field_featured_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bnode--field_key_info_tiles%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cfield_summary%2Cfield_moj_series%2Cpath%2Ctype.meta.drupal_internal__target_id%2Cpublished_at&fields%5Bfile--file%5D=drupal_internal__fid%2Cid%2Cimage_style_uri");
