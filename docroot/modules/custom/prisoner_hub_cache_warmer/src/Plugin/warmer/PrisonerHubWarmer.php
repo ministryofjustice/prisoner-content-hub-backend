@@ -81,13 +81,6 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
   /**
    * {@inheritdoc}
    */
-  protected function warmPrisonHomePage(string $prison) {
-    // @todo Implement warmPrisonHomePage() method.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function warmSeriesPage(string $prison, string $uuid) {
     // @todo Implement warmSeriesPage() method.
   }
