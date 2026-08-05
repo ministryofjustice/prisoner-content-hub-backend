@@ -4074,26 +4074,29 @@
         },
         {
             "name": "drupal/jsonapi_resources",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/jsonapi_resources.git",
-                "reference": "8.x-1.6"
+                "reference": "8.x-1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jsonapi_resources-8.x-1.6.zip",
-                "reference": "8.x-1.6",
-                "shasum": "c1ec1905770c57a5b2b1a96bf2f027845fe5fbc0"
+                "url": "https://ftp.drupal.org/files/projects/jsonapi_resources-8.x-1.7.zip",
+                "reference": "8.x-1.7",
+                "shasum": "c4942e12e5de2f7cfe480f77de948fb76dc1e049"
             },
             "require": {
                 "drupal/core": "^9.1 || ^10 || ^11"
             },
+            "require-dev": {
+                "drupal/jsonapi_extras": "^3.28"
+            },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.6",
-                    "datestamp": "1781004674",
+                    "version": "8.x-1.7",
+                    "datestamp": "1781794624",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
