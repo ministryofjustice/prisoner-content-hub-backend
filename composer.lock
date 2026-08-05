@@ -455,19 +455,20 @@
         },
         {
             "name": "codementality/flysystem-stream-wrapper",
-            "version": "v1.1.2",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codementality/flysystem-stream-wrapper.git",
-                "reference": "c6c306514cfb8a10062c3ad621623b4588ae3bad"
+                "reference": "ad07f41bdd513f9551582142dfe02edb3d93fee9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codementality/flysystem-stream-wrapper/zipball/c6c306514cfb8a10062c3ad621623b4588ae3bad",
-                "reference": "c6c306514cfb8a10062c3ad621623b4588ae3bad",
+                "url": "https://api.github.com/repos/codementality/flysystem-stream-wrapper/zipball/ad07f41bdd513f9551582142dfe02edb3d93fee9",
+                "reference": "ad07f41bdd513f9551582142dfe02edb3d93fee9",
                 "shasum": ""
             },
             "require": {
+                "codementality/stream-util": "v2.0.0",
                 "league/flysystem": "^1.0.9"
             },
             "replace": {
@@ -480,6 +481,9 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
+                    "Codementality\\": [
+                        "vendor/codementality/stream-util/src/"
+                    ],
                     "Codementality\\FlysystemStreamWrapper\\": [
                         "src/"
                     ]
@@ -503,9 +507,59 @@
             "homepage": "http://github.com/codementality/flysystem-stream-wrapper",
             "support": {
                 "issues": "https://github.com/codementality/flysystem-stream-wrapper/issues",
-                "source": "https://github.com/codementality/flysystem-stream-wrapper/tree/v1.1.2"
+                "source": "https://github.com/codementality/flysystem-stream-wrapper/tree/v1.1.1"
             },
-            "time": "2026-07-03T12:59:12+00:00"
+            "time": "2025-01-26T12:03:16+00:00"
+        },
+        {
+            "name": "codementality/stream-util",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codementality/stream-util.git",
+                "reference": "fbb4374f8867a01cddb35b6ad88eacaa46264821"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codementality/stream-util/zipball/fbb4374f8867a01cddb35b6ad88eacaa46264821",
+                "reference": "fbb4374f8867a01cddb35b6ad88eacaa46264821",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2.0"
+            },
+            "replace": {
+                "twistor/stream-util": "1.0.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Codementality\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Leppanen",
+                    "email": "chris.leppanen@gmail.com"
+                },
+                {
+                    "name": "Lisa Ridley",
+                    "email": "lisa@codementality.com"
+                }
+            ],
+            "description": "Helper utilities for dealing with streams. Forked and updated version of twistor/stream-util.",
+            "homepage": "http://github.com/codementality/stream-util",
+            "support": {
+                "source": "https://github.com/codementality/stream-util/tree/v2.0.0"
+            },
+            "time": "2025-01-15T02:52:24+00:00"
         },
         {
             "name": "composer/installers",
@@ -3228,17 +3282,17 @@
         },
         {
             "name": "drupal/flysystem",
-            "version": "2.2.2",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flysystem.git",
-                "reference": "2.2.2"
+                "reference": "2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flysystem-2.2.2.zip",
-                "reference": "2.2.2",
-                "shasum": "9b3512b8bd55c5a43e01c7cf792f29590a4ec113"
+                "url": "https://ftp.drupal.org/files/projects/flysystem-2.2.0.zip",
+                "reference": "2.2.0",
+                "shasum": "0d5e5661271d89d65ff0fb382599871018715f73"
             },
             "require": {
                 "codementality/flysystem-stream-wrapper": "^1.1.1",
@@ -3253,8 +3307,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.2.2",
-                    "datestamp": "1785078688",
+                    "version": "2.2.0",
+                    "datestamp": "1756080936",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7800,16 +7854,16 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.17.0",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "f5f47eff7c48ed1003069a2ca67f316fb4021c76"
+                "reference": "2d6702ff215bf922936ccc1ad31007edc76451b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/f5f47eff7c48ed1003069a2ca67f316fb4021c76",
-                "reference": "f5f47eff7c48ed1003069a2ca67f316fb4021c76",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/2d6702ff215bf922936ccc1ad31007edc76451b9",
+                "reference": "2d6702ff215bf922936ccc1ad31007edc76451b9",
                 "shasum": ""
             },
             "require": {
@@ -7819,7 +7873,7 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.2",
                 "phpstan/phpstan": "^0.12.68",
-                "phpunit/phpunit": "^8.5.8 || ^9.3 || ^10.0 || ^11.0 || ^12.0"
+                "phpunit/phpunit": "^8.5.8 || ^9.3 || ^10.0"
             },
             "type": "library",
             "autoload": {
@@ -7840,7 +7894,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.17.0"
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.16.0"
             },
             "funding": [
                 {
@@ -7852,7 +7906,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-09T11:49:27+00:00"
+            "time": "2024-09-21T08:32:55+00:00"
         },
         {
             "name": "makinacorpus/php-lucene",
