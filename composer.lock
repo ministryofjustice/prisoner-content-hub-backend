@@ -2816,17 +2816,17 @@
         },
         {
             "name": "drupal/elasticsearch_connector",
-            "version": "7.0.0-alpha7",
+            "version": "7.0.0-alpha8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/elasticsearch_connector.git",
-                "reference": "8.x-7.0-alpha7"
+                "reference": "8.x-7.0-alpha8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/elasticsearch_connector-8.x-7.0-alpha7.zip",
-                "reference": "8.x-7.0-alpha7",
-                "shasum": "0cdbaff3d6a0b094a823b738d0b4cd0814638dc5"
+                "url": "https://ftp.drupal.org/files/projects/elasticsearch_connector-8.x-7.0-alpha8.zip",
+                "reference": "8.x-7.0-alpha8",
+                "shasum": "d945b769bbd79ce1b89bad4ccc07fe938cbbdfe8"
             },
             "require": {
                 "drupal/core": "^9.2 || ^10 || ^11",
@@ -2845,8 +2845,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-7.0-alpha7",
-                    "datestamp": "1760541813",
+                    "version": "8.x-7.0-alpha8",
+                    "datestamp": "1784166670",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
