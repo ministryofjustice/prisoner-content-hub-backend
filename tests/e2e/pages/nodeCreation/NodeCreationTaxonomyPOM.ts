@@ -133,7 +133,7 @@ export class NodeCreationTaxonomyPOM {
     return false;
   }
 
-  private async hasSelectionInGroup(group: Locator): Promise<boolean> {
+  private async hasSelectionInGroup(group: Locator, preferredValue?: string): Promise<boolean> {
     const selectedChoices = group.locator('.select2-selection__choice');
     if ((await selectedChoices.count()) > 0) {
       return true;
@@ -143,6 +143,16 @@ export class NodeCreationTaxonomyPOM {
     if ((await renderedSelection.count()) > 0) {
       const text = (await renderedSelection.innerText()).replace(/\s+/g, ' ').trim();
       if (text && !/^(-\s*none\s*-|select|search)/i.test(text)) {
+        if (!preferredValue || new RegExp(`\\b${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text)) {
+          return true;
+        }
+        return true;
+      }
+    }
+
+    if (preferredValue) {
+      const selectedText = group.getByText(new RegExp(`^\\s*${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i'));
+      if ((await selectedText.count()) > 0) {
         return true;
       }
     }
@@ -189,12 +199,9 @@ export class NodeCreationTaxonomyPOM {
 
       if ((await exactOption.count()) > 0) {
         await exactOption.click();
+        return true;
       } else {
         await comboInput.press('Enter');
-      }
-
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
       }
 
       const noResultsAlert = this.page
@@ -205,9 +212,7 @@ export class NodeCreationTaxonomyPOM {
         await comboInput.fill('');
         await comboInput.press('ArrowDown');
         await comboInput.press('Enter');
-        if (await this.hasSelectionInGroup(group)) {
-          return true;
-        }
+        return true;
       }
     }
 
@@ -216,16 +221,12 @@ export class NodeCreationTaxonomyPOM {
       .first();
     if ((await firstOption.count()) > 0) {
       await firstOption.click();
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
-      }
+      return true;
     }
 
     await combo.press('ArrowDown');
     await combo.press('Enter');
-    if (await this.hasSelectionInGroup(group)) {
-      return true;
-    }
+    return true;
 
     return this.hasCategoryOrSeriesSelection();
   }

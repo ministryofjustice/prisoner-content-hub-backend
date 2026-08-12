@@ -81,6 +81,8 @@ To obtain the s3 credentials, you can run the following commands:
 
 Playwright has been added to support migration of existing tests to browser-based end-to-end tests, using TypeScript.
 
+For a full local app + WireMock + test execution walkthrough, see [tests/e2e/local-run.md](tests/e2e/local-run.md).
+
 ### Install dependencies
 
 ```bash
