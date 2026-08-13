@@ -5,6 +5,7 @@ namespace Drupal\prisoner_hub_cache_warmer\Plugin\warmer;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
+use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\warmer\Plugin\WarmerPluginBase;
 use GuzzleHttp\ClientInterface;
@@ -160,10 +161,10 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    *
    * @param string $prison
    *   Machine name of the prison.
-   * @param string $uuid
-   *   UUID of category.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   Taxonomy term of the category.
    */
-  abstract protected function warmCategoryPage(string $prison, string $uuid);
+  abstract protected function warmCategoryPage(string $prison, TermInterface $term);
 
   /**
    * Issues an async request for the primary navigation.
@@ -195,10 +196,11 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
         }
         $terms = $this->termStorage->loadMultiple($tids);
         foreach ($terms as $term) {
+          /** @var \Drupal\taxonomy\TermInterface $term */
           if ($term->bundle() != 'moj_categories') {
             continue;
           }
-          $this->warmCategoryPage($prison, $term->uuid());
+          $this->warmCategoryPage($prison, $term);
         }
         foreach ($tids as $tid) {
           $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/$tid");
@@ -335,7 +337,7 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
 
     foreach ($terms as $term) {
       match ($term->bundle()) {
-        'moj_categories' => $this->warmCategoryPage($prison, $term->uuid()),
+        'moj_categories' => $this->warmCategoryPage($prison, $term),
         'series' => $this->warmSeriesPage($prison, $term->uuid()),
         'topics' => $this->warmTopicPage($prison, $term->uuid()),
       };
