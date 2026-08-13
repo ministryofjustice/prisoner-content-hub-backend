@@ -95,8 +95,12 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
   /**
    * {@inheritdoc}
    */
-  protected function warmTopicPage(string $prison, string $uuid) {
-    // @todo Implement warmTopicPage() method.
+  protected function warmTopicPage(string $prison, TermInterface $term) {
+    $term_id = $term->id();
+    $uuid = $term->uuid();
+    $this->queueAsynchronousJsonApiRequest($prison, "taxonomy_term?filter%5Bdrupal_internal__tid%5D=$term_id&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--series%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--moj_categories%5D=drupal_internal__tid%2Cname%2Cdescription");
+    $this->queueAsynchronousJsonApiRequest($prison, "taxonomy_term/topics/$uuid?include=field_moj_thumbnail_image&fields%5Btaxonomy_term--topics%5D=name%2Cdescription%2Cbreadcrumbs%2Cfield_moj_thumbnail_image&fields%5Bfile--file%5D=image_style_uri%2Curi%2Curl");
+    $this->queueAsynchronousJsonApiRequest($prison, "node?filter%5Bfield_topics.id%5D=$uuid&include=field_moj_thumbnail_image%2Cfield_topics.field_moj_thumbnail_image&page%5Blimit%5D=40&page%5Boffset%5D=0&sort=-created&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_topics&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_topics&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_topics&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_topics&fields%5Bfile--file%5D=image_style_uri%2Curi%2Curl");
   }
 
 }

@@ -50,23 +50,41 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    * Each array entry is a term_id.
    */
   protected array $popularPages = [
+    // Category NPR.
     785,
+    // Series The Request Show.
     933,
+    // Category Games.
     647,
+    // Series Street Heat.
     978,
+    // Series Prison News.
     690,
+    // Topic Music.
     1505,
+    // Category Facilities list and catalogues.
     787,
+    // Series Inside Time.
     1817,
+    // Series Free Flow.
     965,
+    // Category Music.
     1295,
+    // Series 20th Century Hits.
     1004,
+    // Series Porridge.
     1016,
+    // Series Notices.
     1189,
+    // Series Life After Prison.
     1663,
+    // Category Podcasts.
     1051,
+    // Series Decibel.
     865,
+    // Series Converse newspaper.
     1859,
+    // Series Bob and Beyond.
     660,
   ];
 
@@ -267,10 +285,10 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    *
    * @param string $prison
    *   Machine name of the prison.
-   * @param string $uuid
-   *   UUID of topic.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   Term representing topic.
    */
-  abstract protected function warmTopicPage(string $prison, string $uuid);
+  abstract protected function warmTopicPage(string $prison, TermInterface $term);
 
   /**
    * {@inheritdoc}
@@ -339,7 +357,7 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
       match ($term->bundle()) {
         'moj_categories' => $this->warmCategoryPage($prison, $term),
         'series' => $this->warmSeriesPage($prison, $term->uuid()),
-        'topics' => $this->warmTopicPage($prison, $term->uuid()),
+        'topics' => $this->warmTopicPage($prison, $term),
       };
       $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/{$term->id()}");
     }
