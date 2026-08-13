@@ -3,6 +3,43 @@ import { expect, Page, Response } from '@playwright/test';
 export class NodeCreationNavigationPOM {
   constructor(private readonly page: Page) {}
 
+  private async isCreateFormInteractive(bundle: string): Promise<boolean> {
+    const heading = this.page.getByRole('heading', { level: 1, name: new RegExp(`create\\s+${bundle === 'page' ? 'basic page' : 'pdf'}`, 'i') });
+    if ((await heading.count()) === 0) {
+      return false;
+    }
+
+    const titleField = this.page.locator('#edit-title-0-value, input[name="title[0][value]"]').first();
+    if ((await titleField.count()) === 0 || !(await titleField.isVisible().catch(() => false))) {
+      return false;
+    }
+
+    const taxonomyControls = this.page.locator(
+      [
+        'select[name*="top_level_categories"]',
+        'select[name*="moj_series"]',
+        '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
+        '[data-drupal-selector*="edit-field-moj-series"]',
+      ].join(', ')
+    );
+    if ((await taxonomyControls.count()) === 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private async waitForInteractiveCreateForm(bundle: string, timeoutMs = 12000): Promise<boolean> {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      if (await this.isCreateFormInteractive(bundle)) {
+        return true;
+      }
+      await this.page.waitForTimeout(250);
+    }
+    return false;
+  }
+
   async gotoCreatePage(bundle: string): Promise<Response | null> {
     return this.page.goto(`/node/add/${bundle}`);
   }
@@ -11,6 +48,19 @@ export class NodeCreationNavigationPOM {
     const response = await this.gotoCreatePage(bundle);
     expect(response?.status()).toBe(200);
     await expect(this.page).toHaveURL(new RegExp(`/node/add/${bundle}$`));
+
+    const interactiveOnFirstLoad = await this.waitForInteractiveCreateForm(bundle, 8000);
+    if (interactiveOnFirstLoad) {
+      return;
+    }
+
+    // CI can occasionally return a partially initialized form; one reload usually resolves it.
+    await this.page.reload({ waitUntil: 'domcontentloaded' });
+    const interactiveAfterReload = await this.waitForInteractiveCreateForm(bundle, 8000);
+    expect(
+      interactiveAfterReload,
+      `Create form for ${bundle} did not reach interactive state after reload at ${this.page.url()}`
+    ).toBeTruthy();
   }
 
   async expectCreatePageDenied(bundle: string): Promise<void> {
