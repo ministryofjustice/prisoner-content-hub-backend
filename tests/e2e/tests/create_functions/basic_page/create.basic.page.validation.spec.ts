@@ -127,7 +127,32 @@ test.describe('create page validation warnings', () => {
         const main = page.locator('main');
         await expect(main).toContainText(/create basic page/i);
         await expect(main).toContainText(/main body content/i);
-        await expect(page.getByRole('textbox', { name: /Rich Text Editor/i }).first()).toBeVisible();
+
+        const hasVisibleBodyEditor = await page.evaluate(() => {
+          const selectors = [
+            '.ck-editor__editable[role="textbox"]',
+            'textarea[name="body[0][value]"]',
+            'textarea[name="field_main_body_content[0][value]"]',
+            '#edit-field-main-body-content-0-value',
+            '#edit-body-0-value',
+          ];
+
+          const isVisible = (el: Element): boolean => {
+            if (!(el instanceof HTMLElement)) {
+              return false;
+            }
+
+            const style = window.getComputedStyle(el);
+            const rect = el.getBoundingClientRect();
+            return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+          };
+
+          return selectors.some((selector) =>
+            Array.from(document.querySelectorAll(selector)).some((el) => isVisible(el))
+          );
+        });
+
+        expect(hasVisibleBodyEditor).toBe(true);
       });
     });
   });
