@@ -3,6 +3,79 @@ import { expect, Page, Response } from '@playwright/test';
 export class NodeCreationNavigationPOM {
   constructor(private readonly page: Page) {}
 
+  private isVisibleSelector(selector: string): Promise<boolean> {
+    return this.page
+      .locator(selector)
+      .first()
+      .isVisible()
+      .catch(() => false);
+  }
+
+  private taxonomyControls() {
+    return this.page.locator(
+      [
+        'select[name*="top_level_categories"]',
+        'select[name*="moj_series"]',
+        '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
+        '[data-drupal-selector*="edit-field-moj-series"]',
+      ].join(', ')
+    );
+  }
+
+  private async isBundleFullyRendered(bundle: string): Promise<boolean> {
+    const summaryVisible = await this.isVisibleSelector(
+      [
+        '#edit-field-summary-0-value',
+        'textarea[name="field_summary[0][value]"]',
+        '#edit-field-moj-short-summary-0-value',
+        'textarea[name="field_moj_short_summary[0][value]"]',
+      ].join(', ')
+    );
+
+    const saveVisible = await this.page.getByRole('button', { name: /^Save$/ }).isVisible().catch(() => false);
+    if (!summaryVisible || !saveVisible) {
+      return false;
+    }
+
+    if ((await this.taxonomyControls().count()) === 0) {
+      return false;
+    }
+
+    if (bundle === 'page') {
+      return await this.page.evaluate(() => {
+        const selectors = [
+          '.ck-editor__editable[role="textbox"]',
+          'textarea[name="body[0][value]"]',
+          'textarea[name="field_main_body_content[0][value]"]',
+          '#edit-field-main-body-content-0-value',
+          '#edit-body-0-value',
+        ];
+
+        const isVisible = (el: Element): boolean => {
+          if (!(el instanceof HTMLElement)) {
+            return false;
+          }
+
+          const style = window.getComputedStyle(el);
+          const rect = el.getBoundingClientRect();
+          return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+        };
+
+        return selectors.some((selector) =>
+          Array.from(document.querySelectorAll(selector)).some((el) => isVisible(el))
+        );
+      });
+    }
+
+    if (bundle === 'moj_pdf_item') {
+      const pdfVisible = await this.isVisibleSelector('input[type="file"][name="files[field_moj_pdf_0]"]');
+      const thumbnailVisible = await this.isVisibleSelector('input[type="file"][name="files[field_moj_thumbnail_image_0]"]');
+      return pdfVisible && thumbnailVisible;
+    }
+
+    return true;
+  }
+
   private async isCreateFormInteractive(bundle: string): Promise<boolean> {
     const heading = this.page.getByRole('heading', { level: 1, name: new RegExp(`create\\s+${bundle === 'page' ? 'basic page' : 'pdf'}`, 'i') });
     if ((await heading.count()) === 0) {
@@ -14,19 +87,12 @@ export class NodeCreationNavigationPOM {
       return false;
     }
 
-    const taxonomyControls = this.page.locator(
-      [
-        'select[name*="top_level_categories"]',
-        'select[name*="moj_series"]',
-        '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
-        '[data-drupal-selector*="edit-field-moj-series"]',
-      ].join(', ')
-    );
+    const taxonomyControls = this.taxonomyControls();
     if ((await taxonomyControls.count()) === 0) {
       return false;
     }
 
-    return true;
+    return this.isBundleFullyRendered(bundle);
   }
 
   private async waitForInteractiveCreateForm(bundle: string, timeoutMs = 12000): Promise<boolean> {
@@ -41,7 +107,7 @@ export class NodeCreationNavigationPOM {
   }
 
   async gotoCreatePage(bundle: string): Promise<Response | null> {
-    return this.page.goto(`/node/add/${bundle}`);
+    return this.page.goto(`/node/add/${bundle}`, { waitUntil: 'load' });
   }
 
   async expectCreatePageAccessible(bundle: string): Promise<void> {
@@ -55,7 +121,7 @@ export class NodeCreationNavigationPOM {
     }
 
     // CI can occasionally return a partially initialized form; one reload usually resolves it.
-    await this.page.reload({ waitUntil: 'domcontentloaded' });
+    await this.page.reload({ waitUntil: 'load' });
     const interactiveAfterReload = await this.waitForInteractiveCreateForm(bundle, 8000);
     expect(
       interactiveAfterReload,
