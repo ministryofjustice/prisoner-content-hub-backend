@@ -275,10 +275,10 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
    *
    * @param string $prison
    *   Machine name of the prison.
-   * @param string $uuid
-   *   UUID of series.
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   Term representing series.
    */
-  abstract protected function warmSeriesPage(string $prison, string $uuid);
+  abstract protected function warmSeriesPage(string $prison, TermInterface $term);
 
   /**
    * Warms a topic page for a given page.
@@ -356,7 +356,7 @@ abstract class PrisonerHubWarmerBase extends WarmerPluginBase {
     foreach ($terms as $term) {
       match ($term->bundle()) {
         'moj_categories' => $this->warmCategoryPage($prison, $term),
-        'series' => $this->warmSeriesPage($prison, $term->uuid()),
+        'series' => $this->warmSeriesPage($prison, $term),
         'topics' => $this->warmTopicPage($prison, $term),
       };
       $this->queueAsynchronousRouterRequest($prison, "translate-path?path=tags/{$term->id()}");

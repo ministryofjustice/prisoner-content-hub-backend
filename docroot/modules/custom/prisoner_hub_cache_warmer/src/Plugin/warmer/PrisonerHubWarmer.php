@@ -88,8 +88,12 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
   /**
    * {@inheritdoc}
    */
-  protected function warmSeriesPage(string $prison, string $uuid) {
-    // @todo Implement warmSeriesPage() method.
+  protected function warmSeriesPage(string $prison, TermInterface $term) {
+    $term_id = $term->id();
+    $uuid = $term->uuid();
+    $this->queueAsynchronousJsonApiRequest($prison, "taxonomy_term?filter%5Bdrupal_internal__tid%5D=$term_id&page%5Blimit%5D=1&fields%5Btaxonomy_term--topics%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--series%5D=drupal_internal__tid%2Cname%2Cdescription&fields%5Btaxonomy_term--moj_categories%5D=drupal_internal__tid%2Cname%2Cdescription");
+    $this->queueAsynchronousJsonApiRequest($prison, "node?filter%5Bfield_moj_series.id%5D=$uuid&include=field_moj_thumbnail_image%2Cfield_moj_series.field_moj_thumbnail_image&page%5Blimit%5D=40&page%5Boffset%5D=0&sort=series_sort_value%2Ccreated&fields%5Bnode--page%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bnode--moj_video_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bnode--moj_radio_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bnode--moj_pdf_item%5D=drupal_internal__nid%2Ctitle%2Cfield_moj_thumbnail_image%2Cpath%2Cpublished_at%2Cfield_summary%2Cfield_moj_series&fields%5Bfile--file%5D=image_style_uri%2Curi%2Curl");
+    $this->queueAsynchronousJsonApiRequest($prison, "taxonomy_term/series/$uuid?include=field_moj_thumbnail_image&fields%5Btaxonomy_term--series%5D=name%2Cdescription%2Cbreadcrumbs%2Cfield_moj_thumbnail_image&fields%5Bfile--file%5D=image_style_uri%2Curi%2Curl");
   }
 
   /**
