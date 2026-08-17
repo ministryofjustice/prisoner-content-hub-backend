@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9899691a6aa2b689a451e9ef829951fa",
+    "content-hash": "7257c64a48e32fc534b24bc05fad1aeb",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -2645,38 +2645,38 @@
         },
         {
             "name": "drupal/diff",
-            "version": "1.10.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/diff.git",
-                "reference": "8.x-1.10"
+                "reference": "2.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/diff-8.x-1.10.zip",
-                "reference": "8.x-1.10",
-                "shasum": "21398888a97071bfeb57bdc7128fcf6681da5358"
+                "url": "https://ftp.drupal.org/files/projects/diff-2.1.1.zip",
+                "reference": "2.1.1",
+                "shasum": "5510aba84b893dfe7106621e859bdb949d4a1f51"
             },
             "require": {
-                "drupal/core": "^10 || ^11",
+                "drupal/core": "^10.5 || ^11 || ^12",
                 "mkalkbrenner/php-htmldiff-advanced": "~0.0.8",
                 "php": "^8.1"
             },
             "require-dev": {
-                "jangregor/phpstan-prophecy": "^1.0",
-                "mglaman/phpstan-drupal": "^1.2.10",
+                "jangregor/phpstan-prophecy": "^1.0 || ^2.2.0",
+                "mglaman/phpstan-drupal": "^1.2.10 || ^2.0.7",
                 "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan": "^1.11",
+                "phpstan/phpstan": "^1.11 || ^2.1.17",
                 "phpstan/phpstan-deprecation-rules": "*",
-                "phpstan/phpstan-phpunit": "1.4.x-dev",
-                "phpstan/phpstan-strict-rules": "^1@stable",
-                "previousnext/coding-standard": "1.0.1"
+                "phpstan/phpstan-phpunit": "1.4 || ^2.0",
+                "phpstan/phpstan-strict-rules": "^1.0 || ^2.0.4",
+                "previousnext/coding-standard": "1.1.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.10",
-                    "datestamp": "1768951091",
+                    "version": "2.1.1",
+                    "datestamp": "1786557203",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2889,17 +2889,17 @@
         },
         {
             "name": "drupal/entity",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/entity.git",
-                "reference": "8.x-1.6"
+                "reference": "8.x-1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity-8.x-1.6.zip",
-                "reference": "8.x-1.6",
-                "shasum": "dfb214fd45bd6ad79604d23a39a96b3d4c38f8e1"
+                "url": "https://ftp.drupal.org/files/projects/entity-8.x-1.7.zip",
+                "reference": "8.x-1.7",
+                "shasum": "d9c24749beb5bfeb398f503b8a31a676483cd182"
             },
             "require": {
                 "drupal/core": "^10.1 || ^11"
@@ -2907,8 +2907,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.6",
-                    "datestamp": "1740006812",
+                    "version": "8.x-1.7",
+                    "datestamp": "1786708365",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2939,6 +2939,10 @@
                 {
                     "name": "fago",
                     "homepage": "https://www.drupal.org/user/16747"
+                },
+                {
+                    "name": "klausi",
+                    "homepage": "https://www.drupal.org/user/262198"
                 },
                 {
                     "name": "mglaman",
@@ -4384,24 +4388,25 @@
         },
         {
             "name": "drupal/monolog",
-            "version": "3.0.7",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/monolog.git",
-                "reference": "3.0.7"
+                "reference": "3.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/monolog-3.0.7.zip",
-                "reference": "3.0.7",
-                "shasum": "d49c8ae325cd793834a66f083bea7ce823ae1cdd"
+                "url": "https://ftp.drupal.org/files/projects/monolog-3.1.0.zip",
+                "reference": "3.1.0",
+                "shasum": "45413b16c05e0ec17228cbcdc50924bead6dfe0b"
             },
             "require": {
-                "drupal/core": "^10 || ^11",
+                "drupal/core": "^10.1 || ^11 || ^12",
                 "monolog/monolog": "^3.2.0",
                 "php": "^8.1.0"
             },
             "require-dev": {
+                "drush/drush": "^13",
                 "mglaman/phpstan-drupal": "^1.2 || ^2",
                 "phpstan/extension-installer": "^1.3",
                 "phpstan/phpstan": "^1.11 || ^2",
@@ -4412,8 +4417,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.0.7",
-                    "datestamp": "1759154513",
+                    "version": "3.1.0",
+                    "datestamp": "1786366887",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4928,17 +4933,17 @@
         },
         {
             "name": "drupal/raven",
-            "version": "3.2.32",
+            "version": "3.2.33",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/raven.git",
-                "reference": "3.2.32"
+                "reference": "3.2.33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/raven-3.2.32.zip",
-                "reference": "3.2.32",
-                "shasum": "2e11eb8629061a86c2cbb0691292938600b8b54f"
+                "url": "https://ftp.drupal.org/files/projects/raven-3.2.33.zip",
+                "reference": "3.2.33",
+                "shasum": "cdcabecaad7d5c50be56d2290ded582f6d88c605"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10",
@@ -4953,8 +4958,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.2.32",
-                    "datestamp": "1755299825",
+                    "version": "3.2.33",
+                    "datestamp": "1786051450",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
