@@ -115,11 +115,8 @@ export class NodeCreationFormPOM {
       'input[type="radio"][name^="field_prisons"], input[type="checkbox"][name^="field_prisons"]'
     );
 
-    if ((await selectablePrisons.count()) === 0) {
-      return;
-    }
-
     const firstPrison = selectablePrisons.first();
+    await expect(firstPrison).toBeVisible({ timeout: 30000 });
     const firstPrisonId = await firstPrison.getAttribute('id');
 
     if (firstPrisonId) {
