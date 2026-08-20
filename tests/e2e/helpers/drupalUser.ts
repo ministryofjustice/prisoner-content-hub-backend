@@ -13,6 +13,7 @@ const defaultCategoryTerm = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animate
 const defaultSeriesTerm = process.env.PLAYWRIGHT_E2E_SERIES_TERM ?? defaultCategoryTerm;
 const defaultSeedNodeTitle = process.env.PLAYWRIGHT_E2E_SEED_NODE_TITLE ?? defaultCategoryTerm;
 const defaultPrisonTerm = process.env.PLAYWRIGHT_E2E_PRISON_TERM ?? '';
+const defaultPrisonTerms = (process.env.PLAYWRIGHT_E2E_PRISON_TERMS ?? 'Adult male,Bedford,Berwyn,Bristol,Bullingdon,Cardiff,Chelmsford,Cookham Wood,Erlestoke,Feltham A,Feltham B,Female,Garth,Lindholme,New Hall,Ranby,Stoke Heath,Styal,Swaleside,The Mount,The Studio,Wayland,Werrington,Wetherby,Woodhill,Youth male').split(',').map((term) => term.trim()).filter(Boolean);
 
 const drushCommand = process.env.PLAYWRIGHT_DRUSH_COMMAND ?? 'docker-compose exec -T drupal drush';
 
@@ -111,6 +112,8 @@ export function ensureE2ETaxonomyTerms(): void {
   const phpEval = [
     `$map = ["moj_categories" => ${phpSingleQuoted(defaultCategoryTerm)}, "series" => ${phpSingleQuoted(defaultSeriesTerm)}];`,
     '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
+    `$defaultPrisonTerms = ${phpSingleQuoted(JSON.stringify(defaultPrisonTerms))};`,
+    '$prisonNames = json_decode($defaultPrisonTerms, TRUE) ?: [];',
     `$prisonName = ${phpSingleQuoted(defaultPrisonTerm)};`,
     '$prisonTid = NULL;',
     'if ($prisonName !== "") {',
@@ -124,6 +127,19 @@ export function ensureE2ETaxonomyTerms(): void {
     '  $prisonTree = $storage->loadTree("prisons", 0, 1);',
     '  if (!empty($prisonTree)) {',
     '    $prisonTid = (int) $prisonTree[0]->tid;',
+    '  }',
+    '}',
+    'foreach ($prisonNames as $prisonNameCandidate) {',
+    '  if ($prisonNameCandidate === "") {',
+    '    continue;',
+    '  }',
+    '  $matchingPrison = $storage->loadByProperties(["vid" => "prisons", "name" => $prisonNameCandidate]);',
+    '  if (empty($matchingPrison)) {',
+    '    $prisonTerm = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => "prisons", "name" => $prisonNameCandidate]);',
+    '    $prisonTerm->save();',
+    '    if (empty($prisonTid)) {',
+    '      $prisonTid = (int) $prisonTerm->id();',
+    '    }',
     '  }',
     '}',
     '$termIds = [];',
