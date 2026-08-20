@@ -139,9 +139,7 @@ export class NodeCreationFormPOM {
   }
 
   async getPrisonSelectionCount(): Promise<number> {
-    const selectedRadios = await this.page.locator('input[type="radio"][name^="field_prisons"]:checked').count();
-    const selectedCheckboxes = await this.page.locator('input[type="checkbox"][name^="field_prisons"]:checked').count();
-    return selectedRadios + selectedCheckboxes;
+    return await this.prisonGroup().locator('input:checked').count();
   }
 
   saveButton(): Locator {
