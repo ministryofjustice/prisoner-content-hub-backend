@@ -115,9 +115,13 @@ export class NodeCreationFormPOM {
     const checkboxes = this.prisonCheckboxes();
     
     if ((await radioButtons.count()) > 0) {
-      await radioButtons.first().click();
+      const firstRadio = radioButtons.first();
+      await firstRadio.scrollIntoViewIfNeeded();
+      await firstRadio.check({ force: true });
     } else if ((await checkboxes.count()) > 0) {
-      await checkboxes.first().click();
+      const firstCheckbox = checkboxes.first();
+      await firstCheckbox.scrollIntoViewIfNeeded();
+      await firstCheckbox.check({ force: true });
     }
   }
 
