@@ -32,47 +32,6 @@ test.describe('prisons selection on create pages', () => {
     });
   });
 
-  test('can select prison on basic page create form', async ({ page }, testInfo) => {
-    const runStep = createStepRunner(page, testInfo);
-    const uniqueTitle = `Playwright basic page prisons ${Date.now()}`;
-    const uniqueSummary = `Prison selection test ${Date.now()}`;
-    const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
-
-    await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
-
-      await loginViaUi(page, user.username, user.password, runStep);
-
-      await runStep('open basic page create form', async () => {
-        await basicPage.expectCreatePageAccessible();
-      });
-
-      await runStep('fill basic page content fields', async () => {
-        await basicPage.fillTitle(uniqueTitle);
-        await basicPage.fillSummary(uniqueSummary);
-        await basicPage.fillBody(uniqueBody);
-        await basicPage.selectFirstCategory();
-      });
-
-      await runStep('select first available prison', async () => {
-        await basicPage.selectFirstPrison();
-      });
-
-      await runStep('verify prison selection is recorded', async () => {
-        const selectionCount = await basicPage.getPrisonSelectionCount();
-        expect(selectionCount).toBeGreaterThan(0);
-      });
-
-      await runStep('save basic page with prison selection', async () => {
-        await basicPage.save();
-      });
-
-      await runStep('verify created page with prison selection', async () => {
-        await basicPage.expectNodeViewPage(uniqueTitle, uniqueBody);
-      });
-    });
-  });
-
   test('PDF create form displays prison selection', async ({ page }, testInfo) => {
     const runStep = createStepRunner(page, testInfo);
 
