@@ -78,6 +78,55 @@ export class NodeCreationFormPOM {
     return this.page.locator('input[type="checkbox"][name^="field_prisons"]');
   }
 
+  prisonRadioButtons(): Locator {
+    return this.page.locator('input[type="radio"][name^="field_prisons"]');
+  }
+
+  prisonGroup(): Locator {
+    return this.page.getByRole('group', { name: /prisons/i });
+  }
+
+  async selectPrisonByLabel(prisonLabel: string): Promise<void> {
+    // Try radio button first
+    const radioButton = this.page.locator(`input[type="radio"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
+    const radioCount = await radioButton.count();
+    
+    if (radioCount > 0) {
+      await radioButton.click();
+      return;
+    }
+
+    // Fall back to checkbox
+    const checkbox = this.page.locator(`input[type="checkbox"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
+    if ((await checkbox.count()) > 0) {
+      await checkbox.click();
+      return;
+    }
+
+    // Try direct input click if no label found
+    const input = this.page.locator(`input[type="radio"][name^="field_prisons"][value*="${prisonLabel}"], input[type="checkbox"][name^="field_prisons"][value*="${prisonLabel}"]`).first();
+    if ((await input.count()) > 0) {
+      await input.click();
+    }
+  }
+
+  async selectFirstPrison(): Promise<void> {
+    const radioButtons = this.prisonRadioButtons();
+    const checkboxes = this.prisonCheckboxes();
+    
+    if ((await radioButtons.count()) > 0) {
+      await radioButtons.first().click();
+    } else if ((await checkboxes.count()) > 0) {
+      await checkboxes.first().click();
+    }
+  }
+
+  async getPrisonSelectionCount(): Promise<number> {
+    const selectedRadios = await this.page.locator('input[type="radio"][name^="field_prisons"]:checked').count();
+    const selectedCheckboxes = await this.page.locator('input[type="checkbox"][name^="field_prisons"]:checked').count();
+    return selectedRadios + selectedCheckboxes;
+  }
+
   saveButton(): Locator {
     return this.page.getByRole('button', { name: /^Save$/ });
   }
