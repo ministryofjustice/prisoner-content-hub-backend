@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 export class NodeCreationFormPOM {
   constructor(private readonly page: Page) {}
@@ -111,18 +111,31 @@ export class NodeCreationFormPOM {
   }
 
   async selectFirstPrison(): Promise<void> {
-    const radioButtons = this.prisonRadioButtons();
-    const checkboxes = this.prisonCheckboxes();
-    
-    if ((await radioButtons.count()) > 0) {
-      const firstRadio = radioButtons.first();
-      await firstRadio.scrollIntoViewIfNeeded();
-      await firstRadio.check({ force: true });
-    } else if ((await checkboxes.count()) > 0) {
-      const firstCheckbox = checkboxes.first();
-      await firstCheckbox.scrollIntoViewIfNeeded();
-      await firstCheckbox.check({ force: true });
+    const selectablePrisons = this.prisonGroup().locator(
+      'input[type="radio"][name^="field_prisons"], input[type="checkbox"][name^="field_prisons"]'
+    );
+
+    if ((await selectablePrisons.count()) === 0) {
+      return;
     }
+
+    const firstPrison = selectablePrisons.first();
+    const firstPrisonId = await firstPrison.getAttribute('id');
+
+    if (firstPrisonId) {
+      const firstPrisonLabel = this.page.locator(`label[for="${firstPrisonId}"]`).first();
+
+      if ((await firstPrisonLabel.count()) > 0) {
+        await firstPrisonLabel.scrollIntoViewIfNeeded();
+        await firstPrisonLabel.click();
+        await expect(firstPrison).toBeChecked();
+        return;
+      }
+    }
+
+    await firstPrison.scrollIntoViewIfNeeded();
+    await firstPrison.check({ force: true });
+    await expect(firstPrison).toBeChecked();
   }
 
   async getPrisonSelectionCount(): Promise<number> {
