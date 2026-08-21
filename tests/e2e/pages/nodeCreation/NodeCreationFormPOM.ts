@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 export class NodeCreationFormPOM {
   constructor(private readonly page: Page) {}
@@ -76,6 +76,67 @@ export class NodeCreationFormPOM {
 
   prisonCheckboxes(): Locator {
     return this.page.locator('input[type="checkbox"][name^="field_prisons"]');
+  }
+
+  prisonRadioButtons(): Locator {
+    return this.page.locator('input[type="radio"][name^="field_prisons"]');
+  }
+
+  prisonGroup(): Locator {
+    return this.page.getByRole('group', { name: /prisons/i });
+  }
+
+  async selectPrisonByLabel(prisonLabel: string): Promise<void> {
+    // Try radio button first
+    const radioButton = this.page.locator(`input[type="radio"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
+    const radioCount = await radioButton.count();
+    
+    if (radioCount > 0) {
+      await radioButton.click();
+      return;
+    }
+
+    // Fall back to checkbox
+    const checkbox = this.page.locator(`input[type="checkbox"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
+    if ((await checkbox.count()) > 0) {
+      await checkbox.click();
+      return;
+    }
+
+    // Try direct input click if no label found
+    const input = this.page.locator(`input[type="radio"][name^="field_prisons"][value*="${prisonLabel}"], input[type="checkbox"][name^="field_prisons"][value*="${prisonLabel}"]`).first();
+    if ((await input.count()) > 0) {
+      await input.click();
+    }
+  }
+
+  async selectFirstPrison(): Promise<void> {
+    const selectablePrisons = this.prisonGroup().locator(
+      'input[type="radio"][name^="field_prisons"], input[type="checkbox"][name^="field_prisons"]'
+    );
+
+    const firstPrison = selectablePrisons.first();
+    await expect(firstPrison).toBeVisible({ timeout: 30000 });
+    const firstPrisonId = await firstPrison.getAttribute('id');
+
+    if (firstPrisonId) {
+      const firstPrisonLabel = this.page.locator(`label[for="${firstPrisonId}"]`).first();
+
+      if ((await firstPrisonLabel.count()) > 0) {
+        await firstPrisonLabel.scrollIntoViewIfNeeded();
+        await firstPrisonLabel.click();
+        await expect(firstPrison).toBeChecked();
+        return;
+      }
+    }
+
+    await firstPrison.scrollIntoViewIfNeeded();
+    await firstPrison.check({ force: true });
+    await expect(firstPrison).toBeChecked();
+  }
+
+  async getPrisonSelectionCount(): Promise<number> {
+    return await this.prisonGroup().locator('input:checked').count();
   }
 
   saveButton(): Locator {
