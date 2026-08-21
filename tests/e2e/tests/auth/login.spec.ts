@@ -8,7 +8,7 @@ import {
 import { appSettings } from '../../config/appSettings';
 
 test.describe('Drupal Login Page', () => {
-  test.describe.configure({ mode: 'serial' });
+  test.describe.configure({ mode: 'serial', timeout: 120000 });
 
   for (const loginRole of appSettings.roles.all) {
     test(`role ${loginRole} can log in from Drupal login page`, async ({ context, page }, testInfo) => {

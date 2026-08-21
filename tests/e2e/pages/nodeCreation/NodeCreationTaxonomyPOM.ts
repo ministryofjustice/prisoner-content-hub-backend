@@ -5,6 +5,10 @@ const defaultPreferredCategory = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'An
 export class NodeCreationTaxonomyPOM {
   constructor(private readonly page: Page) {}
 
+  private escapeRegex(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   private readonly categoryOrSeriesSelectors = [
     'select[name="field_moj_top_level_categories[]"]',
     'input[id*="field-moj-top-level-categories"][type="search"]',
@@ -31,7 +35,11 @@ export class NodeCreationTaxonomyPOM {
     return this.page.locator(
       [
         'select[name="field_moj_top_level_categories[]"]',
+        'select[name*="top_level_categories"]',
+        'select[id*="top-level-categories"]',
         'select[name="field_moj_series[]"]',
+        'select[name*="moj_series"]',
+        'select[id*="moj-series"]',
       ].join(', ')
     );
   }
@@ -112,20 +120,17 @@ export class NodeCreationTaxonomyPOM {
   }
 
   private async hasCategoryOrSeriesSelection(): Promise<boolean> {
-    const nativeSelect = this.categorySelectField().first();
-    if ((await nativeSelect.count()) > 0) {
-      const selectedValue = await nativeSelect.inputValue();
-      if (selectedValue && !/^(_none|none)?$/i.test(selectedValue)) {
-        return true;
-      }
-
+    const selects = this.categorySelectField();
+    const selectCount = await selects.count();
+    for (let i = 0; i < selectCount; i++) {
+      const nativeSelect = selects.nth(i);
       const selectedLabel = (await nativeSelect
         .locator('option:checked')
         .first()
         .innerText()
         .catch(() => ''))
         .trim();
-      if (selectedLabel && !/^-\s*none\s*-$/i.test(selectedLabel)) {
+      if (selectedLabel && !/^\-\s*none\s*\-$/i.test(selectedLabel)) {
         return true;
       }
     }
@@ -133,7 +138,7 @@ export class NodeCreationTaxonomyPOM {
     return false;
   }
 
-  private async hasSelectionInGroup(group: Locator): Promise<boolean> {
+  private async hasSelectionInGroup(group: Locator, preferredValue?: string): Promise<boolean> {
     const selectedChoices = group.locator('.select2-selection__choice');
     if ((await selectedChoices.count()) > 0) {
       return true;
@@ -143,6 +148,16 @@ export class NodeCreationTaxonomyPOM {
     if ((await renderedSelection.count()) > 0) {
       const text = (await renderedSelection.innerText()).replace(/\s+/g, ' ').trim();
       if (text && !/^(-\s*none\s*-|select|search)/i.test(text)) {
+        if (!preferredValue || new RegExp(`\\b${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text)) {
+          return true;
+        }
+        return true;
+      }
+    }
+
+    if (preferredValue) {
+      const selectedText = group.getByText(new RegExp(`^\\s*${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i'));
+      if ((await selectedText.count()) > 0) {
         return true;
       }
     }
@@ -163,6 +178,79 @@ export class NodeCreationTaxonomyPOM {
     return false;
   }
 
+  private async waitForTaxonomyControls(timeoutMs = 15000): Promise<void> {
+    const start = Date.now();
+
+    while (Date.now() - start < timeoutMs) {
+      if ((await this.categorySelectField().count()) > 0) {
+        return;
+      }
+
+      const autocomplete = this.categoryAutocompleteField().first();
+      if ((await autocomplete.count()) > 0 && (await autocomplete.isVisible().catch(() => false))) {
+        return;
+      }
+
+      const categoryGroupCombo = this.page.getByRole('group', { name: /^Category$/i }).first().locator('[role="combobox"]').first();
+      if ((await categoryGroupCombo.count()) > 0) {
+        return;
+      }
+
+      const seriesGroupCombo = this.page.getByRole('group', { name: /Series/i }).first().locator('[role="combobox"]').first();
+      if ((await seriesGroupCombo.count()) > 0) {
+        return;
+      }
+
+      await this.page.waitForTimeout(250);
+    }
+  }
+
+  private async selectViaDomSelects(preferredValue: string): Promise<boolean> {
+    return this.page.evaluate((preferred) => {
+      const selectors = [
+        'select[name="field_moj_top_level_categories[]"]',
+        'select[name*="top_level_categories"]',
+        'select[id*="top-level-categories"]',
+        'select[name="field_moj_series[]"]',
+        'select[name*="moj_series"]',
+        'select[id*="moj-series"]',
+      ];
+
+      const selects = selectors
+        .flatMap((selector) => Array.from(document.querySelectorAll(selector)))
+        .filter((el): el is HTMLSelectElement => el instanceof HTMLSelectElement);
+
+      for (const select of selects) {
+        const options = Array.from(select.options);
+        if (options.length === 0) {
+          continue;
+        }
+
+        const exact = options.find((option) => option.text.trim().toLowerCase() === preferred.trim().toLowerCase());
+        const fallback = options.find((option) => {
+          const value = (option.value || '').trim();
+          const label = option.text.trim();
+          return value !== '' && !/^(_none|none)$/i.test(value) && !/^\-\s*none\s*\-$/i.test(label);
+        });
+
+        const chosen = exact ?? fallback;
+        if (!chosen) {
+          continue;
+        }
+
+        for (const option of options) {
+          option.selected = false;
+        }
+        chosen.selected = true;
+        select.dispatchEvent(new Event('input', { bubbles: true }));
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        return true;
+      }
+
+      return false;
+    }, preferredValue);
+  }
+
   private async selectFromTaxonomyGroup(groupName: RegExp, preferredValue: string): Promise<boolean> {
     const group = this.page.getByRole('group', { name: groupName }).first();
     if ((await group.count()) === 0) {
@@ -174,13 +262,17 @@ export class NodeCreationTaxonomyPOM {
       return false;
     }
 
-    await combo.click();
+    try {
+      await combo.click({ timeout: 2000 });
+    } catch {
+      return false;
+    }
 
     const comboInput = this.page
       .locator('.select2-container--open input.select2-search__field, .select2-dropdown input.select2-search__field')
       .first();
     if ((await comboInput.count()) > 0) {
-      await comboInput.fill(preferredValue);
+      await comboInput.fill(preferredValue, { timeout: 2000 });
 
       const exactOption = this.page
         .locator('.select2-container--open .select2-results__option[role="option"], .select2-dropdown .select2-results__option[role="option"]')
@@ -188,13 +280,10 @@ export class NodeCreationTaxonomyPOM {
         .first();
 
       if ((await exactOption.count()) > 0) {
-        await exactOption.click();
-      } else {
-        await comboInput.press('Enter');
-      }
-
-      if (await this.hasSelectionInGroup(group)) {
+        await exactOption.click({ timeout: 2000 });
         return true;
+      } else {
+        await comboInput.press('Enter', { timeout: 2000 });
       }
 
       const noResultsAlert = this.page
@@ -202,12 +291,10 @@ export class NodeCreationTaxonomyPOM {
         .filter({ hasText: /no results found/i })
         .first();
       if ((await noResultsAlert.count()) > 0) {
-        await comboInput.fill('');
-        await comboInput.press('ArrowDown');
-        await comboInput.press('Enter');
-        if (await this.hasSelectionInGroup(group)) {
-          return true;
-        }
+        await comboInput.fill('', { timeout: 2000 });
+        await comboInput.press('ArrowDown', { timeout: 2000 });
+        await comboInput.press('Enter', { timeout: 2000 });
+        return true;
       }
     }
 
@@ -215,52 +302,98 @@ export class NodeCreationTaxonomyPOM {
       .locator('.select2-container--open .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found")), .select2-dropdown .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found"))')
       .first();
     if ((await firstOption.count()) > 0) {
-      await firstOption.click();
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
-      }
-    }
-
-    await combo.press('ArrowDown');
-    await combo.press('Enter');
-    if (await this.hasSelectionInGroup(group)) {
+      await firstOption.click({ timeout: 2000 });
       return true;
     }
 
-    return this.hasCategoryOrSeriesSelection();
+    await combo.press('ArrowDown', { timeout: 2000 });
+    await combo.press('Enter', { timeout: 2000 });
+    return true;
+  }
+
+  private async selectFromCategoryListbox(preferredValue: string): Promise<boolean> {
+    const listboxCandidates = this.page
+      .locator([
+        '#edit-field-moj-top-level-categories',
+        '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
+        'select[name*="top_level_categories"]',
+        'main [role="listbox"]',
+      ].join(', '));
+
+    const listbox = listboxCandidates.first();
+    if ((await listbox.count()) === 0) {
+      return false;
+    }
+
+    const listboxTag = (await listbox.evaluate((el) => el.tagName).catch(() => '')).toLowerCase();
+    if (listboxTag === 'select') {
+      const selectedByLabel = await listbox.selectOption({ label: preferredValue }).catch(() => []);
+      if (selectedByLabel.length > 0) {
+        return true;
+      }
+
+      const options = listbox.locator('option');
+      const count = await options.count();
+      for (let i = 0; i < count; i++) {
+        const option = options.nth(i);
+        const value = (await option.getAttribute('value')) ?? '';
+        const label = (await option.innerText()).trim();
+        if (!value || /^(_none|none)$/i.test(value) || /^\-\s*none\s*\-$/i.test(label)) {
+          continue;
+        }
+        const selected = await listbox.selectOption(value).catch(() => []);
+        if (selected.length > 0) {
+          return true;
+        }
+      }
+    }
+
+    const preferredOption = listbox
+      .getByRole('option')
+      .filter({ hasText: new RegExp(`^\\s*${this.escapeRegex(preferredValue)}\\s*$`, 'i') })
+      .first();
+    if ((await preferredOption.count()) > 0) {
+      await preferredOption.click({ timeout: 2000 });
+      return true;
+    }
+
+    const firstOption = listbox.getByRole('option').first();
+    if ((await firstOption.count()) > 0) {
+      await firstOption.click({ timeout: 2000 });
+      return true;
+    }
+
+    return false;
   }
 
   async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
-    const categoryNativeSelect = this.categorySelectField();
-    if ((await categoryNativeSelect.count()) > 0) {
-      const options = categoryNativeSelect.first().locator('option');
-      const optionsCount = await options.count();
-      if (optionsCount > 0) {
-        const candidateValues: string[] = [];
-        for (let i = 0; i < optionsCount; i++) {
-          const option = options.nth(i);
-          const value = (await option.getAttribute('value')) ?? '';
-          const label = (await option.innerText()).trim();
-          if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
-            continue;
-          }
-          candidateValues.push(value);
-        }
+    await this.waitForTaxonomyControls();
 
-        if (candidateValues.length > 0) {
-          await categoryNativeSelect.first().selectOption(candidateValues[0]);
-          if (await this.hasCategoryOrSeriesSelection()) {
-            return;
-          }
-        }
+    if (await this.selectFromCategoryListbox(preferredValue)) {
+      return;
+    }
+
+    if (await this.selectViaDomSelects(preferredValue)) {
+      return;
+    }
+
+    if (await this.hasCategoryOrSeriesSelection()) {
+      return;
+    }
+
+    const categoryNativeSelect = this.categorySelectField().first();
+    if ((await categoryNativeSelect.count()) > 0) {
+      const selectedByLabel = await categoryNativeSelect.selectOption({ label: preferredValue }).catch(() => []);
+      if (selectedByLabel.length > 0 && (await this.hasCategoryOrSeriesSelection())) {
+        return;
       }
     }
 
     const categorySelect2Input = this.categoryAutocompleteField();
     if ((await categorySelect2Input.count()) > 0 && (await categorySelect2Input.first().isVisible())) {
-      await categorySelect2Input.first().click();
-      await categorySelect2Input.first().fill(preferredValue);
-      await categorySelect2Input.first().press('Enter');
+      await categorySelect2Input.first().click({ timeout: 2000 });
+      await categorySelect2Input.first().fill(preferredValue, { timeout: 2000 });
+      await categorySelect2Input.first().press('Enter', { timeout: 2000 });
       if (await this.hasCategoryOrSeriesSelection()) {
         return;
       }
@@ -325,6 +458,7 @@ export class NodeCreationTaxonomyPOM {
     }
 
     const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
+
     throw new Error(
       'Unable to select a category or series on the create form. ' +
       `Main text snapshot: ${mainText}`

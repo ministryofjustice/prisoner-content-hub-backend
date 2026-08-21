@@ -184,6 +184,16 @@ $config['google_analytics.settings']['account'] = getenv('ANALYTICS_SITE_ID', TR
 
 $settings['config_sync_directory'] = '../config/sync';
 
+// Keep Playwright deterministic without mutating active Drupal config.
+// We scope these overrides to requests that explicitly include the test header.
+if (!empty($_SERVER['HTTP_X_PLAYWRIGHT_E2E'])) {
+  $config['system.performance']['css.preprocess'] = FALSE;
+  $config['system.performance']['js.preprocess'] = FALSE;
+  $config['system.performance']['css.gzip'] = FALSE;
+  $config['system.performance']['js.gzip'] = FALSE;
+  $config['system.performance']['cache.page.max_age'] = 0;
+}
+
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
