@@ -74,6 +74,30 @@ export class NodeCreationFormPOM {
       .first();
   }
 
+  unpublishOnDateField(): Locator {
+    return this.page
+      .locator(
+        [
+          '#edit-unpublish-on-0-value-date',
+          'input[name="unpublish_on[0][value][date]"]',
+          'input[data-drupal-selector="edit-unpublish-on-0-value-date"]',
+          'input[id*="unpublish-on"][type="date"]',
+          '[data-drupal-selector*="edit-unpublish-on"] input[type="date"]',
+        ].join(', ')
+      )
+      .first();
+  }
+
+  revisionLogMessageField(): Locator {
+    return this.page
+      .getByRole('textbox', { name: /revision log message/i })
+      .first();
+  }
+
+  detailsSummary(label: string): Locator {
+    return this.page.getByRole('button', { name: new RegExp(label, 'i') }).first();
+  }
+
   prisonCheckboxes(): Locator {
     return this.page.locator('input[type="checkbox"][name^="field_prisons"]');
   }
@@ -181,6 +205,13 @@ export class NodeCreationFormPOM {
     const bodyByLabel = this.page.getByRole('textbox', { name: /main body content|body/i }).first();
     if ((await bodyByLabel.count()) > 0) {
       await bodyByLabel.fill(body);
+    }
+  }
+
+  async fillUnpublishOnDate(date: string): Promise<void> {
+    const unpublishOnDateField = this.unpublishOnDateField();
+    if ((await unpublishOnDateField.count()) > 0) {
+      await unpublishOnDateField.fill(date);
     }
   }
 
