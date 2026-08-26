@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 
 const defaultPreferredCategory = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
+const defaultPreferredPrisonOwner = process.env.PLAYWRIGHT_E2E_PRISON_OWNER_TERM ?? 'Bedford';
 
 export class NodeCreationTaxonomyPOM {
   constructor(private readonly page: Page) {}
@@ -227,7 +228,13 @@ export class NodeCreationTaxonomyPOM {
       return true;
     }
 
-    return this.hasCategoryOrSeriesSelection();
+    return (await this.hasSelectionInGroup(group)) || this.hasCategoryOrSeriesSelection();
+  }
+
+  async selectPrisonOwner(preferredValue = defaultPreferredPrisonOwner): Promise<void> {
+    if (!(await this.selectFromTaxonomyGroup(/^Prison owner$/i, preferredValue))) {
+      throw new Error(`Unable to select prison owner "${preferredValue}" on the create form.`);
+    }
   }
 
   async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {

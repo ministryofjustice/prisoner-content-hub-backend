@@ -6,6 +6,7 @@ import {
 } from '../../../actions/authActions';
 import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
 import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
+import { UrgentBannerCreationPOM } from '../../../pages/nodeCreation/UrgentBannerCreationPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -125,6 +126,53 @@ test.describe('content listing', () => {
 
       await runStep('filter by content type: PDF', async () => {
         await page.selectOption('select[name="type"]', 'moj_pdf_item');
+        await page.click('input[type="submit"][value="Filter"]');
+        await expect(page.locator('table')).toContainText(uniqueTitle);
+      });
+    });
+  });
+
+  test('newly created urgent banner appears in content listing', async ({ page }, testInfo) => {
+    const runStep = createStepRunner(page, testInfo);
+    const uniqueTitle = `Playwright urgent listing ${Date.now()}`;
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    await runWithTemporaryUser(loginRole, async (user) => {
+      const urgentBanner = new UrgentBannerCreationPOM(page);
+
+      await loginViaUi(page, user.username, user.password, runStep);
+
+      await runStep('open urgent banner create form', async () => {
+        await urgentBanner.expectCreatePageAccessible();
+      });
+
+      await runStep('fill urgent banner content fields', async () => {
+        await urgentBanner.fillTitle(uniqueTitle);
+        await urgentBanner.fillUnpublishOnDate(tomorrow);
+        await urgentBanner.selectFirstPrison();
+      });
+
+      await runStep('save urgent banner content', async () => {
+        await urgentBanner.save();
+      });
+
+      await runStep('verify urgent banner was created before listing checks', async () => {
+        await urgentBanner.expectNodeViewPage(uniqueTitle);
+      });
+
+      await runStep('visit content listing', async () => {
+        await page.goto('/admin/content');
+        await expect(page).toHaveURL(/\/admin\/content/);
+      });
+
+      await runStep('verify new urgent banner appears in listing', async () => {
+        await page.fill('input[name="title"]', uniqueTitle);
+        await page.click('input[type="submit"][value="Filter"]');
+        await expect(page.locator('table')).toContainText(uniqueTitle);
+      });
+
+      await runStep('filter by content type: Urgent banner', async () => {
+        await page.selectOption('select[name="type"]', 'urgent_banner');
         await page.click('input[type="submit"][value="Filter"]');
         await expect(page.locator('table')).toContainText(uniqueTitle);
       });
