@@ -48,7 +48,7 @@ services:
       - prisoner_content_hub
 
   redis:
-    image: redis:5.0.6
+    image: redis:5.0.14
     ports:
       - 6379:6379
     networks:
