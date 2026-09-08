@@ -20,7 +20,7 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
    */
   protected function getExcludedPrisons() {
     return [
-//      'bedford',
+      'bedford',
       'berwyn',
       'bristol',
       'bullingdon',
@@ -38,7 +38,6 @@ class PrisonerHubWarmer extends PrisonerHubWarmerBase {
       'styal',
       'swaleside',
       'themount',
-      'thestudio',
       'wayland',
       'werrington',
       'wetherby',
