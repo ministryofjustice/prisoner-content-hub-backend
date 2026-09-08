@@ -18,7 +18,7 @@ services:
     env_file:
       - prisoner-content-hub-backend.env
     ports:
-      - 11001:8080
+      - 8080:8080
     networks:
       - prisoner_content_hub
 
