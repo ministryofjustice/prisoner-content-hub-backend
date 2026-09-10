@@ -112,7 +112,7 @@ jobs:
           name: Wait for mysql service to come up
           command: |
             docker-compose -f docker-compose.yml exec -T drupal /bin/bash -c \
-            'while ! mysqladmin ping -hdatabase --silent; do sleep 1; done'
+            'while ! mysqladmin ping -hdatabase --silent --disable-ssl; do sleep 1; done'
       - run:
           name: Create S3 bucket in localstack
           command: |
