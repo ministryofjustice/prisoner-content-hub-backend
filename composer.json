@@ -82,7 +82,7 @@
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "4.0.13",
         "oomphinc/composer-installers-extender": "^2.0",
-        "psy/psysh": "0.12.21"
+        "psy/psysh": "^0.12.24"
     },
     "conflict": {
         "drupal/drupal": "*"
