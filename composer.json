@@ -78,7 +78,7 @@
         "drupal/views_filters_populate": "^2.0",
         "drupal/views_tree": "^3.0",
         "drupal/warmer": "^2.0",
-        "drush/drush": "^12.4",
+        "drush/drush": "^13",
         "mhor/php-mediainfo": "^5.1.0",
         "npm-asset/select2": "4.0.13",
         "oomphinc/composer-installers-extender": "^2.0",
