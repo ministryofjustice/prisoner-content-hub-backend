@@ -156,6 +156,9 @@ COPY phpunit.xml phpunit.xml
 # Install vim/vi for easier debugging (e.g. from circleci).
 RUN apt-get install -y vim
 
+# Update perl to mitigate CVE-2026-13221
+RUN apt-get upgrade perl -y
+
 # Set to www-data user.
 USER 33
 
