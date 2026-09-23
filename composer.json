@@ -53,7 +53,7 @@
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "^1.8",
         "drupal/pathologic": "^2",
-        "drupal/publication_date": "^2.0@beta",
+        "drupal/publication_date": "^3",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
         "drupal/readonlymode": "^2@alpha",

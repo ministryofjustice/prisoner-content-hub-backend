@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1866f2b944d5d8aa3cab23dd4af66269",
+    "content-hash": "c7fdbe8ff47b67d8e11b85c8e874f956",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -4777,35 +4777,39 @@
         },
         {
             "name": "drupal/publication_date",
-            "version": "2.0.0-beta8",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/publication_date.git",
-                "reference": "8.x-2.0-beta8"
+                "reference": "3.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/publication_date-8.x-2.0-beta8.zip",
-                "reference": "8.x-2.0-beta8",
-                "shasum": "1e40fc97a4582c364a8971e16448775c30441fe7"
+                "url": "https://ftp.drupal.org/files/projects/publication_date-3.2.0.zip",
+                "reference": "3.2.0",
+                "shasum": "306b4dc4694f4ee2c7064028ca336b37097431a9"
             },
             "require": {
-                "drupal/core": "^9.1 || ^10"
+                "drupal/core": "^10.3 || ^11 || ^12"
+            },
+            "require-dev": {
+                "drupal/feeds": "^3.0",
+                "drupal/workbench_moderation": "^1.8"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0-beta8",
-                    "datestamp": "1715850299",
+                    "version": "3.2.0",
+                    "datestamp": "1788875249",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -4842,9 +4846,10 @@
                 }
             ],
             "description": "Add a field containing the publication date.",
-            "homepage": "https://www.drupal.org/project/publication_date",
+            "homepage": "https://drupal.org/project/publication_date",
             "support": {
-                "source": "https://git.drupalcode.org/project/publication_date"
+                "source": "https://git.drupalcode.org/project/publication_date",
+                "issues": "https://drupal.org/project/issues/publication_date"
             }
         },
         {
@@ -19401,7 +19406,6 @@
         "drupal/entity_clone": 10,
         "drupal/form_state_empty": 15,
         "drupal/jsonapi_search_api": 5,
-        "drupal/publication_date": 10,
         "drupal/readonlymode": 15
     },
     "prefer-stable": true,
