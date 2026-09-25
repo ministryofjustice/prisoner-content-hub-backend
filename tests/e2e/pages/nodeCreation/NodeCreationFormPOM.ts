@@ -232,12 +232,32 @@ export class NodeCreationFormPOM {
       .first();
 
     if ((await uploadButton.count()) > 0) {
-      await this.page.waitForTimeout(1000);
-      await uploadButton.evaluate((element: HTMLInputElement) => {
-        element.disabled = false;
-        element.click();
-      });
-      await this.page.waitForTimeout(2500);
+      const startTime = Date.now();
+      const timeout = 30000;
+      let uploadTriggered = false;
+
+      while (!uploadTriggered && Date.now() - startTime < timeout) {
+        const currentButton = this.page
+          .locator('input[name="field_moj_pdf_0_upload_button"], input[id*="field-moj-pdf-0-upload-button"]')
+          .first();
+
+        if ((await currentButton.count()) > 0) {
+          const isConnected = await currentButton.evaluate((element: HTMLInputElement) => element.isConnected).catch(() => false);
+          const isDisabled = await currentButton.evaluate((element: HTMLInputElement) => element.disabled).catch(() => true);
+
+          if (isConnected && !isDisabled) {
+            await currentButton.evaluate((element: HTMLInputElement) => {
+              element.disabled = false;
+              element.click();
+            });
+            uploadTriggered = true;
+            await this.page.waitForTimeout(1500);
+            break;
+          }
+        }
+
+        await this.page.waitForTimeout(500);
+      }
     }
 
     const saveButton = this.saveButton();
