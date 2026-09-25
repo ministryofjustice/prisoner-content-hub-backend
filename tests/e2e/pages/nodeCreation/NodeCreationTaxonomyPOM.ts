@@ -79,6 +79,10 @@ export class NodeCreationTaxonomyPOM {
       return false;
     }
 
+    if (!(await selectionTrigger.isVisible().catch(() => false))) {
+      return false;
+    }
+
     await selectionTrigger.click();
 
     const openSearch = this.page
@@ -240,24 +244,28 @@ export class NodeCreationTaxonomyPOM {
   async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
     const categoryNativeSelect = this.categorySelectField();
     if ((await categoryNativeSelect.count()) > 0) {
-      const options = categoryNativeSelect.first().locator('option');
-      const optionsCount = await options.count();
-      if (optionsCount > 0) {
-        const candidateValues: string[] = [];
-        for (let i = 0; i < optionsCount; i++) {
-          const option = options.nth(i);
-          const value = (await option.getAttribute('value')) ?? '';
-          const label = (await option.innerText()).trim();
-          if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
-            continue;
+      const nativeSelect = categoryNativeSelect.first();
+      const isNativeVisible = await nativeSelect.isVisible().catch(() => false);
+      if (isNativeVisible) {
+        const options = nativeSelect.locator('option');
+        const optionsCount = await options.count();
+        if (optionsCount > 0) {
+          const candidateValues: string[] = [];
+          for (let i = 0; i < optionsCount; i++) {
+            const option = options.nth(i);
+            const value = (await option.getAttribute('value')) ?? '';
+            const label = (await option.innerText()).trim();
+            if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
+              continue;
+            }
+            candidateValues.push(value);
           }
-          candidateValues.push(value);
-        }
 
-        if (candidateValues.length > 0) {
-          await categoryNativeSelect.first().selectOption(candidateValues[0]);
-          if (await this.hasCategoryOrSeriesSelection()) {
-            return;
+          if (candidateValues.length > 0) {
+            await nativeSelect.selectOption(candidateValues[0]);
+            if (await this.hasCategoryOrSeriesSelection()) {
+              return;
+            }
           }
         }
       }

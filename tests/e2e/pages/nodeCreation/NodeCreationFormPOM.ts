@@ -218,18 +218,36 @@ export class NodeCreationFormPOM {
   async uploadPdfFile(filePath: string): Promise<void> {
     const pdfFileInput = this.pdfFileInput();
 
-    if ((await pdfFileInput.count()) > 0) {
-      await pdfFileInput.setInputFiles(filePath);
+    if ((await pdfFileInput.count()) === 0) {
+      throw new Error('PDF file input was not found on the create form.');
+    }
 
-      const saveButton = this.saveButton();
-      const startTime = Date.now();
-      const timeout = 30000;
-      let isEnabled = await saveButton.isEnabled();
+    await pdfFileInput.setInputFiles(filePath);
 
-      while (!isEnabled && Date.now() - startTime < timeout) {
-        await this.page.waitForTimeout(500);
-        isEnabled = await saveButton.isEnabled();
-      }
+    const fileName = filePath.split(/[\\/]/).pop() ?? filePath;
+    await expect(pdfFileInput).toHaveJSProperty('files.0.name', fileName, { timeout: 10000 });
+
+    const uploadButton = this.page
+      .locator('input[name="field_moj_pdf_0_upload_button"], input[id*="field-moj-pdf-0-upload-button"]')
+      .first();
+
+    if ((await uploadButton.count()) > 0) {
+      await this.page.waitForTimeout(1000);
+      await uploadButton.evaluate((element: HTMLInputElement) => {
+        element.disabled = false;
+        element.click();
+      });
+      await this.page.waitForTimeout(2500);
+    }
+
+    const saveButton = this.saveButton();
+    const startTime = Date.now();
+    const timeout = 30000;
+    let isEnabled = await saveButton.isEnabled();
+
+    while (!isEnabled && Date.now() - startTime < timeout) {
+      await this.page.waitForTimeout(500);
+      isEnabled = await saveButton.isEnabled();
     }
   }
 
