@@ -1,5 +1,6 @@
 import { BrowserContext, expect, Page } from '@playwright/test';
 import {
+  DrupalRoleInput,
   TemporaryUser,
   ensureE2ETaxonomyTerms,
   createTemporaryDrupalUser,
@@ -9,11 +10,11 @@ import { StepRunner } from '../helpers/stepScreenshots';
 import { LoginPage } from '../pages/LoginPage';
 
 export async function runWithTemporaryUser<T>(
-  role: string,
+  roles: DrupalRoleInput,
   action: (user: TemporaryUser) => Promise<T>,
 ): Promise<T> {
   ensureE2ETaxonomyTerms();
-  const user = createTemporaryDrupalUser(role);
+  const user = createTemporaryDrupalUser(roles);
   try {
     return await action(user);
   } finally {

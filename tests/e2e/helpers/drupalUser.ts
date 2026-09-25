@@ -8,6 +8,8 @@ export interface TemporaryUser {
   password: string;
 }
 
+export type DrupalRoleInput = string | string[];
+
 let taxonomySeededForSession = false;
 const defaultCategoryTerm = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
 const defaultSeriesTerm = process.env.PLAYWRIGHT_E2E_SERIES_TERM ?? defaultCategoryTerm;
@@ -126,14 +128,27 @@ export function canManageDrupalUsersFromTests(): boolean {
   }
 }
 
-export function createTemporaryDrupalUser(role = 'moj_local_content_manager'): TemporaryUser {
+function normalizeRoles(roles: DrupalRoleInput): string[] {
+  const values = Array.isArray(roles) ? roles : [roles];
+  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+}
+
+export function createTemporaryDrupalUser(roles: DrupalRoleInput = 'moj_local_content_manager'): TemporaryUser {
+  const normalizedRoles = normalizeRoles(roles);
+  if (normalizedRoles.length === 0) {
+    throw new Error('At least one role is required to create a temporary Drupal user.');
+  }
+
+  const primaryRole = normalizedRoles[0];
   const suffix = randomUUID().slice(0, 8);
-  const username = `${roleLabel(role)}-${suffix}`;
+  const username = `${roleLabel(primaryRole)}-${suffix}`;
   const password = `${suffix}-A1!`;
   const email = `${username}@example.test`;
 
   runDrushWithRetry(['user:create', username, `--mail=${email}`, `--password=${password}`]);
-  runDrushWithRetry(['user:role:add', role, username]);
+  for (const role of normalizedRoles) {
+    runDrushWithRetry(['user:role:add', role, username]);
+  }
 
   return { username, password };
 }

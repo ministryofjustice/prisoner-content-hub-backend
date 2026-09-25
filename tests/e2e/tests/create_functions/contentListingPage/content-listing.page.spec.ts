@@ -99,7 +99,7 @@ test.describe('content listing', () => {
 
       await runStep('upload PDF file', async () => {
         const path = require('path');
-        const testFilePath = path.resolve(__dirname, '../../fixtures/test-file.pdf');
+        const testFilePath = path.resolve(__dirname, '../../../fixtures/test-file.pdf');
         await pdfPage.uploadPdfFile(testFilePath);
       });
 

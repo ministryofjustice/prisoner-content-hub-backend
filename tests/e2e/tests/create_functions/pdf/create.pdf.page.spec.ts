@@ -13,7 +13,7 @@ const loginRole = appSettings.roles.lcmTest;
 test.describe('PDF create page', () => {
   test.describe.configure({ mode: 'serial', timeout: 120000 });
 
-  test.skip('local content manager can create PDF content', async ({ page }, testInfo) => {
+  test('local content manager can create PDF content', async ({ page }, testInfo) => {
     const runStep = createStepRunner(page, testInfo);
     const uniqueTitle = `Playwright PDF ${Date.now()}`;
     const uniqueSummary = `Playwright PDF summary ${Date.now()}`;
@@ -30,29 +30,19 @@ test.describe('PDF create page', () => {
       await runStep('fill PDF content fields', async () => {
         await pdfPage.fillTitle(uniqueTitle);
         await pdfPage.fillSummary(uniqueSummary);
-        await pdfPage.selectFirstCategory();
       });
 
       await runStep('upload PDF file', async () => {
-        const testFilePath = path.resolve(__dirname, '../../fixtures/test-file.pdf');
+        const testFilePath = path.resolve(__dirname, '../../../fixtures/test-file.pdf');
         await pdfPage.uploadPdfFile(testFilePath);
       });
 
-      await runStep('save PDF content', async () => {
-        const saveButton = page.getByRole('button', { name: /^Save$/ });
-        const isDisabled = await saveButton.isDisabled();
-        console.log('Save button disabled?', isDisabled);
-        
-        await pdfPage.save();
-        await page.waitForTimeout(3000);
+      await runStep('select required category', async () => {
+        await pdfPage.selectFirstCategory();
+      });
 
-        const currentUrl = page.url();
-        console.log('Current URL after save:', currentUrl);
-        
-        const bodyText = await page.locator('body').innerText();
-        const errorMessages = await page.locator('[data-drupal-message-type="error"]').count();
-        console.log('Error message count:', errorMessages);
-        console.log('Page title:', await page.title());
+      await runStep('save PDF content', async () => {
+        await pdfPage.save();
       });
 
       await runStep('verify created PDF content', async () => {
