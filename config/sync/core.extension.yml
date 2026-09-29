@@ -74,7 +74,6 @@ module:
   path: 0
   path_alias: 0
   pathologic: 0
-  phpass: 0
   prisoner_hub_audit_logs: 0
   prisoner_hub_breadcrumbs: 0
   prisoner_hub_bulk_updater: 0
@@ -116,7 +115,6 @@ module:
   text: 0
   text_editor_refresh_images: 0
   token: 0
-  toolbar: 0
   update: 0
   uploaded_file_filename_randomizer: 0
   user: 0
