@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 
 const defaultPreferredCategory = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
+const defaultPreferredPrisonOwner = process.env.PLAYWRIGHT_E2E_PRISON_OWNER_TERM ?? 'Bedford';
 
 export class NodeCreationTaxonomyPOM {
   constructor(private readonly page: Page) {}
@@ -75,6 +76,10 @@ export class NodeCreationTaxonomyPOM {
       .first();
 
     if ((await selectionTrigger.count()) === 0) {
+      return false;
+    }
+
+    if (!(await selectionTrigger.isVisible().catch(() => false))) {
       return false;
     }
 
@@ -227,30 +232,40 @@ export class NodeCreationTaxonomyPOM {
       return true;
     }
 
-    return this.hasCategoryOrSeriesSelection();
+    return (await this.hasSelectionInGroup(group)) || this.hasCategoryOrSeriesSelection();
+  }
+
+  async selectPrisonOwner(preferredValue = defaultPreferredPrisonOwner): Promise<void> {
+    if (!(await this.selectFromTaxonomyGroup(/^Prison owner$/i, preferredValue))) {
+      throw new Error(`Unable to select prison owner "${preferredValue}" on the create form.`);
+    }
   }
 
   async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
     const categoryNativeSelect = this.categorySelectField();
     if ((await categoryNativeSelect.count()) > 0) {
-      const options = categoryNativeSelect.first().locator('option');
-      const optionsCount = await options.count();
-      if (optionsCount > 0) {
-        const candidateValues: string[] = [];
-        for (let i = 0; i < optionsCount; i++) {
-          const option = options.nth(i);
-          const value = (await option.getAttribute('value')) ?? '';
-          const label = (await option.innerText()).trim();
-          if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
-            continue;
+      const nativeSelect = categoryNativeSelect.first();
+      const isNativeVisible = await nativeSelect.isVisible().catch(() => false);
+      if (isNativeVisible) {
+        const options = nativeSelect.locator('option');
+        const optionsCount = await options.count();
+        if (optionsCount > 0) {
+          const candidateValues: string[] = [];
+          for (let i = 0; i < optionsCount; i++) {
+            const option = options.nth(i);
+            const value = (await option.getAttribute('value')) ?? '';
+            const label = (await option.innerText()).trim();
+            if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
+              continue;
+            }
+            candidateValues.push(value);
           }
-          candidateValues.push(value);
-        }
 
-        if (candidateValues.length > 0) {
-          await categoryNativeSelect.first().selectOption(candidateValues[0]);
-          if (await this.hasCategoryOrSeriesSelection()) {
-            return;
+          if (candidateValues.length > 0) {
+            await nativeSelect.selectOption(candidateValues[0]);
+            if (await this.hasCategoryOrSeriesSelection()) {
+              return;
+            }
           }
         }
       }

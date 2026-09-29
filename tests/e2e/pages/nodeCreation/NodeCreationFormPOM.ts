@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 export class NodeCreationFormPOM {
   constructor(private readonly page: Page) {}
@@ -74,8 +74,93 @@ export class NodeCreationFormPOM {
       .first();
   }
 
+  unpublishOnDateField(): Locator {
+    return this.page
+      .locator(
+        [
+          '#edit-unpublish-on-0-value-date',
+          'input[name="unpublish_on[0][value][date]"]',
+          'input[data-drupal-selector="edit-unpublish-on-0-value-date"]',
+          'input[id*="unpublish-on"][type="date"]',
+          '[data-drupal-selector*="edit-unpublish-on"] input[type="date"]',
+        ].join(', ')
+      )
+      .first();
+  }
+
+  revisionLogMessageField(): Locator {
+    return this.page
+      .getByRole('textbox', { name: /revision log message/i })
+      .first();
+  }
+
+  detailsSummary(label: string): Locator {
+    return this.page.getByRole('button', { name: new RegExp(label, 'i') }).first();
+  }
+
   prisonCheckboxes(): Locator {
     return this.page.locator('input[type="checkbox"][name^="field_prisons"]');
+  }
+
+  prisonRadioButtons(): Locator {
+    return this.page.locator('input[type="radio"][name^="field_prisons"]');
+  }
+
+  prisonGroup(): Locator {
+    return this.page.getByRole('group', { name: /prisons/i });
+  }
+
+  async selectPrisonByLabel(prisonLabel: string): Promise<void> {
+    // Try radio button first
+    const radioButton = this.page.locator(`input[type="radio"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
+    const radioCount = await radioButton.count();
+    
+    if (radioCount > 0) {
+      await radioButton.click();
+      return;
+    }
+
+    // Fall back to checkbox
+    const checkbox = this.page.locator(`input[type="checkbox"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
+    if ((await checkbox.count()) > 0) {
+      await checkbox.click();
+      return;
+    }
+
+    // Try direct input click if no label found
+    const input = this.page.locator(`input[type="radio"][name^="field_prisons"][value*="${prisonLabel}"], input[type="checkbox"][name^="field_prisons"][value*="${prisonLabel}"]`).first();
+    if ((await input.count()) > 0) {
+      await input.click();
+    }
+  }
+
+  async selectFirstPrison(): Promise<void> {
+    const selectablePrisons = this.prisonGroup().locator(
+      'input[type="radio"][name^="field_prisons"], input[type="checkbox"][name^="field_prisons"]'
+    );
+
+    const firstPrison = selectablePrisons.first();
+    await expect(firstPrison).toBeVisible({ timeout: 30000 });
+    const firstPrisonId = await firstPrison.getAttribute('id');
+
+    if (firstPrisonId) {
+      const firstPrisonLabel = this.page.locator(`label[for="${firstPrisonId}"]`).first();
+
+      if ((await firstPrisonLabel.count()) > 0) {
+        await firstPrisonLabel.scrollIntoViewIfNeeded();
+        await firstPrisonLabel.click();
+        await expect(firstPrison).toBeChecked();
+        return;
+      }
+    }
+
+    await firstPrison.scrollIntoViewIfNeeded();
+    await firstPrison.check({ force: true });
+    await expect(firstPrison).toBeChecked();
+  }
+
+  async getPrisonSelectionCount(): Promise<number> {
+    return await this.prisonGroup().locator('input:checked').count();
   }
 
   saveButton(): Locator {
@@ -123,21 +208,66 @@ export class NodeCreationFormPOM {
     }
   }
 
+  async fillUnpublishOnDate(date: string): Promise<void> {
+    const unpublishOnDateField = this.unpublishOnDateField();
+    if ((await unpublishOnDateField.count()) > 0) {
+      await unpublishOnDateField.fill(date);
+    }
+  }
+
   async uploadPdfFile(filePath: string): Promise<void> {
     const pdfFileInput = this.pdfFileInput();
 
-    if ((await pdfFileInput.count()) > 0) {
-      await pdfFileInput.setInputFiles(filePath);
+    if ((await pdfFileInput.count()) === 0) {
+      throw new Error('PDF file input was not found on the create form.');
+    }
 
-      const saveButton = this.saveButton();
+    await pdfFileInput.setInputFiles(filePath);
+
+    const fileName = filePath.split(/[\\/]/).pop() ?? filePath;
+    await expect(pdfFileInput).toHaveJSProperty('files.0.name', fileName, { timeout: 10000 });
+
+    const uploadButton = this.page
+      .locator('input[name="field_moj_pdf_0_upload_button"], input[id*="field-moj-pdf-0-upload-button"]')
+      .first();
+
+    if ((await uploadButton.count()) > 0) {
       const startTime = Date.now();
       const timeout = 30000;
-      let isEnabled = await saveButton.isEnabled();
+      let uploadTriggered = false;
 
-      while (!isEnabled && Date.now() - startTime < timeout) {
+      while (!uploadTriggered && Date.now() - startTime < timeout) {
+        const currentButton = this.page
+          .locator('input[name="field_moj_pdf_0_upload_button"], input[id*="field-moj-pdf-0-upload-button"]')
+          .first();
+
+        if ((await currentButton.count()) > 0) {
+          const isConnected = await currentButton.evaluate((element: HTMLInputElement) => element.isConnected).catch(() => false);
+          const isDisabled = await currentButton.evaluate((element: HTMLInputElement) => element.disabled).catch(() => true);
+
+          if (isConnected && !isDisabled) {
+            await currentButton.evaluate((element: HTMLInputElement) => {
+              element.disabled = false;
+              element.click();
+            });
+            uploadTriggered = true;
+            await this.page.waitForTimeout(1500);
+            break;
+          }
+        }
+
         await this.page.waitForTimeout(500);
-        isEnabled = await saveButton.isEnabled();
       }
+    }
+
+    const saveButton = this.saveButton();
+    const startTime = Date.now();
+    const timeout = 30000;
+    let isEnabled = await saveButton.isEnabled();
+
+    while (!isEnabled && Date.now() - startTime < timeout) {
+      await this.page.waitForTimeout(500);
+      isEnabled = await saveButton.isEnabled();
     }
   }
 

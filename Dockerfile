@@ -8,7 +8,7 @@
 
 # Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
 # of the things we run, like kubectl.
-FROM --platform=linux/amd64 php:8.3.9-apache-bookworm AS base
+FROM --platform=linux/amd64 php:8.3.33-apache-trixie AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -95,7 +95,7 @@ RUN pecl install uploadprogress \
 RUN pecl install redis \
   && docker-php-ext-enable redis
 
-RUN pecl install apcu-5.1.24 \
+RUN pecl install apcu-5.1.28 \
   && docker-php-ext-enable apcu
 
 # Enable apache modules that are used in Drupal's htaccess.
@@ -167,7 +167,7 @@ RUN composer install \
   --no-interaction \
   --prefer-dist
 
-FROM test as local
+FROM test AS local
 
 COPY scripts/ scripts/
 
@@ -209,7 +209,7 @@ USER 33
 # It has been purposely set as the last stage of this file, so that it becomes the default
 # when no build stage has been specified.
 ###########################################################################################
-FROM base as optimised-build
+FROM base AS optimised-build
 
 ## Install dependencies (without dev)
 RUN composer install \
