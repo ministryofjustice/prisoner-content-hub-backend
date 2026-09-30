@@ -3,7 +3,7 @@ import { NodeCreationFormPOM } from './NodeCreationFormPOM';
 import { NodeCreationNavigationPOM } from './NodeCreationNavigationPOM';
 import { NodeCreationTaxonomyPOM } from './NodeCreationTaxonomyPOM';
 
-export class BasicPageCreationPOM {
+export class UrgentBannerCreationPOM {
   private readonly form: NodeCreationFormPOM;
   private readonly navigation: NodeCreationNavigationPOM;
   private readonly taxonomy: NodeCreationTaxonomyPOM;
@@ -15,26 +15,26 @@ export class BasicPageCreationPOM {
   }
 
   async expectCreatePageAccessible(): Promise<void> {
-    await this.navigation.expectCreatePageAccessible('page');
+    await this.navigation.expectCreatePageAccessible('urgent_banner');
   }
 
   async fillTitle(title: string): Promise<void> {
     await this.form.fillTitle(title);
   }
 
-  async fillSummary(summary: string): Promise<void> {
-    await this.form.fillSummary(summary);
+  async fillUnpublishOnDate(date: string): Promise<void> {
+    await this.form.fillUnpublishOnDate(date);
   }
 
-  async fillBody(body: string): Promise<void> {
-    await this.form.fillBody(body);
+  revisionLogMessageField() {
+    return this.form.revisionLogMessageField();
   }
 
-  async selectFirstCategory(preferredValue?: string): Promise<void> {
-    await this.taxonomy.selectFirstCategory(preferredValue);
+  detailsSummary(label: string) {
+    return this.form.detailsSummary(label);
   }
 
-  prisonGroup(): ReturnType<NodeCreationFormPOM['prisonGroup']> {
+  prisonGroup() {
     return this.form.prisonGroup();
   }
 
@@ -42,19 +42,19 @@ export class BasicPageCreationPOM {
     await this.form.selectFirstPrison();
   }
 
-  async selectPrisonByLabel(prisonLabel: string): Promise<void> {
-    await this.form.selectPrisonByLabel(prisonLabel);
-  }
-
   async getPrisonSelectionCount(): Promise<number> {
     return await this.form.getPrisonSelectionCount();
+  }
+
+  async selectPrisonOwner(preferredValue?: string): Promise<void> {
+    await this.taxonomy.selectPrisonOwner(preferredValue);
   }
 
   async save(): Promise<void> {
     await this.form.save();
   }
 
-  async expectNodeViewPage(title: string, body?: string): Promise<void> {
-    await this.navigation.expectNodeViewPage(title, body);
+  async expectNodeViewPage(title: string): Promise<void> {
+    await this.navigation.expectNodeViewPage(title);
   }
 }

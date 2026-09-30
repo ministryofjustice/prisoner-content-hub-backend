@@ -1,27 +1,37 @@
+From 6f56c19c4d70f099a110425e465372662cf2a2ad Mon Sep 17 00:00:00 2001
+From: Elliot Ward <elliot.ward@digital.justice.gov.uk>
+Date: Thu, 18 Jun 2026 18:33:07 +0100
+Subject: [PATCH] #3604065 - enable wildcards for local path coniguration.
+
+---
+ pathologic.module                     | 4 ++--
+ src/PathologicCommonSettingsTrait.php | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/pathologic.module b/pathologic.module
-index 8dcf7d8..8fb3a61 100644
+index e46180b..e2e1962 100644
 --- a/pathologic.module
 +++ b/pathologic.module
-@@ -212,7 +212,7 @@ function _pathologic_replace($matches) {
+@@ -247,7 +247,7 @@ function _pathologic_replace_individual($matches) {
        && strpos($parts['path'], $exploded['path']) === 0
-       // And either they have the same host, or both have no host…
+       // And either they have the same host, or both have no host.
        && (
 -        (isset($exploded['host']) && isset($parts['host']) && $exploded['host'] === $parts['host'])
 +        (isset($exploded['host']) && isset($parts['host']) && fnmatch($exploded['host'], $parts['host']))
          || (!isset($exploded['host']) && !isset($parts['host']))
        )
      ) {
-@@ -229,7 +229,7 @@ function _pathologic_replace($matches) {
+@@ -264,7 +264,7 @@ function _pathologic_replace_individual($matches) {
      // Okay, we didn't match on path alone, or host and path together. Can we
      // match on just host? Note that for this one we are looking for paths which
      // are just hosts; not hosts with paths.
 -    elseif ((isset($parts['host']) && !isset($exploded['path']) && isset($exploded['host']) && $exploded['host'] === $parts['host'])) {
 +    elseif ((isset($parts['host']) && !isset($exploded['path']) && isset($exploded['host']) && fnmatch($exploded['host'], $parts['host']))) {
-       // No further editing; just continue
+       // No further editing; just continue.
        $found = TRUE;
-       // Break out of foreach loop
+       // Break out of foreach loop.
 diff --git a/src/PathologicCommonSettingsTrait.php b/src/PathologicCommonSettingsTrait.php
-index ed1c134..9da2045 100644
+index 67db2d6..0bcad9f 100644
 --- a/src/PathologicCommonSettingsTrait.php
 +++ b/src/PathologicCommonSettingsTrait.php
 @@ -51,7 +51,7 @@ trait PathologicCommonSettingsTrait {
@@ -33,3 +43,6 @@ index ed1c134..9da2045 100644
          '#weight' => 20,
        ],
      ];
+-- 
+GitLab
+

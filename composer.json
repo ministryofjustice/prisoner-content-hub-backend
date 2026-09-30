@@ -21,15 +21,15 @@
         "drupal/csv_serialization": "^3.0 || ^4.0",
         "drupal/database_ssl_check": "^2.0",
         "drupal/decoupled_router": "^2.0",
-        "drupal/diff": "^1.0",
+        "drupal/diff": "^2",
         "drupal/dynamic_entity_reference": "^3.2",
         "drupal/elasticsearch_connector": "^7.0-alpha2",
         "drupal/entity": "^1.2",
         "drupal/entity_clone": "^2.0@beta",
         "drupal/field_group": "^4",
         "drupal/field_permissions": "^1.3",
-        "drupal/file_mime_validator": "^2.0",
-        "drupal/flood_control": "^2.3",
+        "drupal/file_mime_validator": "^3",
+        "drupal/flood_control": "^3",
         "drupal/flysystem": "^2.2",
         "drupal/flysystem_s3": "^2",
         "drupal/form_state_empty": "^1.0@alpha",
@@ -52,8 +52,8 @@
         "drupal/optgroup_taxonomy_select": "^1.2",
         "drupal/password_policy": "^4.0",
         "drupal/pathauto": "^1.8",
-        "drupal/pathologic": "2.0.0-alpha3",
-        "drupal/publication_date": "^2.0@beta",
+        "drupal/pathologic": "^2",
+        "drupal/publication_date": "^3",
         "drupal/queue_ui": "^3.2",
         "drupal/raven": "^3.2",
         "drupal/readonlymode": "^2@alpha",
@@ -79,12 +79,12 @@
         "drupal/views_filters_populate": "^2.0",
         "drupal/views_tree": "^3.0",
         "drupal/warmer": "^2.0",
-        "drush/drush": "^12.4",
+        "drush/drush": "^13",
         "mhor/php-mediainfo": "^5.1.0",
-        "npm-asset/select2": "^4.0",
+        "npm-asset/select2": "4.0.13",
         "oomphinc/composer-installers-extender": "^2.0",
         "yaireo/tagify": "^4.35",
-        "psy/psysh": "0.12.21"
+        "psy/psysh": "^0.12.24"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -184,7 +184,7 @@
                 "Issue #2952301: Implement SearchBuilder::luceneFlattenKeys.": "patches/elasticsearch_connector-flattenkeys-2952301-28.patch"
             },
             "drupal/pathologic": {
-                "Issue #758118: wild card for Additional paths.": "patches/pathologic-758118-wildcard-for-additional-paths-19.patch"
+                "Issue #3604065: enable wildcards for local path configuration.": "patches/pathologic-3604065_enable_wildcards_for_local_path_configuration.patch"
             },
             "consolidation/site-process": {
                 "Temporary patch to allow Drupal 10.3 to install": "patches/temporary_consolidation_fix.patch"

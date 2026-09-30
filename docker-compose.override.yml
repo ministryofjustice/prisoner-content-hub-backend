@@ -24,4 +24,4 @@ services:
       - prisoner-content-hub-backend-local.env
   localstack:
     volumes:
-      - ./scripts/createLocalstackS3Bucket.sh:/docker-entrypoint-initaws.d/createLocalstackS3Bucket.sh
+      - ./scripts/createLocalstackS3Bucket.sh:/etc/localstack/init/ready.d/createLocalstackS3Bucket.sh

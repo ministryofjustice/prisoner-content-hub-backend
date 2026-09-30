@@ -1,14 +1,14 @@
-From 69e9556ece3496189e5edf01274a38f1c69d3cf7 Mon Sep 17 00:00:00 2001
-From: leonnk <leonnk@595374.no-reply.drupal.org>
-Date: Fri, 26 Nov 2021 14:58:04 +0000
-Subject: [PATCH] Rebase branch onto 2.0.x
+From e7df94b457e0061a88a0407edbd8911a7a21850c Mon Sep 17 00:00:00 2001
+From: Elliot Ward <elliot.ward@digital.justice.gov.uk>
+Date: Wed, 17 Jun 2026 14:34:30 +0100
+Subject: [PATCH] #2411667: another rebase of patch following 2.0.3.
 
 ---
  term_reference_tree.js | 21 ++++++++++++---------
  1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/term_reference_tree.js b/term_reference_tree.js
-index 88203c1..c27b1f9 100644
+index f961050..d973765 100644
 --- a/term_reference_tree.js
 +++ b/term_reference_tree.js
 @@ -20,9 +20,10 @@
@@ -24,7 +24,7 @@ index 88203c1..c27b1f9 100644
          });
  
          //On page load, check if the user wants a cascading selection.
-@@ -75,7 +76,7 @@
+@@ -80,7 +81,7 @@
  
                var checkbox = $('#' + control_id);
                checkbox.removeAttr('checked');
@@ -33,16 +33,16 @@ index 88203c1..c27b1f9 100644
  
                //Show "nothing selected" message, if needed.
                showNothingSelectedMessage(track_list_container);
-@@ -259,7 +260,7 @@
- // This helper function checks if the maximum number of choices is already
- // selected. If so, it disables all the other options.  If not, it enables
- // them.
+@@ -314,7 +315,7 @@
+   // This helper function checks if the maximum number of choices is already
+   // selected. If so, it disables all the other options.  If not, it enables
+   // them.
 -  function checkMaxChoices(item, checkbox) {
 +  function checkMaxChoices(item, checkbox, disabledFields) {
      var maxChoices = -1;
      try {
        maxChoices = parseInt(drupalSettings.term_reference_tree.trees[item.attr('id')]['max_choices']);
-@@ -268,11 +269,13 @@
+@@ -323,11 +324,13 @@
      }
      var count = item.find(':checked').length;
  

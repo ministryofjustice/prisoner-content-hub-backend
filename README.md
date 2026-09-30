@@ -42,7 +42,7 @@ This will have all of the site's configuration, but won't have any content or ta
 #### 4. Access the service
 Once all the services have started, you can access them at:
 
-**http://localhost:11001**
+**http://localhost:8080**
 
 #### 5. Logging into Drupal
 The `make sync` command brings in all of the Drupal users from production.  So if you already have an account setup there,
@@ -51,7 +51,7 @@ you can login with the same username/password on your local environment.
 Alternatively, you can login with the admin account by running:
 ```
 docker-compose exec drupal drush user:unblock admin
-docker-compose exec drupal drush uli --uri=http://localhost:11001/
+docker-compose exec drupal drush uli --uri=http://localhost:8080/
 ```
 This will give you a login link to access the site. \
 Note this account is blocked on production, and should only be used on local environments.
@@ -133,10 +133,10 @@ Both local and CI environments use a fresh Drupal install with minimal configura
 npm run typecheck:e2e
 ```
 
-By default, tests target `http://localhost:11001`. You can override this with:
+By default, tests target `http://localhost:8080`. You can override this with:
 
 ```bash
-PLAYWRIGHT_BASE_URL=http://localhost:11001 npm run test:e2e
+PLAYWRIGHT_BASE_URL=http://localhost:8080 npm run test:e2e
 ```
 
 The first starter spec is in `tests/e2e/tests/smoke/smoke.spec.ts`.

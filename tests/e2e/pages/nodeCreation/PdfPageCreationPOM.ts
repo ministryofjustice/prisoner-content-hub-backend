@@ -70,6 +70,22 @@ export class PdfPageCreationPOM {
     await this.taxonomy.selectFirstCategory(preferredValue);
   }
 
+  prisonGroup(): Locator {
+    return this.form.prisonGroup();
+  }
+
+  async selectFirstPrison(): Promise<void> {
+    await this.form.selectFirstPrison();
+  }
+
+  async selectPrisonByLabel(prisonLabel: string): Promise<void> {
+    await this.form.selectPrisonByLabel(prisonLabel);
+  }
+
+  async getPrisonSelectionCount(): Promise<number> {
+    return await this.form.getPrisonSelectionCount();
+  }
+
   async uploadPdfFile(filePath: string): Promise<void> {
     await this.form.uploadPdfFile(filePath);
   }
