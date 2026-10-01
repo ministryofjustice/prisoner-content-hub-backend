@@ -21,7 +21,6 @@ dependencies:
     - raven
     - scheduler
     - system
-    - toolbar
     - view_unpublished
 id: moj_local_content_manager
 label: 'Local Content Manager'
@@ -30,7 +29,6 @@ is_admin: null
 permissions:
   - 'access content overview'
   - 'access site in maintenance mode'
-  - 'access toolbar'
   - 'administer nodes'
   - 'create moj_pdf_item content'
   - 'create moj_radio_item content'
@@ -54,6 +52,7 @@ permissions:
   - 'revert urgent_banner revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'send performance traces to sentry'
   - 'set any published on date'
   - 'use basic_editorial transition create_new_draft'
   - 'use basic_editorial transition publish_approved_content'

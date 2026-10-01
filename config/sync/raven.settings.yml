@@ -4,14 +4,14 @@ client_key: 'https://7e038c55ab3547be95934595b77723f5@o345774.ingest.sentry.io/5
 environment: ''
 release: ''
 log_levels:
-  1: 1
-  2: 2
-  3: 3
-  4: 4
-  5: 0
-  6: 0
-  7: 0
-  8: 0
+  emergency: true
+  alert: true
+  critical: true
+  error: true
+  warning: false
+  notice: false
+  info: false
+  debug: false
 stack: true
 timeout: 2.0
 message_limit: 2048
@@ -40,3 +40,4 @@ send_monitoring_sensor_status_changes: false
 404_tracing: true
 show_report_dialog: false
 error_embed_url: ''
+http_compression: true
