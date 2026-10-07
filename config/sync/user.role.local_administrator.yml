@@ -30,7 +30,6 @@ dependencies:
     - scheduler
     - system
     - taxonomy
-    - toolbar
 _core:
   default_config_hash: w3gv4hBMp_vQx-dpzgOKpEZ0uNN5SSNFsYLbXwC7WZU
 id: local_administrator
@@ -42,7 +41,6 @@ permissions:
   - 'access content overview'
   - 'access site in maintenance mode'
   - 'access taxonomy overview'
-  - 'access toolbar'
   - 'add content to books'
   - 'administer book outlines'
   - 'administer menu'
@@ -133,6 +131,7 @@ permissions:
   - 'revert urgent_banner revisions'
   - 'schedule publishing of nodes'
   - 'send javascript errors to sentry'
+  - 'send performance traces to sentry'
   - 'set any published on date'
   - 'take_ownership_on_clone file entity'
   - 'take_ownership_on_clone node entity'

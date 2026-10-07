@@ -4,9 +4,11 @@ status: true
 dependencies:
   module:
     - content_translation
+    - raven
 id: translator
 label: Translator
 weight: -4
 is_admin: null
 permissions:
+  - 'send performance traces to sentry'
   - 'translate editable entities'
