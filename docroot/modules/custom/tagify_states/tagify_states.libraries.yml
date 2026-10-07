@@ -1,0 +1,5 @@
+tagify_states:
+  js:
+    js/tagify-states.js: {}
+  dependencies:
+    - core/drupal
