@@ -92,15 +92,16 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/console-extend-plugin": true,
             "drupal/core-composer-scaffold": true,
             "drupal/core-project-message": true,
-            "cweagans/composer-patches": true,
-            "drupal/console-extend-plugin": true,
             "drupal/core-vendor-hardening": true,
             "oomphinc/composer-installers-extender": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
+            "symfony/runtime": true,
             "tbachert/spi": true
         }
     },
