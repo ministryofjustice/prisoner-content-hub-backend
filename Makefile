@@ -24,7 +24,7 @@ php-stan:
 
 run-tests:
 	echo "Running tests on existing site"
-	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose
+	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --display-incomplete --display-skipped
 
 deploy:
 	echo "Enabling maintenance and readonly mode"
