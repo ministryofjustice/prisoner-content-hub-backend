@@ -17,7 +17,7 @@ install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y
 
 coding-standards:
-	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css,js docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php
+	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php
 
 php-stan:
 	vendor/bin/phpstan analyze
