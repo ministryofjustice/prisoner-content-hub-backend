@@ -386,7 +386,8 @@ final class PrisonerHubBulkUpdaterCommands extends DrushCommands {
       }
       /** @var \Drupal\node\NodeInterface $node */
       $node = $nodes[$nid];
-      $vids = $node_storage->revisionIds($node);
+      $query = $this->entityTypeManager->getStorage('node')->getQuery()->allRevisions()->condition('nid', $node->id())->accessCheck(FALSE);
+      $vids = array_keys($query->execute());
       foreach ($vids as $vid) {
         $this->logger->notice("Checking revision ID {vid} for node ID {nid}", [
           'vid' => $vid,

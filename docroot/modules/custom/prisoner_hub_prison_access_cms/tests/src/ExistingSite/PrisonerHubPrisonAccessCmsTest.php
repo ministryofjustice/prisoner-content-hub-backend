@@ -338,7 +338,7 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
   /**
    * Test a user making changes to prison fields does not wipe previous values.
    *
-   * @covers ::prisoner_hub_prison_access_cms_entity_presave()
+   * @covers ::prisoner_hub_prison_access_cms_entity_presave
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    * @throws \Behat\Mink\Exception\ElementNotFoundException
