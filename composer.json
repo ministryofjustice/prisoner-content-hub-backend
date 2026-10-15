@@ -228,12 +228,12 @@
     "require-dev": {
         "dmore/chrome-mink-driver": "^2.7",
         "drupal/core-dev": "^11.4.8",
-        "mglaman/phpstan-drupal": "^1.2",
-        "palantirnet/drupal-rector": "^0.15.1",
+        "mglaman/phpstan-drupal": "^2",
+        "palantirnet/drupal-rector": "^1",
         "phpspec/prophecy-phpunit": "^2",
-        "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^1.11",
-        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "phpstan/phpstan": "^2",
+        "phpstan/phpstan-deprecation-rules": "^2",
+        "phpstan/phpstan-phpunit": "^2",
         "weitzman/drupal-test-traits": "^2"
     }
 }
