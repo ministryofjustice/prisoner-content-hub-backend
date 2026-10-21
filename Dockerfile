@@ -8,7 +8,7 @@
 
 # Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
 # of the things we run, like kubectl.
-FROM --platform=linux/amd64 php:8.3.33-apache-trixie AS base
+FROM --platform=linux/amd64 php:8.3.35-apache-trixie AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
