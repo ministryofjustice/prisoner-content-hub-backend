@@ -21,9 +21,9 @@ application:
     delaySeconds: 10
     timeoutSeconds: 5
   config:
-    phpMemoryLimit: 256M
-    phpUploadMaxFileSize: 500M
-    phpPostMaxSize: 500M
+    phpMemoryLimit: -1
+    phpUploadMaxFileSize: 2M
+    phpPostMaxSize: 8M
     xDebugIp: 127.0.0.1
   dbSecretName: drupal-rds
   s3:
