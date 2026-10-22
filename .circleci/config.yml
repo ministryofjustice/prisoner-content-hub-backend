@@ -230,9 +230,6 @@ workflows:
       - run_playwright_e2e_tests
       - build_preview:
           <<: *feature_branch
-          requires:
-            - run_tests
-            - run_playwright_e2e_tests
 
       - approve_preview_build:
           <<: *feature_branch
