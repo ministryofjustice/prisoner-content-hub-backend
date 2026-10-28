@@ -76,6 +76,10 @@ RUN { \
     echo 'zend.assertions=-1'; \
   } > /usr/local/etc/php/conf.d/zend-assertions.ini
 
+RUN { \
+    echo 'session.upload_progress.enabled = 0'; \
+  } > /usr/local/etc/php/conf.d/session.ini
+
 ###########################################################################################
 # Finish copy Dockerhub Drupal image
 ###########################################################################################
