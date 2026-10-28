@@ -78,6 +78,7 @@ RUN { \
 
 RUN { \
     echo 'session.upload_progress.enabled = 0'; \
+    echo 'session.use_strict_mode = 1'; \
   } > /usr/local/etc/php/conf.d/session.ini
 
 ###########################################################################################
