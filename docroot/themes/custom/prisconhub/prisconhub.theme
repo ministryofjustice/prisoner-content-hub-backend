@@ -87,11 +87,11 @@ function prisconhub_preprocess_file_upload_help(array &$variables) {
 }
 
 /**
- * Utility function to check if a given set of file extensions indicate
- * we should allow big files.
+ * Check if a given set of file extensions indicate we should allow big files.
  *
  * @param string $extensions
  *   Space separated list of file extensions.
+ * 
  * @return bool
  *   TRUE if the extensions indicate we should allow big files.
  */
