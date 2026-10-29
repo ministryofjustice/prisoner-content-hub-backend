@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Implements hook_preprocess_form_element().
@@ -76,13 +77,11 @@ function prisconhub_preprocess_file_upload_help(array &$variables) {
   if (isset($variables['upload_validators']['FileSizeLimit'])
     && isset($variables['upload_validators']['FileExtension'])
     && $variables['upload_validators']['FileExtension']['extensions'] == 'mp4') {
-    /** @var $description \Drupal\Core\StringTranslation\TranslatableMarkup */
     foreach ($variables['descriptions'] as &$description) {
-      if ($description instanceof \Drupal\Core\StringTranslation\TranslatableMarkup
+      if ($description instanceof TranslatableMarkup
         && $description->getUntranslatedString() == "@size limit.") {
         $description = t("500 MB limit.");
       }
     }
   }
 }
-
