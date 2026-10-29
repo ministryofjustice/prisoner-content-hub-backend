@@ -97,7 +97,7 @@ function prisconhub_preprocess_file_upload_help(array &$variables) {
  */
 function _prisconhub_extensions_allow_big_files(string $extensions): bool {
   $extensions = explode(' ', $extensions);
-  if (array_intersect($extensions, ['mp4', 'mp3', 'm4a', 'ogg'])) {
+  if (array_intersect($extensions, ['mp4', 'mp3', 'm4a', 'ogg', 'pdf'])) {
     return TRUE;
   }
   return FALSE;
