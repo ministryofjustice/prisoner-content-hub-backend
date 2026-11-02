@@ -8,7 +8,7 @@
 
 # Specify amd64 platform, as otherwise M1 macs will download an arm version, which won't be compatible with some
 # of the things we run, like kubectl.
-FROM --platform=linux/amd64 php:8.3.33-apache-trixie AS base
+FROM --platform=linux/amd64 php:8.3.36-apache-trixie AS base
 
 # install the PHP extensions we need
 RUN set -eux; \
@@ -75,6 +75,11 @@ RUN { \
 RUN { \
     echo 'zend.assertions=-1'; \
   } > /usr/local/etc/php/conf.d/zend-assertions.ini
+
+RUN { \
+    echo 'session.upload_progress.enabled = 0'; \
+    echo 'session.use_strict_mode = 1'; \
+  } > /usr/local/etc/php/conf.d/session.ini
 
 ###########################################################################################
 # Finish copy Dockerhub Drupal image

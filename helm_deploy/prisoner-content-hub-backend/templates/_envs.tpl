@@ -52,7 +52,7 @@ env:
   - name: FILE_PUBLIC_BASE_URL
     value: {{ include "prisoner-content-hub-backend.externalHost" . }}/sites/default/files
   - name: PHP_MEMORY_LIMIT
-    value: {{ .Values.application.config.phpMemoryLimit }}
+    value: "{{ .Values.application.config.phpMemoryLimit }}"
   - name: PHP_UPLOAD_MAX_FILE_SIZE
     value: {{ .Values.application.config.phpUploadMaxFileSize }}
   - name: PHP_POST_MAX_SIZE

@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Implements hook_preprocess_form_element().
@@ -60,5 +61,44 @@ function prisconhub_form_alter(&$form, FormStateInterface $form_state, $form_id)
     unset($form['#fieldgroups']['group_prisons']);
     unset($form['#fieldgroups']['group_prison_categories']);
   }
+}
 
+/**
+ * Implements hook_preprocess_file_upload_help().
+ *
+ * We have set the PHP file upload size to be small for security reasons.
+ * This will not affect S3 uploads, so this may be confusing specifically
+ * when uploading video files that will be significantly larger.
+ * This preprocess function will be called after
+ * template_preprocess_file_upload_help() so we can override the message
+ * presented to users in the file upload field for videos.
+ */
+function prisconhub_preprocess_file_upload_help(array &$variables) {
+  if (isset($variables['upload_validators']['FileSizeLimit'])
+    && isset($variables['upload_validators']['FileExtension'])
+    && _prisconhub_extensions_allow_big_files($variables['upload_validators']['FileExtension']['extensions'])) {
+    foreach ($variables['descriptions'] as &$description) {
+      if ($description instanceof TranslatableMarkup
+        && $description->getUntranslatedString() == "@size limit.") {
+        $description = t("500 MB limit.");
+      }
+    }
+  }
+}
+
+/**
+ * Check if a given set of file extensions indicate we should allow big files.
+ *
+ * @param string $extensions
+ *   Space separated list of file extensions.
+ *
+ * @return bool
+ *   TRUE if the extensions indicate we should allow big files.
+ */
+function _prisconhub_extensions_allow_big_files(string $extensions): bool {
+  $extensions = explode(' ', $extensions);
+  if (array_intersect($extensions, ['mp4', 'mp3', 'm4a', 'ogg', 'pdf'])) {
+    return TRUE;
+  }
+  return FALSE;
 }
