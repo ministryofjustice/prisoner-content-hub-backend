@@ -129,7 +129,7 @@ jobs:
           command: |
             set -x
             npm ci
-            npx playwright install --with-deps chromium
+            npx playwright install chromium
       - run:
           name: Run Playwright E2E shard
           command: |
