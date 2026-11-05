@@ -99,6 +99,7 @@ jobs:
 
   run_playwright_e2e_tests:
     working_directory: ~/workspace
+    parallelism: 4
     machine:
       image: ubuntu-2204:current
     steps:
@@ -128,18 +129,66 @@ jobs:
           command: |
             set -x
             npm ci
-            npx playwright install chromium
+            npx playwright install --with-deps chromium
       - run:
-          name: Run Playwright E2E tests
+          name: Run Playwright E2E shard
           command: |
             set -x
-            PLAYWRIGHT_BASE_URL=http://localhost:8080 npx playwright test -c tests/e2e/playwright.config.ts --workers=1 --reporter=list,html
+            SHARD_NUMBER=$((CIRCLE_NODE_INDEX + 1))
+            set +e
+            PLAYWRIGHT_BASE_URL=http://localhost:8080 \
+            PLAYWRIGHT_BLOB_OUTPUT_DIR="$PWD/test-results/playwright/blob-report/shard-${CIRCLE_NODE_INDEX}" \
+            PLAYWRIGHT_JUNIT_OUTPUT_FILE="$PWD/test-results/playwright/junit/shard-${CIRCLE_NODE_INDEX}.xml" \
+              npx playwright test -c tests/e2e/playwright.config.ts --shard="${SHARD_NUMBER}/${CIRCLE_NODE_TOTAL}"
+            TEST_EXIT_CODE=$?
+            echo "$TEST_EXIT_CODE" > /tmp/playwright-test-exit-code
+      - store_artifacts:
+          path: test-results/playwright/test-output
+      - store_artifacts:
+          path: test-results/playwright/blob-report
+      - store_artifacts:
+          path: test-results/playwright/junit
+      - persist_to_workspace:
+          root: ~/workspace
+          paths:
+            - test-results/playwright/blob-report
+            - test-results/playwright/junit
+      - run:
+          name: Return Playwright shard status
+          command: exit "$(cat /tmp/playwright-test-exit-code)"
+      - run:
+          name: Stop Drupal test stack
+          command: docker-compose -f docker-compose.yml down --volumes
+          when: always
+
+  merge_playwright_e2e_reports:
+    working_directory: ~/workspace
+    docker:
+      - image: cimg/node:22.13
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/workspace
+      - run:
+          name: Install Node dependencies
+          command: npm ci
+      - run:
+          name: Merge Playwright reports
+          command: |
+            set -x
+            mkdir -p test-results/playwright/merge-input
+            find test-results/playwright/blob-report -type f -name '*.zip' -exec cp {} test-results/playwright/merge-input/ \;
+            test -n "$(find test-results/playwright/merge-input -type f -name '*.zip' -print -quit)"
+            PLAYWRIGHT_MERGE_REPORTS=true \
+            PLAYWRIGHT_HTML_OUTPUT_DIR="$PWD/test-results/playwright/report" \
+            PLAYWRIGHT_JUNIT_OUTPUT_FILE="$PWD/test-results/playwright/merged-junit/junit.xml" \
+              npx playwright merge-reports --config=tests/e2e/playwright.config.ts --reporter=html,junit test-results/playwright/merge-input
       - store_test_results:
-          path: test-results
+          path: test-results/playwright/merged-junit
       - store_artifacts:
-          path: test-results
+          path: test-results/playwright/report
       - store_artifacts:
-          path: playwright-report
+          path: test-results/playwright/merged-junit
 
   build_preview:
     <<: *defaults
@@ -228,6 +277,12 @@ workflows:
     jobs:
       - run_tests
       - run_playwright_e2e_tests
+      - merge_playwright_e2e_reports:
+          requires:
+            - run_playwright_e2e_tests:
+                - success
+                - failed
+                - canceled
       - build_preview:
           <<: *feature_branch
 
