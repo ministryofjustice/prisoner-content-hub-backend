@@ -189,6 +189,9 @@
             },
             "drupal/warmer": {
                 "Issue #3273547: No way to disable cron warming": "patches/warmer_3273547-no-way-to-disable-cron-warming.patch"
+            },
+            "drupal/computed_breadcrumbs": {
+                "Remove resovable url from computed breadcrumbs link item.": "patches/computed_breadcrumbs.23.remove_resovable_url.patch"
             }
         },
         "patches-ignore": {
