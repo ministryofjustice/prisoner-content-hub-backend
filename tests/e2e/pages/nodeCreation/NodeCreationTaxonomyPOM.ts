@@ -53,6 +53,15 @@ export class NodeCreationTaxonomyPOM {
     );
   }
 
+  private categoryTagifyInput(): Locator {
+    return this.page.locator(
+      [
+        'tags.tagify.field_moj_top_level_categories .tagify__input[contenteditable]',
+        'tags.tagify.field_moj_series .tagify__input[contenteditable]',
+      ].join(', ')
+    );
+  }
+
   private categoryWrapperField(): Locator {
     return this.page.locator(
       [
@@ -117,6 +126,13 @@ export class NodeCreationTaxonomyPOM {
   }
 
   private async hasCategoryOrSeriesSelection(): Promise<boolean> {
+    const tagifySelection = this.page.locator(
+      'tags.tagify.field_moj_top_level_categories tag, tags.tagify.field_moj_series tag'
+    );
+    if ((await tagifySelection.count()) > 0) {
+      return true;
+    }
+
     const nativeSelect = this.categorySelectField().first();
     if ((await nativeSelect.count()) > 0) {
       const selectedValue = await nativeSelect.inputValue();
@@ -271,13 +287,26 @@ export class NodeCreationTaxonomyPOM {
       }
     }
 
-    const categorySelect2Input = this.categoryAutocompleteField();
-    if ((await categorySelect2Input.count()) > 0 && (await categorySelect2Input.first().isVisible())) {
-      await categorySelect2Input.first().click();
-      await categorySelect2Input.first().fill(preferredValue);
-      await categorySelect2Input.first().press('Enter');
+    const categoryTagifyInput = this.categoryTagifyInput();
+    const hasCategoryTagifyInput = (await categoryTagifyInput.count()) > 0;
+    if (hasCategoryTagifyInput && (await categoryTagifyInput.first().isVisible())) {
+      await categoryTagifyInput.first().click();
+      await categoryTagifyInput.first().fill(preferredValue);
+      await categoryTagifyInput.first().press('Enter');
       if (await this.hasCategoryOrSeriesSelection()) {
         return;
+      }
+    }
+
+    if (!hasCategoryTagifyInput) {
+      const categoryAutocompleteField = this.categoryAutocompleteField();
+      if ((await categoryAutocompleteField.count()) > 0 && (await categoryAutocompleteField.first().isVisible())) {
+        await categoryAutocompleteField.first().click();
+        await categoryAutocompleteField.first().fill(preferredValue);
+        await categoryAutocompleteField.first().press('Enter');
+        if (await this.hasCategoryOrSeriesSelection()) {
+          return;
+        }
       }
     }
 
@@ -305,7 +334,7 @@ export class NodeCreationTaxonomyPOM {
         .locator('input[type="search"], input[type="text"]')
         .first();
 
-      if ((await selectedViaWrapperInput.count()) > 0 && (await selectedViaWrapperInput.isVisible())) {
+      if (!hasCategoryTagifyInput && (await selectedViaWrapperInput.count()) > 0 && (await selectedViaWrapperInput.isVisible())) {
         await selectedViaWrapperInput.click();
         await selectedViaWrapperInput.fill(preferredValue);
         await selectedViaWrapperInput.press('Enter');
