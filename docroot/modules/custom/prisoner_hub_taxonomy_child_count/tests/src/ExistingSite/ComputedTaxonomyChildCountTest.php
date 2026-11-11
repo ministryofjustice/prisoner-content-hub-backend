@@ -20,7 +20,6 @@ class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
    * Test that correct values are returned for "child_term_count".
    */
   public function testComputedTaxonomyChildCount() {
-    $this->fail('Temporary CI JUnit upload verification failure. Remove this line after verification.');
 
     $vocab = $this->createVocabulary();
     $parent_1 = $this->createTerm($vocab);
