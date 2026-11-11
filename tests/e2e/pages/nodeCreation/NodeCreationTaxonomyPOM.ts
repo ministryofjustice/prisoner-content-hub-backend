@@ -301,7 +301,7 @@ export class NodeCreationTaxonomyPOM {
     if (!hasCategoryTagifyInput) {
       const categoryAutocompleteField = this.categoryAutocompleteField();
       if ((await categoryAutocompleteField.count()) > 0 && (await categoryAutocompleteField.first().isVisible())) {
-        await categoryAutocompleteField.first().click();
+        await categoryAutocompleteFielda.first().click();
         await categoryAutocompleteField.first().fill(preferredValue);
         await categoryAutocompleteField.first().press('Enter');
         if (await this.hasCategoryOrSeriesSelection()) {
