@@ -142,6 +142,8 @@ jobs:
               npx playwright test -c tests/e2e/playwright.config.ts --shard="${SHARD_NUMBER}/${CIRCLE_NODE_TOTAL}"
             TEST_EXIT_CODE=$?
             echo "$TEST_EXIT_CODE" > /tmp/playwright-test-exit-code
+      - store_test_results:
+          path: test-results/playwright/junit
       - store_artifacts:
           path: test-results/playwright/test-output
       - store_artifacts:
