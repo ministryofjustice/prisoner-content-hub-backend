@@ -77,7 +77,7 @@ test.describe('content listing', () => {
     });
   });
 
-  test.skip('newly created PDF appears in content listing', async ({ page }, testInfo) => {
+  test('newly created PDF appears in content listing', async ({ page }, testInfo) => {
     const runStep = createStepRunner(page, testInfo);
     const uniqueTitle = `Playwright PDF listing ${Date.now()}`;
     const uniqueSummary = `Playwright PDF summary ${Date.now()}`;
