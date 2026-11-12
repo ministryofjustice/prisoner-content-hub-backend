@@ -112,7 +112,7 @@ RUN echo "date.timezone = Europe/London" > /usr/local/etc/php/conf.d/timezone_se
 RUN echo 'memory_limit = -1' >> /usr/local/etc/php/php-cli.ini
 
 # Update zlib due to CVE-2026-76844
-RUN apt-get upgrade -y zlib1g-dev zlib1g
+RUN apt-get upgrade -y zlib1g
 
 ###########################################################################################
 # Install composer as non-root and copy repository files
