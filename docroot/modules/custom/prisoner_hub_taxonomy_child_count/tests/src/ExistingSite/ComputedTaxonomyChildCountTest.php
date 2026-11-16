@@ -20,6 +20,7 @@ class ComputedTaxonomyChildCountTest extends ExistingSiteBase {
    * Test that correct values are returned for "child_term_count".
    */
   public function testComputedTaxonomyChildCount() {
+
     $vocab = $this->createVocabulary();
     $parent_1 = $this->createTerm($vocab);
     $parent_2 = $this->createTerm($vocab);

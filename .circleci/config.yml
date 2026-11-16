@@ -90,8 +90,13 @@ jobs:
           name: Copy test results output
           command: |
             set -x
-            mkdir ~/phpunit
-            docker cp $(docker-compose -f << parameters.docker-compose-filename >> ps -q << parameters.docker-image-name-backend >>):/var/www/phpunit ~/phpunit
+            mkdir -p ~/phpunit
+            CONTAINER_ID=$(docker-compose -f << parameters.docker-compose-filename >> ps -q << parameters.docker-image-name-backend >>)
+            if [ -n "$CONTAINER_ID" ]; then
+              docker cp "$CONTAINER_ID":/var/www/phpunit/. ~/phpunit/ || true
+            fi
+            find ~/phpunit -type f -name '*.xml' -print
+          when: always
       - store_test_results:
           path: ~/phpunit
       - store_artifacts:
