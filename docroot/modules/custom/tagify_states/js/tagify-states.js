@@ -6,12 +6,6 @@
 
   'use strict';
 
-  Drupal.behaviors.tagifyStatesTagifyStates = {
-    attach(context, settings) {
-      console.log('It works!');
-    }
-  };
-
   Drupal.behaviors.tagifyStatesCompatibility = {
     attach(context) {
 
