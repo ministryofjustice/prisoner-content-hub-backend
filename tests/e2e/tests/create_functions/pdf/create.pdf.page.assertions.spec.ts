@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { createStepRunner } from '../../../helpers/stepScreenshots';
 import { loginViaUi, runWithTemporaryUser } from '../../../actions/authActions';
-import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -12,9 +12,9 @@ test.describe('PDF create page', () => {
   test('has all required fields and components', async ({ page }, testInfo) => {
     const runStep = createStepRunner(page, testInfo);
     await runWithTemporaryUser(loginRole, async (user) => {
-      const pdfPage = new PdfPageCreationPOM(page);
+      const pdfPage = new NodeCreationPage(page, 'moj_pdf_item');
 
-      const expectOptionalPresent = async (locator: ReturnType<PdfPageCreationPOM['seasonField']>) => {
+      const expectOptionalPresent = async (locator: ReturnType<NodeCreationPage['seasonField']>) => {
         if ((await locator.count()) === 0) {
           return;
         }

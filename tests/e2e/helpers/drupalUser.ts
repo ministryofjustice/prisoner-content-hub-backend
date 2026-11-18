@@ -128,6 +128,10 @@ export function canManageDrupalUsersFromTests(): boolean {
   }
 }
 
+export function executeDrushEval(phpCode: string): string {
+  return runDrushWithRetry(['php:eval', phpCode]);
+}
+
 function normalizeRoles(roles: DrupalRoleInput): string[] {
   const values = Array.isArray(roles) ? roles : [roles];
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];

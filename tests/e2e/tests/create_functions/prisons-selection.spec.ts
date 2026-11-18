@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { createStepRunner } from '../../helpers/stepScreenshots';
 import { loginViaUi, runWithTemporaryUser } from '../../actions/authActions';
-import { BasicPageCreationPOM } from '../../pages/nodeCreation/BasicPageCreationPOM';
-import { PdfPageCreationPOM } from '../../pages/nodeCreation/PdfPageCreationPOM';
+import { NodeCreationPage } from '../../pages/NodeCreationPage';
 import { appSettings } from '../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -14,7 +13,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -36,7 +35,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const pdfPage = new PdfPageCreationPOM(page);
+      const pdfPage = new NodeCreationPage(page, 'moj_pdf_item');
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -58,7 +57,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -91,7 +90,7 @@ test.describe('prisons selection on create pages', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -142,7 +141,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 

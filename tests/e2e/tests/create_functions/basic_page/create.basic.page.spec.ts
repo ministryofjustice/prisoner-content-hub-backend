@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -16,7 +16,7 @@ test.describe('basic page create', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -33,7 +33,7 @@ test.describe('basic page create', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
