@@ -169,7 +169,7 @@ export function ensureE2ETaxonomyTerms(): void {
   const phpEval = [
     `$map = ["moj_categories" => ${phpSingleQuoted(defaultCategoryTerm)}, "series" => ${phpSingleQuoted(defaultSeriesTerm)}];`,
     '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
-    `$prisonHierarchy = ${phpSingleQuoted(JSON.stringify(defaultPrisonGroups))};`,
+    `$prisonHierarchy = json_decode(${phpSingleQuoted(JSON.stringify(defaultPrisonGroups))}, TRUE, 512, JSON_THROW_ON_ERROR);`,
     '$prisonTermsByName = [];',
     '$seedPrisonTerm = function (string $name, int $parentTid = 0) use ($storage, &$prisonTermsByName): int {',
     '  $existing = $storage->loadByProperties(["vid" => "prisons", "name" => $name]);',
