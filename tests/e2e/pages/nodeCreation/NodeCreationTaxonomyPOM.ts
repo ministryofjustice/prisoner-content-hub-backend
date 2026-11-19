@@ -28,6 +28,18 @@ export class NodeCreationTaxonomyPOM {
     return this.page.locator(this.categoryOrSeriesSelectors.join(', ')).first();
   }
 
+  categoryGroup(): Locator {
+    return this.page.getByRole('group', { name: /^Category$/i }).first();
+  }
+
+  seriesField(): Locator {
+    return this.page.getByLabel(/^Series$/i).first();
+  }
+
+  async selectSeriesById(termId: number): Promise<void> {
+    await this.seriesField().selectOption(String(termId));
+  }
+
   private categorySelectField(): Locator {
     return this.page.locator(
       [

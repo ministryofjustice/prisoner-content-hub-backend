@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { createStepRunner } from '../../../helpers/stepScreenshots';
 import { loginViaUi, runWithTemporaryUser } from '../../../actions/authActions';
-import { UrgentBannerCreationPOM } from '../../../pages/nodeCreation/UrgentBannerCreationPOM';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -15,7 +15,7 @@ test.describe('urgent banner create', () => {
     const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const urgentBanner = new UrgentBannerCreationPOM(page);
+      const urgentBanner = new NodeCreationPage(page, 'urgent_banner');
 
       await loginViaUi(page, user.username, user.password, runStep);
 
