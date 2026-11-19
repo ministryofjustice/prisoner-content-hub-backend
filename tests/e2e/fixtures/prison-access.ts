@@ -3,6 +3,7 @@ import {
   createTemporaryDrupalUser,
   deleteTemporaryDrupalUser,
   DrupalRoleInput,
+  ensureE2ETaxonomyTerms,
   executeDrushEval,
   TemporaryUser,
 } from '../helpers/drupalUser';
@@ -196,6 +197,7 @@ export async function runWithPrisonAccessUser<T>(
   action: (user: TemporaryUser, fixture: PrisonAccessFixture) => Promise<T>,
   roles: DrupalRoleInput = 'moj_local_content_manager',
 ): Promise<T> {
+  ensureE2ETaxonomyTerms();
   const user = createTemporaryDrupalUser(roles);
   let fixture: PrisonAccessFixture | undefined;
   try {
