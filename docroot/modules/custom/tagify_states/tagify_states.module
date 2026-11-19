@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Tagify States module.
+ */
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function tagify_states_element_info_alter(array &$info): void {
+  $tagify_types = [
+    'select_tagify',
+    'entity_autocomplete_tagify_user_list',
+    'entity_autocomplete_tagify',
+  ];
+  foreach ($tagify_types as $tagify_type) {
+    if (isset($info[$tagify_type])) {
+      $info[$tagify_type]['#attached']['library'][] = 'tagify_states/tagify_states';
+    }
+  }
+}

@@ -63,7 +63,6 @@ module:
   navigation: 0
   node: 0
   node_edit_protection: 0
-  optgroup_taxonomy_select: 0
   options: 0
   page_cache: 0
   page_cache_persist: 0
@@ -104,10 +103,11 @@ module:
   scheduler_content_moderation_integration: 0
   search_api: 0
   search_api_db: 0
-  select2: 0
   serialization: 0
   string_field_formatter: 0
   system: 0
+  tagify: 0
+  tagify_states: 0
   taxonomy: 0
   taxonomy_machine_name: 0
   term_reference_tree: 0

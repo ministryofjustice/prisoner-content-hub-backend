@@ -92,7 +92,7 @@ class EntityFormStates {
    */
   public function applyToForm(array &$form) {
     if (empty($this->episodeSortingStates)) {
-      hide($form['group_season_and_episode_number']);
+      $form['group_season_and_episode_number']['#access'] = FALSE;
     }
     else {
       $form['group_season_and_episode_number']['#states']['visible'] = [
@@ -107,7 +107,7 @@ class EntityFormStates {
     }
 
     if (empty($this->releaseDateSortingStates)) {
-      hide($form['group_release_date']);
+      $form['group_release_date']['#access'] = FALSE;
     }
     else {
       $form['group_release_date']['#states']['visible'] = [
