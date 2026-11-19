@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { createStepRunner } from '../../helpers/stepScreenshots';
-import { loginViaUi, runWithTemporaryUser } from '../../actions/authActions';
-import { NodeCreationPage } from '../../pages/NodeCreationPage';
-import { appSettings } from '../../config/appSettings';
+import { createStepRunner } from '../../../helpers/stepScreenshots';
+import { loginViaUi, runWithTemporaryUser } from '../../../actions/authActions';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
+import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
 

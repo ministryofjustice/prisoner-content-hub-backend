@@ -1,9 +1,9 @@
 import { expect, Page, test } from '@playwright/test';
-import { loginViaUi } from '../../actions/authActions';
-import { appSettings } from '../../config/appSettings';
-import { TaxonomySortingFixture, withTaxonomySortingFixture } from '../../fixtures/taxonomy-form-states';
-import { createStepRunner } from '../../helpers/stepScreenshots';
-import { NodeCreationPage } from '../../pages/NodeCreationPage';
+import { loginViaUi } from '../../../actions/authActions';
+import { appSettings } from '../../../config/appSettings';
+import { TaxonomySortingFixture, withTaxonomySortingFixture } from '../../../fixtures/taxonomy-form-states';
+import { createStepRunner } from '../../../helpers/stepScreenshots';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 
 const studioAdminContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item', 'link'];
 const localContentManagerContentTypes = ['moj_radio_item', 'page', 'moj_video_item', 'moj_pdf_item'];
