@@ -92,7 +92,6 @@ test.describe('content listing', () => {
       await runStep('fill PDF content fields', async () => {
         await pdfPage.fillTitle(uniqueTitle);
         await pdfPage.fillSummary(uniqueSummary);
-        await pdfPage.selectFirstCategory();
       });
 
       await runStep('upload PDF file', async () => {
@@ -101,8 +100,16 @@ test.describe('content listing', () => {
         await pdfPage.uploadPdfFile(testFilePath);
       });
 
+      await runStep('select required category', async () => {
+        await pdfPage.selectFirstCategory();
+      });
+
       await runStep('save PDF content', async () => {
         await pdfPage.save();
+      });
+
+      await runStep('verify PDF was created before listing checks', async () => {
+        await pdfPage.expectNodeViewPage(uniqueTitle);
       });
 
       await runStep('visit content listing', async () => {

@@ -21,7 +21,10 @@ export interface PrisonAccessFixture {
     otherPrisonName: string;
     extraPrisonId: number;
     contentCategoryId: number;
+    contentSeriesId: number;
   };
+  createdContentCategoryId: number;
+  createdContentSeriesId: number;
   createdNodeIds: number[];
 }
 
@@ -52,9 +55,11 @@ function runDrushEvalWithResult<T>(marker: string, phpCode: string): T {
 
 export function createPrisonAccessFixture(username: string): PrisonAccessFixture {
   const prefix = `Playwright ${randomUUID().slice(0, 8)}`;
+  const phpPrefix = encodeValue(prefix);
   const phpUsername = encodeValue(username);
   const marker = '__PRISON_ACCESS_FIXTURE__';
   const fixture = runDrushEvalWithResult<Omit<PrisonAccessFixture, 'prefix' | 'createdNodeIds'>>(marker, String.raw`
+    $prefix = json_decode(base64_decode('${phpPrefix}'), TRUE, 512, JSON_THROW_ON_ERROR);
     $username = json_decode(base64_decode('${phpUsername}'), TRUE, 512, JSON_THROW_ON_ERROR);
     $user = user_load_by_name($username);
     if (!$user) {
@@ -74,18 +79,20 @@ export function createPrisonAccessFixture(username: string): PrisonAccessFixture
     if (!$currentCategory || !$currentPrison || !$siblingPrison || !$otherPrison || !$extraPrison) {
       throw new \RuntimeException('Required prison taxonomy terms are missing from the database.');
     }
-    $findUnscopedContentTerm = static function (string $vocabularyId) use ($termStorage) {
-      foreach ($termStorage->loadByProperties(['vid' => $vocabularyId]) as $term) {
-        if (!$term->hasField('field_prisons') || $term->get('field_prisons')->isEmpty()) {
-          return $term;
-        }
-      }
-      return NULL;
-    };
-    $contentCategory = $findUnscopedContentTerm('moj_categories');
-    if (!$contentCategory) {
-      throw new \RuntimeException('No existing unscoped content Category is available for test content.');
-    }
+    $contentCategory = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => 'moj_categories',
+      'name' => $prefix . ' unscoped Category',
+    ]);
+    $contentCategory->save();
+    $createdContentCategoryId = (int) $contentCategory->id();
+    $contentSeries = \Drupal\taxonomy\Entity\Term::create([
+      'vid' => 'series',
+      'name' => $prefix . ' content Series',
+      'field_category' => [['target_id' => $createdContentCategoryId]],
+      'field_prisons' => [['target_id' => (int) $currentPrison->id()]],
+    ]);
+    $contentSeries->save();
+    $createdContentSeriesId = (int) $contentSeries->id();
 
     $userPrisonField = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access_cms.user_prison_field_name');
     $user->set($userPrisonField, [['target_id' => $currentPrison->id()]]);
@@ -106,7 +113,10 @@ export function createPrisonAccessFixture(username: string): PrisonAccessFixture
         'otherPrisonName' => $otherPrison->label(),
         'extraPrisonId' => (int) $extraPrison->id(),
         'contentCategoryId' => (int) $contentCategory->id(),
+        'contentSeriesId' => $createdContentSeriesId,
       ],
+      'createdContentCategoryId' => $createdContentCategoryId,
+      'createdContentSeriesId' => $createdContentSeriesId,
     ];
     print('${marker}' . base64_encode(json_encode($fixture, JSON_THROW_ON_ERROR)));
   `);
@@ -146,6 +156,7 @@ export function createPrisonAccessNode(
     excludedPrisonIds: options.excludedPrisonIds ?? [],
     authorUserId: options.authorUserId ?? 1,
     contentCategoryId: fixture.terms.contentCategoryId,
+    contentSeriesId: fixture.terms.contentSeriesId,
   });
   const marker = '__PRISON_ACCESS_NODE__';
   const nodeId = Number(runDrushEvalWithResult<string>(marker, String.raw`
@@ -169,6 +180,9 @@ export function createPrisonAccessNode(
     if ($node->hasField('field_moj_top_level_categories')) {
       $node->set('field_moj_top_level_categories', [['target_id' => (int) $data['contentCategoryId']]]);
     }
+    if ($node->hasField('field_moj_series')) {
+      $node->set('field_moj_series', [['target_id' => (int) $data['contentSeriesId']]]);
+    }
     if ($node->hasField('field_summary')) {
       $node->set('field_summary', [['value' => 'Prison access test summary']]);
     }
@@ -183,13 +197,20 @@ export function createPrisonAccessNode(
 }
 
 export function cleanupPrisonAccessFixture(fixture: PrisonAccessFixture): void {
-  const phpData = encodeValue({ nodeIds: fixture.createdNodeIds });
+  const phpData = encodeValue({
+    nodeIds: fixture.createdNodeIds,
+    createdContentCategoryId: fixture.createdContentCategoryId,
+    createdContentSeriesId: fixture.createdContentSeriesId,
+  });
   executeDrushEval(String.raw`
     $data = json_decode(base64_decode('${phpData}'), TRUE, 512, JSON_THROW_ON_ERROR);
     $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
     foreach ($nodeStorage->loadMultiple(array_map('intval', $data['nodeIds'])) as $node) {
       $node->delete();
     }
+    $termStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $termStorage->load((int) $data['createdContentSeriesId'])?->delete();
+    $termStorage->load((int) $data['createdContentCategoryId'])?->delete();
   `);
 }
 
