@@ -34,9 +34,11 @@ async function expectSeriesSortingStates(
   }
 }
 
-async function expectCategoryFieldVisible(page: Page, contentTypes: string[]): Promise<void> {
+async function expectCategoryFieldUsable(page: Page, contentTypes: string[]): Promise<void> {
   for (const contentType of contentTypes) {
-    await new NodeCreationPage(page, contentType).expectCategoryGroupVisible();
+    const contentPage = new NodeCreationPage(page, contentType);
+    await contentPage.expectCategoryGroupVisible();
+    await contentPage.selectFirstCategory();
   }
 }
 
@@ -57,13 +59,13 @@ test.describe('taxonomy form states', () => {
 
   test('categoryFieldStudioAdmin', async ({ page }, testInfo) => {
     await runAsRole(appSettings.roles.studioAdminTest, page, testInfo, async () => {
-      await expectCategoryFieldVisible(page, studioAdminContentTypes);
+      await expectCategoryFieldUsable(page, studioAdminContentTypes);
     });
   });
 
   test('categoryFieldLocalContentManager', async ({ page }, testInfo) => {
     await runAsRole(appSettings.roles.lcmTest, page, testInfo, async () => {
-      await expectCategoryFieldVisible(page, localContentManagerContentTypes);
+      await expectCategoryFieldUsable(page, localContentManagerContentTypes);
     });
   });
 });
