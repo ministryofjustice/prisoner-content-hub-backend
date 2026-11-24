@@ -97,11 +97,18 @@ export class NodeCreationTaxonomyPOM {
 
     if ((await exactOption.count()) > 0) {
       await exactOption.click();
-    } else if ((await availableOptions.count()) > 0) {
-      await availableOptions.first().click();
-    } else if ((await openSearch.count()) > 0) {
-      await openSearch.press('ArrowDown');
-      await openSearch.press('Enter');
+    } else {
+      if ((await openSearch.count()) > 0) {
+        await openSearch.fill('');
+      }
+
+      const firstAvailableOption = availableOptions.first();
+      if ((await firstAvailableOption.count()) > 0) {
+        await firstAvailableOption.click();
+      } else if ((await openSearch.count()) > 0) {
+        await openSearch.press('ArrowDown');
+        await openSearch.press('Enter');
+      }
     }
 
     return this.hasSelectionInGroup(group);
