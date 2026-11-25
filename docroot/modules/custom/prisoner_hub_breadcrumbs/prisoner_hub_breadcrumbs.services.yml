@@ -13,3 +13,4 @@ services:
     class: Drupal\prisoner_hub_breadcrumbs\TopicsTermBreadcrumbBuilder
     tags:
       - { name: breadcrumb_builder, priority: 1003}
+

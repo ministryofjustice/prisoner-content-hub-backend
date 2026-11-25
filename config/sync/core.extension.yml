@@ -8,7 +8,6 @@ module:
   book_blocks: 0
   breakpoint: 0
   ckeditor5: 0
-  computed_breadcrumbs: 0
   config: 0
   config_ignore: 0
   content_moderation: 0

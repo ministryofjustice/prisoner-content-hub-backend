@@ -1072,11 +1072,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              comms_live_service_hq: '0'
             reduce: true
           is_grouped: false
           group_info:
@@ -1118,8 +1113,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -1159,15 +1152,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1213,10 +1197,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1262,15 +1242,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1321,10 +1292,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
@@ -1368,11 +1335,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              gds_theme_user: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1412,10 +1374,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -1455,10 +1413,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -1501,10 +1455,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1550,10 +1500,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2712,11 +2658,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              comms_live_service_hq: '0'
             reduce: true
           is_grouped: false
           group_info:
@@ -2758,8 +2699,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -2799,15 +2738,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2853,10 +2783,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2902,15 +2828,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -2961,10 +2878,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
@@ -3008,11 +2921,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              gds_theme_user: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3052,10 +2960,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3095,10 +2999,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3141,10 +3041,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3190,10 +3086,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3471,11 +3363,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              comms_live_service_hq: '0'
             reduce: true
           is_grouped: false
           group_info:
@@ -3517,8 +3404,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3558,15 +3443,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3612,10 +3488,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3661,15 +3533,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              prisoner: '0'
-              local_administrator: '0'
-              anonymous: '0'
-              administrator: '0'
-              moj_view_video: '0'
-              moj_view_pdf: '0'
-              moj_view_radio: '0'
-              moj_local_content_manager: '0'
-              moj_prison_officer: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3720,10 +3583,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
@@ -3767,11 +3626,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              gds_theme_user: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3811,10 +3665,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3854,10 +3704,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3900,10 +3746,6 @@ display:
             multiple: true
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -3949,10 +3791,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -4002,12 +3840,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
-              comms_live_service_hq: '0'
-              translator: '0'
             reduce: true
           is_grouped: false
           group_info:
