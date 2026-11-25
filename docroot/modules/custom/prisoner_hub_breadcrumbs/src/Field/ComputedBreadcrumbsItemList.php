@@ -11,7 +11,7 @@ use Drupal\taxonomy\TermInterface;
 /**
  * Provides a computed breadcrumbs field without using the contrib module.
  */
-class ComputedBreadcrumbsItemList extends FieldItemList implements CacheableDependencyInterface {
+class ComputedBreadcrumbsItemList extends FieldItemList {
   use ComputedItemListTrait;
 
   /**
