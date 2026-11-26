@@ -16,6 +16,9 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function computeValue() {
     // @todo computed_breadcrumbs module doesn't reset this. Why?
