@@ -6,157 +6,32 @@ const defaultPreferredPrisonOwner = process.env.PLAYWRIGHT_E2E_PRISON_OWNER_TERM
 export class NodeCreationTaxonomyPOM {
   constructor(private readonly page: Page) {}
 
-  private readonly categoryOrSeriesSelectors = [
-    'select[name="field_moj_top_level_categories[]"]',
-    'input[id*="field-moj-top-level-categories"][type="search"]',
-    'input[id*="field-moj-top-level-categories"][type="text"]',
-    'input[data-drupal-selector*="edit-field-moj-top-level-categories"][type="text"]',
-    'input[name^="field_moj_top_level_categories"][name*="[target_id]"]',
-    'input[name*="top_level_categories"][name*="[target_id]"]',
-    'select[name="field_moj_series[]"]',
-    'input[id*="field-moj-series"][type="search"]',
-    'input[id*="field-moj-series"][type="text"]',
-    'input[data-drupal-selector*="edit-field-moj-series"][type="text"]',
-    'input[name^="field_moj_series"][name*="[target_id]"]',
-    '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
-    '[id*="edit-field-moj-top-level-categories"]',
-    '[data-drupal-selector*="edit-field-moj-series"]',
-    '[id*="edit-field-moj-series"]',
-  ];
+  categoryGroup(): Locator {
+    return this.page.getByRole('group', { name: /^Category$/i }).first();
+  }
 
   categoryField(): Locator {
-    return this.page.locator(this.categoryOrSeriesSelectors.join(', ')).first();
+    return this.categoryGroup().locator([
+      'select[name="field_moj_top_level_categories[]"]',
+      'input[id*="field-moj-top-level-categories"][type="search"]',
+      'input[id*="field-moj-top-level-categories"][type="text"]',
+      'input[data-drupal-selector*="edit-field-moj-top-level-categories"][type="text"]',
+      'input[name^="field_moj_top_level_categories"][name*="[target_id]"]',
+      'tags.tagify.field_moj_top_level_categories .tagify__input[contenteditable]',
+      '[role="combobox"]',
+    ].join(', ')).first();
   }
 
-  private categorySelectField(): Locator {
-    return this.page.locator(
-      [
-        'select[name="field_moj_top_level_categories[]"]',
-        'select[name="field_moj_series[]"]',
-      ].join(', ')
-    );
+  seriesField(): Locator {
+    return this.page.getByLabel(/^Series$/i).first();
   }
 
-  private categoryAutocompleteField(): Locator {
-    return this.page.locator(
-      [
-        'input[id*="field-moj-top-level-categories"][type="search"]',
-        'input[id*="field-moj-top-level-categories"][type="text"]',
-        'input[data-drupal-selector*="edit-field-moj-top-level-categories"][type="text"]',
-        'input[name^="field_moj_top_level_categories"][name*="[target_id]"]',
-        'input[name*="top_level_categories"][name*="[target_id]"]',
-        'input[id*="field-moj-series"][type="search"]',
-        'input[id*="field-moj-series"][type="text"]',
-        'input[data-drupal-selector*="edit-field-moj-series"][type="text"]',
-        'input[name^="field_moj_series"][name*="[target_id]"]',
-      ].join(', ')
-    );
-  }
-
-  private categoryTagifyInput(): Locator {
-    return this.page.locator(
-      [
-        'tags.tagify.field_moj_top_level_categories .tagify__input[contenteditable]',
-        'tags.tagify.field_moj_series .tagify__input[contenteditable]',
-      ].join(', ')
-    );
-  }
-
-  private categoryWrapperField(): Locator {
-    return this.page.locator(
-      [
-        '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
-        '[id*="edit-field-moj-top-level-categories"]',
-        '[data-drupal-selector*="edit-field-moj-series"]',
-        '[id*="edit-field-moj-series"]',
-      ].join(', ')
-    );
-  }
-
-  private async selectFromSelect2(root: Locator, preferredValue: string): Promise<boolean> {
-    const selectionTrigger = root
-      .locator(
-        [
-          '.select2-selection',
-          '.select2-container .selection',
-          '[class*="select2"] [role="combobox"]',
-        ].join(', ')
-      )
-      .first();
-
-    if ((await selectionTrigger.count()) === 0) {
-      return false;
-    }
-
-    if (!(await selectionTrigger.isVisible().catch(() => false))) {
-      return false;
-    }
-
-    await selectionTrigger.click();
-
-    const openSearch = this.page
-      .locator('.select2-container--open input.select2-search__field, .select2-dropdown input.select2-search__field')
-      .first();
-
-    if ((await openSearch.count()) === 0) {
-      return false;
-    }
-
-    await openSearch.fill(preferredValue);
-
-    const preferredResult = this.page
-      .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
-      .first();
-
-    if ((await preferredResult.count()) > 0) {
-      await preferredResult.click();
-      return true;
-    }
-
-    await openSearch.fill('');
-    const firstAvailableResult = this.page
-      .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
-      .first();
-    if ((await firstAvailableResult.count()) > 0) {
-      await firstAvailableResult.click();
-      return true;
-    }
-
-    return false;
-  }
-
-  private async hasCategoryOrSeriesSelection(): Promise<boolean> {
-    const tagifySelection = this.page.locator(
-      'tags.tagify.field_moj_top_level_categories tag, tags.tagify.field_moj_series tag'
-    );
-    if ((await tagifySelection.count()) > 0) {
-      return true;
-    }
-
-    const nativeSelect = this.categorySelectField().first();
-    if ((await nativeSelect.count()) > 0) {
-      const selectedValue = await nativeSelect.inputValue();
-      if (selectedValue && !/^(_none|none)?$/i.test(selectedValue)) {
-        return true;
-      }
-
-      const selectedLabel = (await nativeSelect
-        .locator('option:checked')
-        .first()
-        .innerText()
-        .catch(() => ''))
-        .trim();
-      if (selectedLabel && !/^-\s*none\s*-$/i.test(selectedLabel)) {
-        return true;
-      }
-    }
-
-    return false;
+  async selectSeriesById(termId: number): Promise<void> {
+    await this.seriesField().selectOption(String(termId));
   }
 
   private async hasSelectionInGroup(group: Locator): Promise<boolean> {
-    const selectedChoices = group.locator('.select2-selection__choice');
-    if ((await selectedChoices.count()) > 0) {
+    if ((await group.locator('.select2-selection__choice').count()) > 0) {
       return true;
     }
 
@@ -168,17 +43,10 @@ export class NodeCreationTaxonomyPOM {
       }
     }
 
-    const nativeSelect = group.locator('select').first();
-    if ((await nativeSelect.count()) > 0) {
-      const selectedLabel = (await nativeSelect
-        .locator('option:checked')
-        .first()
-        .innerText()
-        .catch(() => ''))
-        .trim();
-      if (selectedLabel && !/^\-\s*none\s*\-$/i.test(selectedLabel)) {
-        return true;
-      }
+    const selectedOption = group.locator('select option:checked').first();
+    if ((await selectedOption.count()) > 0) {
+      const text = (await selectedOption.innerText()).trim();
+      return Boolean(text && !/^(-\s*none\s*-|select)/i.test(text));
     }
 
     return false;
@@ -190,188 +58,72 @@ export class NodeCreationTaxonomyPOM {
       return false;
     }
 
-    const combo = group.locator('[role="combobox"]').first();
+    const nativeSelect = group.locator('select').first();
+    if ((await nativeSelect.count()) > 0) {
+      const options = await nativeSelect.locator('option').evaluateAll((elements) =>
+        elements.map((element) => ({
+          value: (element as HTMLOptionElement).value,
+          label: (element as HTMLOptionElement).label.trim(),
+        })).filter(({ value, label }) => value && !/^_none$/i.test(value) && !/^-\s*none\s*-$/i.test(label)),
+      );
+      const option = options.find(({ label }) => label.toLowerCase() === preferredValue.toLowerCase())
+        ?? options.find(({ label }) => label.toLowerCase().includes(preferredValue.toLowerCase()))
+        ?? options[0];
+      if (option) {
+        await nativeSelect.selectOption(option.value);
+        return this.hasSelectionInGroup(group);
+      }
+    }
+
+    const combo = group.locator('[role="combobox"], .select2-selection').first();
     if ((await combo.count()) === 0) {
       return false;
     }
-
     await combo.click();
 
-    const comboInput = this.page
+    const openSearch = this.page
       .locator('.select2-container--open input.select2-search__field, .select2-dropdown input.select2-search__field')
       .first();
-    if ((await comboInput.count()) > 0) {
-      await comboInput.fill(preferredValue);
-
-      const exactOption = this.page
-        .locator('.select2-container--open .select2-results__option[role="option"], .select2-dropdown .select2-results__option[role="option"]')
-        .filter({ hasText: new RegExp(`^\\s*${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i') })
-        .first();
-
-      if ((await exactOption.count()) > 0) {
-        await exactOption.click();
-      } else {
-        await comboInput.press('Enter');
-      }
-
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
-      }
-
-      const noResultsAlert = this.page
-        .locator('.select2-container--open .select2-results__option, .select2-dropdown .select2-results__option')
-        .filter({ hasText: /no results found/i })
-        .first();
-      if ((await noResultsAlert.count()) > 0) {
-        await comboInput.fill('');
-        await comboInput.press('ArrowDown');
-        await comboInput.press('Enter');
-        if (await this.hasSelectionInGroup(group)) {
-          return true;
-        }
-      }
+    if ((await openSearch.count()) > 0) {
+      await openSearch.fill(preferredValue);
     }
 
-    const firstOption = this.page
-      .locator('.select2-container--open .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found")), .select2-dropdown .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found"))')
+    const availableOptions = this.page.locator(
+      '.select2-container--open .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found")), .select2-dropdown .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found"))',
+    );
+    const escapedValue = preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const exactOption = availableOptions
+      .filter({ hasText: new RegExp(`^\\s*${escapedValue}\\s*$`, 'i') })
       .first();
-    if ((await firstOption.count()) > 0) {
-      await firstOption.click();
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
+
+    if ((await exactOption.count()) > 0) {
+      await exactOption.click();
+    } else {
+      if ((await openSearch.count()) > 0) {
+        await openSearch.fill('');
+      }
+
+      const firstAvailableOption = availableOptions.first();
+      if ((await firstAvailableOption.count()) > 0) {
+        await firstAvailableOption.click();
+      } else if ((await openSearch.count()) > 0) {
+        await openSearch.press('ArrowDown');
+        await openSearch.press('Enter');
       }
     }
 
-    await combo.press('ArrowDown');
-    await combo.press('Enter');
-    if (await this.hasSelectionInGroup(group)) {
-      return true;
-    }
+    return this.hasSelectionInGroup(group);
+  }
 
-    return (await this.hasSelectionInGroup(group)) || this.hasCategoryOrSeriesSelection();
+  async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
+    if (!(await this.selectFromTaxonomyGroup(/^Category$/i, preferredValue))) {
+      throw new Error(`Unable to select a category on the create form: "${preferredValue}".`);
+    }
   }
 
   async selectPrisonOwner(preferredValue = defaultPreferredPrisonOwner): Promise<void> {
     if (!(await this.selectFromTaxonomyGroup(/^Prison owner$/i, preferredValue))) {
       throw new Error(`Unable to select prison owner "${preferredValue}" on the create form.`);
     }
-  }
-
-  async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
-    const categoryNativeSelect = this.categorySelectField();
-    if ((await categoryNativeSelect.count()) > 0) {
-      const nativeSelect = categoryNativeSelect.first();
-      const isNativeVisible = await nativeSelect.isVisible().catch(() => false);
-      if (isNativeVisible) {
-        const options = nativeSelect.locator('option');
-        const optionsCount = await options.count();
-        if (optionsCount > 0) {
-          const candidateValues: string[] = [];
-          for (let i = 0; i < optionsCount; i++) {
-            const option = options.nth(i);
-            const value = (await option.getAttribute('value')) ?? '';
-            const label = (await option.innerText()).trim();
-            if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
-              continue;
-            }
-            candidateValues.push(value);
-          }
-
-          if (candidateValues.length > 0) {
-            await nativeSelect.selectOption(candidateValues[0]);
-            if (await this.hasCategoryOrSeriesSelection()) {
-              return;
-            }
-          }
-        }
-      }
-    }
-
-    const categoryTagifyInput = this.categoryTagifyInput();
-    const hasCategoryTagifyInput = (await categoryTagifyInput.count()) > 0;
-    if (hasCategoryTagifyInput && (await categoryTagifyInput.first().isVisible())) {
-      await categoryTagifyInput.first().click();
-      await categoryTagifyInput.first().fill(preferredValue);
-      await categoryTagifyInput.first().press('Enter');
-      if (await this.hasCategoryOrSeriesSelection()) {
-        return;
-      }
-    }
-
-    if (!hasCategoryTagifyInput) {
-      const categoryAutocompleteField = this.categoryAutocompleteField();
-      if ((await categoryAutocompleteField.count()) > 0 && (await categoryAutocompleteField.first().isVisible())) {
-        await categoryAutocompleteField.first().click();
-        await categoryAutocompleteField.first().fill(preferredValue);
-        await categoryAutocompleteField.first().press('Enter');
-        if (await this.hasCategoryOrSeriesSelection()) {
-          return;
-        }
-      }
-    }
-
-    const categoryWrapper = this.categoryWrapperField();
-    if ((await categoryWrapper.count()) > 0) {
-      if (!(await categoryWrapper.first().isVisible())) {
-        const openDetailsToggle = this.page
-          .locator(
-            [
-              'summary:has-text("Category")',
-              'summary:has-text("Series")',
-              'button:has-text("Category")',
-              'button:has-text("Series")',
-            ].join(', ')
-          )
-          .first();
-
-        if ((await openDetailsToggle.count()) > 0) {
-          await openDetailsToggle.click();
-        }
-      }
-
-      const selectedViaWrapperInput = categoryWrapper
-        .first()
-        .locator('input[type="search"], input[type="text"]')
-        .first();
-
-      if (!hasCategoryTagifyInput && (await selectedViaWrapperInput.count()) > 0 && (await selectedViaWrapperInput.isVisible())) {
-        await selectedViaWrapperInput.click();
-        await selectedViaWrapperInput.fill(preferredValue);
-        await selectedViaWrapperInput.press('Enter');
-        if (await this.hasCategoryOrSeriesSelection()) {
-          return;
-        }
-      }
-
-      if (await this.selectFromSelect2(categoryWrapper.first(), preferredValue)) {
-        if (await this.hasCategoryOrSeriesSelection()) {
-          return;
-        }
-      }
-    }
-
-    const categorySearch = this.page.getByRole('searchbox', { name: /category|series/i }).first();
-    if ((await categorySearch.count()) > 0) {
-      await categorySearch.click();
-      await categorySearch.fill(preferredValue);
-      await categorySearch.press('Enter');
-      if (await this.hasCategoryOrSeriesSelection()) {
-        return;
-      }
-    }
-
-    if (await this.selectFromTaxonomyGroup(/^Category$/i, preferredValue)) {
-      return;
-    }
-
-    if (await this.selectFromTaxonomyGroup(/Series/i, preferredValue)) {
-      return;
-    }
-
-    const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
-    throw new Error(
-      'Unable to select a category or series on the create form. ' +
-      `Main text snapshot: ${mainText}`
-    );
   }
 }

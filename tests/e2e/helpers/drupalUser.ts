@@ -128,6 +128,10 @@ export function canManageDrupalUsersFromTests(): boolean {
   }
 }
 
+export function executeDrushEval(phpCode: string): string {
+  return runDrushWithRetry(['php:eval', phpCode]);
+}
+
 function normalizeRoles(roles: DrupalRoleInput): string[] {
   const values = Array.isArray(roles) ? roles : [roles];
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
@@ -165,7 +169,7 @@ export function ensureE2ETaxonomyTerms(): void {
   const phpEval = [
     `$map = ["moj_categories" => ${phpSingleQuoted(defaultCategoryTerm)}, "series" => ${phpSingleQuoted(defaultSeriesTerm)}];`,
     '$storage = \\Drupal::entityTypeManager()->getStorage("taxonomy_term");',
-    `$prisonHierarchy = ${phpSingleQuoted(JSON.stringify(defaultPrisonGroups))};`,
+    `$prisonHierarchy = json_decode(${phpSingleQuoted(JSON.stringify(defaultPrisonGroups))}, TRUE, 512, JSON_THROW_ON_ERROR);`,
     '$prisonTermsByName = [];',
     '$seedPrisonTerm = function (string $name, int $parentTid = 0) use ($storage, &$prisonTermsByName): int {',
     '  $existing = $storage->loadByProperties(["vid" => "prisons", "name" => $name]);',
@@ -212,9 +216,24 @@ export function ensureE2ETaxonomyTerms(): void {
     '$termIds = [];',
     'foreach ($map as $vid => $name) {',
     '  $existing = $storage->loadByProperties(["vid" => $vid, "name" => $name]);',
+    '  if ($vid === "moj_categories") {',
+    '    $existing = array_filter($existing, static fn ($term) => (int) $term->get("parent")->target_id > 0);',
+    '    if (empty($existing)) {',
+    '      $parents = $storage->loadByProperties(["vid" => $vid, "name" => "Playwright E2E Categories"]);',
+    '      $parents = array_filter($parents, static fn ($term) => (int) $term->get("parent")->target_id === 0);',
+    '      $parent = reset($parents);',
+    '      if (!$parent) {',
+    '        $parent = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => $vid, "name" => "Playwright E2E Categories"]);',
+    '        $parent->save();',
+    '      }',
+    '      $term = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => $vid, "name" => $name, "parent" => [["target_id" => $parent->id()]]]);',
+    '      $term->save();',
+    '      $existing = [$term];',
+    '    }',
+    '  }',
     '  if (empty($existing)) {',
     '    $term = \\Drupal\\taxonomy\\Entity\\Term::create(["vid" => $vid, "name" => $name]);',
-    '    if (!empty($adultMaleTid) && $term->hasField("field_prisons")) {',
+    '    if ($vid === "series" && !empty($adultMaleTid) && $term->hasField("field_prisons")) {',
     '      $term->set("field_prisons", [["target_id" => $adultMaleTid]]);',
     '    }',
     '    $term->save();',
@@ -222,7 +241,7 @@ export function ensureE2ETaxonomyTerms(): void {
     '  }',
     '  else {',
     '    $existingTerm = reset($existing);',
-    '    if (!empty($adultMaleTid) && $existingTerm->hasField("field_prisons") && $existingTerm->get("field_prisons")->isEmpty()) {',
+    '    if ($vid === "series" && !empty($adultMaleTid) && $existingTerm->hasField("field_prisons") && $existingTerm->get("field_prisons")->isEmpty()) {',
     '      $existingTerm->set("field_prisons", [["target_id" => $adultMaleTid]]);',
     '      $existingTerm->save();',
     '    }',

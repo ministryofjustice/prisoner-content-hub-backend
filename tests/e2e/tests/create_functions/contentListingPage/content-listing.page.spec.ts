@@ -4,9 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
-import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
-import { UrgentBannerCreationPOM } from '../../../pages/nodeCreation/UrgentBannerCreationPOM';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -22,7 +20,7 @@ test.describe('content listing', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -83,7 +81,7 @@ test.describe('content listing', () => {
     const uniqueSummary = `Playwright PDF summary ${Date.now()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const pdfPage = new PdfPageCreationPOM(page);
+      const pdfPage = new NodeCreationPage(page, 'moj_pdf_item');
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -94,7 +92,6 @@ test.describe('content listing', () => {
       await runStep('fill PDF content fields', async () => {
         await pdfPage.fillTitle(uniqueTitle);
         await pdfPage.fillSummary(uniqueSummary);
-        await pdfPage.selectFirstCategory();
       });
 
       await runStep('upload PDF file', async () => {
@@ -103,8 +100,16 @@ test.describe('content listing', () => {
         await pdfPage.uploadPdfFile(testFilePath);
       });
 
+      await runStep('select required category', async () => {
+        await pdfPage.selectFirstCategory();
+      });
+
       await runStep('save PDF content', async () => {
         await pdfPage.save();
+      });
+
+      await runStep('verify PDF was created before listing checks', async () => {
+        await pdfPage.expectNodeViewPage(uniqueTitle);
       });
 
       await runStep('visit content listing', async () => {
@@ -138,7 +143,7 @@ test.describe('content listing', () => {
     const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const urgentBanner = new UrgentBannerCreationPOM(page);
+      const urgentBanner = new NodeCreationPage(page, 'urgent_banner');
 
       await loginViaUi(page, user.username, user.password, runStep);
 

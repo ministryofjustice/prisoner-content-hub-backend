@@ -5,7 +5,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -19,7 +19,7 @@ test.describe('PDF create page', () => {
     const uniqueSummary = `Playwright PDF summary ${Date.now()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const pdfPage = new PdfPageCreationPOM(page);
+      const pdfPage = new NodeCreationPage(page, 'moj_pdf_item');
 
       await loginViaUi(page, user.username, user.password, runStep);
 

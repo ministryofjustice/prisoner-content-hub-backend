@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationPage } from '../../../pages/NodeCreationPage';
 import { appSettings } from '../../../config/appSettings';
 
 const studioAdminRole = appSettings.roles.studioAdminTest;
@@ -16,7 +16,7 @@ test.describe('studio admin role', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(studioAdminRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -33,7 +33,7 @@ test.describe('studio admin role', () => {
     const uniqueBody = `Created by studio admin at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(studioAdminRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationPage(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
