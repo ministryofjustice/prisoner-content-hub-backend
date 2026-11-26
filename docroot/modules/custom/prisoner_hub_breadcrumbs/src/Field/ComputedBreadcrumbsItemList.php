@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\prisoner_hub_breadcrumbs\Field;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

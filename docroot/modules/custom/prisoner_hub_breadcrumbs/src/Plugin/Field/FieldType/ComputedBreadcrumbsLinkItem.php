@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\prisoner_hub_breadcrumbs\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Attribute\FieldType;
