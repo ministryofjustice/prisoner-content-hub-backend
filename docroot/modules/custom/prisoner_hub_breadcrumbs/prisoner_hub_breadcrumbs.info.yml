@@ -6,5 +6,3 @@ package: 'Custom'
 dependencies:
   - drupal:node
   - drupal:taxonomy
-test_dependencies:
-  - computed_breadcrumbs:computed_breadcrumbs
