@@ -35,24 +35,36 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
       return;
     }
     if ($entity instanceof TermInterface) {
-      if ($entity->bundle() == 'topics') {
-        $this->addTopicBreadcrumbs();
-        return;
-      }
-      if ($entity->bundle() == 'series') {
-        $this->addSeriesBreadcrumbs($entity);
-        return;
-      }
+      match ($entity->bundle()) {
+        'topics' => $this->addTopicBreadcrumbs(),
+        'series' => $this->addSeriesBreadcrumbs($entity),
+        'moj_categories' => $this->addCategoryBreadcrumbs($entity),
+        default => NULL,
+      };
     }
   }
 
+  /**
+   * Add the home breadcrumb.
+   */
   private function addHomeBreadcrumb() {
-    $this->list[] = $this->createItem(0, [
+    $this->list[] = $this->createItem(count($this->list), [
       'uri' => "/en",
       'title' => $this->t('Home'),
     ]);
   }
 
+  /**
+   * Add all required breadcrumbs for a node.
+   *
+   * Assumes node is of type that can have a series or category.
+   *
+   * @param \Drupal\Node\NodeInterface $node
+   *   Node for which to add breadcrumbs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
   private function addNodeBreadcrumbs(NodeInterface $node) {
     $this->addHomeBreadcrumb();
 
@@ -74,30 +86,40 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
 
     /** @var \Drupal\taxonomy\TermInterface $category */
     $category = reset($categories);
-    $parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($category->id());
-    $breadcrumb_terms = array_reverse($parents);
+    $this->addParentTerms($category, FALSE);
     if ($series) {
-      $breadcrumb_terms[] = $series;
-    }
-    foreach ($breadcrumb_terms as $term) {
-      $term = \Drupal::service('entity.repository')->getTranslationFromContext($term);
-      $this->list[] = $this->createItem(0, [
-        'uri' => "/en/tags/" . $term->id(),
-        'title' => $term->getName(),
+      $this->list[] = $this->createItem(count($this->list), [
+        'uri' => "/en/tags/" . $series->id(),
+        'title' => $series->getName(),
       ]);
     }
 
   }
 
+  /**
+   * Adds all required breadcrumbs for a topic.
+   *
+   * These are the same regardless of the specfic topic, as topics are not in
+   * a hierarchy.
+   */
   private function addTopicBreadcrumbs() {
     $this->addHomeBreadcrumb();
 
-    $this->list[] = $this->createItem(1, [
+    $this->list[] = $this->createItem(count($this->list), [
       'uri' => "/topics",
       'title' => $this->t('Browse all topics'),
     ]);
   }
 
+  /**
+   * Adds all required breadcrumbs for a series.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The series for which to add breadcrumbs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
   private function addSeriesBreadcrumbs(TermInterface $term) {
     $this->addHomeBreadcrumb();
 
@@ -110,12 +132,46 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
 
     /** @var \Drupal\taxonomy\TermInterface $category */
     $category = reset($categories);
-    $parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($category->id());
-    foreach (array_reverse($parents) as $term) {
-      $term = \Drupal::service('entity.repository')->getTranslationFromContext($term);
-      $this->list[] = $this->createItem(0, [
-        'uri' => "/en/tags/" . $term->id(),
-        'title' => $term->getName(),
+    $this->addParentTerms($category, FALSE);
+  }
+
+  /**
+   * Adds all required breadcrumbs for a category.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The category for which to add breadcrumbs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function addCategoryBreadcrumbs(TermInterface $term) {
+    $this->addHomeBreadcrumb();
+    $this->addParentTerms($term);
+  }
+
+  /**
+   * Adds parent terms to the breadcrumbs list.
+   *
+   * Optionally excludes the passed term from that list.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The term whose parents to add.
+   * @param bool $exclude_self
+   *   Whether to exclude the passed term from the list.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function addParentTerms(TermInterface $term, bool $exclude_self = TRUE) {
+    $parent_terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($term->id());
+    if ($exclude_self && array_key_exists($term->id(), $parent_terms)) {
+      unset($parent_terms[$term->id()]);
+    }
+    foreach (array_reverse($parent_terms) as $parent_term) {
+      $parent_term = \Drupal::service('entity.repository')->getTranslationFromContext($parent_term);
+      $this->list[] = $this->createItem(count($this->list), [
+        'uri' => "/en/tags/" . $parent_term->id(),
+        'title' => $parent_term->getName(),
       ]);
     }
 
