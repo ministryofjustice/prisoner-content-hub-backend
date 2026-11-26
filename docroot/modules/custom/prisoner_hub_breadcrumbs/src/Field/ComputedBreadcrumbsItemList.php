@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\prisoner_hub_breadcrumbs\Field;
 
-use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 use Drupal\Node\NodeInterface;
@@ -13,8 +14,8 @@ use Drupal\taxonomy\TermInterface;
 /**
  * Provides a computed breadcrumbs field without using the contrib module.
  */
-class ComputedBreadcrumbsItemList extends FieldItemList {
-  use ComputedItemListTrait;
+class ComputedBreadcrumbsItemList extends FieldItemList implements RefinableCacheableDependencyInterface {
+  use ComputedItemListTrait, RefinableCacheableDependencyTrait;
 
   /**
    * {@inheritdoc}
@@ -97,6 +98,7 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
         'uri' => "/en/tags/" . $series->id(),
         'title' => $series->getName(),
       ]);
+      $this->addCacheableDependency($series);
     }
 
   }
@@ -178,6 +180,7 @@ class ComputedBreadcrumbsItemList extends FieldItemList {
         'uri' => "/en/tags/" . $parent_term->id(),
         'title' => $parent_term->getName(),
       ]);
+      $this->addCacheableDependency($parent_term);
     }
 
   }
