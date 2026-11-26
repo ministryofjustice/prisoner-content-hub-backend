@@ -18,6 +18,7 @@ export class NodeCreationTaxonomyPOM {
       'input[data-drupal-selector*="edit-field-moj-top-level-categories"][type="text"]',
       'input[name^="field_moj_top_level_categories"][name*="[target_id]"]',
       'tags.tagify.field_moj_top_level_categories .tagify__input[contenteditable]',
+      '[role="combobox"]',
     ].join(', ')).first();
   }
 

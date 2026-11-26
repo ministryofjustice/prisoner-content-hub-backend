@@ -3,6 +3,7 @@ import {
   createTemporaryDrupalUser,
   deleteTemporaryDrupalUser,
   DrupalRoleInput,
+  ensureE2ETaxonomyTerms,
   executeDrushEval,
   TemporaryUser,
 } from '../helpers/drupalUser';
@@ -66,6 +67,7 @@ export async function withTaxonomySortingFixture<T>(
   role: DrupalRoleInput,
   action: (user: TemporaryUser, fixture: TaxonomySortingFixture) => Promise<T>,
 ): Promise<T> {
+  ensureE2ETaxonomyTerms();
   const user = createTemporaryDrupalUser(role);
   let fixture: TaxonomySortingFixture | undefined;
   try {
