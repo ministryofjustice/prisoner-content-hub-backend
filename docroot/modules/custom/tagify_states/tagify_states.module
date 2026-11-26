@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @file
  * Primary module hooks for Tagify States module.
  */
+
+declare(strict_types=1);
 
 /**
  * Implements hook_element_info_alter().
