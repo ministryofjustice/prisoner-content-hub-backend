@@ -74,6 +74,8 @@ export class NodeCreationTaxonomyPOM {
         return false;
       }
     }, {
+      timeout: 30000,
+      intervals: [100, 250, 500],
       message: `Tagify field ${fieldId} did not serialize the selected entity "${preferredValue}".`,
     }).toBe(true);
   }
