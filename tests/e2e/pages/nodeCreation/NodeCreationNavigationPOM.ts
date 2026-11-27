@@ -21,17 +21,24 @@ export class NodeCreationNavigationPOM {
   }
 
   async expectNodeViewPage(title: string, body?: string): Promise<void> {
-    await expect(this.page).toHaveURL(/(?:\/node\/add\/page$)|(?:\/(?:[a-z]{2}\/)?node\/\d+(?:\/edit)?$)/);
+    const nodeViewUrl = /\/(?:[a-z]{2}\/)?node\/\d+(?:\/edit)?$/;
 
-    const currentUrl = this.page.url();
-    if (/\/node\/add\/page$/.test(currentUrl)) {
-      const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
-      throw new Error(
-        `Expected to be redirected to created node view, but stayed on add page (${currentUrl}). ` +
-        `This usually means form validation blocked save. Main text: ${mainText}`
-      );
+    try {
+      await expect(this.page).toHaveURL(nodeViewUrl, { timeout: 30000 });
+    } catch (error) {
+      const currentUrl = this.page.url();
+      if (/\/node\/add\/[^/]+$/.test(currentUrl)) {
+        const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
+        throw new Error(
+          `Expected to be redirected to created node view, but stayed on add page (${currentUrl}). ` +
+          `The save may have been blocked by form validation. Main text: ${mainText}`
+        );
+      }
+
+      throw error;
     }
 
+    const currentUrl = this.page.url();
     const nodeMatch = currentUrl.match(/\/(?:[a-z]{2}\/)?node\/(\d+)(?:\/edit)?$/);
     expect(nodeMatch).toBeTruthy();
 
