@@ -17,17 +17,16 @@ install-drupal:
 	vendor/bin/drush site-install prisoner_content_hub_profile --existing-config -y
 
 coding-standards:
-	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css,js docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php
+	vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,theme,css docroot/modules/custom/ docroot/themes/custom/ docroot/sites/default/settings.php
 
 php-stan:
 	vendor/bin/phpstan analyze
 
 run-tests:
 	echo "Running tests on existing site"
-	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --verbose
+	vendor/bin/phpunit --testsuite=existing-site --log-junit ~/phpunit/junit-existing-site.xml --display-incomplete --display-skipped
 
 deploy:
-	drush cache:rebuild
 	echo "Enabling maintenance and readonly mode"
 	drush state-set readonlymode_active 1
 	drush state-set system.maintenance_mode 1

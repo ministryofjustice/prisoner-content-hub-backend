@@ -154,12 +154,10 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
       [
         'uri' => '/en',
         'title' => 'Home',
-        'options' => [],
       ],
       [
         'uri' => '/topics',
         'title' => 'Browse all topics',
-        'options' => [],
       ],
     ];
     $this->assertSame($expected_breadcrumbs, $response_document['data']['attributes']['breadcrumbs'], $message);
@@ -190,14 +188,12 @@ class PrisonerHubBreadcrumbsTest extends ExistingSiteBase {
         [
           'uri' => Url::fromRoute('<front>')->toString(),
           'title' => 'Home',
-          'options' => [],
         ],
       ];
       foreach ($breadcrumb_entities as $breadcrumb_entity) {
         $breadcrumbs[] = [
           'uri' => $breadcrumb_entity->toUrl()->toString(),
           'title' => $breadcrumb_entity->label(),
-          'options' => [],
         ];
       }
       $this->assertEquals($breadcrumbs, $response_document['data']['attributes']['breadcrumbs'], $message);

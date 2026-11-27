@@ -1,0 +1,5 @@
+name: 'Tagify States'
+type: module
+description: 'Provides support for form #states for elements using tagify widgets.'
+package: User interface
+core_version_requirement: ^10 || ^11

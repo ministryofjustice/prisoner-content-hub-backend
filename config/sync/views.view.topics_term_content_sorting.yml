@@ -545,8 +545,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin:
-            hide_title: 1
-            hide_description: 1
+            hide_title: true
+            hide_description: true
             type: datetime_timestamp
             settings: {  }
             third_party_settings: {  }
@@ -741,10 +741,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              moj_local_content_manager: '0'
-              local_administrator: '0'
-              administrator: '0'
           is_grouped: false
           group_info:
             label: ''

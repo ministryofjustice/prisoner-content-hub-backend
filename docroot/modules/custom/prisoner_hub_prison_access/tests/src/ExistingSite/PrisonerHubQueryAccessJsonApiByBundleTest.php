@@ -121,7 +121,7 @@ class PrisonerHubQueryAccessJsonApiByBundleTest extends PrisonerHubQueryAccessTe
   /**
    * Test a group OR filter on two different entity reference fields works.
    *
-   * @covers ::prisoner_hub_prison_access_jsonapi_entity_filter_access().
+   * @covers ::prisoner_hub_prison_access_jsonapi_entity_filter_access
    * @see https://www.drupal.org/project/drupal/issues/3072384
    */
   public function testJsonApiGroupFilters() {

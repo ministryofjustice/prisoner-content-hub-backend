@@ -18,7 +18,7 @@ use Drupal\node\NodeInterface;
  */
 function prisoner_hub_cms_help_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   if (isset($build['book_navigation'])) {
-    hide($build['book_navigation']);
+    $build['book_navigation']['#printed'] = TRUE;
   }
 }
 

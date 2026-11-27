@@ -61,13 +61,15 @@ function prisoner_hub_prison_access_cms_field_widget_single_element_form_alter(&
     }
   }
 
-  // Set the default value for the prison owner field to the users prisons.
-  // On new content only (do not modify existing content).
-  $prison_owner_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
-  if ($field_name == $prison_owner_field_name) {
-    if ($entity->isNew()) {
+  // On new content only (do not modify existing content)..
+  if ($entity->isNew()) {
+    // ..set the default value for the prison owner field to the user's prisons.
+    $prison_owner_field_name = \Drupal::getContainer()->getParameter('prisoner_hub_prison_access_cms.prison_owner_field_name');
+    /** @var \Drupal\taxonomy\TermStorageInterface $term_storage */
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    if ($field_name == $prison_owner_field_name) {
       foreach ($entity_edit_access->getUserPrisons() as $user_prison) {
-        $element['#default_value'][] = $user_prison->id();
+        $element['#default_value'][] = $term_storage->load($user_prison->id());
       }
     }
   }
