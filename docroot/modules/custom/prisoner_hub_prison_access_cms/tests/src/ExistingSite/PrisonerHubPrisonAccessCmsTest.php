@@ -104,7 +104,12 @@ class PrisonerHubPrisonAccessCmsTest extends ExistingSiteBase {
 
       // Test that the default value for the prison owner field is the users
       // current prison.
-      $this->assertSession()->elementAttributeExists('css', 'select[name="field_prison_owner[]"] option[value="' . $this->prisonTerm->id() . '"]', 'selected');
+      $this->assertStringContainsString(
+        '"entity_id":"' . $this->prisonTerm->id() . '"',
+        (string) $this->assertSession()
+          ->elementExists('css', '#edit-field-prison-owner')
+          ->getValue()
+      );
 
       $this->assertUserCanEditNodeOnCurrentPage($contentType);
     }

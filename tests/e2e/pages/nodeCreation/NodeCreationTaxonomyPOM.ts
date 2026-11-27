@@ -65,6 +65,17 @@ export class NodeCreationTaxonomyPOM {
     await expect(suggestion).toBeVisible();
     await suggestion.click();
     await expect(wrapper.locator('tag').filter({ hasText: preferredValue })).toBeVisible();
+    await expect.poll(async () => {
+      const selectedValues = await this.page.locator(fieldId).inputValue();
+      try {
+        const values = JSON.parse(selectedValues) as Array<{ entity_id?: string | number; label?: string }>;
+        return values.some((value) => value.label === preferredValue && value.entity_id != null);
+      } catch {
+        return false;
+      }
+    }, {
+      message: `Tagify field ${fieldId} did not serialize the selected entity "${preferredValue}".`,
+    }).toBe(true);
   }
 
   async selectPrisonOwner(preferredValue = defaultPreferredPrisonOwner): Promise<void> {
