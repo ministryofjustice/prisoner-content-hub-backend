@@ -106,7 +106,7 @@ class ComputedBreadcrumbsItemList extends FieldItemList implements RefinableCach
   /**
    * Adds all required breadcrumbs for a topic.
    *
-   * These are the same regardless of the specfic topic, as topics are not in
+   * These are the same regardless of the specific topic, as topics are not in
    * a hierarchy.
    */
   private function addTopicBreadcrumbs() {
