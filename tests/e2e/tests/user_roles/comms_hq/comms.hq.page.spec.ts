@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationFormPOM } from '../../../pages/nodeCreation/NodeCreationFormPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const commsHqRole = appSettings.roles.commsLiveServiceHq;
@@ -18,7 +18,7 @@ test.describe('comms live service HQ role', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(commsHqCombinedRoles, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -35,7 +35,7 @@ test.describe('comms live service HQ role', () => {
     const uniqueBody = `Created by comms HQ at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(commsHqCombinedRoles, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 

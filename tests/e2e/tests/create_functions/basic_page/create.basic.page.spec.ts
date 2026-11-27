@@ -1,11 +1,12 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { createStepRunner } from '../../../helpers/stepScreenshots';
 import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationFormPOM } from '../../../pages/nodeCreation/NodeCreationFormPOM';
 import { appSettings } from '../../../config/appSettings';
+import { taxonomyFixtures } from '../../../fixtures/taxonomyFixures';
 
 const loginRole = appSettings.roles.lcmTest;
 
@@ -16,7 +17,7 @@ test.describe('basic page create', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -33,7 +34,7 @@ test.describe('basic page create', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -57,4 +58,24 @@ test.describe('basic page create', () => {
       });
     });
   });
+
+  for (const taxonomyFixture of taxonomyFixtures) {
+    test(`local content manager can select and remove ${taxonomyFixture.name}`, async ({ page }, testInfo) => {
+      const runStep = createStepRunner(page, testInfo);
+      await runWithTemporaryUser(loginRole, async (user) => {
+        const basicPage = new NodeCreationFormPOM(page);
+        await loginViaUi(page, user.username, user.password, runStep);
+        await basicPage.expectCreatePageAccessible();
+
+        const field = taxonomyFixture.field(basicPage);
+        await expect(field).toHaveCount(1);
+        const wrapper = field.locator('xpath=preceding-sibling::tags[1]');
+        await taxonomyFixture.select(basicPage);
+        await expect(wrapper.locator('tag').filter({ hasText: taxonomyFixture.term })).toBeVisible();
+
+        await taxonomyFixture.remove(basicPage);
+        await expect(wrapper.locator('tag').filter({ hasText: taxonomyFixture.term })).toHaveCount(0);
+      });
+    });
+  }
 });

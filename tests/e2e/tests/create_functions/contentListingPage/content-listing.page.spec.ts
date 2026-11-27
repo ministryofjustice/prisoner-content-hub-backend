@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationFormPOM } from '../../../pages/nodeCreation/NodeCreationFormPOM';
 import { PdfPageCreationPOM } from '../../../pages/nodeCreation/PdfPageCreationPOM';
 import { UrgentBannerCreationPOM } from '../../../pages/nodeCreation/UrgentBannerCreationPOM';
 import { appSettings } from '../../../config/appSettings';
@@ -22,7 +22,7 @@ test.describe('content listing', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 

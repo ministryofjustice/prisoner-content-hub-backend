@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { createStepRunner } from '../../helpers/stepScreenshots';
 import { loginViaUi, runWithTemporaryUser } from '../../actions/authActions';
-import { BasicPageCreationPOM } from '../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationFormPOM } from '../../pages/nodeCreation/NodeCreationFormPOM';
 import { PdfPageCreationPOM } from '../../pages/nodeCreation/PdfPageCreationPOM';
 import { appSettings } from '../../config/appSettings';
 
@@ -14,7 +14,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -58,7 +58,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -91,7 +91,7 @@ test.describe('prisons selection on create pages', () => {
     const uniqueBody = `Created by Playwright at ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -142,7 +142,7 @@ test.describe('prisons selection on create pages', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
