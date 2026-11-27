@@ -4,7 +4,7 @@ import {
   loginViaUi,
   runWithTemporaryUser,
 } from '../../../actions/authActions';
-import { BasicPageCreationPOM } from '../../../pages/nodeCreation/BasicPageCreationPOM';
+import { NodeCreationFormPOM } from '../../../pages/nodeCreation/NodeCreationFormPOM';
 import { appSettings } from '../../../config/appSettings';
 
 const loginRole = appSettings.roles.lcmTest;
@@ -16,7 +16,7 @@ test.describe('create page validation warnings', () => {
     const runStep = createStepRunner(page, testInfo);
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -72,7 +72,7 @@ test.describe('create page validation warnings', () => {
     const uniqueBody = `Warning validation body ${new Date().toISOString()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 
@@ -104,7 +104,7 @@ test.describe('create page validation warnings', () => {
     const uniqueSummary = `Playwright body summary ${Date.now()}`;
 
     await runWithTemporaryUser(loginRole, async (user) => {
-      const basicPage = new BasicPageCreationPOM(page);
+      const basicPage = new NodeCreationFormPOM(page);
 
       await loginViaUi(page, user.username, user.password, runStep);
 

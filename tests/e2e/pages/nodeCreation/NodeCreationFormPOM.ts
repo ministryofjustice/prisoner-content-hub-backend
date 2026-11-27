@@ -1,143 +1,153 @@
 import { expect, Locator, Page } from '@playwright/test';
+import { NodeCreationNavigationPOM } from './NodeCreationNavigationPOM';
+import { NodeCreationTaxonomyPOM } from './NodeCreationTaxonomyPOM';
 
 export class NodeCreationFormPOM {
-  constructor(private readonly page: Page) {}
+  private readonly navigation: NodeCreationNavigationPOM;
+  private readonly taxonomy: NodeCreationTaxonomyPOM;
+
+  constructor(private readonly page: Page) {
+    this.navigation = new NodeCreationNavigationPOM(page);
+    this.taxonomy = new NodeCreationTaxonomyPOM(page);
+  }
+
+  async expectCreatePageAccessible(bundle = 'page'): Promise<void> {
+    await this.navigation.expectCreatePageAccessible(bundle);
+  }
+
+  async expectNodeViewPage(title: string, body?: string): Promise<void> {
+    await this.navigation.expectNodeViewPage(title, body);
+  }
 
   titleField(): Locator {
     return this.page.locator('#edit-title-0-value').first();
   }
 
   summaryField(): Locator {
-    return this.page
-      .locator(
-        [
-          '#edit-field-summary-0-value',
-          'textarea[name="field_summary[0][value]"]',
-          '#edit-field-moj-short-summary-0-value',
-          'textarea[name="field_moj_short_summary[0][value]"]',
-        ].join(', ')
-      )
-      .first();
+    return this.page.locator('#edit-field-summary-0-value');
   }
 
   pdfFileInput(): Locator {
-    return this.page
-      .locator('input[type="file"][name="files[field_moj_pdf_0]"]')
-      .first();
+    return this.page.locator('#edit-field-moj-pdf-0-upload');
   }
 
   thumbnailImageInput(): Locator {
-    return this.page
-      .locator('input[type="file"][name="files[field_moj_thumbnail_image_0]"]')
-      .first();
+    return this.page.locator('#edit-field-moj-thumbnail-image-0-upload');
   }
 
   seasonField(): Locator {
-    return this.page
-      .locator(
-        [
-          '#edit-field-moj-season-0-value',
-          'input[name="field_moj_season[0][value]"]',
-          'input[data-drupal-selector="edit-field-moj-season-0-value"]',
-          'input[id*="field-moj-season"][type="number"]',
-          '[data-drupal-selector*="edit-field-moj-season"] input[type="number"]',
-        ].join(', ')
-      )
-      .first();
+    return this.page.locator('#edit-field-moj-season-0-value');
   }
 
   episodeField(): Locator {
-    return this.page
-      .locator(
-        [
-          '#edit-field-moj-episode-0-value',
-          'input[name="field_moj_episode[0][value]"]',
-          'input[data-drupal-selector="edit-field-moj-episode-0-value"]',
-          'input[id*="field-moj-episode"][type="number"]',
-          '[data-drupal-selector*="edit-field-moj-episode"] input[type="number"]',
-        ].join(', ')
-      )
-      .first();
+    return this.page.locator('#edit-field-moj-episode-0-value');
   }
 
   releaseDateField(): Locator {
-    return this.page
-      .locator(
-        [
-          '#edit-field-release-date-0-value-date',
-          'input[name="field_release_date[0][value][date]"]',
-          'input[data-drupal-selector="edit-field-release-date-0-value-date"]',
-          'input[id*="field-release-date"][type="date"]',
-          '[data-drupal-selector*="edit-field-release-date"] input[type="date"]',
-        ].join(', ')
-      )
-      .first();
+    return this.page.locator('#edit-field-release-date-0-value-date');
   }
 
   unpublishOnDateField(): Locator {
-    return this.page
-      .locator(
-        [
-          '#edit-unpublish-on-0-value-date',
-          'input[name="unpublish_on[0][value][date]"]',
-          'input[data-drupal-selector="edit-unpublish-on-0-value-date"]',
-          'input[id*="unpublish-on"][type="date"]',
-          '[data-drupal-selector*="edit-unpublish-on"] input[type="date"]',
-        ].join(', ')
-      )
-      .first();
+    return this.page.locator('#edit-unpublish-on-0-value-date');
   }
 
   revisionLogMessageField(): Locator {
-    return this.page
-      .getByRole('textbox', { name: /revision log message/i })
-      .first();
+    return this.page.locator('#edit-revision-log-0-value');
+  }
+
+  categoryField(): Locator {
+    return this.taxonomy.categoryField();
+  }
+
+  prisonOwnerField(): Locator {
+    return this.taxonomy.prisonOwnerField();
+  }
+
+  topicField(): Locator {
+    return this.taxonomy.topicField();
+  }
+
+  seriesField(): Locator {
+    return this.taxonomy.seriesField();
+  }
+
+  async selectFirstCategory(preferredValue?: string): Promise<void> {
+    await this.taxonomy.selectFirstCategory(preferredValue);
+  }
+
+  async selectPrisonOwner(preferredValue?: string): Promise<void> {
+    await this.taxonomy.selectPrisonOwner(preferredValue);
+  }
+
+  async selectTopic(preferredValue: string): Promise<void> {
+    await this.taxonomy.selectTopic(preferredValue);
+  }
+
+  async selectSeries(preferredValue: string): Promise<void> {
+    await this.taxonomy.selectSeries(preferredValue);
+  }
+
+  async selectFirstCategoryRemoveButton(): Promise<void> {
+    await this.taxonomy.selectFirstCategoryRemoveButton();
+  }
+
+  async selectPrisonOwnerRemoveButton(): Promise<void> {
+    await this.taxonomy.selectPrisonOwnerRemoveButton();
+  }
+
+  async selectTopicRemoveButton(): Promise<void> {
+    await this.taxonomy.selectTopicRemoveButton();
+  }
+
+  async selectSeriesRemoveButton(): Promise<void> {
+    await this.taxonomy.selectSeriesRemoveButton();
   }
 
   detailsSummary(label: string): Locator {
-    return this.page.getByRole('button', { name: new RegExp(label, 'i') }).first();
+    const sectionSelectors: Record<string, string> = {
+      'Prison owner': '#edit-group-prison-owner > summary',
+      'Published date': '#edit-group-published-date > summary',
+      'Authoring information': '#edit-author > summary',
+    };
+    const selector = sectionSelectors[label];
+    if (!selector) {
+      throw new Error(`Unknown form section "${label}".`);
+    }
+    return this.page.locator(selector);
   }
 
   prisonCheckboxes(): Locator {
-    return this.page.locator('input[type="checkbox"][name^="field_prisons"]');
+    return this.prisonGroup().locator('input[type="checkbox"][id^="edit-field-prisons-"]');
   }
 
   prisonRadioButtons(): Locator {
-    return this.page.locator('input[type="radio"][name^="field_prisons"]');
+    return this.prisonGroup().locator('input[type="radio"][id^="edit-field-prisons-"]');
   }
 
   prisonGroup(): Locator {
-    return this.page.getByRole('group', { name: /prisons/i });
+    return this.page.locator('#edit-field-prisons--wrapper');
   }
 
   async selectPrisonByLabel(prisonLabel: string): Promise<void> {
-    // Try radio button first
-    const radioButton = this.page.locator(`input[type="radio"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
-    const radioCount = await radioButton.count();
-    
-    if (radioCount > 0) {
-      await radioButton.click();
-      return;
+    const escapedLabel = prisonLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const label = this.prisonGroup()
+      .locator('label[for]')
+      .filter({ hasText: new RegExp(`^\\s*${escapedLabel}\\s*$`, 'i') })
+      .first();
+    await expect(label).toBeVisible();
+
+    const inputId = await label.getAttribute('for');
+    if (!inputId) {
+      throw new Error(`Prison option "${prisonLabel}" has no associated input ID.`);
     }
 
-    // Fall back to checkbox
-    const checkbox = this.page.locator(`input[type="checkbox"][name^="field_prisons"] + label:has-text("${prisonLabel}")`).first();
-    if ((await checkbox.count()) > 0) {
-      await checkbox.click();
-      return;
-    }
-
-    // Try direct input click if no label found
-    const input = this.page.locator(`input[type="radio"][name^="field_prisons"][value*="${prisonLabel}"], input[type="checkbox"][name^="field_prisons"][value*="${prisonLabel}"]`).first();
-    if ((await input.count()) > 0) {
-      await input.click();
-    }
+    const input = this.page.locator(`#${inputId}`);
+    await label.click();
+    await expect(input).toBeChecked();
   }
 
   async selectFirstPrison(): Promise<void> {
-    const selectablePrisons = this.prisonGroup().locator(
-      'input[type="radio"][name^="field_prisons"], input[type="checkbox"][name^="field_prisons"]'
-    );
+    const selectablePrisons = this.prisonGroup().locator('input[id^="edit-field-prisons-"]');
 
     const firstPrison = selectablePrisons.first();
     await expect(firstPrison).toBeVisible({ timeout: 30000 });
@@ -160,11 +170,11 @@ export class NodeCreationFormPOM {
   }
 
   async getPrisonSelectionCount(): Promise<number> {
-    return await this.prisonGroup().locator('input:checked').count();
+    return await this.prisonGroup().locator('input[id^="edit-field-prisons-"]:checked').count();
   }
 
   saveButton(): Locator {
-    return this.page.getByRole('button', { name: /^Save$/ });
+    return this.page.locator('#edit-submit');
   }
 
   async fillTitle(title: string): Promise<void> {
@@ -172,40 +182,22 @@ export class NodeCreationFormPOM {
   }
 
   async fillSummary(summary: string): Promise<void> {
-    const summaryField = this.summaryField();
-    if ((await summaryField.count()) > 0) {
-      await summaryField.fill(summary);
-      return;
-    }
-
-    await this.page.getByRole('textbox', { name: /summary/i }).first().fill(summary);
+    await this.summaryField().fill(summary);
   }
 
   async fillBody(body: string): Promise<void> {
-    const bodyTextarea = this.page.locator(
-      [
-        'textarea[name="body[0][value]"]',
-        'textarea[name="field_main_body_content[0][value]"]',
-        '#edit-field-main-body-content-0-value',
-      ].join(', ')
-    );
+    const bodyField = this.page.locator('#edit-field-main-body-content-0-value, #edit-body-0-value').first();
 
-    if ((await bodyTextarea.count()) > 0 && (await bodyTextarea.first().isVisible())) {
-      await bodyTextarea.first().fill(body);
+    if (await bodyField.isVisible()) {
+      await bodyField.fill(body);
       return;
     }
 
-    const richTextEditor = this.page.locator('.ck-editor__editable[role="textbox"]');
-    if ((await richTextEditor.count()) > 0) {
-      await richTextEditor.first().click();
-      await richTextEditor.first().fill(body);
-      return;
-    }
-
-    const bodyByLabel = this.page.getByRole('textbox', { name: /main body content|body/i }).first();
-    if ((await bodyByLabel.count()) > 0) {
-      await bodyByLabel.fill(body);
-    }
+    const richTextEditor = bodyField
+      .locator('xpath=following-sibling::div[contains(@class, "ck-editor")]')
+      .locator('.ck-editor__editable');
+    await expect(richTextEditor).toBeVisible();
+    await richTextEditor.fill(body);
   }
 
   async fillUnpublishOnDate(date: string): Promise<void> {
@@ -217,58 +209,13 @@ export class NodeCreationFormPOM {
 
   async uploadPdfFile(filePath: string): Promise<void> {
     const pdfFileInput = this.pdfFileInput();
-
-    if ((await pdfFileInput.count()) === 0) {
-      throw new Error('PDF file input was not found on the create form.');
-    }
-
+    await expect(pdfFileInput).toHaveCount(1);
     await pdfFileInput.setInputFiles(filePath);
 
-    const fileName = filePath.split(/[\\/]/).pop() ?? filePath;
-    await expect(pdfFileInput).toHaveJSProperty('files.0.name', fileName, { timeout: 10000 });
-
-    const uploadButton = this.page
-      .locator('input[name="field_moj_pdf_0_upload_button"], input[id*="field-moj-pdf-0-upload-button"]')
-      .first();
-
-    if ((await uploadButton.count()) > 0) {
-      const startTime = Date.now();
-      const timeout = 30000;
-      let uploadTriggered = false;
-
-      while (!uploadTriggered && Date.now() - startTime < timeout) {
-        const currentButton = this.page
-          .locator('input[name="field_moj_pdf_0_upload_button"], input[id*="field-moj-pdf-0-upload-button"]')
-          .first();
-
-        if ((await currentButton.count()) > 0) {
-          const isConnected = await currentButton.evaluate((element: HTMLInputElement) => element.isConnected).catch(() => false);
-          const isDisabled = await currentButton.evaluate((element: HTMLInputElement) => element.disabled).catch(() => true);
-
-          if (isConnected && !isDisabled) {
-            await currentButton.evaluate((element: HTMLInputElement) => {
-              element.disabled = false;
-              element.click();
-            });
-            uploadTriggered = true;
-            await this.page.waitForTimeout(1500);
-            break;
-          }
-        }
-
-        await this.page.waitForTimeout(500);
-      }
-    }
-
-    const saveButton = this.saveButton();
-    const startTime = Date.now();
-    const timeout = 30000;
-    let isEnabled = await saveButton.isEnabled();
-
-    while (!isEnabled && Date.now() - startTime < timeout) {
-      await this.page.waitForTimeout(500);
-      isEnabled = await saveButton.isEnabled();
-    }
+    const managedFile = this.page
+      .locator('[data-drupal-selector="edit-field-moj-pdf-0-fids"]')
+      .locator('xpath=ancestor::div[contains(@class, "js-form-managed-file")]');
+    await expect(managedFile.locator('.file a')).toBeVisible({ timeout: 30000 });
   }
 
   async save(): Promise<void> {

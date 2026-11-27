@@ -1,377 +1,119 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 const defaultPreferredCategory = process.env.PLAYWRIGHT_E2E_CATEGORY_TERM ?? 'Animated shorts';
 const defaultPreferredPrisonOwner = process.env.PLAYWRIGHT_E2E_PRISON_OWNER_TERM ?? 'Bedford';
+const defaultPreferredTopic = process.env.PLAYWRIGHT_E2E_TOPIC_TERM ?? 'Appeals';
+const defaultPreferredSeries = process.env.PLAYWRIGHT_E2E_SERIES_TERM ?? defaultPreferredCategory;
+const categoryFieldId = '#edit-field-moj-top-level-categories';
+const topicFieldId = '#edit-field-topics';
+const seriesFieldId = '#edit-field-moj-series';
+const prisonOwnerFieldId = '#edit-field-prison-owner';
 
 export class NodeCreationTaxonomyPOM {
   constructor(private readonly page: Page) {}
 
-  private readonly categoryOrSeriesSelectors = [
-    'select[name="field_moj_top_level_categories[]"]',
-    'input[id*="field-moj-top-level-categories"][type="search"]',
-    'input[id*="field-moj-top-level-categories"][type="text"]',
-    'input[data-drupal-selector*="edit-field-moj-top-level-categories"][type="text"]',
-    'input[name^="field_moj_top_level_categories"][name*="[target_id]"]',
-    'input[name*="top_level_categories"][name*="[target_id]"]',
-    'select[name="field_moj_series[]"]',
-    'input[id*="field-moj-series"][type="search"]',
-    'input[id*="field-moj-series"][type="text"]',
-    'input[data-drupal-selector*="edit-field-moj-series"][type="text"]',
-    'input[name^="field_moj_series"][name*="[target_id]"]',
-    '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
-    '[id*="edit-field-moj-top-level-categories"]',
-    '[data-drupal-selector*="edit-field-moj-series"]',
-    '[id*="edit-field-moj-series"]',
-  ];
-
   categoryField(): Locator {
-    return this.page.locator(this.categoryOrSeriesSelectors.join(', ')).first();
+    return this.page.locator(categoryFieldId);
   }
 
-  private categorySelectField(): Locator {
-    return this.page.locator(
-      [
-        'select[name="field_moj_top_level_categories[]"]',
-        'select[name="field_moj_series[]"]',
-      ].join(', ')
-    );
+  prisonOwnerField(): Locator {
+    return this.page.locator(prisonOwnerFieldId);
   }
 
-  private categoryAutocompleteField(): Locator {
-    return this.page.locator(
-      [
-        'input[id*="field-moj-top-level-categories"][type="search"]',
-        'input[id*="field-moj-top-level-categories"][type="text"]',
-        'input[data-drupal-selector*="edit-field-moj-top-level-categories"][type="text"]',
-        'input[name^="field_moj_top_level_categories"][name*="[target_id]"]',
-        'input[name*="top_level_categories"][name*="[target_id]"]',
-        'input[id*="field-moj-series"][type="search"]',
-        'input[id*="field-moj-series"][type="text"]',
-        'input[data-drupal-selector*="edit-field-moj-series"][type="text"]',
-        'input[name^="field_moj_series"][name*="[target_id]"]',
-      ].join(', ')
-    );
+  topicField(): Locator {
+    return this.page.locator(topicFieldId);
   }
 
-  private categoryTagifyInput(): Locator {
-    return this.page.locator(
-      [
-        'tags.tagify.field_moj_top_level_categories .tagify__input[contenteditable]',
-        'tags.tagify.field_moj_series .tagify__input[contenteditable]',
-      ].join(', ')
-    );
+  seriesField(): Locator {
+    return this.page.locator(seriesFieldId);
   }
 
-  private categoryWrapperField(): Locator {
-    return this.page.locator(
-      [
-        '[data-drupal-selector*="edit-field-moj-top-level-categories"]',
-        '[id*="edit-field-moj-top-level-categories"]',
-        '[data-drupal-selector*="edit-field-moj-series"]',
-        '[id*="edit-field-moj-series"]',
-      ].join(', ')
-    );
+  categoryRemoveButton(preferredValue = defaultPreferredCategory): Locator {
+    return this.tagifyRemoveButton(categoryFieldId, preferredValue);
   }
 
-  private async selectFromSelect2(root: Locator, preferredValue: string): Promise<boolean> {
-    const selectionTrigger = root
-      .locator(
-        [
-          '.select2-selection',
-          '.select2-container .selection',
-          '[class*="select2"] [role="combobox"]',
-        ].join(', ')
-      )
-      .first();
-
-    if ((await selectionTrigger.count()) === 0) {
-      return false;
-    }
-
-    if (!(await selectionTrigger.isVisible().catch(() => false))) {
-      return false;
-    }
-
-    await selectionTrigger.click();
-
-    const openSearch = this.page
-      .locator('.select2-container--open input.select2-search__field, .select2-dropdown input.select2-search__field')
-      .first();
-
-    if ((await openSearch.count()) === 0) {
-      return false;
-    }
-
-    await openSearch.fill(preferredValue);
-
-    const preferredResult = this.page
-      .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
-      .first();
-
-    if ((await preferredResult.count()) > 0) {
-      await preferredResult.click();
-      return true;
-    }
-
-    await openSearch.fill('');
-    const firstAvailableResult = this.page
-      .locator('.select2-results__option[role="option"]:not(.select2-results__option--disabled)')
-      .first();
-    if ((await firstAvailableResult.count()) > 0) {
-      await firstAvailableResult.click();
-      return true;
-    }
-
-    return false;
+  prisonOwnerRemoveButton(preferredValue = defaultPreferredPrisonOwner): Locator {
+    return this.tagifyRemoveButton(prisonOwnerFieldId, preferredValue);
   }
 
-  private async hasCategoryOrSeriesSelection(): Promise<boolean> {
-    const tagifySelection = this.page.locator(
-      'tags.tagify.field_moj_top_level_categories tag, tags.tagify.field_moj_series tag'
-    );
-    if ((await tagifySelection.count()) > 0) {
-      return true;
-    }
-
-    const nativeSelect = this.categorySelectField().first();
-    if ((await nativeSelect.count()) > 0) {
-      const selectedValue = await nativeSelect.inputValue();
-      if (selectedValue && !/^(_none|none)?$/i.test(selectedValue)) {
-        return true;
-      }
-
-      const selectedLabel = (await nativeSelect
-        .locator('option:checked')
-        .first()
-        .innerText()
-        .catch(() => ''))
-        .trim();
-      if (selectedLabel && !/^-\s*none\s*-$/i.test(selectedLabel)) {
-        return true;
-      }
-    }
-
-    return false;
+  topicRemoveButton(preferredValue = defaultPreferredTopic): Locator {
+    return this.tagifyRemoveButton(topicFieldId, preferredValue);
   }
 
-  private async hasSelectionInGroup(group: Locator): Promise<boolean> {
-    const selectedChoices = group.locator('.select2-selection__choice');
-    if ((await selectedChoices.count()) > 0) {
-      return true;
-    }
-
-    const renderedSelection = group.locator('.select2-selection__rendered').first();
-    if ((await renderedSelection.count()) > 0) {
-      const text = (await renderedSelection.innerText()).replace(/\s+/g, ' ').trim();
-      if (text && !/^(-\s*none\s*-|select|search)/i.test(text)) {
-        return true;
-      }
-    }
-
-    const nativeSelect = group.locator('select').first();
-    if ((await nativeSelect.count()) > 0) {
-      const selectedLabel = (await nativeSelect
-        .locator('option:checked')
-        .first()
-        .innerText()
-        .catch(() => ''))
-        .trim();
-      if (selectedLabel && !/^\-\s*none\s*\-$/i.test(selectedLabel)) {
-        return true;
-      }
-    }
-
-    return false;
+  seriesRemoveButton(preferredValue = defaultPreferredSeries): Locator {
+    return this.tagifyRemoveButton(seriesFieldId, preferredValue);
   }
 
-  private async selectFromTaxonomyGroup(groupName: RegExp, preferredValue: string): Promise<boolean> {
-    const group = this.page.getByRole('group', { name: groupName }).first();
-    if ((await group.count()) === 0) {
-      return false;
-    }
+  private tagifyWrapper(fieldId: string): Locator {
+    return this.page.locator(fieldId).locator('xpath=preceding-sibling::tags[1]');
+  }
 
-    const combo = group.locator('[role="combobox"]').first();
-    if ((await combo.count()) === 0) {
-      return false;
-    }
+  private tagifyRemoveButton(fieldId: string, preferredValue: string): Locator {
+    return this.tagifyWrapper(fieldId)
+      .locator('tag')
+      .filter({ hasText: preferredValue })
+      .locator('.tagify__tag__removeBtn');
+  }
 
-    await combo.click();
+  private async selectTagifyValue(fieldId: string, preferredValue: string): Promise<void> {
+    const wrapper = this.tagifyWrapper(fieldId);
+    const editor = wrapper.locator('.tagify__input[contenteditable]');
+    await expect(editor).toBeVisible();
+    await editor.fill(preferredValue);
 
-    const comboInput = this.page
-      .locator('.select2-container--open input.select2-search__field, .select2-dropdown input.select2-search__field')
-      .first();
-    if ((await comboInput.count()) > 0) {
-      await comboInput.fill(preferredValue);
-
-      const exactOption = this.page
-        .locator('.select2-container--open .select2-results__option[role="option"], .select2-dropdown .select2-results__option[role="option"]')
-        .filter({ hasText: new RegExp(`^\\s*${preferredValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i') })
-        .first();
-
-      if ((await exactOption.count()) > 0) {
-        await exactOption.click();
-      } else {
-        await comboInput.press('Enter');
+    const suggestion = this.page.locator('.tagify__dropdown__item').filter({ hasText: preferredValue }).first();
+    await expect(suggestion).toBeVisible();
+    await suggestion.click();
+    await expect(wrapper.locator('tag').filter({ hasText: preferredValue })).toBeVisible();
+    await expect.poll(async () => {
+      const selectedValues = await this.page.locator(fieldId).inputValue();
+      try {
+        const values = JSON.parse(selectedValues) as Array<{ entity_id?: string | number; label?: string }>;
+        return values.some((value) => value.label === preferredValue && value.entity_id != null);
+      } catch {
+        return false;
       }
-
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
-      }
-
-      const noResultsAlert = this.page
-        .locator('.select2-container--open .select2-results__option, .select2-dropdown .select2-results__option')
-        .filter({ hasText: /no results found/i })
-        .first();
-      if ((await noResultsAlert.count()) > 0) {
-        await comboInput.fill('');
-        await comboInput.press('ArrowDown');
-        await comboInput.press('Enter');
-        if (await this.hasSelectionInGroup(group)) {
-          return true;
-        }
-      }
-    }
-
-    const firstOption = this.page
-      .locator('.select2-container--open .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found")), .select2-dropdown .select2-results__option[role="option"]:not(.select2-results__option--disabled):not(:has-text("No results found"))')
-      .first();
-    if ((await firstOption.count()) > 0) {
-      await firstOption.click();
-      if (await this.hasSelectionInGroup(group)) {
-        return true;
-      }
-    }
-
-    await combo.press('ArrowDown');
-    await combo.press('Enter');
-    if (await this.hasSelectionInGroup(group)) {
-      return true;
-    }
-
-    return (await this.hasSelectionInGroup(group)) || this.hasCategoryOrSeriesSelection();
+    }, {
+      timeout: 30000,
+      intervals: [100, 250, 500],
+      message: `Tagify field ${fieldId} did not serialize the selected entity "${preferredValue}".`,
+    }).toBe(true);
   }
 
   async selectPrisonOwner(preferredValue = defaultPreferredPrisonOwner): Promise<void> {
-    if (!(await this.selectFromTaxonomyGroup(/^Prison owner$/i, preferredValue))) {
-      throw new Error(`Unable to select prison owner "${preferredValue}" on the create form.`);
-    }
+    await this.selectTagifyValue(prisonOwnerFieldId, preferredValue);
   }
 
   async selectFirstCategory(preferredValue = defaultPreferredCategory): Promise<void> {
-    const categoryNativeSelect = this.categorySelectField();
-    if ((await categoryNativeSelect.count()) > 0) {
-      const nativeSelect = categoryNativeSelect.first();
-      const isNativeVisible = await nativeSelect.isVisible().catch(() => false);
-      if (isNativeVisible) {
-        const options = nativeSelect.locator('option');
-        const optionsCount = await options.count();
-        if (optionsCount > 0) {
-          const candidateValues: string[] = [];
-          for (let i = 0; i < optionsCount; i++) {
-            const option = options.nth(i);
-            const value = (await option.getAttribute('value')) ?? '';
-            const label = (await option.innerText()).trim();
-            if (!value || /^_none$/i.test(value) || /^-\s*none\s*-$/i.test(label)) {
-              continue;
-            }
-            candidateValues.push(value);
-          }
+    await this.selectTagifyValue(categoryFieldId, preferredValue);
+  }
 
-          if (candidateValues.length > 0) {
-            await nativeSelect.selectOption(candidateValues[0]);
-            if (await this.hasCategoryOrSeriesSelection()) {
-              return;
-            }
-          }
-        }
-      }
-    }
+  async selectTopic(preferredValue: string): Promise<void> {
+    await this.selectTagifyValue(topicFieldId, preferredValue);
+  }
 
-    const categoryTagifyInput = this.categoryTagifyInput();
-    const hasCategoryTagifyInput = (await categoryTagifyInput.count()) > 0;
-    if (hasCategoryTagifyInput && (await categoryTagifyInput.first().isVisible())) {
-      await categoryTagifyInput.first().click();
-      await categoryTagifyInput.first().fill(preferredValue);
-      await categoryTagifyInput.first().press('Enter');
-      if (await this.hasCategoryOrSeriesSelection()) {
-        return;
-      }
-    }
+  async selectSeries(preferredValue: string): Promise<void> {
+    await this.selectTagifyValue(seriesFieldId, preferredValue);
+  }
 
-    if (!hasCategoryTagifyInput) {
-      const categoryAutocompleteField = this.categoryAutocompleteField();
-      if ((await categoryAutocompleteField.count()) > 0 && (await categoryAutocompleteField.first().isVisible())) {
-        await categoryAutocompleteField.first().click();
-        await categoryAutocompleteField.first().fill(preferredValue);
-        await categoryAutocompleteField.first().press('Enter');
-        if (await this.hasCategoryOrSeriesSelection()) {
-          return;
-        }
-      }
-    }
+  async selectFirstCategoryRemoveButton(preferredValue = defaultPreferredCategory): Promise<void> {
+    await this.removeTagifyValue(this.categoryRemoveButton(preferredValue));
+  }
 
-    const categoryWrapper = this.categoryWrapperField();
-    if ((await categoryWrapper.count()) > 0) {
-      if (!(await categoryWrapper.first().isVisible())) {
-        const openDetailsToggle = this.page
-          .locator(
-            [
-              'summary:has-text("Category")',
-              'summary:has-text("Series")',
-              'button:has-text("Category")',
-              'button:has-text("Series")',
-            ].join(', ')
-          )
-          .first();
+  async selectPrisonOwnerRemoveButton(preferredValue = defaultPreferredPrisonOwner): Promise<void> {
+    await this.removeTagifyValue(this.prisonOwnerRemoveButton(preferredValue));
+  }
 
-        if ((await openDetailsToggle.count()) > 0) {
-          await openDetailsToggle.click();
-        }
-      }
+  async selectTopicRemoveButton(preferredValue = defaultPreferredTopic): Promise<void> {
+    await this.removeTagifyValue(this.topicRemoveButton(preferredValue));
+  }
 
-      const selectedViaWrapperInput = categoryWrapper
-        .first()
-        .locator('input[type="search"], input[type="text"]')
-        .first();
+  async selectSeriesRemoveButton(preferredValue = defaultPreferredSeries): Promise<void> {
+    await this.removeTagifyValue(this.seriesRemoveButton(preferredValue));
+  }
 
-      if (!hasCategoryTagifyInput && (await selectedViaWrapperInput.count()) > 0 && (await selectedViaWrapperInput.isVisible())) {
-        await selectedViaWrapperInput.click();
-        await selectedViaWrapperInput.fill(preferredValue);
-        await selectedViaWrapperInput.press('Enter');
-        if (await this.hasCategoryOrSeriesSelection()) {
-          return;
-        }
-      }
-
-      if (await this.selectFromSelect2(categoryWrapper.first(), preferredValue)) {
-        if (await this.hasCategoryOrSeriesSelection()) {
-          return;
-        }
-      }
-    }
-
-    const categorySearch = this.page.getByRole('searchbox', { name: /category|series/i }).first();
-    if ((await categorySearch.count()) > 0) {
-      await categorySearch.click();
-      await categorySearch.fill(preferredValue);
-      await categorySearch.press('Enter');
-      if (await this.hasCategoryOrSeriesSelection()) {
-        return;
-      }
-    }
-
-    if (await this.selectFromTaxonomyGroup(/^Category$/i, preferredValue)) {
-      return;
-    }
-
-    if (await this.selectFromTaxonomyGroup(/Series/i, preferredValue)) {
-      return;
-    }
-
-    const mainText = (await this.page.locator('main').innerText()).replace(/\s+/g, ' ').trim();
-    throw new Error(
-      'Unable to select a category or series on the create form. ' +
-      `Main text snapshot: ${mainText}`
-    );
+  private async removeTagifyValue(removeButton: Locator): Promise<void> {
+    await expect(removeButton).toBeVisible();
+    await removeButton.click();
   }
 }
